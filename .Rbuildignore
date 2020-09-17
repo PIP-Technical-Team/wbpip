@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^wbpip\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
