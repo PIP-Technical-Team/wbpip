@@ -179,10 +179,10 @@
     },
     "withr": {
       "Package": "withr",
-      "Version": "2.2.0",
+      "Version": "2.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ecd17882a0b4419545691e095b74ee89"
+      "Hash": "7307d79f58d1885b38c4f4f1a8cb19dd"
     }
   }
 }
