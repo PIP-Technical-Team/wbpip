@@ -17,3 +17,5 @@ Suggests:
     testthat
 URL: https://github.com/PIP-Technical-Team/wbpip
 BugReports: https://github.com/PIP-Technical-Team/wbpip/issues
+Depends: 
+    R (>= 2.10)
