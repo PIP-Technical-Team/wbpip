@@ -1,5 +1,4 @@
 #' @importFrom dplyr lag
-#' @importFrom rlang abort
 NULL
 
 #' Gini coefficient
@@ -71,7 +70,7 @@ clean_inputs_md_compute_gini <- function(welfare, weight){
         msg <- sprintf('Info: Found %s missing values in `welfare`. These observations were removed.',
                        sum(is.na(welfare)))
       }
-      message(msg)
+      rlang::inform(msg)
     }
     if (anyNA(weight)) {
       if (sum(is.na(weight)) == 1) {
@@ -80,7 +79,7 @@ clean_inputs_md_compute_gini <- function(welfare, weight){
         msg <- sprintf('Info: Found %s missing values in `weight`. These observations were removed.',
                        sum(is.na(weight)))
       }
-      message(msg)
+      rlang::inform(msg)
     }
     weight_no_na <- weight[!is.na(welfare)]
     weight_no_na <- weight_no_na[!is.na(weight_no_na)]
@@ -99,7 +98,7 @@ clean_inputs_md_compute_gini <- function(welfare, weight){
         msg <- sprintf('Info: Found %s negative values in `welfare`. These observations were removed.',
                        sum(welfare < 0))
       }
-      message(msg)
+      rlang::inform(msg)
     }
     if (any(weight < 0)) {
       if (sum(weight < 0) == 1) {
@@ -108,7 +107,7 @@ clean_inputs_md_compute_gini <- function(welfare, weight){
         msg <- sprintf('Info: Found %s negative values in `weight`. These observations were removed.',
                        sum(weight < 0))
       }
-      message(msg)
+      rlang::inform(msg)
     }
     weight_no_negative <- weight[!welfare < 0]
     weight_no_negative <- weight_no_negative[!weight_no_negative < 0]

@@ -2,4 +2,3 @@
 
 export(md_compute_gini)
 importFrom(dplyr,lag)
-importFrom(rlang,abort)
