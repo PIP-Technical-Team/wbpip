@@ -1,34 +1,23 @@
-library(devtools)
-library(pipload)
-library(data.table)
+#' Check microdata to be used in PIP methods
+#'
+#' @param dt Data frame.
+#' @param ... list of arguments that correspond to specific variable names.
+#' Arguments available are in `getOption("wbpip.agrs_to_check")`.
+#' For instance, welfare = "income", weight = "peso'.
+#'
+#' @return
+#' @export
+#' @import data.table
+#'
+#' @examples
+md_check_data <- function(dt, ...) {
 
-dt <- pip_load_data(country = "PRY",
-                    year    = 2017,
-                    tool    = "TB")
-
-
-md_check_data <- function(dt, ...
-                          # welfare   = NULL,
-                          # weight    = NULL,
-                          # age       = NULL,
-                          # educy     = NULL,
-                          # educat4   = NULL,
-                          # educat5   = NULL,
-                          # educat7   = NULL
-                          ) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #---------   SET UP   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  agrs_to_check <-
-    c("welfare",
-      "weight",
-      "age",
-      "educy",
-      "educat4",
-      "educat5",
-      "educat7")
+  agrs_to_check <- getOption("wbpip.agrs_to_check")
 
   # parse ellipsis as a list, where names are the the names of
   # the arguments, and contents the names of the variables to
@@ -104,23 +93,4 @@ md_check_data <- function(dt, ...
 
   return(cols)
 }
-
-
-cols <- md_check_data(dt,
-                      welfare = "welfare",
-                      weight  = "weight")
-
-
-cols <- md_check_data(dt,
-                      welfsdfe = "welfare",
-                      weight  = "weight")
-
-
-
-
-
-
-cols <- md_check_data(dt,
-                      welfare = "bla",
-                      weight  = "ble")
 
