@@ -30,4 +30,8 @@ md_compute_gini(welfare = 1:10)
 # Include weights
 md_compute_gini(welfare = 1:10, weight = 1:10)
 
+# Microdata example
+data("md_ABC_2000_income")
+md_compute_gini(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
+
 }
