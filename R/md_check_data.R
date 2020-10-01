@@ -5,7 +5,15 @@
 #' Arguments available are in `getOption("wbpip.agrs_to_check")`.
 #' For instance, welfare = "income", weight = "peso'.
 #'
-#' @return
+#' @return list of elements whose main object is a dataframe (in data.table format)
+#' with the necessary transformations to be included in PIP methods. Data is available in
+#' element $data. The other elements provide the number of observations that were modified
+#' depending on test performed. The name of elements are in the form p_s, where p (or prefix)
+#' refers to the test, whereas s (for suffix) refers to the name of the variable evaluated.
+#' Prefix are:
+#'
+#' *nna:*  Number of NA in variable
+#' *nng:*  Number of negative values
 #' @export
 #' @import data.table
 #'
@@ -18,6 +26,9 @@ md_check_data <- function(dt, ...) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   agrs_to_check <- getOption("wbpip.agrs_to_check")
+
+  # List to return
+  ll <- vector(mode = "list")
 
   # parse ellipsis as a list, where names are the the names of
   # the arguments, and contents the names of the variables to
@@ -103,6 +114,7 @@ md_check_data <- function(dt, ...) {
 
       dt <- dt[!is.na(get(welf))]
 
+      ll[[paste0("nna_", welf)]] <- nna
     }
 
     # Check for negative values
@@ -118,6 +130,8 @@ md_check_data <- function(dt, ...) {
       )
 
       dt <- dt[get(welf) >= 0]
+
+      ll[[paste0("nng_", welf)]] <- nng
     }
 
     # Check for super outliers (unweigthed)
@@ -162,6 +176,8 @@ md_check_data <- function(dt, ...) {
 
       dt <- dt[!is.na(get(wht))]
 
+      ll[[paste0("nna_", wht)]] <- nna
+
     }
 
     # Check for negative values
@@ -177,9 +193,12 @@ md_check_data <- function(dt, ...) {
       )
 
       dt <- dt[get(wht) > 0]
+
+      ll[[paste0("nng_", wht)]] <- nng
     }
   } # end of weight check
 
-  return(dt)
+  ll[["data"]] <- dt
+  return(ll)
 }
 
