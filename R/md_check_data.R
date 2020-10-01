@@ -14,7 +14,7 @@ md_check_data <- function(dt, ...) {
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   SET UP   ---------
+  #--------- SET UP   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   agrs_to_check <- getOption("wbpip.agrs_to_check")
@@ -33,7 +33,7 @@ md_check_data <- function(dt, ...) {
   # Names of arguments
   argnames <- names(cols)
 
-  #--------- check that all the variables selected exist in dt ---------
+  #--------- Check that all the variables selected exist in dt ---------
 
   if (!(all(colnames %in% names(dt)))) {
 
@@ -55,7 +55,7 @@ md_check_data <- function(dt, ...) {
 
   }
 
-  #--------- check that the names of the arguments are part of the variables to check ---------
+  #--------- Check that the names of the arguments are part of the variables to check ---------
   if (!(all(argnames %in% agrs_to_check))) {
 
     nocolind <- which(!(argnames %in% agrs_to_check))
@@ -81,7 +81,7 @@ md_check_data <- function(dt, ...) {
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   CHECKs by variable   ---------
+  #--------- CHECKs by variable   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   #--------- WELFARE ---------
@@ -94,7 +94,7 @@ md_check_data <- function(dt, ...) {
     if (nna > 0) {
 
       msg     <- paste("NA values in", welf, "will be dropped")
-      hint    <- paste("you have", nna, "values in", welf)
+      hint    <- paste("you have", nna, "NA values in", welf)
       rlang::inform(c(
                     msg,
                     i = hint
@@ -110,7 +110,7 @@ md_check_data <- function(dt, ...) {
     if (nng > 0) {
 
       msg     <- paste("Negative values in", welf, "will be dropped")
-      hint    <- paste("you have", nng, "values in", welf)
+      hint    <- paste("you have", nng, "negative values in", welf)
       rlang::inform(c(
         msg,
         i = hint
@@ -141,11 +141,45 @@ md_check_data <- function(dt, ...) {
                           "` that are greater than 8 times the SD of the mean"))
     }
 
-  }
+  } # End of welfare check
 
+  #--------- WEIGHT ---------
+  if ("weight" %in% argnames) {
 
+    wht <- cols$weight
 
+    # Check for missing values
+    nna <- dt[is.na(get(wht)) , .N]
+    if (nna > 0) {
 
-  return(cols)
+      msg     <- paste("NA values in", wht, "will be dropped")
+      hint    <- paste("you have", nna, "NA values in", wht)
+      rlang::inform(c(
+        msg,
+        i = hint
+      )
+      )
+
+      dt <- dt[!is.na(get(wht))]
+
+    }
+
+    # Check for negative values
+    nng <- dt[get(wht) <= 0 , .N]
+    if (nng > 0) {
+
+      msg     <- paste("Zero or negative values in", wht, "will be dropped")
+      hint    <- paste("you have", nng, "values that are either zero or negative in", wht)
+      rlang::inform(c(
+        msg,
+        i = hint
+      )
+      )
+
+      dt <- dt[get(wht) > 0]
+    }
+  } # end of weight check
+
+  return(dt)
 }
 
