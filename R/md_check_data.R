@@ -84,12 +84,67 @@ md_check_data <- function(dt, ...) {
   #---------   CHECKs by variable   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  #--------- WELFARE ---------
+
   if ("welfare" %in% argnames) {
     welf <- cols$welfare
 
+    # Check for missing values
+    nna <- dt[is.na(get(welf)) , .N]
+    if (nna > 0) {
 
-    dt[is.na(get(welf)) , .N]
+      msg     <- paste("NA values in", welf, "will be dropped")
+      hint    <- paste("you have", nna, "values in", welf)
+      rlang::inform(c(
+                    msg,
+                    i = hint
+                    )
+                    )
+
+      dt <- dt[!is.na(get(welf))]
+
+    }
+
+    # Check for negative values
+    nng <- dt[get(welf) < 0 , .N]
+    if (nng > 0) {
+
+      msg     <- paste("Negative values in", welf, "will be dropped")
+      hint    <- paste("you have", nng, "values in", welf)
+      rlang::inform(c(
+        msg,
+        i = hint
+      )
+      )
+
+      dt <- dt[get(welf) >= 0]
+    }
+
+    # Check for super outliers (unweigthed)
+    sdmn <- dt[, .(sd   = sd(get(welf), na.rm = TRUE),
+                   mean = mean(get(welf), na.rm = TRUE))
+               ]
+
+    # outliers
+    ol <- dt[get(welf) > 4*sdmn[, sd] + sdmn[, mean], .N]
+
+    # Super outliers
+    sol <- dt[get(welf) > 8*sdmn[, sd] + sdmn[, mean], .N]
+
+    if (ol > 0) {
+      rlang::inform(paste0("you have ", ol, " outliers in `", welf,
+                          "` that are greater than 4 times the SD of the mean"))
+    }
+
+    if (sol > 0) {
+      rlang::inform(paste0("you have ", sol, " outliers in `", welf,
+                          "` that are greater than 8 times the SD of the mean"))
+    }
+
   }
+
+
+
 
   return(cols)
 }
