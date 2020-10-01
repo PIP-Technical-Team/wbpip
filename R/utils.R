@@ -11,24 +11,42 @@ md_clean_inputs <- function(welfare, weight){
 
   # Remove missing values
   if (anyNA(welfare) | anyNA(weight)) {
-    if (anyNA(welfare)) {
-      if (sum(is.na(welfare)) == 1) {
-        msg <- sprintf('Info: Found 1 missing value in `welfare`. This observation was removed.')
-      } else {
-        msg <- sprintf('Info: Found %s missing values in `welfare`. These observations were removed.',
-                       sum(is.na(welfare)))
-      }
-      rlang::inform(msg)
-    }
-    if (anyNA(weight)) {
+
+    # Number of observations with missing values
+    n_obs <- sum(is.na(welfare) | is.na(weight))
+
+    # Info message
+    if (n_obs == 1) {
+      msg_main <- 'Info: Found 1 observation with missing values. This observation was removed.'
       if (sum(is.na(weight)) == 1) {
-        msg <- sprintf('Info: Found 1 missing value in `weight`. This observation was removed.')
+        msg_weight <- '1 missing value in `weight`.'
       } else {
-        msg <- sprintf('Info: Found %s missing values in `weight`. These observations were removed.',
-                       sum(is.na(weight)))
+        msg_weight <- sprintf('%s missing values in `weight`.', sum(is.na(weight)))
       }
-      rlang::inform(msg)
+      if (sum(is.na(welfare)) == 1) {
+        msg_welfare <- '1 missing value in `welfare`.'
+      } else {
+        msg_welfare <- sprintf('%s missing values in `welfare`.', sum(is.na(welfare)))
+      }
+      msg <- c(msg_main, i = msg_welfare, i = msg_weight)
+    } else {
+      msg_main <- 'Info: Found %s observations with missing values. These observations were removed.'
+      msg_main <- sprintf(msg_main, n_obs)
+      if (sum(is.na(weight)) == 1) {
+        msg_weight <- '1 missing value in `weight`.'
+      } else {
+        msg_weight <- sprintf('%s missing values in `weight`.', sum(is.na(weight)))
+      }
+      if (sum(is.na(welfare)) == 1) {
+        msg_welfare <- '1 missing value in `welfare`.'
+      } else {
+        msg_welfare <- sprintf('%s missing values in `welfare`.', sum(is.na(welfare)))
+      }
+      msg <- c(msg_main, i = msg_welfare, i = msg_weight)
     }
+    rlang::inform(msg)
+
+    # Clean vectors
     weight_no_na <- weight[!is.na(welfare)]
     weight_no_na <- weight_no_na[!is.na(weight_no_na)]
     welfare_no_na <- welfare[!is.na(weight)]
@@ -39,24 +57,41 @@ md_clean_inputs <- function(welfare, weight){
 
   # Remove negative values
   if (any(welfare < 0) | any(weight < 0)) {
-    if (any(welfare < 0)) {
-      if (sum(welfare < 0) == 1) {
-        msg <- sprintf('Info: Found 1 negative value in `welfare`. This observation was removed.')
-      } else {
-        msg <- sprintf('Info: Found %s negative values in `welfare`. These observations were removed.',
-                       sum(welfare < 0))
-      }
-      rlang::inform(msg)
-    }
-    if (any(weight < 0)) {
+
+    # Number of observations with negative values
+    n_obs <- sum(welfare < 0 | weight < 0)
+
+    # Info message
+    if (n_obs == 1) {
+      msg_main <- 'Info: Found 1 observation with negative values. This observation was removed.'
       if (sum(weight < 0) == 1) {
-        msg <- sprintf('Info: Found 1 negative value in `weight`. This observation was removed.')
+        msg_weight <- '1 negative value in `weight`.'
       } else {
-        msg <- sprintf('Info: Found %s negative values in `weight`. These observations were removed.',
-                       sum(weight < 0))
+        msg_weight <- sprintf('%s negative values in `weight`.', sum(weight < 0))
       }
-      rlang::inform(msg)
+      if (sum(welfare < 0) == 1) {
+        msg_welfare <- '1 negative value in `welfare`.'
+      } else {
+        msg_welfare <- sprintf('%s negative values in `welfare`.', sum(weight < 0))
+      }
+      msg <- c(msg_main, i = msg_welfare, i = msg_weight)
+    } else {
+      msg_main <- 'Info: Found %s observations with negative values. These observations were removed.'
+      msg_main <- sprintf(msg_main, n_obs)
+      if (sum(weight < 0) == 1) {
+        msg_weight <- '1 negative value in `weight`.'
+      } else {
+        msg_weight <- sprintf('%s negative values in `weight`.', sum(weight < 0))
+      }
+      if (sum(welfare < 0) == 1) {
+        msg_welfare <- '1 negative value in `welfare`.'
+      } else {
+        msg_welfare <- sprintf('%s negative values in `welfare`.', sum(welfare < 0))
+      }
+      msg <- c(msg_main, i = msg_welfare, i = msg_weight)
     }
+    rlang::inform(msg)
+
     weight_no_negative <- weight[!welfare < 0]
     weight_no_negative <- weight_no_negative[!weight_no_negative < 0]
     welfare_no_negative <- welfare[!weight < 0]
