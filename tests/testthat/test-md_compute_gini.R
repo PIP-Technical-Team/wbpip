@@ -38,6 +38,12 @@ test_that('md_compute_gini() computations are correct', {
   )
 
   # Test perfect inequality
+  # Pass but slow to run
+  # expect_equal(
+  #   md_compute_gini(welfare = c(rep(0, 99999999), 100)),
+  #   1
+  # )
+  # Fail due to sample size: Add sample size correction?
   expect_equal(
     md_compute_gini(welfare = c(rep(0, 99), 100)),
     1
