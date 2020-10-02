@@ -1,0 +1,33 @@
+---
+title: "Basic functions"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Basic functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(wbpip)
+```
+
+# Review basic functions
+Basic functions are meant to be used with single datasets.  
+
+## `md_compute_gini()`
+```{r}
+data("md_ABC_2000_income")
+
+md_compute_gini(welfare = md_ABC_2000_income$welfare, 
+                weight = md_ABC_2000_income$weight)
+```
+
