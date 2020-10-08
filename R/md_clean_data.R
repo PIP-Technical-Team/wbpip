@@ -18,7 +18,7 @@
 #' @import data.table
 #'
 #' @examples
-md_check_data <- function(dt, ...) {
+md_clean_data <- function(dt, ...) {
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,20 +1,20 @@
 context("Conditions of arguments work correctly")
 test_that("All the variables selected exist", {
-  expect_error( md_check_data(dt,
+  expect_error( md_clean_data(dt,
                               welfsdfe = "welfare",
                               weight  = "weight")
                 )
 })
 
 test_that("All arguments are valid exist", {
-  expect_error( md_check_data(dt,
+  expect_error( md_clean_data(dt,
                               welfare = "bla",
                               weight  = "ble")
                 )
 })
 
 context("Elimination is done correctly")
-nd <- md_check_data(dt,
+nd <- md_clean_data(dt,
                     welfare = "welfare",
                     weight  = "weight")
 
