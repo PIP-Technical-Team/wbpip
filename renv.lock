@@ -333,10 +333,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.17",
+      "Version": "0.18",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "5016afba2a931ac92bbb3c6feb03d2c8"
+      "Hash": "d1c0b777b432e4b4c039c8aaecc54e0f"
     },
     "yaml": {
       "Package": "yaml",
