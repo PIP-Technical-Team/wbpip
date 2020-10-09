@@ -20,6 +20,11 @@ md_infer_poverty_line <- function(welfare,
                                   alternative = FALSE,
                                   na.rm = FALSE) {
 
+  # if weight is not provided
+  if (is.null(weight)) {
+    weight <- rep(1, length(welfare))
+  }
+
   # make sure data is sorted properly
   o       <- order(welfare)
   weight  <- weight[o]
