@@ -28,8 +28,7 @@ NULL
 #'
 #' @export
 md_compute_gini <- function(welfare,
-                            weight = NULL,
-                            type = "microdata"){
+                            weight = NULL){
 
   # Set all weights to 1 if none are supplied
   if (is.null(weight)) weight <- rep(1, length(welfare))

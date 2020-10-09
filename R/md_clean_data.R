@@ -19,14 +19,10 @@
 #' @import data.table
 #'
 #' @examples
-md_clean_data <- function(dt, type = "microdata", ...) {
+md_clean_data <- function(dt, ...) {
 
   if(!(inherits(dt, "data.table"))) {
     setDT(dt)
-  }
-
-  if (inherits(dt, "grouped_df")) {
-    return(dplyr::do(dt, md_clean_data(., type = type, ...)))
   }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

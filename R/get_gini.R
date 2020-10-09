@@ -44,15 +44,34 @@ get_gini <-  function(.data, welfare, weight, type = "microdata") {
 
   # Organize argument to parse to md_clean_data
   args <- list(dt = .data,
-               type = type,
                welfare = welfare,
                weight  = weight)
 
-  # Clean data
-  df <- do.call(md_clean_data, args)$data
+  if (type == "microdata") {
+    # Clean data
+    df <- do.call(md_clean_data, args)$data
 
-  # Compute Gini
-  gini <- md_compute_gini(df[[welfare]] , df[[weight]])
+    # Compute Gini
+    gini <- md_compute_gini(df[[welfare]] , df[[weight]])
+
+  } else if (type == "groupdata") {
+
+    rlang::inform("process for group data not ready yet")
+    gini <- NA
+
+  } else {
+    msg     <- "Wrong `type`"
+    hint    <- "Make sure `type` is either 'microdata' or 'group data'"
+    problem <- paste("your `type` is", type)
+    rlang::abort(c(
+                  msg,
+                  i = hint,
+                  x = problem
+                  ),
+                  class = "wbpip_error"
+                  )
+
+  }
 
   # return(gini)
   return(tibble::tibble(gini = gini))
