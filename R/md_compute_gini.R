@@ -12,7 +12,6 @@ NULL
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights, optional.
-#' @inheritParams md_clean_data
 #' @return numeric
 #'
 #' @examples

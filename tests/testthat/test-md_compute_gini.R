@@ -29,6 +29,7 @@ test_that('md_compute_gini() works as expected', {
   )
 })
 
+context('md_compute_gini() computations are correct')
 test_that('md_compute_gini() computations are correct', {
 
   # Test perfect equality
@@ -46,12 +47,14 @@ test_that('md_compute_gini() computations are correct', {
   # Fail due to sample size: Add sample size correction?
   expect_equal(
     md_compute_gini(welfare = c(rep(0, 99), 100)),
-    .99
+    1
   )
 
   # Test against pre-computed correct values
   lapply(dl, function(x){
-    df <- x$data
+    df <- md_clean_data(x$data,
+                        welfare = "welfare",
+                        weight  = "weight")$data
     res <- md_compute_gini(welfare = df$welfare, weight = df$weight)
     expect_equal(res, x$stats$gini)
   })

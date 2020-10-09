@@ -13,23 +13,11 @@ get_gini(.data, welfare, weight, type = "microdata")
 
 \item{weight}{numeric: A vector of weights, optional.}
 
-\item{type}{character: either 'microdat' or 'groupdata'. Defatult 'microdata'}
+\item{type}{character: either 'microdata' or 'groupdata'. Defatult 'microdata'}
 }
 \value{
 
 }
 \description{
 Title
-}
-\examples{
-get_gini(dt, welfare, weight)
-
-setnames(md_ABC_2000_income, c("welfare", "weight"), c("wf", "wt") )
-
-md_ABC_2000_income \%>\%
-  group_by(area) \%>\%
-  get_gini(wf, wt)
-
-md_ABC_2000_income \%>\%
-  get_gini(wf, wt)
 }

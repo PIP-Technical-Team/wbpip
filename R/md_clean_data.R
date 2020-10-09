@@ -1,7 +1,6 @@
 #' Check microdata to be used in PIP methods
 #'
 #' @param dt Data frame.
-#' @param type character: either 'microdat' or 'groupdata'. Defatult 'microdata'
 #' @param ... list of arguments that correspond to specific variable names.
 #' Arguments available are in `getOption("wbpip.agrs_to_check")`.
 #' For instance, welfare = "income", weight = "peso'.

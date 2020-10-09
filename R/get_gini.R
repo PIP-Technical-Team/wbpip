@@ -2,24 +2,14 @@
 #' Title
 #'
 #' @param .data Household survey dataframe with at least a welfare variable
-#' @inheritParams md_clean_data
 #' @inheritParams md_compute_gini
+#' @param type character: either 'microdata' or 'groupdata'. Defatult 'microdata'
 #'
 #' @return
 #' @export
 #' @import data.table
 #'
 #' @examples
-#' get_gini(dt, welfare, weight)
-#'
-#' setnames(md_ABC_2000_income, c("welfare", "weight"), c("wf", "wt") )
-#'
-#' md_ABC_2000_income %>%
-#'   group_by(area) %>%
-#'   get_gini(wf, wt)
-#'
-#' md_ABC_2000_income %>%
-#'   get_gini(wf, wt)
 get_gini <-  function(.data, welfare, weight, type = "microdata") {
 
   if (inherits(.data, "grouped_df")) {
