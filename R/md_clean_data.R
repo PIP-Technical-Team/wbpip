@@ -18,8 +18,15 @@
 #' @import data.table
 #'
 #' @examples
-md_clean_data <- function(dt, ...) {
+md_clean_data <- function(dt, type = "microdata", ...) {
 
+  if(!(inherits(dt, "data.table"))) {
+    setDT(dt)
+  }
+
+  if (inherits(dt, "grouped_df")) {
+    return(dplyr::do(dt, md_clean_data(., type = type, ...)))
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #--------- SET UP   ---------
@@ -98,7 +105,7 @@ md_clean_data <- function(dt, ...) {
   #--------- WELFARE ---------
 
   if ("welfare" %in% argnames) {
-    welf <- cols$welfare
+    welf <- as.character(cols$welfare)
 
     # Check for missing values
     nna <- dt[is.na(get(welf)) , .N]
@@ -160,7 +167,7 @@ md_clean_data <- function(dt, ...) {
   #--------- WEIGHT ---------
   if ("weight" %in% argnames) {
 
-    wht <- cols$weight
+    wht <- as.character(cols$weight)
 
     # Check for missing values
     nna <- dt[is.na(get(wht)) , .N]

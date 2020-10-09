@@ -27,17 +27,12 @@ NULL
 #' md_compute_gini(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
 #'
 #' @export
-md_compute_gini <- function(welfare, weight = NULL){
+md_compute_gini <- function(welfare,
+                            weight = NULL,
+                            type = "microdata"){
 
   # Set all weights to 1 if none are supplied
   if (is.null(weight)) weight <- rep(1, length(welfare))
-
-  # Check that inputs are valid
-  md_check_inputs(welfare = welfare, weight = weight)
-
-  # Clean data if necessary
-  res <- md_clean_inputs(welfare = welfare, weight = weight)
-  welfare <- res$welfare; weight <- res$weight
 
   # Calculate Gini
   weighted_welfare <- welfare * weight
