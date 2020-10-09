@@ -15,6 +15,8 @@
 #'
 #' *nna:*  Number of NA in variable
 #' *nng:*  Number of negative values
+#' *ina:*  Index of obs with NA in variable
+#' *ing:*  Index of obs with negative values
 #' @export
 #' @import data.table
 #'
@@ -94,7 +96,6 @@ md_clean_data <- function(dt, ...) {
 
   }
 
-
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #--------- CHECKs by variable   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -106,36 +107,30 @@ md_clean_data <- function(dt, ...) {
 
     # Check for missing values
     nna <- dt[is.na(get(welf)) , .N]
+
     if (nna > 0) {
+      ina <- dt[, which(is.na(get(welf)))]
 
-      msg     <- paste("NA values in", welf, "will be dropped")
-      hint    <- paste("you have", nna, "NA values in", welf)
-      rlang::inform(c(
-                    msg,
-                    i = hint
-                    )
-                    )
-
-      dt <- dt[!is.na(get(welf))]
+      dt  <- dt[!is.na(get(welf))] # remove values
 
       ll[[paste0("nna_", welf)]] <- nna
+      ll[[paste0("ina_", welf)]] <- ina
+
+      nna_msg(nna, welf)
     }
 
     # Check for negative values
     nng <- dt[get(welf) < 0 , .N]
     if (nng > 0) {
 
-      msg     <- paste("Negative values in", welf, "will be dropped")
-      hint    <- paste("you have", nng, "negative values in", welf)
-      rlang::inform(c(
-        msg,
-        i = hint
-      )
-      )
+      ing <- dt[, which(get(welf) < 0)]
 
       dt <- dt[get(welf) >= 0]
 
       ll[[paste0("nng_", welf)]] <- nng
+      ll[[paste0("ing_", welf)]] <- ing
+
+      nng_msg(nng, welf)
     }
 
   } # End of welfare check
@@ -147,37 +142,30 @@ md_clean_data <- function(dt, ...) {
 
     # Check for missing values
     nna <- dt[is.na(get(wht)) , .N]
+
     if (nna > 0) {
 
-      msg     <- paste("NA values in", wht, "will be dropped")
-      hint    <- paste("you have", nna, "NA values in", wht)
-      rlang::inform(c(
-        msg,
-        i = hint
-      )
-      )
-
+      ina <- dt[, which(is.na(get(wht)))]
       dt <- dt[!is.na(get(wht))]
 
       ll[[paste0("nna_", wht)]] <- nna
+      ll[[paste0("ina_", wht)]] <- ina
 
+      nna_msg(nna, wht)
     }
 
     # Check for negative values
     nng <- dt[get(wht) <= 0 , .N]
+
     if (nng > 0) {
-
-      msg     <- paste("Zero or negative values in", wht, "will be dropped")
-      hint    <- paste("you have", nng, "values that are either zero or negative in", wht)
-      rlang::inform(c(
-        msg,
-        i = hint
-      )
-      )
-
+      ing <- dt[, which(get(wht) <= 0)]
       dt <- dt[get(wht) > 0]
 
       ll[[paste0("nng_", wht)]] <- nng
+      ll[[paste0("ing_", wht)]] <- ing
+
+      nng_msg(nng, wht)
+
     }
   } # end of weight check
 
@@ -185,3 +173,19 @@ md_clean_data <- function(dt, ...) {
   return(ll)
 }
 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#---------   Messages   ---------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+nng_msg <- function(nng, x) {
+  msg     <- paste0(nng, " zero or negative values in variable `", x, "` were dropped")
+  rlang::inform(c(i = msg))
+  invisible()
+}
+
+nna_msg <- function(nna, x) {
+  msg     <- paste0(nna, " NA values in variable `", x, "` were dropped")
+  rlang::inform(c(i = msg))
+  invisible()
+}
