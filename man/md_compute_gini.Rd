@@ -4,12 +4,14 @@
 \alias{md_compute_gini}
 \title{Gini coefficient}
 \usage{
-md_compute_gini(welfare, weight = NULL)
+md_compute_gini(welfare, weight = NULL, type = "microdata")
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
 \item{weight}{numeric: A vector of weights, optional.}
+
+\item{type}{character: either 'microdat' or 'groupdata'. Defatult 'microdata'}
 }
 \value{
 numeric

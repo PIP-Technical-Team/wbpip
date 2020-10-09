@@ -4,10 +4,12 @@
 \alias{md_clean_data}
 \title{Check microdata to be used in PIP methods}
 \usage{
-md_clean_data(dt, ...)
+md_clean_data(dt, type = "microdata", ...)
 }
 \arguments{
 \item{dt}{Data frame.}
+
+\item{type}{character: either 'microdat' or 'groupdata'. Defatult 'microdata'}
 
 \item{...}{list of arguments that correspond to specific variable names.
 Arguments available are in \code{getOption("wbpip.agrs_to_check")}.

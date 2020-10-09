@@ -12,7 +12,7 @@ NULL
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights, optional.
-#'
+#' @inheritParams md_clean_data
 #' @return numeric
 #'
 #' @examples
@@ -33,6 +33,11 @@ md_compute_gini <- function(welfare,
 
   # Set all weights to 1 if none are supplied
   if (is.null(weight)) weight <- rep(1, length(welfare))
+
+  # Make sure data is sorted
+  ordy    <- order(welfare)   # order of welfare
+  welfare <- welfare[ordy]    #order weight
+  weight  <- weight[ordy]     # order welfare
 
   # Calculate Gini
   weighted_welfare <- welfare * weight

@@ -25,5 +25,5 @@ Imports:
     dplyr,
     rlang,
     data.table,
+    tibble
 VignetteBuilder: knitr
-
