@@ -13,12 +13,12 @@
 #' @export
 #'
 #' @examples
-infer_poverty_line <- function(welfare,
-                               weight,
-                               popshare = .5,
-                               sum_weights = NULL,
-                               alternative = FALSE,
-                               na.rm = FALSE) {
+md_infer_poverty_line <- function(welfare,
+                                  weight = NULL,
+                                  popshare = .5,
+                                  sum_weights = NULL,
+                                  alternative = FALSE,
+                                  na.rm = FALSE) {
 
   # make sure data is sorted properly
   o       <- order(welfare)
@@ -32,7 +32,7 @@ infer_poverty_line <- function(welfare,
 
   } else {
 
-    weight <- weight * (sum_weights/sum(weight,na.rm = na.rm))
+    weight <- weight * (sum_weights/sum(weight, na.rm = na.rm))
 
   }
 
@@ -47,9 +47,9 @@ infer_poverty_line <- function(welfare,
     wi <- weight[i]
     yi <- welfare[i]
 
-    if (sum(headcount, wi, , na.rm = na.rm) < wtile) {
+    if (sum(headcount, wi, na.rm = na.rm) < wtile) {
 
-      headcount <- sum(headcount, wi, , na.rm = na.rm)
+      headcount <- sum(headcount, wi, na.rm = na.rm)
       lastY     <- yi
 
     } else {
