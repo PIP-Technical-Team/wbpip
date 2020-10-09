@@ -138,27 +138,6 @@ md_clean_data <- function(dt, ...) {
       ll[[paste0("nng_", welf)]] <- nng
     }
 
-    # Check for super outliers (unweigthed)
-    sdmn <- dt[, .(sd   = sd(get(welf), na.rm = TRUE),
-                   mean = mean(get(welf), na.rm = TRUE))
-               ]
-
-    # outliers
-    ol <- dt[get(welf) > 4*sdmn[, sd] + sdmn[, mean], .N]
-
-    # Super outliers
-    sol <- dt[get(welf) > 8*sdmn[, sd] + sdmn[, mean], .N]
-
-    if (ol > 0) {
-      rlang::inform(paste0("you have ", ol, " outliers in `", welf,
-                          "` that are greater than 4 times the SD of the mean"))
-    }
-
-    if (sol > 0) {
-      rlang::inform(paste0("you have ", sol, " outliers in `", welf,
-                          "` that are greater than 8 times the SD of the mean"))
-    }
-
   } # End of welfare check
 
   #--------- WEIGHT ---------
