@@ -13,6 +13,11 @@
 #' @export
 #'
 #' @examples
+#' df <- md_ABC_2000_income
+#' # median
+#' md_infer_poverty_line(df$welfare, df$weight)
+#' md_infer_poverty_line(df$welfare, df$weight, popshare = .2)
+#' md_infer_poverty_line(df$welfare, df$weight, popshare = .6)
 md_infer_poverty_line <- function(welfare,
                                   weight = NULL,
                                   popshare = .5,
@@ -42,7 +47,6 @@ md_infer_poverty_line <- function(welfare,
   }
 
   headcount <- 0
-  # pr.h    <- popshare # headcount defined as popshare
   wtile     <- popshare * sum_weights # Number of people below PL in survey sample
   lastY     <- 0
   pl        <- NA
