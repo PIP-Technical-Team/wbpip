@@ -65,6 +65,11 @@ md_compute_bins <- function(welfare,
      }
      ]
 
+  #--------- labels ---------
+  attr(dt$cum_pop,      "label")  <- "cumulative population"
+  attr(dt$cum_prop_pop, "label")  <- "cumulative proportion of population"
+  attr(dt$bins,          "label") <- "Quantiles"
+
   if ("simple" %in% output) {
 
     return(dt[, "bins"])
