@@ -84,8 +84,10 @@ derive_lq <- function(x, A, B, C) {
 #'
 #' @return list
 #'
-#' #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
+#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 #' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
+#' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
+#' Computational Tools For Poverty Measurement And Analysis}
 #'
 check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
@@ -101,14 +103,14 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
                 is_valid = is_valid))
   }
 
+  # Failure conditions for checking theoretically valid Lorenz curve
+  # Found in section 4 of Datt computational tools paper
   cn1 <- n^2
-  cn2 <- 4 * m * e^2 # formula does not match with paper
   cn3 <- cn1 / (4 * e^2)
 
-  # Failure conditions for checking theoretically valid Lorenz curve
-  if (!((m < 0) ||
-        ((m > 0) && (m < cn3) && (n >= 0)) ||
-        ((m > 0) && (m < -n/2) && (m < cn3)))) {
+  if (!((m < 0) |
+        ((m > 0) & (m < cn3) & (n >= 0)) |
+        ((m > 0) & (m < -n/2) & (m < cn3)))) {
     return(list(is_normal = is_normal,
                 is_valid = is_valid))
   }
@@ -118,5 +120,59 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
   return(list(is_normal = is_normal,
               is_valid = is_valid))
+
+}
+
+#' Compute gini index from Lorenz Quadratic fit
+#'
+#' `gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
+#'
+#' @param A numeric: First regression coefficient
+#' @param B numeric: Second regression coefficient
+#' @param C numeric: Third regression coefficient
+#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
+#' (1, 1)
+#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+#' an ellipse (m is called alpha in paper)
+#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
+#'
+#' @return numeric
+#'
+#' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
+#' Computational Tools For Poverty Measurement And Analysis}
+gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+
+  # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
+  # P.isValid <- (A + C) >= 0.9
+  # P.isNormal <- TRUE
+
+  e1 <- abs(A + C - 1)
+  e2 <- 1 + (B / 2) + e
+
+  tmp1 <- n * (B + 2) / (4 * m)
+  tmp2 <- (r^2) / (8 * m)
+  tmp3 <- (2 * m) + n
+
+  if (m > 0) {
+    # tmpnum <- tmp3 + 2 * sqrt(m) * abs(e)
+    # tmpden <- n - 2 * abs(e) * sqrt(m)
+
+    # Formula from Datt paper
+    # CHECK that code matches formulas in paper
+    gini <- e2 + (tmp3/(4 * m)) * e1 - (n*abs(e) / (4 * m)) - ((r^2) / (8 * sqrt(m))) * log(abs(((tmp3 + (2 * sqrt(m) * e1)))/(n + (2 * sqrt(m) * abs(e)))))
+    #P.gi <- (e/2) - tmp1 - (tmp2 * log(abs(tmpnum/tmpden)) / sqrt(m))
+
+  } else {
+    tmp4 <- ((2*m) + n) / r
+    tmp4 <- ifelse(tmp4 < -1, -1, tmp4)
+    tmp4 <- ifelse(tmp4 > 1, 1, tmp4)
+
+    # Formula does not match with paper
+    gini <- e2 + (tmp3/(4*m)) * e1 - (n*abs(e)/(4*m)) + (tmp2 * (asin(tmp4) - asin(n/r)) / sqrt(-m))
+    # P.gi <- (e/2) - tmp1 + ((tmp2 * (asin(tmp4) - asin(n/r))) / sqrt(-m))
+  }
+
+  return(gini)
 
 }
