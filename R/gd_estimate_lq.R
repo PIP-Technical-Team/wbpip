@@ -201,3 +201,43 @@ value_at_lq <- function(x, A, B, C) {
 
   return(estle)
 }
+
+#' Computes MLD from Lorenz Quadratic fit
+#'
+#' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
+#' Quadratic fit
+#'
+#' @param dd numeric
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#'
+gd_compute_mld_lq <- function(dd, A, B, C) {
+  x1 <- derive_lq(0.0005, A, B, C)
+  gap <- 0
+  mld <- 0
+  if (x1 == 0) {
+    gap <- 0.0005
+  }
+  else {
+    mld <- log(x1) * 0.001
+  }
+  x1 <- derive_lq(0, A, B, C)
+  for(xstep in seq(0, 0.998, 0.001)) {
+    x2 <- derive_lq(xstep + 0.001, A, B, C)
+    if ((x1 <= 0) || (x2 <= 0)) {
+      gap <- gap + 0.001
+      if (gap > 0.5) {
+        return(-1)
+      }
+    }
+    else {
+      gap <- 0
+      mld <- mld + (log(x1) + log(x2)) * 0.0005
+    }
+    x1 <- x2
+  }
+  return(-mld)
+}
