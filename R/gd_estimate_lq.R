@@ -67,3 +67,56 @@ derive_lq <- function(x, A, B, C) {
 
   return(val)
 }
+
+#' Check validity of Lorenz Quadratic fit
+#'
+#' `check_curve_validity_lq()` checks the validity of the Lorenz Quadratic fit
+#'
+#' @param A numeric: First regression coefficient
+#' @param B numeric: Second regression coefficient
+#' @param C numeric: Third regression coefficient
+#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
+#' (1, 1)
+#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+#' an ellipse (m is called alpha in paper)
+#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
+#'
+#' @return list
+#'
+#' #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
+#' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
+#'
+check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
+
+  is_normal <- FALSE
+  is_valid <- FALSE
+
+  # r needs to be > 0 because need to extract sq root
+  if (r < 0) {return(list(is_normal = is_normal,
+                          is_valid = is_valid))}
+
+  if (e > 0 || C < 0) {
+    return(list(is_normal = is_normal,
+                is_valid = is_valid))
+  }
+
+  cn1 <- n^2
+  cn2 <- 4 * m * e^2 # formula does not match with paper
+  cn3 <- cn1 / (4 * e^2)
+
+  # Failure conditions for checking theoretically valid Lorenz curve
+  if (!((m < 0) ||
+        ((m > 0) && (m < cn3) && (n >= 0)) ||
+        ((m > 0) && (m < -n/2) && (m < cn3)))) {
+    return(list(is_normal = is_normal,
+                is_valid = is_valid))
+  }
+
+  is_normal <- TRUE
+  is_valid <- (A + C) >= 0.9
+
+  return(list(is_normal = is_normal,
+              is_valid = is_valid))
+
+}
