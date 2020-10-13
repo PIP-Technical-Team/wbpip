@@ -241,3 +241,30 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
   }
   return(-mld)
 }
+
+#' Compute quantiles from Lorenz Quandratic fit
+#'
+#' `gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
+#'
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#'
+gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+  vec <- vector(mode = "numeric", length = n_quantile)
+  x1 <- 1 / n_quantile
+  q <- 0
+  lastq <- 0
+  for (i in seq_len(n_quantile - 1)) {
+    q <- value_at_lq(x1, A, B, C)
+    v <- q - lastq
+    vec[i] <- v
+    lastq <- q
+    x1 <- x1 + 1 / n_quantile
+  }
+  vec[n_quantile] <- 1 - lastq
+
+  return(vec)
+}
