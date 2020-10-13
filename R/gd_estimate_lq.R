@@ -43,3 +43,27 @@ create_functional_form_lq <- function(lorenz_pop,
 }
 
 
+#' Returns the first derivative of the quadratic Lorenz
+#'
+#' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
+#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#'
+#' @param x numeric: point on curve
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#'
+derive_lq <- function(x, A, B, C) {
+  e <- -(A + B + C + 1)
+  m <- (B^2) - (4 * A)
+  n <- (2 * B * e) - (4 * C)
+  tmp <- (m * x^2) + (n * x) + (e^2)
+  tmp <- ifelse(tmp < 0, 0, tmp)
+
+  # Formula for first derivative of GQ Lorenz Curve
+  val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+
+  return(val)
+}
