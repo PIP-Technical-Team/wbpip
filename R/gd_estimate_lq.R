@@ -268,3 +268,74 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 
   return(vec)
 }
+
+#'  Computes Watts Index from Quadratic Lorenz fit
+#'
+#' `gd_compute_watts_lq()` computes Watts Index from Quadratic Lorenz fit
+#' The first distribution-sensitive poverty measure was proposed in 1968 by Watts
+#' It is defined as the mean across the population of the proportionate poverty
+#' gaps, as measured by the log of the ratio of the poverty line to income,
+#' where the mean is formed over the whole population, counting the nonpoor as
+#' having a zero poverty gap.
+#'
+#' @param headcount numeric: headcount index
+#' @param mu numeric
+#' @param povline numeric: poverty line
+#' @param dd numeric
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' watt_index_lq(headcount, dd, A, B, C)
+#'
+gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
+  if (headcount <= 0) {
+    return(0)
+  }
+
+  # x1 = x2 = xstep = xend = gap <- 0
+  x1 <- 0
+  x2 <- 0
+  xstep <- 0
+  xend <- 0
+  gap <- 0
+  snw <- headcount * dd
+  watts <- 0
+
+  x1 <- derive_lq(snw / 2, A, B, C)
+  if (x1 <= 0) {
+    gap <- snw / 2
+  } else {
+    watts <- log(x1) * snw
+  }
+  xend <- headcount - snw
+  x1 <- derive_lq(0, A, B, C)
+  # Number of steps seems to be different from what happens in .Net codebase
+  for (xstep in seq(0, xend, by = snw)) {
+    x2 <- derive_lq(xstep + snw, A, B, C)
+    if ((x1 <= 0) || (x2 <= 0)) {
+      gap <- gap + snw
+      if (gap > 0.05) {
+        return(NA)
+      }
+    } else {
+      gap <- 0
+      watts <- watts + (log(x1) + log(x2)) * snw * 0.5
+    }
+    x1 <- x2
+  }
+  if ((mu != 0) && (watts != 0)) {
+    x1 <- povline / mu
+    if (x1 > 0) {
+      watts <- log(x1) * headcount - watts
+      if (watts > 0) {
+        return(watts)
+      }
+    }
+    return(NA)
+  }
+}
