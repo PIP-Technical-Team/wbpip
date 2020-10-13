@@ -7,8 +7,9 @@
 #' actually divides the population in equal bins sorted by the welfare aggregate
 #' rather than calculate proper percentiles. This function however,  yields less
 #' unequally sized categories when [1] the cutpoint value is frequent, [2] when
-#' using weights or [3] when the number of observations in the dataset is not a
-#' product of the number of quantiles. Keep in mind that it may not work properly
+#' using weights high variance or [3] when the number of observations in the
+#' dataset is not a product of the number of quantiles.
+#' Keep in mind that it may not work properly
 #' on small datasets or if calculated for small groups. If the number of
 #' observations in the dataset or group is small, tabulate afterwards to
 #' check the results. you may use
