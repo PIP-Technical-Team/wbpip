@@ -2,16 +2,14 @@
 % Please edit documentation in R/md_infer_poverty_line.R
 \name{md_infer_poverty_line}
 \alias{md_infer_poverty_line}
-\title{calculate percentiles corresponding to the specified  Shared of population
-(percentages)}
+\title{md_infer_poverty_line}
 \usage{
 md_infer_poverty_line(
   welfare,
-  weight = NULL,
+  weight,
   popshare = 0.5,
-  sum_weights = NULL,
-  alternative = FALSE,
-  na.rm = FALSE
+  na.rm = FALSE,
+  include = FALSE
 )
 }
 \arguments{
@@ -22,12 +20,12 @@ md_infer_poverty_line(
 \item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median)}
 
-\item{sum_weights}{numeric: Total population. Default is \code{sum(weight)}. If
-provided \code{weight} will be adjusted accordingly,
-\code{weight <- weight * (sum_weights/sum(weight))}}
+\item{na.rm}{logical: Set to TRUE to remove missing from computations}
+
+\item{include}{logical:}
 }
 \value{
-welfare value (quantile) that corresponds
+numeric
 }
 \description{
 calculate percentiles corresponding to the specified  Shared of population
@@ -39,4 +37,5 @@ df <- md_ABC_2000_income
 md_infer_poverty_line(df$welfare, df$weight)
 md_infer_poverty_line(df$welfare, df$weight, popshare = .2)
 md_infer_poverty_line(df$welfare, df$weight, popshare = .6)
+
 }

@@ -1,3 +1,5 @@
+#' md_infer_poverty_line
+#'
 #' calculate percentiles corresponding to the specified  Shared of population
 #' (percentages)
 #'
@@ -5,11 +7,10 @@
 #' @param weight numeric: A vector of weights, optional.
 #' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median)
-#' @param sum_weights numeric: Total population. Default is `sum(weight)`. If
-#' provided `weight` will be adjusted accordingly,
-#' `weight <- weight * (sum_weights/sum(weight))`
+#' @param na.rm logical: Set to TRUE to remove missing from computations
+#' @param include logical:
 #'
-#' @return welfare value (quantile) that corresponds
+#' @return numeric
 #' @export
 #'
 #' @examples
@@ -18,12 +19,12 @@
 #' md_infer_poverty_line(df$welfare, df$weight)
 #' md_infer_poverty_line(df$welfare, df$weight, popshare = .2)
 #' md_infer_poverty_line(df$welfare, df$weight, popshare = .6)
+#'
 md_infer_poverty_line <- function(welfare,
                                   weight = NULL,
                                   popshare = .5,
-                                  sum_weights = NULL,
-                                  alternative = FALSE,
-                                  na.rm = FALSE) {
+                                  na.rm = FALSE,
+                                  include = FALSE) {
 
   # if weight is not provided
   if (is.null(weight)) {
@@ -31,44 +32,21 @@ md_infer_poverty_line <- function(welfare,
   }
 
   # make sure data is sorted properly
-  o       <- order(welfare)
-  weight  <- weight[o]
+  o <- order(welfare)
+  weight <- weight[o]
   welfare <- welfare[o]
 
-  # Treatment of Total population
-  if (is.null(sum_weights)) {
+  prob   <- cumsum(weight)/sum(weight, na.rm = na.rm)
+  ps     <- which(abs(prob - popshare) == min(abs(prob - popshare), na.rm = na.rm))
 
-    sum_weights <- sum(weight, na.rm = na.rm)
+  # Weighted mean with the next available value in order to
+  # guarantee inclusion in poverty calculation
 
+  if (include == TRUE) {
+    pctile <- weighted.mean(c(welfare[ps], welfare[ps + 1]), c(weight[ps], weight[ps + 1]))
   } else {
-
-    weight <- weight * (sum_weights/sum(weight, na.rm = na.rm))
-
+    pctile <- mean(welfare[ps])
   }
 
-  headcount <- 0
-  wtile     <- popshare * sum_weights # Number of people below PL in survey sample
-  lastY     <- 0
-  pl        <- NA
-
-  for (i in seq_along(welfare)) {
-
-    wi <- weight[i]
-    yi <- welfare[i]
-
-    if (sum(headcount, wi, na.rm = na.rm) < wtile) {
-
-      headcount <- sum(headcount, wi, na.rm = na.rm)
-      lastY     <- yi
-
-    } else {
-
-      pl <- lastY + (yi - lastY) * (wtile - headcount) / wi # infer poverty line from h
-      break
-
-    }
-  }
-
-  return(pl)
-
+  return(pctile)
 }

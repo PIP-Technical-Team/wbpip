@@ -42,7 +42,6 @@ test_that("2 digits of tolerance", {
   res <- lapply(shares, function(x){
 
     i1 <- md_infer_poverty_line(df$welfare, df$weight, popshare = x)
-    # i1 <- infer2(df$welfare, df$weight, p = x)
     s1 <- fgt(df$welfar, i1, equal = TRUE)
     hc <- weighted.mean(s1, df$weight, na.rm = TRUE)
     hc <- round(hc, digits = tl)
