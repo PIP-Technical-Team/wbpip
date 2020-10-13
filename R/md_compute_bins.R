@@ -23,11 +23,22 @@
 #'
 #' @examples
 #' data("md_ABC_2010_income")
-#' df <- md_compute_bins(md_ABC_2010_income$welfare, md_ABC_2000_income$weight)
+#' df <- md_ABC_2000_income
+#' md_compute_bins(df$welfare,
+#'                 df$weight)[]
+#'
+#' md_compute_bins(df$welfare,
+#'                 df$weight,
+#'                 output = "full")[]
+#'
+#' md_compute_bins(df$welfare,
+#'                 df$weight,
+#'                 output = c("cum_pop", "cum_prop_pop"))[]
 md_compute_bins <- function(welfare,
                             weight = NULL,
                             nbins  = 100,
-                            na.rm  = FALSE) {
+                            na.rm  = FALSE,
+                            output = "simple") {
 
   # Set all weights to 1 if none are supplied
   if (is.null(weight)) {
@@ -54,5 +65,17 @@ md_compute_bins <- function(welfare,
      }
      ]
 
-  return(dt)
+  if ("simple" %in% output) {
+
+    return(dt[, "bins"])
+
+  } else if ("full" %in% output) {
+
+    return(dt)
+
+  } else {
+
+    return(dt[, ..output])
+
+  }
 }
