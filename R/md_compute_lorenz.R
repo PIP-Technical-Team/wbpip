@@ -22,8 +22,9 @@ md_compute_lorenz <- function(welfare, weight = NULL) {
   # Check that inputs are valid
   md_check_inputs(welfare = welfare, weight = weight)
   # Clean data if necessary
-  res <- md_clean_inputs(welfare = welfare, weight = weight)
-  welfare <- res$welfare; weight <- res$weight
+  res     <- md_clean_inputs(welfare = welfare, weight = weight)
+  welfare <- res$welfare
+  weight  <- res$weight
 
   nobs <- length(weight)
   # METHODOLOGY QUESTION: Should this stay the same? Should this be moved as a
@@ -46,7 +47,7 @@ md_compute_lorenz <- function(welfare, weight = NULL) {
 
 
   for (i in seq_len(nobs)) {
-    cum_weight <- cum_weight + weight[i] # Cumulative weight
+    cum_weight  <- cum_weight + weight[i] # Cumulative weight
     cum_welfare <- cum_welfare + weighted_welfare[i] # Cumulative income
 
     while ((cum_weight >= next_level) & (j <= n_lorenz)) {
