@@ -4,7 +4,13 @@
 \alias{md_compute_bins}
 \title{md_compute_bins}
 \usage{
-md_compute_bins(welfare, weight = NULL, nbins = 100, na.rm = FALSE)
+md_compute_bins(
+  welfare,
+  weight = NULL,
+  nbins = 100,
+  na.rm = FALSE,
+  output = "simple"
+)
 }
 \arguments{
 \item{welfare}{numeric: vector of welfare measures}
@@ -22,8 +28,9 @@ This is way we call the function \code{bins} rather than quantiles because it
 actually divides the population in equal bins sorted by the welfare aggregate
 rather than calculate proper percentiles. This function however,  yields less
 unequally sized categories when \link{1} the cutpoint value is frequent, \link{2} when
-using weights or \link{3} when the number of observations in the dataset is not a
-product of the number of quantiles. Keep in mind that it may not work properly
+using weights high variance or \link{3} when the number of observations in the
+dataset is not a product of the number of quantiles.
+Keep in mind that it may not work properly
 on small datasets or if calculated for small groups. If the number of
 observations in the dataset or group is small, tabulate afterwards to
 check the results. you may use
@@ -31,5 +38,15 @@ check the results. you may use
 }
 \examples{
 data("md_ABC_2010_income")
-df <- md_compute_bins(md_ABC_2010_income$welfare, md_ABC_2000_income$weight)
+df <- md_ABC_2000_income
+md_compute_bins(df$welfare,
+                df$weight)[]
+
+md_compute_bins(df$welfare,
+                df$weight,
+                output = "full")[]
+
+md_compute_bins(df$welfare,
+                df$weight,
+                output = c("cum_pop", "cum_prop_pop"))[]
 }
