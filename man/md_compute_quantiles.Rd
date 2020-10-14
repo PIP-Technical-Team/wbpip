@@ -7,18 +7,18 @@
 md_compute_quantiles(lwelfare, lweight, percentile, n_quantile = 10)
 }
 \arguments{
-\item{lwelfare}{numeric: cumulative share of welfare}
+\item{lwelfare}{numeric: cumulative share of welfare.}
 
-\item{lweight}{numeric: cumulative share of population}
+\item{lweight}{numeric: cumulative share of population.}
 
-\item{percentile}{numeric: Monetary value each percentile}
+\item{percentile}{numeric: Monetary value each percentile.}
 
 \item{n_quantile}{numeric: Number of quantiles for which share of total income
 is desired. It can't be larger that the total number of percentiles in the
 Lorenz curve provided by the user.  default is 10.}
 }
 \value{
-
+list
 }
 \description{
 Calculate share of total welfare in each quantile from Lorenz curve and

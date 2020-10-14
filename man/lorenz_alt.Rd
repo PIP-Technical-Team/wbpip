@@ -10,6 +10,10 @@ lorenz_alt(welfare, weight = NULL, nbins = NULL, na.rm = FALSE)
 \item{welfare}{numeric: vector of welfare measures}
 
 \item{weight}{numeric: vector of weights}
+
+\item{nbins}{numeric: number of points on the Lorenz curve}
+
+\item{na.rm}{logical: Set to TRUE to remove missing}
 }
 \value{
 data.frame

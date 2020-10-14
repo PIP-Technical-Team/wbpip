@@ -3,6 +3,7 @@
 #' Lorenz curve
 #' @param welfare numeric: vector of welfare measures
 #' @param weight numeric: vector of weights
+#' @param nbins numeric: number of points on the Lorenz curve
 #'
 #' @return data.frame
 #'

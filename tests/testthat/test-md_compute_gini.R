@@ -44,10 +44,20 @@ test_that('md_compute_gini() computations are correct', {
   #   md_compute_gini(welfare = c(rep(0, 99999999), 100)),
   #   1
   # )
-  # Fail due to sample size: Add sample size correction?
+  # The theoritical value for perfect inequality is 1
+  # But the md_compute_gini() is asymptotic and tends to 1 as the sample size
+  # grows
   expect_equal(
     md_compute_gini(welfare = c(rep(0, 99), 100)),
-    1
+    0.99
+  )
+  expect_equal(
+    md_compute_gini(welfare = c(rep(0, 999), 1000)),
+    0.999
+  )
+  expect_equal(
+    md_compute_gini(welfare = c(rep(0, 9999), 10000)),
+    0.9999
   )
 
   # Test against pre-computed correct values

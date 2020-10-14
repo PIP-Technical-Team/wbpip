@@ -23,13 +23,6 @@
       "Repository": "CRAN",
       "Hash": "292b54f8f4b94669b08f94e5acce6be2"
     },
-    "Rcpp": {
-      "Package": "Rcpp",
-      "Version": "1.0.5",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "125dc7a0ed375eb68c0ce533b48d291f"
-    },
     "assertthat": {
       "Package": "assertthat",
       "Version": "0.2.1",
@@ -71,6 +64,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "08cf4045c149a0f0eaf405324c7495bd"
+    },
+    "cpp11": {
+      "Package": "cpp11",
+      "Version": "0.2.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f28776fbc53c699a788792a89c4465a6"
     },
     "crayon": {
       "Package": "crayon",
@@ -270,10 +270,10 @@
     },
     "readr": {
       "Package": "readr",
-      "Version": "1.3.1",
+      "Version": "1.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "af8ab99cd936773a148963905736907b"
+      "Hash": "2639976851f71f330264a9c9c3d43a61"
     },
     "renv": {
       "Package": "renv",
@@ -375,10 +375,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.18",
+      "Version": "0.17",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "d1c0b777b432e4b4c039c8aaecc54e0f"
+      "Hash": "5016afba2a931ac92bbb3c6feb03d2c8"
     },
     "yaml": {
       "Package": "yaml",

@@ -20,20 +20,20 @@ get_bins(
 
 \item{weight}{numeric: vector of weights}
 
-\item{type}{character: either 'microdata' or 'groupdata'. Defatult 'microdata'}
+\item{type}{character: either 'microdata' or 'groupdata'. Default 'microdata'}
 
 \item{nbins}{numeric: number of bins}
 
-\item{output}{character: It as two variaties. \link{1} it could be a vector of
+\item{output}{character: It has two varieties. 1) it could be a vector of
 variables to retain after calculations (variables available are "welfare",
-"weight", "cum_pop", "cum_prop_pop", and "bins"). \link{2} It could be a one of two
+"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of two
 key words, "simple" or "full". \code{output = "simple"} is equivalent to
 \code{output = "bins"} (which is the default). \code{output = "full"} if equivalent to
 a vector with all the variables available,
 \code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
 }
 \value{
-
+data.frame
 }
 \description{
 Use function \code{md_compute_bins()} to calculate quantiles. In addition, this

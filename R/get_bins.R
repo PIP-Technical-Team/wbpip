@@ -5,9 +5,9 @@
 #'
 #' @param .data Household survey dataframe with at least a welfare variable
 #' @inheritParams md_compute_bins
-#' @param type character: either 'microdata' or 'groupdata'. Defatult 'microdata'
+#' @param type character: either 'microdata' or 'groupdata'. Default 'microdata'
 #'
-#' @return
+#' @return data.frame
 #' @export
 #' @import data.table
 #'

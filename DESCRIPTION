@@ -26,5 +26,6 @@ Imports:
     dplyr,
     rlang,
     data.table,
-    tibble
+    tibble,
+    assertthat
 VignetteBuilder: knitr

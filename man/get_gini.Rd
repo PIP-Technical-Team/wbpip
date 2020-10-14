@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_gini.R
 \name{get_gini}
 \alias{get_gini}
-\title{Title}
+\title{Gini coefficient}
 \usage{
 get_gini(.data, welfare, weight, type = "microdata")
 }
@@ -16,8 +16,8 @@ get_gini(.data, welfare, weight, type = "microdata")
 \item{type}{character: either 'microdata' or 'groupdata'. Defatult 'microdata'}
 }
 \value{
-
+data.frame
 }
 \description{
-Title
+Compute the Gini coefficient from microdata
 }

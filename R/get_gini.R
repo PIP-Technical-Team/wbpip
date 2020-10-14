@@ -1,15 +1,15 @@
-
-#' Title
+#' Gini coefficient
+#'
+#' Compute the Gini coefficient from microdata
 #'
 #' @param .data Household survey dataframe with at least a welfare variable
 #' @inheritParams md_compute_gini
 #' @param type character: either 'microdata' or 'groupdata'. Defatult 'microdata'
 #'
-#' @return
+#' @return data.frame
 #' @export
 #' @import data.table
 #'
-#' @examples
 get_gini <-  function(.data, welfare, weight, type = "microdata") {
 
   if (inherits(.data, "grouped_df")) {

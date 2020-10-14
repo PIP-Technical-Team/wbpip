@@ -6,7 +6,7 @@
 \usage{
 md_infer_poverty_line(
   welfare,
-  weight,
+  weight = NULL,
   popshare = 0.5,
   na.rm = FALSE,
   include = FALSE

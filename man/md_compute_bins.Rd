@@ -21,9 +21,9 @@ md_compute_bins(
 
 \item{na.rm}{logical: If TRUE it will exclude all NA in calculations}
 
-\item{output}{character: It as two variaties. \link{1} it could be a vector of
+\item{output}{character: It has two varieties. 1) it could be a vector of
 variables to retain after calculations (variables available are "welfare",
-"weight", "cum_pop", "cum_prop_pop", and "bins"). \link{2} It could be a one of two
+"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of two
 key words, "simple" or "full". \code{output = "simple"} is equivalent to
 \code{output = "bins"} (which is the default). \code{output = "full"} if equivalent to
 a vector with all the variables available,
@@ -39,8 +39,8 @@ are defined by the ideal size of the quantile rather than by the cutpoints.
 This is way we call the function \code{bins} rather than quantiles because it
 actually divides the population in equal bins sorted by the welfare aggregate
 rather than calculate proper percentiles. This function however,  yields less
-unequally sized categories when \link{1} the cutpoint value is frequent, \link{2} when
-using weights high variance or \link{3} when the number of observations in the
+unequally sized categories when 1) the cutpoint value is frequent, 2) when
+using weights high variance or 3) when the number of observations in the
 dataset is not a product of the number of quantiles.
 Keep in mind that it may not work properly
 on small datasets or if calculated for small groups. If the number of

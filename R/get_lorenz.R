@@ -7,7 +7,7 @@
 #' @inheritParams md_compute_lorenz
 #' @param type character: either 'microdata' or 'groupdata'. Defatult 'microdata'
 #'
-#' @return
+#' @return data.frame
 #' @export
 #' @import data.table
 #'
@@ -17,10 +17,10 @@
 #' lorenz <- get_lorenz(df, welfare, weight)
 #' str(lorenz)
 get_lorenz <-  function(.data,
-                      welfare,
-                      weight,
-                      type   = "microdata",
-                      nbins  = NULL) {
+                        welfare,
+                        weight,
+                        type   = "microdata",
+                        nbins  = NULL) {
 
   if (inherits(.data, "grouped_df")) {
 

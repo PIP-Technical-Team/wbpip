@@ -13,7 +13,7 @@
 #' Lorenz curve provided by the user.  default is 10.
 #' @param percentile numeric: Monetary value each percentile.
 #'
-#' @return
+#' @return list
 #' @export
 #'
 #' @examples

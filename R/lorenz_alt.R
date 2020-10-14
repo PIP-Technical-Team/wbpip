@@ -4,6 +4,8 @@
 #' Lorenz curve and selveral other related indicators.
 #' @param welfare numeric: vector of welfare measures
 #' @param weight numeric: vector of weights
+#' @param nbins numeric: number of points on the Lorenz curve
+#' @param na.rm logical: Set to TRUE to remove missing
 #'
 #' @return data.frame
 #' @export

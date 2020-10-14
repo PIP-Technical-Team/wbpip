@@ -6,8 +6,8 @@
 #' This is way we call the function `bins` rather than quantiles because it
 #' actually divides the population in equal bins sorted by the welfare aggregate
 #' rather than calculate proper percentiles. This function however,  yields less
-#' unequally sized categories when [1] the cutpoint value is frequent, [2] when
-#' using weights high variance or [3] when the number of observations in the
+#' unequally sized categories when 1) the cutpoint value is frequent, 2) when
+#' using weights high variance or 3) when the number of observations in the
 #' dataset is not a product of the number of quantiles.
 #' Keep in mind that it may not work properly
 #' on small datasets or if calculated for small groups. If the number of
@@ -19,9 +19,9 @@
 #' @param weight numeric: vector of weights
 #' @param nbins  numeric: number of bins
 #' @param na.rm  logical: If TRUE it will exclude all NA in calculations
-#' @param output character: It as two variaties. [1] it could be a vector of
+#' @param output character: It has two varieties. 1) it could be a vector of
 #' variables to retain after calculations (variables available are "welfare",
-#' "weight", "cum_pop", "cum_prop_pop", and "bins"). [2] It could be a one of two
+#' "weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of two
 #' key words, "simple" or "full". `output = "simple"` is equivalent to
 #' `output = "bins"` (which is the default). `output = "full"` if equivalent to
 #' a vector with all the variables available,
