@@ -1,4 +1,72 @@
+#' Computes poverty statistics from grouped data
+#'
+#' @param grouped_data dataframe: grouped data
+#' @param mean numeric: Welfare mean
+#' @param povline numeric: Poverty line
+#' @param ppp numeric: PPP request by user
+#' @param default_ppp numeric: Default purchasing power parity
 
+#' @param popshare numeric: Share of population living below the poverty line.
+#' Optional
+#' @param isLQ boolean: indicates whether the estimation of lorenz quadratic
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' gd_estimate_lq(grouped_data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+#
+gd_compute_pip_stats_lq <- function(grouped_data,
+                                    mean,
+                                    povline,
+                                    ppp = NULL,
+                                    default_ppp,
+                                    popshare = NULL,
+                                    isLQ = TRUE) {
+
+  n_obs <- nrow(grouped_data)
+  population <- grouped_data$population
+  welfare <- grouped_data$welfare
+
+  p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
+  if (!is.null(ppp)) { mean <- mean * default_ppp / ppp }
+
+  prepped_data <- create_functional_form_lq(population, welfare)
+  # Estimate regression coefficient using LQ parameterization
+  reg_results <- regres(prepped_data)
+  reg_coef <- reg_results$coef
+
+  # What is isLQ? Where is it defined?
+  if (isLQ)
+    A <- reg_coef[1]
+  else
+    A <- exp(reg_coef[1]) # Why exp() if isLQ == FALSE?
+  B <- reg_coef[2]
+  C <- reg_coef[3]
+
+  # return poverty line if share of population living in poverty is supplied
+  # intead of a poverty line
+  if (!is.null(popshare)) {
+    povline <- derive_lq(popshare, A, B, C) * mean
+  }
+
+  # Boundary conditions (Why 4?)
+  z_min <- mean * derive_lq(0.001, A, B, C) + 4
+  z_max <- mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- ifelse(z_min < 0, 0, z_min)
+
+  results1 <- list(mean, povline, z_min, z_max, ppp)
+  names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
+
+  # Estimate poverty measure based on identified parameters
+  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+
+  res <- c(results1, results2, results_fit, reg_results)
+
+  return(res)
+
+}
 
 #' Prepares data for Lorenz Quadratic regression
 #'
@@ -568,3 +636,46 @@ gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
   return(out)
 
 }
+
+#' Computes the sum of squares of error
+#' Measures the fit of the model to the data.
+#'
+#' @param welfare numeric: Welfare vector (grouped)
+#' @param population numeric: Population vector (grouped)
+#' @param headcount numeric: headcount index
+#' @param A numeric vector: Lorenz curve coefficient
+#' @param B numeric vector: Lorenz curve coefficient
+#' @param C numeric vector: Lorenz curve coefficient
+#'
+#' @return list
+#'
+gd_compute_fit_lq <- function(welfare,
+                              population,
+                              headcount,
+                              A,
+                              B,
+                              C) {
+  lasti  <- -1
+  sse  <- 0 # Sum of square error
+  ssez <- 0
+
+  for (i in seq_along(welfare[-1])) {
+    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual_sq <- residual^2
+    sse <- sse + residual_sq
+    if (population[i] < headcount)
+    {
+      ssez <- ssez  + residual_sq
+      lasti <- i
+    }
+  }
+  lasti <- lasti + 1
+  residual <- welfare[lasti] - value_at_lq(population[lasti], A, B, C)
+  ssez <- ssez + residual^2
+
+  out <- list(sse, ssez)
+  names(out) <- list("sse", "ssez")
+
+  return(out)
+}
+
