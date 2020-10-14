@@ -3,5 +3,6 @@
 export(get_gini)
 export(md_clean_data)
 export(md_compute_gini)
+export(md_compute_quantiles)
 export(md_infer_poverty_line)
 importFrom(dplyr,lag)
