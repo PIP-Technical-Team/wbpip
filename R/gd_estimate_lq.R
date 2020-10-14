@@ -137,7 +137,7 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 #' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
 #' an ellipse (m is called alpha in paper)
 #' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param r numeric: r = (n^2) - (4 * m * e^2). r is called K in paper
 #'
 #' @return numeric
 #'
@@ -365,7 +365,7 @@ gd_compute_polarization_lq <- function(mean,
   return(pol)
 }
 
-#' Title
+#' Computes distributional stats from Lorenz Quadratic fit
 #'
 #' @param mean numeric: welfare mean
 #' @param p0 numeric: To document
@@ -377,7 +377,7 @@ gd_compute_polarization_lq <- function(mean,
 #' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
 #' an ellipse (m is called alpha in paper)
 #' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
 #'
 #' @return list
 #'
@@ -402,4 +402,169 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
     mld          = mld,
     deciles      = deciles
   ))
+}
+
+#' Computes poverty stats from Lorenz Quadratic fit
+#'
+#' @param mean numeric: welfare mean
+#' @param povline numeric: Poverty line
+#' @param A numeric: First regression coefficient
+#' @param B numeric: Second regression coefficient
+#' @param C numeric: Third regression coefficient
+#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
+#' (1, 1)
+#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+#' an ellipse (m is called alpha in paper)
+#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param s1 numeric: To document
+#'
+#' @return list
+#'
+gd_compute_poverty_stats_lq <- function(mean,
+                                        povline,
+                                        A,
+                                        B,
+                                        C,
+                                        e,
+                                        m,
+                                        n,
+                                        r,
+                                        s1,
+                                        s2) {
+  # Compute headcount
+  bu <- B + (2 * povline / mean)
+  u <- mean / povline
+
+  headcount <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
+
+  tmp0 <- (m * headcount^2) + (n * headcount) + (e^2)
+  tmp0 <- ifelse(tmp0 < 0, 0, tmp0)
+  tmp0 <- sqrt(tmp0)
+
+  # First derivative of the Lorenz curve
+  dl <- -(0.5 * B) - (0.25 * ((2 * m * headcount) + n) / tmp0)
+
+  # Second derivative of the Lorenz curve
+  ddl <- r^2 / (tmp0^3 * 8)
+
+  if (headcount < 0) {
+    headcount = pov_gap = pov_gap_sq = watt <- 0
+    eh = epg = ep = gh = gpg = gp  <- 0
+  } else {
+
+    # Poverty gap index (P.pg)
+    pov_gap <- headcount - (u * value_at_lq(headcount, A, B, C))
+
+    # P.p2 - Distributionally sensitive FGT poverty measure
+    #P.p2 <- (2*P.pg) - P.h - u^2 * (A*P.h + B*value_at_lq(P.h, A, B, C) - (r/16 *log((1 - P.h/s1))/(1 - P.h/s2)))
+    # Poverty severity
+    pov_gap_sq <- (2 * pov_gap) - headcount -
+      (u^2 * (A * headcount + B * value_at_lq(headcount, A, B, C) -
+                ((r / 16) * log((1 - headcount / s1)/(1 - headcount / s2)))))
+
+    # Elasticity of headcount index w.r.t mean (P.eh)
+    eh <- -povline / (mean * headcount * ddl)
+
+    # Elasticity of poverty gap index w.r.t mean (P.epg)
+    epg <- 1 - (headcount / pov_gap)
+
+    # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean (P.ep)
+    ep <- 2 * (1 - pov_gap / pov_gap_sq)
+
+    # PElasticity of headcount index w.r.t gini index (P.gh)
+    gh <- (1 - povline / mean) / (headcount * ddl)
+
+    # Elasticity of poverty gap index w.r.t gini index (P.gpg)
+    gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
+
+    # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
+    gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
+
+    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+  }
+
+  return(
+    list(
+      headcount = headcount,
+      pg = pov_gap,
+      p2 = pov_gap_sq,
+      eh = eh,
+      epg = epg,
+      ep = ep,
+      gh = gh,
+      gpg = gpg,
+      gp = gp,
+      watt = watt,
+      dl = dl,
+      ddl = ddl
+    )
+  )
+}
+
+#' Estimates poverty and inequality stats from Quadratic Lorenz fit
+#'
+#' @param n_obs numeric: number of observations
+#' @param mean numeric: Welfare mean
+#' @param povline numeric: Poverty line
+#' @param p0 numeric: TO document
+#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[1]
+#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[2]
+#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[3]
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' estimate_lq(n_obs, mean, povline, p0, coefs)
+#'
+gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
+
+  # Compute key numbers from Lorenz quadratic form
+  # Theorem 3 from original lorenz quadratic paper
+  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
+  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
+  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
+  r <- (n^2) - (4 * m * e^2) # r is called K in paper
+
+  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+
+  r <- sqrt(r)
+  s1 <- (r - n) / (2 * m)
+  s2 <- -(r + n) / (2 * m)
+
+  # Compute distributional measures -----------------------------------------
+
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+
+
+  # Compute poverty stats ---------------------------------------------------
+
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+
+  out <- list(gini = dist_stats$gini,
+              median = dist_stats$median,
+              rmhalf = dist_stats$rmhalf,
+              pol = dist_stats$polarization,
+              ris = dist_stats$ris,
+              mld = dist_stats$mld,
+              dcm = dist_stats$dcm,
+              P.Decile = dist_stats$deciles,
+              headcount = pov_stats$headcount,
+              pg = pov_stats$pg,
+              p2 = pov_stats$p2,
+              eh = pov_stats$eh,
+              epg = pov_stats$epg,
+              ep = pov_stats$ep,
+              gh = pov_stats$gh,
+              gpg = pov_stats$gpg,
+              gp = pov_stats$gp,
+              watt = pov_stats$watt,
+              dl = pov_stats$dl,
+              ddl = pov_stats$ddl,
+              is_normal = validity$is_normal,
+              is_valid = validity$is_valid)
+
+  return(out)
+
 }

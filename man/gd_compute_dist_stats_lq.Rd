@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_estimate_lq.R
 \name{gd_compute_dist_stats_lq}
 \alias{gd_compute_dist_stats_lq}
-\title{Title}
+\title{Computes distributional stats from Lorenz Quadratic fit}
 \usage{
 gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
 }
@@ -25,11 +25,11 @@ an ellipse (m is called alpha in paper)}
 
 \item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
 
-\item{r}{r = (n^2) - (4 * m * e^2). r is called K in paper}
+\item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper}
 }
 \value{
 list
 }
 \description{
-Title
+Computes distributional stats from Lorenz Quadratic fit
 }
