@@ -6,7 +6,7 @@
 Given a vector of weights and welfare, this functions computes the
 Lorenz curve}
 \usage{
-md_compute_lorenz(welfare, weight = NULL)
+md_compute_lorenz(welfare, weight = NULL, nbins = NULL)
 }
 \arguments{
 \item{welfare}{numeric: vector of welfare measures}
