@@ -6,13 +6,14 @@
 #' @param weight numeric: vector of weights
 #'
 #' @return data.frame
+#' @export
 #' @import data.table
 #'
 #' @examples
 #' data("md_ABC_2010_income")
 #' df <- md_ABC_2010_income
 #' lz <- lorenz2(df$welfare, df$weight)[]
-lorenz2 <- function(welfare,
+lorenz_alt <- function(welfare,
                     weight = NULL,
                     nbins  = NULL,
                     na.rm  = FALSE) {
