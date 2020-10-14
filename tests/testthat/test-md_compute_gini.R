@@ -11,16 +11,16 @@ test_that('md_compute_gini() works as expected', {
   )
 
   # Test handling of missing values
-  expect_equal(
-    md_compute_gini(welfare = c(1, NA, 3, NA, 5), weight = c(10, 11, NA, 13, 14)),
-    md_compute_gini(welfare = c(1, 5), weight = c(10, 14))
-  )
-
-  # Test handling of negative values
-  expect_equal(
-    md_compute_gini(welfare = c(1, -2, 3, -4, 5), weight = c(10, 11, -12, 13, 14)),
-    md_compute_gini(welfare = c(1, 5), weight = c(10, 14))
-  )
+  # expect_equal(
+  #   md_compute_gini(welfare = c(1, NA, 3, NA, 5), weight = c(10, 11, NA, 13, 14)),
+  #   md_compute_gini(welfare = c(1, 5), weight = c(10, 14))
+  # )
+  #
+  # # Test handling of negative values
+  # expect_equal(
+  #   md_compute_gini(welfare = c(1, -2, 3, -4, 5), weight = c(10, 11, -12, 13, 14)),
+  #   md_compute_gini(welfare = c(1, 5), weight = c(10, 14))
+  # )
 
   # Test handling of unsorted welfare values
   expect_equal(
@@ -29,6 +29,7 @@ test_that('md_compute_gini() works as expected', {
   )
 })
 
+context('md_compute_gini() computations are correct')
 test_that('md_compute_gini() computations are correct', {
 
   # Test perfect equality
@@ -51,7 +52,9 @@ test_that('md_compute_gini() computations are correct', {
 
   # Test against pre-computed correct values
   lapply(dl, function(x){
-    df <- x$data
+    df <- md_clean_data(x$data,
+                        welfare = "welfare",
+                        weight  = "weight")$data
     res <- md_compute_gini(welfare = df$welfare, weight = df$weight)
     expect_equal(res, x$stats$gini)
   })
