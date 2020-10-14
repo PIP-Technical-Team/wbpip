@@ -2,6 +2,7 @@
 
 export(get_bins)
 export(get_gini)
+export(get_lorenz)
 export(lorenz_alt)
 export(md_clean_data)
 export(md_compute_bins)
