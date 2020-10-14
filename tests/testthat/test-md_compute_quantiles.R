@@ -1,7 +1,11 @@
-lorenz <- readr::read_csv("../testdata/lorenz.csv")
+fpath  <- system.file("testdata", "lorenz.csv", package="wbpip")
+lz     <- read.csv(fpath,
+                   col.names = c("y", "lorenzW", "lorenzY"))
 
 test_that("md_compute_quantiles output is formatted as expected", {
-  out <- md_compute_quantiles(lorenz)
+  out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
+                              lweight    = lz$lorenzW,
+                              percentile = lz$y)
   expect_equal(names(out), c("quantiles", "median"))
   expect_equal(length(out$quantiles), 10)
   expect_equal(length(out$median), 1)
@@ -10,12 +14,17 @@ test_that("md_compute_quantiles output is formatted as expected", {
   # expect_equal(length(out$quantiles), 5)
   # out <- md_compute_quantiles(lorenz, n_quantile = 20)
 
-  expect_error(md_compute_quantiles(lorenz, n_quantile = 200))
+  expect_error(md_compute_quantiles(lwelfare   = lz$lorenzY,
+                                    lweight    = lz$lorenzW,
+                                    percentile = lz$y,
+                                    n_quantile = 200))
 
 })
 
 test_that("md_compute_quantiles computations are correct", {
-  out <- md_compute_quantiles(lorenz)
+  out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
+                              lweight    = lz$lorenzW,
+                              percentile = lz$y)
 
   expect_equal(out$median, 228.666687012)
   expect_equal(out$quantiles, c(0.00847950735425,
