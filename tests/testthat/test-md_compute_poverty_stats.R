@@ -1,4 +1,20 @@
-test.dt <- readRDS('../testdata/synthetic-microdata.RDS')
+## load pcb data from the povcalnet folder
+library("povcalnet")
+library("magrittr")
+
+path.pcb <- "../povcalnet/tests/testdata/bra2003.pcb"
+parsed.pcb <- path.pcb %>%
+  parse_pcb %>%
+  format_pcb()
+
+PPP <- 1.658783
+newPPP <- 1.658783
+reqYearMean <- 531.2
+QP = -1
+
+daily_pl <- 1.9
+monthly_pl <- daily_pl * 365 / 12
+pl_LCU <- monthly_pl * parsed.pcb$summaries[["meanY"]] / round(mean(parsed.pcb$microdata$welfare),1)
 
 test_that('md_compute_poverty_stats() works as expected', {
 
@@ -63,6 +79,20 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
     0
   )
 
+  # does function produce results that match povcalnet outputs
+  pcn.values <- nonParam(pcb = parsed.pcb,
+                         req.PPP = PPP,
+                         newPPP = newPPP,
+                         req.reqYearMean = reqYearMean,
+                         QP = QP,
+                         req.PovertyLine = monthly_pl)
+  pcn.values <- pcn.values[c("headcount", "povgap", "povgapsq", "watts")]
+  names(pcn.values) <- c("headcount", "poverty_gap", "poverty_severity", "watts")
+  res <- md_compute_poverty_stats(welfare = parsed.pcb$microdata$welfare,
+                                  weight = parsed.pcb$microdata$weight,
+                                  povline = pl_LCU)
+  res$headcount <- res$headcount/sum(parsed.pcb$microdata$weight)
+  expect_equal(pcn.values, res)
 
 })
 
