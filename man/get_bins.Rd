@@ -39,12 +39,3 @@ a vector with all the variables available,
 Use function \code{md_compute_bins()} to calculate quantiles. In addition, this
 function makes sure data is properly cleaned using \code{md_clean_data}
 }
-\examples{
-df <- md_ABC_2000_income
-
-bins <- get_bins(df, welfare, weight)
-str(bins)
-
-bins <- get_bins(df, welfare, weight, output = "full")
-str(bins)
-}
