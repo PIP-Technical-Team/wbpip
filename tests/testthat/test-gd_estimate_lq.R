@@ -75,3 +75,77 @@ test_that("create_functional_form_lq works as expected", {
   expect_equal(out$x2, x2)
   expect_equal(out$x3, x3)
 })
+
+test_that("gd_compute_dist_stats_lq works as expected", {
+  mean <- 51.5660557757944
+  p0 <- 0.5
+  A <- 0.795981535745657
+  B <- -1.4445933880119242
+  C <- 0.14728191995919815
+  e <- -0.498670067692931
+  m <- -1.0970760862948583
+  n <- 0.851623285340541
+  r <- 1.3477796260474386
+  benchmark <- list(
+    gini = 0.32126464221602591,
+    median = 42.247782467994874,
+    rmhalf = 30.338461373077628,
+    dcm = 34.999705316492175,
+    polarization = 0.22066218253919992,
+    ris = 0.29417085441813828,
+    mld = 0.1897890974403306,
+    deciles = c(0.037459351271787455,
+                0.050102491249992831,
+                0.060098424008397155,
+                0.0689612882777707,
+                0.077549299610190137,
+                0.086590868400210574,
+                0.097034440897180829,
+                0.11071235633968635,
+                0.13305852826044706,
+                0.2784329516843369)
+  )
+
+  out <- gd_compute_dist_stats_lq(mean = mean,
+                               p0 = p0,
+                               A = A,
+                               B = B,
+                               C = C,
+                               e = e,
+                               m = m,
+                               n = n,
+                               r = r)
+
+  expect_equal(names(out), c("gini", "median", "rmhalf", "dcm", "polarization",
+                             "ris", "mld", "deciles"))
+  expect_equal(length(out), length(benchmark))
+  expect_equal(out$gini, benchmark$gini)
+  expect_equal(out$median, benchmark$median)
+  expect_equal(out$rmhalf, benchmark$rmhalf)
+  expect_equal(out$dcm, benchmark$dcm)
+  expect_equal(out$polarization, benchmark$polarization)
+  expect_equal(out$ris, benchmark$ris)
+  expect_equal(out$mld, benchmark$mld)
+  expect_equal(out$deciles, benchmark$deciles)
+})
+
+test_that("gd_compute_polarization_lq works as expected", {
+  mean <- 51.5660557757944
+  p0 <- 0.5
+  dcm <- 34.999705316492175
+  A <- 0.795981535745657
+  B <- -1.4445933880119242
+  C <- 0.14728191995919815
+  benchmark <- 0.22066218253919992
+
+  out <- gd_compute_polarization_lq(mean = mean,
+                                 p0 = p0,
+                                 dcm = dcm,
+                                 A = A,
+                                 B = B,
+                                 C = C)
+
+  expect_equal(out, benchmark)
+
+
+})
