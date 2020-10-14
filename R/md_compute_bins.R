@@ -14,8 +14,18 @@
 #' observations in the dataset or group is small, tabulate afterwards to
 #' check the results. you may use
 #' `tp <- df[, sum(weight)]; df[, round((sum(weight)/(tp))*100, digits = 2) , by = bins]`.
+#'
 #' @param welfare numeric: vector of welfare measures
 #' @param weight numeric: vector of weights
+#' @param nbins  numeric: number of bins
+#' @param na.rm  logical: If TRUE it will exclude all NA in calculations
+#' @param output character: It as two variaties. [1] it could be a vector of
+#' variables to retain after calculations (variables available are "welfare",
+#' "weight", "cum_pop", "cum_prop_pop", and "bins"). [2] It could be a one of two
+#' key words, "simple" or "full". `output = "simple"` is equivalent to
+#' `output = "bins"` (which is the default). `output = "full"` if equivalent to
+#' a vector with all the variables available,
+#' `output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")`
 #'
 #' @return dataframe in data.table format
 #' @export

@@ -16,6 +16,18 @@ md_compute_bins(
 \item{welfare}{numeric: vector of welfare measures}
 
 \item{weight}{numeric: vector of weights}
+
+\item{nbins}{numeric: number of bins}
+
+\item{na.rm}{logical: If TRUE it will exclude all NA in calculations}
+
+\item{output}{character: It as two variaties. \link{1} it could be a vector of
+variables to retain after calculations (variables available are "welfare",
+"weight", "cum_pop", "cum_prop_pop", and "bins"). \link{2} It could be a one of two
+key words, "simple" or "full". \code{output = "simple"} is equivalent to
+\code{output = "bins"} (which is the default). \code{output = "full"} if equivalent to
+a vector with all the variables available,
+\code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
 }
 \value{
 dataframe in data.table format

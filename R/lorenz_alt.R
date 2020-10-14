@@ -12,7 +12,7 @@
 #' @examples
 #' data("md_ABC_2010_income")
 #' df <- md_ABC_2010_income
-#' lz <- lorenz2(df$welfare, df$weight)[]
+#' lz <- lorenz_alt(df$welfare, df$weight)[]
 lorenz_alt <- function(welfare,
                     weight = NULL,
                     nbins  = NULL,
