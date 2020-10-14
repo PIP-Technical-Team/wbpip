@@ -6,12 +6,12 @@
 #' share of welfare (`lwelfare`), and a vector the corresponding monetary value
 #' of each percentile (`percentile`).
 #'
-#' @param lwelfare numeric: cumulative share of welfare
-#' @param lweight  numeric: cumulative share of population
+#' @param lwelfare numeric: cumulative share of welfare.
+#' @param lweight  numeric: cumulative share of population.
 #' @param n_quantile numeric: Number of quantiles for which share of total income
 #' is desired. It can't be larger that the total number of percentiles in the
 #' Lorenz curve provided by the user.  default is 10.
-#' @param percentile numeric: Monetary value each percentile
+#' @param percentile numeric: Monetary value each percentile.
 #'
 #' @return
 #' @export

@@ -28,7 +28,6 @@ share of welfare (\code{lwelfare}), and a vector the corresponding monetary valu
 of each percentile (\code{percentile}).
 }
 \examples{
-devtools::load_all()
 fpath  <- system.file("testdata", "lorenz.csv", package="wbpip")
 lz     <- read.csv(fpath,
                    col.names = c("y", "lorenzW", "lorenzY"))
