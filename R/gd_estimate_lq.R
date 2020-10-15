@@ -1,6 +1,6 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param grouped_data dataframe: grouped data
+#' @param .data dataframe: grouped data
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param ppp numeric: PPP request by user
@@ -14,9 +14,9 @@
 #' @export
 #'
 #' @examples
-#' gd_estimate_lq(grouped_data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
 #
-gd_compute_pip_stats_lq <- function(grouped_data,
+gd_compute_pip_stats_lq <- function(.data,
                                     mean,
                                     povline,
                                     ppp = NULL,
@@ -24,15 +24,20 @@ gd_compute_pip_stats_lq <- function(grouped_data,
                                     popshare = NULL,
                                     isLQ = TRUE) {
 
-  n_obs <- nrow(grouped_data)
-  population <- grouped_data$population
-  welfare <- grouped_data$welfare
+  n_obs <- nrow(.data)
+  population <- .data$population
+  welfare <- .data$welfare
 
   p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
-  if (!is.null(ppp)) { mean <- mean * default_ppp / ppp }
-
+  if (!is.null(ppp)) {
+    mean <- mean * default_ppp / ppp
+  } else {
+      ppp <- default_ppp
+    }
+  # STEP 1: Prep data to fit functional form
   prepped_data <- create_functional_form_lq(population, welfare)
-  # Estimate regression coefficient using LQ parameterization
+
+  # STEP 2: Estimate regression coefficients using LQ parameterization
   reg_results <- regres(prepped_data)
   reg_coef <- reg_results$coef
 
@@ -44,6 +49,7 @@ gd_compute_pip_stats_lq <- function(grouped_data,
   B <- reg_coef[2]
   C <- reg_coef[3]
 
+  # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
@@ -58,8 +64,10 @@ gd_compute_pip_stats_lq <- function(grouped_data,
   results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
-  # Estimate poverty measure based on identified parameters
+  # STEP 3: Estimate poverty measures based on identified parameters
   results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+
+  # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
 
   res <- c(results1, results2, results_fit, reg_results)

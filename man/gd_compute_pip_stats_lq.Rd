@@ -5,7 +5,7 @@
 \title{Computes poverty statistics from grouped data}
 \usage{
 gd_compute_pip_stats_lq(
-  grouped_data,
+  .data,
   mean,
   povline,
   ppp = NULL,
@@ -15,7 +15,7 @@ gd_compute_pip_stats_lq(
 )
 }
 \arguments{
-\item{grouped_data}{dataframe: grouped data}
+\item{.data}{dataframe: grouped data}
 
 \item{mean}{numeric: Welfare mean}
 
@@ -37,5 +37,5 @@ list
 Computes poverty statistics from grouped data
 }
 \examples{
-gd_estimate_lq(grouped_data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
 }
