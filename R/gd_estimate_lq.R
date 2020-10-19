@@ -303,7 +303,7 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
     mld <- log(x1) * 0.001
   }
   x1 <- derive_lq(0, A, B, C)
-  for(xstep in seq(0, 0.998, 0.001)) {
+  for (xstep in seq(0, 0.998, 0.001)) {
     x2 <- derive_lq(xstep + 0.001, A, B, C)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
