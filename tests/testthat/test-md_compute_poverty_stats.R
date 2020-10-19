@@ -1,3 +1,15 @@
+# check for github packages that are needed but not installed and install them
+
+check.packages <- function(pkg, github.link){
+  new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+  if (length(new.pkg))
+    devtools::install_github(repo = github.link)
+}
+
+check.packages(pkg = "povcalnet",
+               github.link = "https://github.com/PovcalNet-Team/povcalnet")
+
+
 ## load pcb data from the povcalnet folder
 library("povcalnet")
 library("magrittr")

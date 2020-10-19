@@ -14,7 +14,7 @@ md_compute_poverty_stats(welfare, povline, weight = NULL)
 \item{weight}{numeric: A vector of weights, optional, a vector of 1s if not specified.}
 }
 \value{
-list containing poverty headcount, poverty gap, poverty severity and the watts index
+List object containing poverty headcount, poverty gap, poverty severity and the watts index
 }
 \description{
 Compute the poverty headcount, poverty gap, poverty severity and
