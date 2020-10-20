@@ -1,16 +1,4 @@
-<<<<<<< HEAD
 test.dt <- read.csv("tests/testdata/bra2003.csv")
-=======
-## load pcb data from the povcalnet folder
-library("povcalnet")
-library("magrittr")
-
-path.pcb <- "../povcalnet/tests/testdata/bra2003.pcb"
-parsed.pcb <- path.pcb %>%
-  parse_pcb %>%
-  format_pcb()
->>>>>>> origin/ifybranch
-
 PPP <- 1.658783
 newPPP <- 1.658783
 reqYearMean <- 531.2
@@ -18,11 +6,7 @@ QP = -1
 
 daily_pl <- 1.9
 monthly_pl <- daily_pl * 365 / 12
-<<<<<<< HEAD
 pl_LCU <- monthly_pl * 431.2037 / 531.2
-=======
-pl_LCU <- monthly_pl * parsed.pcb$summaries[["meanY"]] / round(mean(parsed.pcb$microdata$welfare),1)
->>>>>>> origin/ifybranch
 
 test_that('md_compute_poverty_stats() works as expected', {
 
@@ -33,7 +17,6 @@ test_that('md_compute_poverty_stats() works as expected', {
   )
 
   # how does the function deal with missing values?
-<<<<<<< HEAD
   # expect_equal(
   #   md_compute_poverty_stats(welfare = c(1,2,NA,4,5),
   #                            povline = 10,
@@ -54,30 +37,28 @@ test_that('md_compute_poverty_stats() works as expected', {
   #   md_compute_poverty_stats(welfare = c(1,2,-3,4,-5), povline = 2),
   #   md_compute_poverty_stats(welfare = c(1,2,4), povline = 2)
   # )
-=======
-  expect_equal(
-    md_compute_poverty_stats(welfare = c(1,2,NA,4,5),
-                             povline = 10,
-                             weight = c(1,2,3,NA,5)),
-    md_compute_poverty_stats(welfare = c(1,2,5),
-                             povline = 10,
-                             weight = c(1,2,5))
-  )
+
+  # expect_equal(
+  #   md_compute_poverty_stats(welfare = c(1,2,NA,4,5),
+  #                            povline = 10,
+  #                            weight = c(1,2,3,NA,5)),
+  #   md_compute_poverty_stats(welfare = c(1,2,5),
+  #                            povline = 10,
+  #                            weight = c(1,2,5))
+  # )
 
   # kind of redundant but how does it behave when no weights are specified and we have missing values?
-  expect_equal(
-    md_compute_poverty_stats(welfare = c(1,2,NA,4,5), povline = 2),
-    md_compute_poverty_stats(welfare = c(1,2,4,5), povline = 2)
-  )
+  # expect_equal(
+  #   md_compute_poverty_stats(welfare = c(1,2,NA,4,5), povline = 2),
+  #   md_compute_poverty_stats(welfare = c(1,2,4,5), povline = 2)
+  # )
 
   # how does it handle negative values?
-  expect_equal(
-    md_compute_poverty_stats(welfare = c(1,2,-3,4,-5), povline = 2),
-    md_compute_poverty_stats(welfare = c(1,2,4), povline = 2)
-  )
->>>>>>> origin/ifybranch
-
-})
+#   expect_equal(
+#     md_compute_poverty_stats(welfare = c(1,2,-3,4,-5), povline = 2),
+#     md_compute_poverty_stats(welfare = c(1,2,4), povline = 2)
+#   )
+ })
 
 test_that('md_compute_poverty_stats() produces expected headcounts and poverty gap indices', {
 
@@ -111,7 +92,6 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
   )
 
   # does function produce results that match povcalnet outputs
-<<<<<<< HEAD
   pcn.values <- list()
   pcn.values[["headcount"]] <- 0.06792263
   pcn.values[["poverty_gap"]] <- 0.02645899
@@ -124,21 +104,6 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
   res$headcount <- res$headcount/sum(test.dt$weight)
 
   expect_equal(pcn.values, res, tolerance = 1e-6)
-=======
-  pcn.values <- nonParam(pcb = parsed.pcb,
-                         req.PPP = PPP,
-                         newPPP = newPPP,
-                         req.reqYearMean = reqYearMean,
-                         QP = QP,
-                         req.PovertyLine = monthly_pl)
-  pcn.values <- pcn.values[c("headcount", "povgap", "povgapsq", "watts")]
-  names(pcn.values) <- c("headcount", "poverty_gap", "poverty_severity", "watts")
-  res <- md_compute_poverty_stats(welfare = parsed.pcb$microdata$welfare,
-                                  weight = parsed.pcb$microdata$weight,
-                                  povline = pl_LCU)
-  res$headcount <- res$headcount/sum(parsed.pcb$microdata$weight)
-  expect_equal(pcn.values, res)
->>>>>>> origin/ifybranch
 
 })
 

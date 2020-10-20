@@ -36,18 +36,10 @@ md_compute_poverty_stats <- function(welfare, povline, weight = NULL) {
     weight <- rep(1, length(welfare))
   }
 
-<<<<<<< HEAD
   ## make sure the data is sorted
   ordy    <- order(welfare)   # order of welfare
   welfare <- welfare[ordy]    #order weight
   weight  <- weight[ordy]     # order welfare
-=======
-  ## check inputs and clean up for analysis
-  md_check_inputs(welfare = welfare, weight = weight)
-
-  res <- md_clean_inputs(welfare = welfare, weight = weight)
-  welfare <- res$welfare; weight <- res$weight
->>>>>>> origin/ifybranch
 
   headcount <- 0
   gap <- 0
@@ -61,11 +53,6 @@ md_compute_poverty_stats <- function(welfare, povline, weight = NULL) {
 
     if (welfare_i <= povline) {
 
-<<<<<<< HEAD
-=======
-      #in this block I set na.rm = TRUE for sums to ensure that in the presence of na.rm function
-      #wont return missing values
->>>>>>> origin/ifybranch
       headcount <- sum(headcount, weight_i)
       gap_i <- 1 - welfare_i / povline
       gap <- sum(gap, weight_i * gap_i)
