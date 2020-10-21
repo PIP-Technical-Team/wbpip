@@ -69,7 +69,6 @@ md_compute_poverty_stats <- function(welfare, povline, weight = NULL) {
   severity <- severity / sum(weight)
   watt8 <- watt8 / sum(weight)
 
-
   return(list(
     headcount = headcount,
     poverty_gap = gap,

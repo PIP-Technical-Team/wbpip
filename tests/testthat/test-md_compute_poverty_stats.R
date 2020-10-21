@@ -1,12 +1,5 @@
-test.dt <- read.csv("tests/testdata/bra2003.csv")
-PPP <- 1.658783
-newPPP <- 1.658783
-reqYearMean <- 531.2
-QP = -1
-
-daily_pl <- 1.9
-monthly_pl <- daily_pl * 365 / 12
-pl_LCU <- monthly_pl * 431.2037 / 531.2
+test.dt <- readRDS('tests/testdata/synthetic-microdata.RDS')
+test.dt <- test.dt[[1]]$data
 
 test_that('md_compute_poverty_stats() works as expected', {
 
@@ -91,18 +84,17 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
     0
   )
 
-  # does function produce results that match povcalnet outputs
-  pcn.values <- list()
-  pcn.values[["headcount"]] <- 0.06792263
-  pcn.values[["poverty_gap"]] <- 0.02645899
-  pcn.values[["poverty_severity"]] <- 0.01528384
-  pcn.values[["watts"]] <- 0.03872916
-
+  # does function produce results that match compute_poverty_stats in povcalnet
   res <- md_compute_poverty_stats(welfare = test.dt$welfare,
-                                  weight = test.dt$weight,
-                                  povline = pl_LCU)
+                                  povline = mean(test.dt$welfare),
+                                  weight = test.dt$weight)
   res$headcount <- res$headcount/sum(test.dt$weight)
+  pcn.values <- list()
+  pcn.values[["headcount"]] <- 0.7333513
+  pcn.values[["poverty_gap"]] <- 0.3957584
+  pcn.values[["poverty_severity"]] <- 0.2534849
+  pcn.values[["watts"]] <- 0.6899868
 
-  expect_equal(pcn.values, res, tolerance = 1e-6)
+  expect_equal(res, pcn.values, tolerance = 1e-6)
 
 })
