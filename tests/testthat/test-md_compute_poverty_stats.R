@@ -1,4 +1,4 @@
-test.dt <- readRDS('tests/testdata/synthetic-microdata.RDS')
+test.dt <- readRDS('../testdata/synthetic-microdata.RDS')
 test.dt <- test.dt[[1]]$data
 
 test_that('md_compute_poverty_stats() works as expected', {
