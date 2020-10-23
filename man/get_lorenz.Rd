@@ -24,3 +24,9 @@ data.frame
 Use function \code{md_compute_lorenz()} to calculate quantiles. In addition, this
 function makes sure data is properly cleaned using \code{md_clean_data}
 }
+\examples{
+data("md_ABC_2000_income")
+df     <- md_ABC_2000_income
+lorenz <- get_lorenz(df, welfare, weight)
+str(lorenz)
+}

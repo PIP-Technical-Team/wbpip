@@ -1,4 +1,4 @@
-context("Conditions of arguments work correctly")
+context("md_clean_data: Conditions of arguments work correctly")
 test_that("All the variables selected exist", {
   expect_error( md_clean_data(dt,
                               welfsdfe = "welfare",
@@ -13,7 +13,7 @@ test_that("All arguments are valid exist", {
                 )
 })
 
-context("Elimination is done correctly")
+context("md_clean_data: Elimination is done correctly")
 nd <- md_clean_data(dt,
                     welfare = "welfare",
                     weight  = "weight")

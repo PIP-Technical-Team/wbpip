@@ -1,7 +1,7 @@
-test.dt <- readRDS('../testdata/synthetic-microdata.RDS')
-test.dt <- test.dt[[1]]$data
+benchmark <- readRDS('../testdata/synthetic-microdata.RDS')
+benchmark <- benchmark[[1]]$data
 
-test_that('md_compute_poverty_stats() works as expected', {
+test_that('md_compute_poverty_stats works as expected', {
 
   # how does the function handle unspecified weights?
   expect_equal(
@@ -53,7 +53,7 @@ test_that('md_compute_poverty_stats() works as expected', {
   #   )
 })
 
-test_that('md_compute_poverty_stats() produces expected headcounts and poverty gap indices', {
+test_that('md_compute_poverty_stats matched expected results', {
 
   # does function return 0 headcount when all welfare is above poverty line?
   res <- md_compute_poverty_stats(welfare = 10:100, povline = 9, weight = 10:100)
@@ -67,7 +67,7 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
   res <- md_compute_poverty_stats(welfare = pop, povline = 101)
   expect_equal(
     res$headcount,
-    length(pop)
+    1
   )
 
   # does poverty gap = 1 when welfare values are 0?
@@ -85,16 +85,13 @@ test_that('md_compute_poverty_stats() produces expected headcounts and poverty g
   )
 
   # does function produce results that match compute_poverty_stats in povcalnet
-  res <- md_compute_poverty_stats(welfare = test.dt$welfare,
-                                  povline = mean(test.dt$welfare),
-                                  weight = test.dt$weight)
-  res$headcount <- res$headcount/sum(test.dt$weight)
-  pcn.values <- list()
-  pcn.values[["headcount"]] <- 0.7333513
-  pcn.values[["poverty_gap"]] <- 0.3957584
-  pcn.values[["poverty_severity"]] <- 0.2534849
-  pcn.values[["watts"]] <- 0.6899868
+  res <- md_compute_poverty_stats(welfare = benchmark$welfare,
+                                  povline = mean(benchmark$welfare),
+                                  weight = benchmark$weight)
 
-  expect_equal(res, pcn.values, tolerance = 1e-6)
+  expect_equal(res[["headcount"]], 0.7333513, tolerance = 1e-6)
+  expect_equal(res[["poverty_gap"]], 0.3957584, tolerance = 1e-6)
+  expect_equal(res[["poverty_severity"]], 0.2534849, tolerance = 1e-6)
+  expect_equal(res[["watts"]], 0.6899868, tolerance = 1e-6)
 
 })

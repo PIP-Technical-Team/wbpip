@@ -1,13 +1,7 @@
 # Read in synthetic microdata
 dl <- readRDS('../testdata/synthetic-microdata.RDS')
 
-test_that('get_gini() works as expected', {
-
-  expect_equal(2+2, 4)
-})
-
-context("get_gini() match precalculated values in synthetic-microdata.RDS")
-test_that('get_gini() computations are correct', {
+test_that('get_gini() match precalculated values in synthetic-microdata.RDS', {
 
   # Test against pre-computed correct values
   lapply(dl, function(x){

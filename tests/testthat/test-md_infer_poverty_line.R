@@ -1,5 +1,5 @@
 
-context("uniform distribution of welfare")
+context("infer_poverty: uniform distribution of welfare")
 test_that("multiplication works", {
   set.seed(10010)
   uv   <- 5
@@ -16,7 +16,7 @@ test_that("multiplication works", {
 
 })
 
-context("infer_poverty works in any point of the distribution")
+context("infer_poverty: works in any point of the distribution")
 test_that("2 digits of tolerance", {
 
   fgt <- function(welfare,
