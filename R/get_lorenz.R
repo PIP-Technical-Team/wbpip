@@ -12,7 +12,7 @@
 #' @import data.table
 #'
 #' @examples
-#' data("md_ABC_2000_income)
+#' data("md_ABC_2000_income")
 #' df     <- md_ABC_2000_income
 #' lorenz <- get_lorenz(df, welfare, weight)
 #' str(lorenz)

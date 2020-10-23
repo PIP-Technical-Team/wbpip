@@ -19,7 +19,6 @@
 #' @export
 #' @import data.table
 #'
-#' @examples
 md_clean_data <- function(dt, ...) {
 
   if(!(inherits(dt, "data.table"))) {

@@ -29,7 +29,6 @@ test_that('md_compute_gini() works as expected', {
   )
 })
 
-context('md_compute_gini() computations are correct')
 test_that('md_compute_gini() computations are correct', {
 
   # Test perfect equality
