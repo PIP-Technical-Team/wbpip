@@ -24,5 +24,8 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     dplyr,
-    rlang
+    rlang,
+    data.table,
+    tibble,
+    assertthat
 VignetteBuilder: knitr
