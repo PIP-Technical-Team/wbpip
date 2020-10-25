@@ -43,6 +43,7 @@ test_that('md_compute_gini() computations are correct', {
   #   md_compute_gini(welfare = c(rep(0, 99999999), 100)),
   #   1
   # )
+
   # The theoritical value for perfect inequality is 1
   # But the md_compute_gini() is asymptotic and tends to 1 as the sample size
   # grows
