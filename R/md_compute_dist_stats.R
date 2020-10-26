@@ -21,6 +21,16 @@ md_compute_dist_stats <- function(welfare,
                                   nbins  = NULL,
                                   n_quantile = 10) {
 
+  # set all weights to 1 if none are supplied
+  if (is.null(weight) == TRUE) {
+    weight <- rep(1, length(welfare))
+  }
+
+  # make sure the data is sorted
+  ordy    <- order(welfare)   # order of welfare
+  welfare <- welfare[ordy]    #order weight
+  weight  <- weight[ordy]     # order welfare
+
   gini <- md_compute_gini(welfare = welfare,
                           weight  = weight)
 
@@ -32,7 +42,17 @@ md_compute_dist_stats <- function(welfare,
                                     lweight    = lorenz[["lorenz_weight"]],
                                     percentile = lorenz[["welfare"]])
 
-  # mld <- md_compute_m
+  mean <- stats::weighted.mean(welfare, weight)
 
+  mld <- md_compute_mld(welfare = welfare,
+                        weight  = weight)
 
+  return(list(
+    mean = mean,
+    median = quantiles[["median"]],
+    gini = gini,
+    polarization = NA,
+    mld = mld,
+    quantiles = quantiles[["quantiles"]]
+  ))
 }
