@@ -4,12 +4,12 @@
 \alias{md_compute_poverty_stats}
 \title{Compute Poverty Statistics}
 \usage{
-md_compute_poverty_stats(welfare, povline, weight = NULL)
+md_compute_poverty_stats(welfare, povline_lcu, weight = NULL)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
-\item{povline}{numeric: A poverty line/threshold}
+\item{povline_lcu}{numeric: Poverty line in Local Currency Unit (LCU)}
 
 \item{weight}{numeric: A vector of weights, optional, a vector of 1s if not specified.}
 }
@@ -29,10 +29,10 @@ Negative values are dropped from computations.
 }
 \examples{
 # simple example (no weights)
-md_compute_poverty_stats(welfare = 1:100, povline = 10)
+md_compute_poverty_stats(welfare = 1:100, povline_lcu = 10)
 
 # with weights
-md_compute_poverty_stats(welfare = 1:100, povline = 10, weight = 1:100)
+md_compute_poverty_stats(welfare = 1:100, povline_lcu = 10, weight = 1:100)
 
 # using a micro data set
 data("md_ABC_2000_income")
