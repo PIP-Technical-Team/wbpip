@@ -16,12 +16,16 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    readr
 URL: https://github.com/PIP-Technical-Team/wbpip
 BugReports: https://github.com/PIP-Technical-Team/wbpip/issues
 Depends: 
     R (>= 3.5.0)
 Imports: 
     dplyr,
-    rlang
+    rlang,
+    data.table,
+    tibble,
+    assertthat
 VignetteBuilder: knitr
