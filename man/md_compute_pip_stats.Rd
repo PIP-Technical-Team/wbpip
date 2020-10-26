@@ -17,7 +17,7 @@ md_compute_pip_stats(
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
-\item{povline}{numeric: Daily poverty line in international dollars}
+\item{povline}{numeric: Monthly poverty line in international dollars}
 
 \item{weight}{numeric: A vector of weights, optional, a vector of 1s if not specified.}
 
@@ -25,7 +25,7 @@ md_compute_pip_stats(
 
 \item{default_ppp}{numeric: Default purchasing power parity}
 
-\item{requested_mean}{numeric: Requested welfare mean (used for interpolation)}
+\item{requested_mean}{numeric: Welfare mean in international dollars}
 
 \item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median)}
