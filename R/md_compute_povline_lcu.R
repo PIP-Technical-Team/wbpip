@@ -3,7 +3,7 @@
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param povline numeric: Poverty line in internationl dollars (PPP)
 #' @param weight numeric: A vector of weights, optional.
-#' @param popshare umeric: Share of population for which the corresponding
+#' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param requested_mean numeric: requested mean (adjusted with PPPs)
 #' @param data_mean numeric: Data mean

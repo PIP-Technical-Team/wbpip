@@ -20,7 +20,7 @@ md_compute_povline_lcu(
 
 \item{weight}{numeric: A vector of weights, optional.}
 
-\item{popshare}{umeric: Share of population for which the corresponding
+\item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median)}
 
 \item{requested_mean}{numeric: requested mean (adjusted with PPPs)}
