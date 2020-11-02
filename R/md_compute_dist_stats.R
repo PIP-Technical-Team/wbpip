@@ -1,4 +1,4 @@
-#' Compute distributionla statistics
+#' Compute distributional statistics
 #'
 #' Given a vector of weights and welfare, this functions computes the
 #' various distributional statistics

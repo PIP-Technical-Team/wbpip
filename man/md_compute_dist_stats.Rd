@@ -2,7 +2,7 @@
 % Please edit documentation in R/md_compute_dist_stats.R
 \name{md_compute_dist_stats}
 \alias{md_compute_dist_stats}
-\title{Compute distributionla statistics}
+\title{Compute distributional statistics}
 \usage{
 md_compute_dist_stats(welfare, weight = NULL, nbins = NULL, n_quantile = 10)
 }
