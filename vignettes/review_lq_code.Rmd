@@ -75,7 +75,7 @@ df <- data.frame(population = population,
 #  X=The mean income of that interval.
 
 datt <- tibble::tribble(
-         ~W,    ~X,      ~p,      ~L,
+         ~W,    ~X,      ~P,      ~L,
         0.92,   24.84,  0.0092, 0.00208,
         2.47,    35.8,  0.0339, 0.01013,
         5.11,   45.36,   0.085, 0.03122,
@@ -91,7 +91,7 @@ datt <- tibble::tribble(
         2.49,  384.97,       1,       1
   )
 
-
+datt$W <- datt$W/100
 
 # Estimate poverty statistics
 gd_compute_pip_stats_lq(.data           = df,
