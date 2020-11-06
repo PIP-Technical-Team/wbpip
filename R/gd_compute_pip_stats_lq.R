@@ -38,7 +38,9 @@ gd_compute_pip_stats_lq <- function(.data,
   prepped_data <- create_functional_form_lq(population, welfare)
 
   # STEP 2: Estimate regression coefficients using LQ parameterization
-  reg_results <- regres(prepped_data)
+  reg_results <- regres(prepped_data,
+                        is_lq = isLQ)
+
   reg_coef <- reg_results$coef
 
   # What is isLQ? Where is it defined?
