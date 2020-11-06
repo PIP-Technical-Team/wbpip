@@ -1,7 +1,16 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param .data dataframe: grouped data
-#' @param mean numeric: Welfare mean
+#' @param population numeric: population vector whose form depends on on `type`.
+#' @param welfare numeric: welfare vector whose form depends on on `type`.
+#' @param type numeric: Type of data. if `type = 1`, `population` must be the
+#' cumulative proportion of population and `welfare` must be the cumulative
+#' proportion of income held by that proportion of the population (Lorenz Curve).
+#' if `type = 2`, `population` must be the proportion of population and
+#' `welfare` must be the proportion of income.
+#' If `type = 5`, then `population` must be the Percentage
+#' of the population in a given interval of incomes, whereas `welfare` must be
+#' the mean income of that interval. Default is 1.
+#' @param mean numeric: Welfare mean if `type = 1` or `type = 2`
 #' @param povline numeric: Poverty line
 #' @param ppp numeric: PPP request by user
 #' @param default_ppp numeric: Default purchasing power parity
@@ -15,10 +24,11 @@
 #'
 #' @examples
 #' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
-#
-gd_compute_pip_stats_lq <- function(.data,
+gd_compute_pip_stats_lq <- function(population,
+                                    welfare,
                                     mean,
                                     default_ppp,
+                                    type     = 1,
                                     povline  = NULL,
                                     ppp      = NULL,
                                     popshare = NULL,
@@ -47,7 +57,7 @@ gd_compute_pip_stats_lq <- function(.data,
 
   }
 
-  if (   (is.null(povline) && is.null(popshare))
+  if (   ( is.null(povline) &&  is.null(popshare))
       || (!is.null(povline) && !is.null(popshare)) ) {
     msg     <- "Either `povline` or `popshare` most be provided"
     rlang::abort(msg,
