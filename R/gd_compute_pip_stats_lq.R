@@ -107,36 +107,36 @@ gd_compute_pip_stats_lq <- function(.data,
 #' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
 #' original paper.
 #'
-#' @param lorenz_pop numeric: Population vector from empirical Lorenz curve
-#' @param lorenz_welfare numeric: Welfare vector from empirical Lorenz curve
+#' @param population numeric: Population vector from empirical Lorenz curve
+#' @param welfare numeric: Welfare vector from empirical Lorenz curve
 #'
 #' @return data.frame
 #'
 #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 #' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
 
-create_functional_form_lq <- function(lorenz_pop,
-                                      lorenz_welfare) {
+create_functional_form_lq <- function(population,
+                                      welfare) {
   # CHECK inputs
-  assertthat::assert_that(is.numeric(lorenz_pop))
-  assertthat::assert_that(is.numeric(lorenz_welfare))
-  assertthat::assert_that(length(lorenz_pop) == length(lorenz_welfare))
-  assertthat::assert_that(length(lorenz_pop) > 1)
+  assertthat::assert_that(is.numeric(population))
+  assertthat::assert_that(is.numeric(welfare))
+  assertthat::assert_that(length(population) == length(welfare))
+  assertthat::assert_that(length(population) > 1)
 
   # Remove last observation (the functional form for the Lorenz curve already forces
   # it to pass through the point (1, 1)
-  nobs <- length(lorenz_pop) - 1
-  lorenz_pop <- lorenz_pop[1:nobs]
-  lorenz_welfare <- lorenz_welfare[1:nobs]
+  nobs <- length(population) - 1
+  population <- population[1:nobs]
+  welfare <- welfare[1:nobs]
 
   # L(1-L)
-  y <- lorenz_welfare * (1 - lorenz_welfare)
+  y <- welfare * (1 - welfare)
   # (P^2-L)
-  x1 <- lorenz_pop^2 - lorenz_welfare
+  x1 <- population^2 - welfare
   # L(P-1)
-  x2 <- lorenz_welfare * (lorenz_pop - 1)
+  x2 <- welfare * (population - 1)
   # P-L
-  x3 <- lorenz_pop - lorenz_welfare
+  x3 <- population - welfare
 
   out <- data.frame(y, x1, x2, x3, stringsAsFactors = FALSE)
 
