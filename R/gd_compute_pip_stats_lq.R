@@ -17,13 +17,13 @@
 
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional
-#' @param isLQ boolean: indicates whether the estimation of lorenz quadratic
+#' @param is_lq boolean: indicates whether the estimation of lorenz quadratic
 #'
 #' @return list
 #' @export
 #'
 #' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+#' # gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, is_lq)
 gd_compute_pip_stats_lq <- function(population,
                                     welfare,
                                     mean,
@@ -32,20 +32,39 @@ gd_compute_pip_stats_lq <- function(population,
                                     povline  = NULL,
                                     ppp      = NULL,
                                     popshare = NULL,
-                                    isLQ     = TRUE,
+                                    is_lq     = TRUE,
                                     p0       = 0.5) {
 
-  n_obs      <- nrow(.data)
-  population <- .data$population
-  welfare    <- .data$welfare
 
-  #---------  make sure data is sorted ---------
 
-  o          <- order(welfare)
-  welfare    <- welfare[o]
-  population <- population[o]
+
+  check_input_gd_compute_pip_stats_lq(population,
+                                      welfare,
+                                      mean,
+                                      default_ppp,
+                                      type,
+                                      povline,
+                                      ppp,
+                                      popshare,
+                                      is_lq,
+                                      p0)
+
+  #--------- convert type 5 to type 1 ---------
+  if (type %in% c(3, 5)) {
+
+    mean    <- weighted.mean(welfare, population)
+
+    X       <- population*welfare
+    X       <- cumsum(X)
+    welfare <- X/max(X)
+
+    population <- cumsum(population)
+
+  }
+
 
   #--------- Conditions ---------
+
 
   if (!is.null(ppp)) {
 
@@ -65,20 +84,27 @@ gd_compute_pip_stats_lq <- function(population,
   }
 
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #--------- functional form and Estimate
+  #    regression coefficients using LQ parametrization ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
   # STEP 1: Prep data to fit functional form
-  prepped_data <- create_functional_form_lq(population, welfare)
+  reg_results <- create_functional_form_lq(population = population,
+                                            welfare    = welfare,
+                                            is_lq = is_lq)
 
-  # STEP 2: Estimate regression coefficients using LQ parameterization
-  reg_results <- regres(prepped_data,
-                        is_lq = isLQ)
+  reg_coef <- reg_results$coef_stat$estimate
 
-  reg_coef <- reg_results$coef
 
-  # What is isLQ? Where is it defined?
-  if (isLQ)
+  # What is is_lq? Where is it defined?
+  if (is_lq) {
     A <- reg_coef[1]
-  else
-    A <- exp(reg_coef[1]) # Why exp() if isLQ == FALSE?
+  } else {
+    A <- exp(reg_coef[1]) # Why exp() if is_lq == FALSE?
+  }
+
   B <- reg_coef[2]
   C <- reg_coef[3]
 
@@ -109,52 +135,7 @@ gd_compute_pip_stats_lq <- function(population,
 
 }
 
-#' Prepares data for Lorenz Quadratic regression
-#'
-#' @description  Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
-#' (P-L). The last observation of (p,l), which by construction has the value
-#' (1, 1), is excluded since the functional form for the Lorenz curve already
-#' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
-#' original paper.
-#'
-#' @param population numeric: Population vector from empirical Lorenz curve
-#' @param welfare numeric: Welfare vector from empirical Lorenz curve
-#'
-#' @return data.frame
-#'
-#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
-#' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
-
-create_functional_form_lq <- function(population,
-                                      welfare) {
-  # CHECK inputs
-  assertthat::assert_that(is.numeric(population))
-  assertthat::assert_that(is.numeric(welfare))
-  assertthat::assert_that(length(population) == length(welfare))
-  assertthat::assert_that(length(population) > 1)
-
-  # Remove last observation (the functional form for the Lorenz curve already forces
-  # it to pass through the point (1, 1)
-  nobs <- length(population) - 1
-  population <- population[1:nobs]
-  welfare <- welfare[1:nobs]
-
-  # L(1-L)
-  y <- welfare * (1 - welfare)
-  # (P^2-L)
-  x1 <- population^2 - welfare
-  # L(P-1)
-  x2 <- welfare * (population - 1)
-  # P-L
-  x3 <- population - welfare
-
-  out <- data.frame(y, x1, x2, x3, stringsAsFactors = FALSE)
-
-  return(out)
-}
-
-
-#' Returns the first derivative of the quadratic Lorenz
+#' Returns the first derivative of the Lorenz quadratic
 #'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
 #' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
@@ -720,3 +701,67 @@ gd_compute_fit_lq <- function(welfare,
   return(out)
 }
 
+
+
+check_input_gd_compute_pip_stats_lq <- function(population,
+                                                welfare,
+                                                mean,
+                                                default_ppp,
+                                                type,
+                                                povline,
+                                                ppp,
+                                                popshare,
+                                                is_lq,
+                                                p0){
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   TYPE 1   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (type == 1) {
+
+    #--------- check vector cumsum up to one ---------
+    share_pop <- c(population[1], diff(population))
+    share_wel <- c(welfare[1], diff(welfare))
+
+    assertthat::assert_that(sum(share_pop) == 1,
+                            msg = "Share of `population` does not sum up to 1")
+
+    assertthat::assert_that(sum(share_wel) == 1,
+                            msg = "Share of `welfare` does not sum up to 1")
+
+    #--------- make sure  share of income is always increasing ---------
+    # normalize welfare by population
+    norm_wel <- diff(share_wel/share_pop)
+
+    assertthat::assert_that(all(norm_wel >= 0),
+                            msg = paste0("share of `welfare` must increase with each\n",
+                                    "subsequent bin relative to its corresponging\n",
+                                    "population. Make sure data is sorted correctly."))
+
+  }
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   TYPE 2   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  if (type == 2) {
+
+    #---------  make sure data is sorted ---------
+    o          <- order(welfare)
+
+    welfare    <- welfare[o]
+    population <- population[o]
+  }
+
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   TYPE 5/3   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+}

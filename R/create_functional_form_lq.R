@@ -53,6 +53,9 @@ create_functional_form_lq <- function(population,
 
   res <- stats::lm(y ~ x1 + x2 + x3 - 1, data = df)
 
+  coef_stat <- broom::tidy(res)
+  fitness   <- broom::glance(res)
+
   ymean <- mean(df[["y"]])
   sst   <- sum((df[["y"]] - ymean)^2)    # sum of square total
   coef  <- unname(res[["coefficients"]]) # regression coefs
@@ -70,13 +73,15 @@ create_functional_form_lq <- function(population,
   #
   # }
 
-  return(list(ymean = ymean,
-              sst = sst,
-              coef = coef,
-              sse = sse,
-              r2 = r2,
-              mse = mse,
-              se = se))
+  return(list(ymean     = ymean,
+              sst       = sst,
+              coef      = coef,
+              sse       = sse,
+              r2        = r2,
+              mse       = mse,
+              se        = se,
+              coef_stat = coef_stat,
+              fitness   = fitness))
 
   return(out)
 }
