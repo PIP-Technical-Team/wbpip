@@ -18,22 +18,43 @@
 #
 gd_compute_pip_stats_lq <- function(.data,
                                     mean,
-                                    povline,
-                                    ppp = NULL,
                                     default_ppp,
+                                    povline  = NULL,
+                                    ppp      = NULL,
                                     popshare = NULL,
-                                    isLQ = TRUE) {
+                                    isLQ     = TRUE,
+                                    p0       = 0.5) {
 
-  n_obs <- nrow(.data)
+  n_obs      <- nrow(.data)
   population <- .data$population
-  welfare <- .data$welfare
+  welfare    <- .data$welfare
 
-  p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
+  #---------  make sure data is sorted ---------
+
+  o          <- order(welfare)
+  welfare    <- welfare[o]
+  population <- population[o]
+
+  #--------- Conditions ---------
+
   if (!is.null(ppp)) {
+
     mean <- mean * default_ppp / ppp
+
   } else {
-      ppp <- default_ppp
-    }
+
+    ppp <- default_ppp
+
+  }
+
+  if (   (is.null(povline) && is.null(popshare))
+      || (!is.null(povline) && !is.null(popshare)) ) {
+    msg     <- "Either `povline` or `popshare` most be provided"
+    rlang::abort(msg,
+                 class = "wbpip_error")
+  }
+
+
   # STEP 1: Prep data to fit functional form
   prepped_data <- create_functional_form_lq(population, welfare)
 
@@ -80,7 +101,7 @@ gd_compute_pip_stats_lq <- function(.data,
 
 #' Prepares data for Lorenz Quadratic regression
 #'
-#' @description  Prepares data for regression on L(1-L) on (P^2-L), L(P-1) and
+#' @description  Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
 #' (P-L). The last observation of (p,l), which by construction has the value
 #' (1, 1), is excluded since the functional form for the Lorenz curve already
 #' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
