@@ -93,9 +93,21 @@ datt <- tibble::tribble(
 
 datt$W <- datt$W/100
 
+W <- datt$W
+X <- datt$X
+P <- datt$P
+L <- datt$L
+
+mu  <- 109.9 # mean
+z   <- 89    # poverty line
+
 # Estimate poverty statistics
-gd_compute_pip_stats_lq(.data           = df,
-                        mean            = welfare_mean,
-                        povline         = monthly_povline,
-                        default_ppp     = ppp)
+# gd_compute_pip_stats_lq(.data           = df,
+#                         mean            = welfare_mean,
+#                         povline         = monthly_povline,
+#                         default_ppp     = ppp)
+
+
+
+
 ```

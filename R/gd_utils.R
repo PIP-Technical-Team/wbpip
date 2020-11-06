@@ -18,12 +18,12 @@ regres <- function(df, is_lq = TRUE) {
   res <- stats::lm(y ~ x1 + x2 + x3 - 1, data = df)
 
   ymean <- mean(df[["y"]])
-  sst <- sum((df[["y"]] - ymean)^2) # sum of square total
-  coef <- unname(res[["coefficients"]]) # regression coefs
-  sse <- sum(res$residuals^2) # sum of square error
-  r2 <- 1 - sse / sst # R-square (This is the R2 formula for models with an intercept)
-  mse <- sse / (nrow(df) - length(coef)) # Mean squared error
-  se <- unname(sqrt(diag(stats::vcov(res)))) # Standard error
+  sst   <- sum((df[["y"]] - ymean)^2) # sum of square total
+  coef  <- unname(res[["coefficients"]]) # regression coefs
+  sse   <- sum(res$residuals^2) # sum of square error
+  r2    <- 1 - sse / sst # R-square (This is the R2 formula for models with an intercept)
+  mse   <- sse / (nrow(df) - length(coef)) # Mean squared error
+  se    <- unname(sqrt(diag(stats::vcov(res)))) # Standard error
   # REVIEW:
   # Where is isLQ defined?
   # Why exp() if isLQ == FALSE?
