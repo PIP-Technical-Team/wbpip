@@ -106,6 +106,24 @@ z   <- 89    # poverty line
 #                         mean            = welfare_mean,
 #                         povline         = monthly_povline,
 #                         default_ppp     = ppp)
+# 
+
+ff       <- create_functional_form_lq(L, P)
+reg_coef <- ff$coef_stat$estimate
+
+A <- reg_coef[1]
+B <- reg_coef[2]
+C <- reg_coef[3]
+
+ct <- get_components_lq(A, B, C)
+ct
+
+fgt <- fgt_lq(A, B, C, mu, z, ct)
+
+
+popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 1)
+
+popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 2)
 
 
 

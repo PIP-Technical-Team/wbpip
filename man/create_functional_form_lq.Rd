@@ -4,14 +4,12 @@
 \alias{create_functional_form_lq}
 \title{Prepares data for Lorenz Quadratic regression}
 \usage{
-create_functional_form_lq(population, welfare, is_lq)
+create_functional_form_lq(welfare, population)
 }
 \arguments{
-\item{population}{numeric: Population vector from empirical Lorenz curve}
-
 \item{welfare}{numeric: Welfare vector from empirical Lorenz curve}
 
-\item{is_lq}{boolean: if TRUE it is assumed quadratic}
+\item{population}{numeric: Population vector from empirical Lorenz curve}
 }
 \value{
 data.frame

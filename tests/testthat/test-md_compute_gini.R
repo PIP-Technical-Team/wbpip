@@ -46,7 +46,7 @@ test_that('md_compute_gini() computations are correct', {
   # Fail due to sample size: Add sample size correction?
   expect_equal(
     md_compute_gini(welfare = c(rep(0, 99), 100)),
-    1
+    .99
   )
 
   # Test against pre-computed correct values

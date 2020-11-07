@@ -92,8 +92,7 @@ gd_compute_pip_stats_lq <- function(population,
 
   # STEP 1: Prep data to fit functional form
   reg_results <- create_functional_form_lq(population = population,
-                                            welfare    = welfare,
-                                            is_lq = is_lq)
+                                            welfare    = welfare)
 
   reg_coef <- reg_results$coef_stat$estimate
 
@@ -107,6 +106,14 @@ gd_compute_pip_stats_lq <- function(population,
 
   B <- reg_coef[2]
   C <- reg_coef[3]
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #-----   components of poverty measures using parameters ------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
 
   # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied

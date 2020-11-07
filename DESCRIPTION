@@ -24,5 +24,7 @@ Depends:
 Imports: 
     dplyr,
     rlang,
-    broom
+    broom,
+    cli,
+    scales
 VignetteBuilder: knitr
