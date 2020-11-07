@@ -11,16 +11,15 @@
 #'
 #' @param population numeric: Population vector from empirical Lorenz curve
 #' @param welfare numeric: Welfare vector from empirical Lorenz curve
-#' @param is_lq  boolean: if TRUE it is assumed quadratic
 #'
 #' @return data.frame
+#' @export
 #'
 #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 #' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
 
-create_functional_form_lq <- function(population,
-                                      welfare,
-                                      is_lq) {
+create_functional_form_lq <- function(welfare,
+                                      population) {
   # CHECK inputs
   assertthat::assert_that(is.numeric(population))
   assertthat::assert_that(is.numeric(welfare))
