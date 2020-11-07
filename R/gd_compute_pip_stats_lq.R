@@ -32,11 +32,8 @@ gd_compute_pip_stats_lq <- function(population,
                                     povline  = NULL,
                                     ppp      = NULL,
                                     popshare = NULL,
-                                    is_lq     = TRUE,
+                                    is_lq    = TRUE,
                                     p0       = 0.5) {
-
-
-
 
   check_input_gd_compute_pip_stats_lq(population,
                                       welfare,

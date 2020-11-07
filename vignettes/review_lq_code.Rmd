@@ -63,69 +63,11 @@ df <- data.frame(population = population,
                  welfare    = welfare)
 
 
-#--------- Data from DATT 1998 ---------
-# Source:http://ebrary.ifpri.org/utils/getfile/collection/p15738coll2/id/125673/filename/125704.pdf
-# Table 1
-# Identify the type of data
-# Type 1 grouped data: 
-#  P=Cumulative proportion of population, 
-#  L=Cumulative proportion of income held by that proportion of the population
-# Type 5 grouped data: 
-#  W=Percentage of the population in a given interval of incomes, 
-#  X=The mean income of that interval.
-
-datt <- tibble::tribble(
-         ~W,    ~X,      ~P,      ~L,
-        0.92,   24.84,  0.0092, 0.00208,
-        2.47,    35.8,  0.0339, 0.01013,
-        5.11,   45.36,   0.085, 0.03122,
-         7.9,    55.1,   0.164, 0.07083,
-        9.69,   64.92,  0.2609, 0.12808,
-       15.24,   77.08,  0.4133, 0.23498,
-       13.64,   91.75,  0.5497, 0.34887,
-       16.99,  110.64,  0.7196, 0.51994,
-          10,   134.9,  0.8196,  0.6427,
-        9.78,  167.76,  0.9174, 0.79201,
-        3.96,  215.48,   0.957, 0.86966,
-        1.81,  261.66,  0.9751, 0.91277,
-        2.49,  384.97,       1,       1
-  )
-
-datt$W <- datt$W/100
-
-W <- datt$W
-X <- datt$X
-P <- datt$P
-L <- datt$L
-
-mu  <- 109.9 # mean
-z   <- 89    # poverty line
-
 # Estimate poverty statistics
 # gd_compute_pip_stats_lq(.data           = df,
 #                         mean            = welfare_mean,
 #                         povline         = monthly_povline,
 #                         default_ppp     = ppp)
 # 
-
-ff       <- create_functional_form_lq(L, P)
-reg_coef <- ff$coef_stat$estimate
-
-A <- reg_coef[1]
-B <- reg_coef[2]
-C <- reg_coef[3]
-
-ct <- get_components_lq(A, B, C)
-ct
-
-fgt <- fgt_lq(A, B, C, mu, z, ct)
-
-
-popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 1)
-
-popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 2)
-
-
-
 
 ```

@@ -34,7 +34,7 @@ popshare_lq <- function(A, B, C, H, mu, ct, method = 1) {
     val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
     z <- val*mu
   }
-
+  p <- H
   Lp <- - (1/2) * (B*p + e + (m*p^2 + n*p +e^2)^(1/2))
 
   cli::cli_alert_success("Share of Popluation {.val {scales::percent(H, accuracy = .01)}}")
