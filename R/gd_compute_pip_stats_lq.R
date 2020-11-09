@@ -1,20 +1,12 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: population vector whose form depends on on `type`.
-#' @param welfare numeric: welfare vector whose form depends on on `type`.
-#' @param type numeric: Type of data. if `type = 1`, `population` must be the
-#' cumulative proportion of population and `welfare` must be the cumulative
-#' proportion of income held by that proportion of the population (Lorenz Curve).
-#' if `type = 2`, `population` must be the proportion of population and
-#' `welfare` must be the proportion of income.
-#' If `type = 5`, then `population` must be the Percentage
-#' of the population in a given interval of incomes, whereas `welfare` must be
-#' the mean income of that interval. Default is 1.
-#' @param mean numeric: Welfare mean if `type = 1` or `type = 2`
+#' @param population numeric: cumulative proportion of population.
+#' @param welfare numeric: cumulative proportion of income held by that
+#' proportion of the population (Lorenz Curve).
+#' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param ppp numeric: PPP request by user
 #' @param default_ppp numeric: Default purchasing power parity
-
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional
 #' @param is_lq boolean: indicates whether the estimation of lorenz quadratic
@@ -28,7 +20,6 @@ gd_compute_pip_stats_lq <- function(population,
                                     welfare,
                                     mean,
                                     default_ppp,
-                                    type     = 1,
                                     povline  = NULL,
                                     ppp      = NULL,
                                     popshare = NULL,
@@ -39,26 +30,11 @@ gd_compute_pip_stats_lq <- function(population,
                                       welfare,
                                       mean,
                                       default_ppp,
-                                      type,
                                       povline,
                                       ppp,
                                       popshare,
                                       is_lq,
                                       p0)
-
-  #--------- convert type 5 to type 1 ---------
-  if (type %in% c(3, 5)) {
-
-    mean    <- weighted.mean(welfare, population)
-
-    X       <- population*welfare
-    X       <- cumsum(X)
-    welfare <- X/max(X)
-
-    population <- cumsum(population)
-
-  }
-
 
   #--------- Conditions ---------
 
@@ -711,17 +687,11 @@ check_input_gd_compute_pip_stats_lq <- function(population,
                                                 welfare,
                                                 mean,
                                                 default_ppp,
-                                                type,
                                                 povline,
                                                 ppp,
                                                 popshare,
                                                 is_lq,
                                                 p0){
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   TYPE 1   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (type == 1) {
 
     #--------- check vector cumsum up to one ---------
     share_pop <- c(population[1], diff(population))
@@ -741,31 +711,6 @@ check_input_gd_compute_pip_stats_lq <- function(population,
                             msg = paste0("share of `welfare` must increase with each\n",
                                     "subsequent bin relative to its corresponging\n",
                                     "population. Make sure data is sorted correctly."))
-
-  }
-
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   TYPE 2   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  if (type == 2) {
-
-    #---------  make sure data is sorted ---------
-    o          <- order(welfare)
-
-    welfare    <- welfare[o]
-    population <- population[o]
-  }
-
-
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   TYPE 5/3   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
 
 
 }
