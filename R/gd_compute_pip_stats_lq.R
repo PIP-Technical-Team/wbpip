@@ -105,7 +105,7 @@ gd_compute_pip_stats_lq <- function(population,
   results2 <- gd_estimate_lq(mean, povline, p0, ct)
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, ct)
 
   res <- c(results1, results2, results_fit, reg_results)
 
@@ -769,15 +769,13 @@ gd_estimate_lq <- function(mean, povline, p0, ct) {
 gd_compute_fit_lq <- function(welfare,
                               population,
                               headcount,
-                              A,
-                              B,
-                              C) {
+                              ct) {
   lasti  <- -1
   sse  <- 0 # Sum of square error
   ssez <- 0
 
   for (i in seq_along(welfare[-1])) {
-    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual <- welfare[i] - value_at_lq(population[i], ct)
     residual_sq <- residual^2
     sse <- sse + residual_sq
     if (population[i] < headcount)
@@ -787,7 +785,7 @@ gd_compute_fit_lq <- function(welfare,
     }
   }
   lasti <- lasti + 1
-  residual <- welfare[lasti] - value_at_lq(population[lasti], A, B, C)
+  residual <- welfare[lasti] - value_at_lq(population[lasti], ct)
   ssez <- ssez + residual^2
 
   out <- list(sse, ssez)
@@ -838,21 +836,3 @@ expand_components <- function(ct) {
   }
 }
 
-
-# f1 <- function() {
-#   assign("x", 2, pos = 1)
-#   # nct <- names(ct)
-#   # for (i in seq_along(nct)) {
-#   #   assign(nct[i], ct[[i]], envir = )
-#   # }
-# }
-#
-# f2 <- function() {
-#   f1()
-#   x + 4
-# }
-# f2()
-#
-#
-#
-# expand_components()
