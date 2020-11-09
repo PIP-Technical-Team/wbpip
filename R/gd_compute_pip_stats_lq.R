@@ -1,6 +1,5 @@
 #' Computes poverty statistics from grouped data
 #'
-<<<<<<< HEAD
 #' @param population numeric: cumulative proportion of population
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
@@ -39,56 +38,19 @@ gd_compute_pip_stats_lq <- function(population,
                                     ppp = NULL,
                                     p0 = 0.5) {
   # Adjust mean if different PPP value is provided
-=======
-#' @param .data dataframe: grouped data
-#' @param mean numeric: Welfare mean
-#' @param povline numeric: Poverty line
-#' @param ppp numeric: PPP request by user
-#' @param default_ppp numeric: Default purchasing power parity
-
-#' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#'
-#' @return list
-#' @export
-#'
-#' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l)
-#
-gd_compute_pip_stats_lq <- function(.data,
-                                    mean,
-                                    povline,
-                                    ppp = NULL,
-                                    default_ppp,
-                                    popshare = NULL) {
-
-  n_obs <- nrow(.data)
-  population <- .data$population
-  welfare <- .data$welfare
-
-  p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
   if (!is.null(ppp)) {
     mean <- mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
   # STEP 1: Prep data to fit functional form
-<<<<<<< HEAD
   prepped_data <- create_functional_form_lq(welfare = welfare,
                                             population = population)
 
   # STEP 2: Estimate regression coefficients using LQ parameterization
   reg_results <- regres(prepped_data, is_lq = TRUE)
   reg_coef <- reg_results$coef
-=======
-  prepped_data <- create_functional_form_lq(population, welfare)
 
-  # STEP 2: Estimate regression coefficients using LQ parameterization
-  reg_results <- regres(prepped_data)
-  reg_coef <- reg_results$coef
-
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
   A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
@@ -109,11 +71,7 @@ gd_compute_pip_stats_lq <- function(.data,
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-<<<<<<< HEAD
   results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
-=======
-  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -126,11 +84,7 @@ gd_compute_pip_stats_lq <- function(.data,
 
 #' Prepares data for Lorenz Quadratic regression
 #'
-<<<<<<< HEAD
 #' @description  Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
-=======
-#' @description  Prepares data for regression on L(1-L) on (P^2-L), L(P-1) and
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
 #' (P-L). The last observation of (p,l), which by construction has the value
 #' (1, 1), is excluded since the functional form for the Lorenz curve already
 #' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
@@ -474,28 +428,6 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   }
 }
 
-#' Computes polarization index from Quadratic Lorenz fit
-#'
-#' @param mean numeric: Welfare mean
-#' @param p0 numeric: To document
-#' @param dcm numeric: To document
-#' @param A numeric: Lorenz curve coefficient
-#' @param B numeric: Lorenz curve coefficient
-#' @param C numeric: Lorenz curve coefficient
-#'
-#' @return numeric
-#'
-gd_compute_polarization_lq <- function(mean,
-                                       p0,
-                                       dcm,
-                                       A, B, C) {
-
-  pol <- 2 - (1 / p0) +
-    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
-    (p0 * mean * derive_lq(p0, A, B, C))
-
-  return(pol)
-}
 
 #' Computes distributional stats from Lorenz Quadratic fit
 #'
@@ -519,7 +451,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
   median  <- mean * derive_lq(0.5, A, B, C)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
-  pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
+  pol     <- gd_compute_polarization(mean, p0, dcm, A, B, C)
   ris     <- value_at_lq(0.5, A, B, C)
   mld     <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
