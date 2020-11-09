@@ -337,13 +337,13 @@ gd_compute_watts_lb <- function(headcount, mu, povline, dd, A, B, C) {
   xend <- 0
   gap <- 0
   snw <- headcount * dd
-  watts <- 0
+  watt <- 0
 
   x1 <- derive_lb(snw / 2, A, B, C)
   if (x1 <= 0) {
     gap <- snw / 2
   } else {
-    watts <- log(x1) * snw
+    watt <- log(x1) * snw
   }
   xend <- headcount - snw
   x1 <- derive_lb(0, A, B, C)
@@ -357,16 +357,16 @@ gd_compute_watts_lb <- function(headcount, mu, povline, dd, A, B, C) {
       }
     } else {
       gap <- 0
-      watts <- watts + (log(x1) + log(x2)) * snw * 0.5
+      watt <- watt + (log(x1) + log(x2)) * snw * 0.5
     }
     x1 <- x2
   }
-  if ((mu != 0) && (watts != 0)) {
-    x1 <- povline / mu
+  if ((mean != 0) && (watt != 0)) {
+    x1 <- povline / mean
     if (x1 > 0) {
-      watts <- log(x1) * headcount - watts
-      if (watts > 0) {
-        return(watts)
+      watt <- log(x1) * headcount - watt
+      if (watt > 0) {
+        return(watt)
       }
     }
     return(NA)
@@ -426,10 +426,10 @@ gd_compute_poverty_stats_lb <- function(mean,
   is_normal <- FALSE
   # Compute headcount
   headcount <- gd_compute_headcount_lb(mean = mean,
-                                    povline = povline,
-                                    A = A,
-                                    B = B,
-                                    C = C)
+                                       povline = povline,
+                                       A = A,
+                                       B = B,
+                                       C = C) {
   if (is.na(headcount)) {return(NA)}
 
   is_normal <- TRUE
@@ -447,7 +447,38 @@ gd_compute_poverty_stats_lb <- function(mean,
   p2 <- ifelse(pg < p2, pg - 0.00001, p2)
   pg <- ifelse(pg < 0, 0, pg)
   p2 <- ifelse(p2 < 0, 0, p2)
-  }
+}
+
+# First derivative of the Lorenz curve
+dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
+
+# Second derivative of the Lorenz curve
+ddl <- A * (headcount^B) *
+  ((1 - headcount)^C) *
+  ((B * (1 - B) / headcount^2) +
+     (2 * B * C / (headcount * (1 - headcount))) +
+     (C * (1 - C) / ((1 - headcount)^2)))
+
+# Elasticity of headcount index w.r.t mean
+eh <- -povline / (mean * headcount * ddl)
+
+# Elasticity of poverty gap index w.r.t mean
+epg <- 1 - (headcount / pg)
+
+# Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
+ep <- 2 * (1 - pg / p2)
+
+# PElasticity of headcount index w.r.t gini index
+gh <- (1 - povline / mean) / (headcount  * ddl)
+
+# Elasticity of poverty gap index w.r.t gini index
+gpg <- 1 + (((mean / povline) - 1) * headcount / pg)
+
+# Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
+gp <- 2 * (1 + (((mean / povline) - 1) * pg / p2))
+
+# Watts index
+watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
 
   return(
     list(
