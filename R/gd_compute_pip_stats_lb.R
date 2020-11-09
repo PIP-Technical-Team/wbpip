@@ -159,51 +159,34 @@ derive_lb <- function(x, A, B, C) {
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
 #' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
 #'
 #' @return list
 #'
-#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
-#' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
+#' @seealso \href{https://econpapers.repec.org/article/ecmemetrp/v_3a48_3ay_3a1980_3ai_3a2_3ap_3a437-46.htm}{Original Beta Lorenz curve paper}
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
 #'
-check_curve_validity_lb <- function(A, B, C, e, m, n, r) {
+check_curve_validity_lb <- function(A, B, C) {
 
-  is_normal <- FALSE
-  is_valid <- FALSE
+  is_valid <- TRUE
 
-  # r needs to be > 0 because need to extract sq root
-  if (r < 0) {return(list(is_normal = is_normal,
-                          is_valid = is_valid))}
-
-  if (e > 0 || C < 0) {
-    return(list(is_normal = is_normal,
-                is_valid = is_valid))
+  for (w in seq(from = 0.001, to = 0.1, by = 0.05)) {
+    if (derive_lb(w, A, B, C) < 0) {
+      is_valid <- FALSE
+      break
+    }
   }
 
-  # Failure conditions for checking theoretically valid Lorenz curve
-  # Found in section 4 of Datt computational tools paper
-  cn1 <- n^2
-  cn3 <- cn1 / (4 * e^2)
-
-  if (!((m < 0) |
-        ((m > 0) & (m < cn3) & (n >= 0)) |
-        ((m > 0) & (m < -n/2) & (m < cn3)))) {
-    return(list(is_normal = is_normal,
-                is_valid = is_valid))
+  if (is_valid) {
+    for (w in seq(from = 0.001, to = 0.999, by = 0.05)) {
+      if (DDLK(w, A, B, C) < 0) { # What does DDLK stands for?? What does it do?
+        is_valid <- FALSE
+        break
+      }
+    }
   }
 
-  is_normal <- TRUE
-  is_valid <- (A + C) >= 0.9
-
-  return(list(is_normal = is_normal,
-              is_valid = is_valid))
+  return(list(is_valid = is_valid))
 
 }
 
@@ -599,22 +582,11 @@ gd_compute_poverty_stats_lb <- function(mean,
 #'
 gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
 
-  # Compute key numbers from lorenz beta form
-  # Theorem 3 from original lorenz beta paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
-
-  validity <- check_curve_validity_lb(A, B, C, e, m, n, r)
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
+  validity <- check_curve_validity_lb(A, B, C)
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lb(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lb(mean, p0, A, B, C)
 
 
   # Compute poverty stats ---------------------------------------------------
@@ -689,3 +661,25 @@ gd_compute_fit_lb <- function(welfare,
 
   return(out)
 }
+
+#' DDLK
+#'
+#' @param h numeric
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' DDLK(h, A, B, C)
+#'
+DDLK <- function(h, A, B, C) {
+  tmp1 <- B * (1 - B) / (h^2)
+  tmp2 <- (2 * B * C) / (h * (1 - h))
+  tmp3 <- C * (1 - C) / ((1 - h)^2)
+  res <- A * (h^B) * ((1 - h)^C) * (tmp1 + tmp2 + tmp3)
+  return(res)
+}
+
