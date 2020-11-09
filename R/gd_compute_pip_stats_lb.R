@@ -414,14 +414,6 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
 #' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
-#' @param s1 numeric: To document
-#' @param s2 numeric: To document
 #'
 #' @return list
 #'
@@ -429,22 +421,18 @@ gd_compute_poverty_stats_lb <- function(mean,
                                         povline,
                                         A,
                                         B,
-                                        C,
-                                        e,
-                                        m,
-                                        n,
-                                        r,
-                                        s1,
-                                        s2) {
+                                        C) {
+
+  is_normal <- FALSE
   # Compute headcount
-  bu <- B + (2 * povline / mean)
-  u <- mean / povline
+  headcount <- gd_compute_headcount_lb(mean = mean,
+                                    povline = povline,
+                                    A = A,
+                                    B = B,
+                                    C = C)
+  if (is.na(headcount)) {return(NA)}
 
-  headcount <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
-
-  tmp0 <- (m * headcount^2) + (n * headcount) + (e^2)
-  tmp0 <- ifelse(tmp0 < 0, 0, tmp0)
-  tmp0 <- sqrt(tmp0)
+  is_normal <- TRUE
 
   # First derivative of the Lorenz curve
   dl <- -(0.5 * B) - (0.25 * ((2 * m * headcount) + n) / tmp0)
@@ -622,3 +610,38 @@ DDLK <- function(h, A, B, C) {
   return(res)
 }
 
+#' Compute the headcount statistic from Lorenz Beta fit
+#'
+#' @param mean numeric: Welfare measure mean (income of consumption)
+#' @param povline numeric: Poverty line
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#'
+gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
+  # Compute headcount
+  headcount <- rtSafe(0.0001, 0.9999, 1e-4,
+                      mean = mean,
+                      povline = povline,
+                      A = A,
+                      B = B,
+                      C = C)
+  # Check headcount invalidity conditions
+  if (headcount < 0) {return(NA)}
+
+  condition1 <- is.na(BETAI(a = 2 * B - 1,
+                            b = 2 * C + 1,
+                            x = headcount))
+  condition2 <- is.na(BETAI(a = 2 * B,
+                            b = 2 * C,
+                            x = headcount))
+  condition3 <- is.na(BETAI(a = 2 * B + 1,
+                            b = 2 * C - 1,
+                            x = headcount))
+
+  if (condition1 | condition2 | condition3) {return(NA)}
+
+  return(headcount)
+}
