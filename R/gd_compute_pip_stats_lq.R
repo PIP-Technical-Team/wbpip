@@ -412,28 +412,6 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   }
 }
 
-#' Computes polarization index from Quadratic Lorenz fit
-#'
-#' @param mean numeric: Welfare mean
-#' @param p0 numeric: To document
-#' @param dcm numeric: To document
-#' @param A numeric: Lorenz curve coefficient
-#' @param B numeric: Lorenz curve coefficient
-#' @param C numeric: Lorenz curve coefficient
-#'
-#' @return numeric
-#'
-gd_compute_polarization_lq <- function(mean,
-                                       p0,
-                                       dcm,
-                                       A, B, C) {
-
-  pol <- 2 - (1 / p0) +
-    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
-    (p0 * mean * derive_lq(p0, A, B, C))
-
-  return(pol)
-}
 
 #' Computes distributional stats from Lorenz Quadratic fit
 #'
@@ -457,7 +435,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
   median  <- mean * derive_lq(0.5, A, B, C)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
-  pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
+  pol     <- gd_compute_polarization(mean, p0, dcm, A, B, C)
   ris     <- value_at_lq(0.5, A, B, C)
   mld     <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
