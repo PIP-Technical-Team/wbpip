@@ -8,21 +8,19 @@
 
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional
-#' @param isLQ boolean: indicates whether the estimation of lorenz quadratic
 #'
 #' @return list
 #' @export
 #'
 #' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+#' gd_estimate_lb(.data, , povline, default_ppp, ppp, popshare, p, l)
 #
-gd_compute_pip_stats_lq <- function(.data,
+gd_compute_pip_stats_lb <- function(.data,
                                     mean,
                                     povline,
                                     ppp = NULL,
                                     default_ppp,
-                                    popshare = NULL,
-                                    isLQ = TRUE) {
+                                    popshare = NULL) {
 
   n_obs <- nrow(.data)
   population <- .data$population
@@ -35,17 +33,13 @@ gd_compute_pip_stats_lq <- function(.data,
       ppp <- default_ppp
     }
   # STEP 1: Prep data to fit functional form
-  prepped_data <- create_functional_form_lq(population, welfare)
+  prepped_data <- create_functional_form_lb(population, welfare)
 
-  # STEP 2: Estimate regression coefficients using LQ parameterization
+  # STEP 2: Estimate regression coefficients using LB parameterization
   reg_results <- regres(prepped_data)
   reg_coef <- reg_results$coef
 
-  # What is isLQ? Where is it defined?
-  if (isLQ)
-    A <- reg_coef[1]
-  else
-    A <- exp(reg_coef[1]) # Why exp() if isLQ == FALSE?
+  A <- exp(reg_coef[1]) # Why do we use exp() here?
   B <- reg_coef[2]
   C <- reg_coef[3]
 
@@ -53,22 +47,22 @@ gd_compute_pip_stats_lq <- function(.data,
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * mean
+    povline <- derive_lb(popshare, A, B, C) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- mean * derive_lb(0.001, A, B, C) + 4
+  z_max <- mean * derive_lb(0.980, A, B, C) - 4
   z_min <- ifelse(z_min < 0, 0, z_min)
 
   results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lb(n_obs, mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)
 
   res <- c(results1, results2, results_fit, reg_results)
 
@@ -76,23 +70,20 @@ gd_compute_pip_stats_lq <- function(.data,
 
 }
 
-#' Prepares data for Lorenz Quadratic regression
+#' Prepares data for lorenz beta regression
 #'
-#' @description  Prepares data for regression on L(1-L) on (P^2-L), L(P-1) and
-#' (P-L). The last observation of (p,l), which by construction has the value
+#' @description  Prepares data for regression. The last observation of (p,l), which by construction has the value
 #' (1, 1), is excluded since the functional form for the Lorenz curve already
-#' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
-#' original paper.
+#' forces it to pass through the point (1, 1).
 #'
 #' @param lorenz_pop numeric: Population vector from empirical Lorenz curve
 #' @param lorenz_welfare numeric: Welfare vector from empirical Lorenz curve
 #'
 #' @return data.frame
 #'
-#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
-#' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
+#' @seealso \href{https://econpapers.repec.org/article/ecmemetrp/v_3a48_3ay_3a1980_3ai_3a2_3ap_3a437-46.htm}{Original Beta Lorenz curve paper}
 
-create_functional_form_lq <- function(lorenz_pop,
+create_functional_form_lb <- function(lorenz_pop,
                                       lorenz_welfare) {
   # CHECK inputs
   assertthat::assert_that(is.numeric(lorenz_pop))
@@ -106,14 +97,14 @@ create_functional_form_lq <- function(lorenz_pop,
   lorenz_pop <- lorenz_pop[1:nobs]
   lorenz_welfare <- lorenz_welfare[1:nobs]
 
-  # L(1-L)
-  y <- lorenz_welfare * (1 - lorenz_welfare)
-  # (P^2-L)
-  x1 <- lorenz_pop^2 - lorenz_welfare
-  # L(P-1)
-  x2 <- lorenz_welfare * (lorenz_pop - 1)
-  # P-L
-  x3 <- lorenz_pop - lorenz_welfare
+  # y
+  y <-  log(lorenz_pop - lorenz_welfare)
+  # x1
+  x1 <- 1
+  # x2
+  x2 <- log(lorenz_pop)
+  # x3
+  x3 <- log(1 - lorenz_pop)
 
   out <- data.frame(y, x1, x2, x3, stringsAsFactors = FALSE)
 
@@ -121,10 +112,9 @@ create_functional_form_lq <- function(lorenz_pop,
 }
 
 
-#' Returns the first derivative of the quadratic Lorenz
+#' Returns the first derivative of the beta Lorenz
 #'
-#' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
-#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#' `derive_lb()` returns the first derivative of the beta Lorenz curves
 #'
 #' @param x numeric: point on curve
 #' @param A numeric vector: lorenz curve coefficient
@@ -133,22 +123,26 @@ create_functional_form_lq <- function(lorenz_pop,
 #'
 #' @return numeric
 #'
-derive_lq <- function(x, A, B, C) {
-  e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  tmp <- (m * x^2) + (n * x) + (e^2)
-  tmp <- ifelse(tmp < 0, 0, tmp)
+derive_lb <- function(x, A, B, C) {
+  if (x == 0) {
+    if (B == 1) {return(1 - A)}
+    if (B > 1) {return(1)}
+    return(-Inf)
+  } else if (x == 0) {
+    if (C == 1) {return(1 + A)}
+    if (C > 1) {return(1)}
+    return(Inf)
+  }
 
   # Formula for first derivative of GQ Lorenz Curve
-  val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+  val <- 1 - (A * x^B * (1 - x)^C * ((B / x) - C / (1 - x)))
 
   return(val)
 }
 
-#' Check validity of Lorenz Quadratic fit
+#' Check validity of lorenz beta fit
 #'
-#' `check_curve_validity_lq()` checks the validity of the Lorenz Quadratic fit
+#' `check_curve_validity_lb()` checks the validity of the lorenz beta fit
 #'
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
@@ -167,7 +161,7 @@ derive_lq <- function(x, A, B, C) {
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
 #'
-check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
+check_curve_validity_lb <- function(A, B, C, e, m, n, r) {
 
   is_normal <- FALSE
   is_valid <- FALSE
@@ -201,9 +195,9 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
 }
 
-#' Compute gini index from Lorenz Quadratic fit
+#' Compute gini index from lorenz beta fit
 #'
-#' `gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
+#' `gd_compute_gini_lb()` computes the gini index from a lorenz beta fit
 #'
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
@@ -219,7 +213,7 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 #'
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
-gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+gd_compute_gini_lb <- function(A, B, C, e, m, n, r) {
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
@@ -255,10 +249,10 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 
 }
 
-#' Solves for quadratic Lorenz curves
+#' Solves for beta Lorenz curves
 #'
-#' `value_at_lq()`solves for quadratic Lorenz curves with c = 1
-#' General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#' `value_at_lb()`solves for beta Lorenz curves with c = 1
+#' General beta form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 #'
 #' @param x numeric: point on curve
 #' @param A numeric vector: First lorenz curve coefficient
@@ -267,7 +261,7 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #'
 #' @return numeric
 #'
-value_at_lq <- function(x, A, B, C) {
+value_at_lb <- function(x, A, B, C) {
   e <- -(A + B + C + 1)
   m <- (B^2) - (4 * A)
   n <- (2 * B * e) - (4 * C)
@@ -280,10 +274,10 @@ value_at_lq <- function(x, A, B, C) {
   return(estle)
 }
 
-#' Computes MLD from Lorenz Quadratic fit
+#' Computes MLD from lorenz beta fit
 #'
-#' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
-#' Quadratic fit
+#' `gd_compute_mld_lb()` computes the Mean Log deviation (MLD) from a Lorenz
+#' beta fit
 #'
 #' @param dd numeric
 #' @param A numeric vector: lorenz curve coefficient
@@ -292,8 +286,8 @@ value_at_lq <- function(x, A, B, C) {
 #'
 #' @return numeric
 #'
-gd_compute_mld_lq <- function(dd, A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C)
+gd_compute_mld_lb <- function(dd, A, B, C) {
+  x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
   if (x1 == 0) {
@@ -302,9 +296,9 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
   else {
     mld <- log(x1) * 0.001
   }
-  x1 <- derive_lq(0, A, B, C)
+  x1 <- derive_lb(0, A, B, C)
   for (xstep in seq(0, 0.998, 0.001)) {
-    x2 <- derive_lq(xstep + 0.001, A, B, C)
+    x2 <- derive_lb(xstep + 0.001, A, B, C)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
       if (gap > 0.5) {
@@ -322,7 +316,7 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
 
 #' Compute quantiles from Lorenz Quandratic fit
 #'
-#' `gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
+#' `gd_compute_quantile_lb()` computes quantiles from a lorenz beta fit.
 #'
 #' @param A numeric vector: lorenz curve coefficient
 #' @param B numeric vector: lorenz curve coefficient
@@ -330,13 +324,13 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
 #'
 #' @return numeric
 #'
-gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
   vec <- vector(mode = "numeric", length = n_quantile)
   x1 <- 1 / n_quantile
   q <- 0
   lastq <- 0
   for (i in seq_len(n_quantile - 1)) {
-    q <- value_at_lq(x1, A, B, C)
+    q <- value_at_lb(x1, A, B, C)
     v <- q - lastq
     vec[i] <- v
     lastq <- q
@@ -347,9 +341,9 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
   return(vec)
 }
 
-#'  Computes Watts Index from Quadratic Lorenz fit
+#'  Computes Watts Index from beta Lorenz fit
 #'
-#' `gd_compute_watts_lq()` computes Watts Index from Quadratic Lorenz fit
+#' `gd_compute_watts_lb()` computes Watts Index from beta Lorenz fit
 #' The first distribution-sensitive poverty measure was proposed in 1968 by Watts
 #' It is defined as the mean across the population of the proportionate poverty
 #' gaps, as measured by the log of the ratio of the poverty line to income,
@@ -368,9 +362,9 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #' @export
 #'
 #' @examples
-#' watt_index_lq(headcount, dd, A, B, C)
+#' watt_index_lb(headcount, dd, A, B, C)
 #'
-gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mu, povline, dd, A, B, C) {
   if (headcount <= 0) {
     return(0)
   }
@@ -384,17 +378,17 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   snw <- headcount * dd
   watts <- 0
 
-  x1 <- derive_lq(snw / 2, A, B, C)
+  x1 <- derive_lb(snw / 2, A, B, C)
   if (x1 <= 0) {
     gap <- snw / 2
   } else {
     watts <- log(x1) * snw
   }
   xend <- headcount - snw
-  x1 <- derive_lq(0, A, B, C)
+  x1 <- derive_lb(0, A, B, C)
   # Number of steps seems to be different from what happens in .Net codebase
   for (xstep in seq(0, xend, by = snw)) {
-    x2 <- derive_lq(xstep + snw, A, B, C)
+    x2 <- derive_lb(xstep + snw, A, B, C)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + snw
       if (gap > 0.05) {
@@ -418,7 +412,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   }
 }
 
-#' Computes polarization index from Quadratic Lorenz fit
+#' Computes polarization index from beta Lorenz fit
 #'
 #' @param mean numeric: Welfare mean
 #' @param p0 numeric: To document
@@ -429,19 +423,19 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
 #'
 #' @return numeric
 #'
-gd_compute_polarization_lq <- function(mean,
+gd_compute_polarization_lb <- function(mean,
                                        p0,
                                        dcm,
                                        A, B, C) {
 
   pol <- 2 - (1 / p0) +
-    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
-    (p0 * mean * derive_lq(p0, A, B, C))
+    (dcm - (2 * value_at_lb(p0, A, B, C) * mean)) /
+    (p0 * mean * derive_lb(p0, A, B, C))
 
   return(pol)
 }
 
-#' Computes distributional stats from Lorenz Quadratic fit
+#' Computes distributional stats from lorenz beta fit
 #'
 #' @param mean numeric: welfare mean
 #' @param p0 numeric: To document
@@ -457,16 +451,16 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #'
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, e, m, n, r) {
 
-  gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
-  median  <- mean * derive_lq(0.5, A, B, C)
-  rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
+  gini    <- gd_compute_gini_lb(A, B, C, e, m, n, r)
+  median  <- mean * derive_lb(0.5, A, B, C)
+  rmhalf  <- value_at_lb(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
-  pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
-  ris     <- value_at_lq(0.5, A, B, C)
-  mld     <- gd_compute_mld_lq(0.01, A, B, C)
-  deciles <- gd_compute_quantile_lq(A, B, C)
+  pol     <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
+  ris     <- value_at_lb(0.5, A, B, C)
+  mld     <- gd_compute_mld_lb(0.01, A, B, C)
+  deciles <- gd_compute_quantile_lb(A, B, C)
 
   return(list(
     gini         = gini,
@@ -480,7 +474,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
   ))
 }
 
-#' Computes poverty stats from Lorenz Quadratic fit
+#' Computes poverty stats from lorenz beta fit
 #'
 #' @param mean numeric: welfare mean
 #' @param povline numeric: Poverty line
@@ -497,7 +491,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
 #'
 #' @return list
 #'
-gd_compute_poverty_stats_lq <- function(mean,
+gd_compute_poverty_stats_lb <- function(mean,
                                         povline,
                                         A,
                                         B,
@@ -530,13 +524,13 @@ gd_compute_poverty_stats_lq <- function(mean,
   } else {
 
     # Poverty gap index (P.pg)
-    pov_gap <- headcount - (u * value_at_lq(headcount, A, B, C))
+    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
 
     # P.p2 - Distributionally sensitive FGT poverty measure
-    #P.p2 <- (2*P.pg) - P.h - u^2 * (A*P.h + B*value_at_lq(P.h, A, B, C) - (r/16 *log((1 - P.h/s1))/(1 - P.h/s2)))
+    #P.p2 <- (2*P.pg) - P.h - u^2 * (A*P.h + B*value_at_lb(P.h, A, B, C) - (r/16 *log((1 - P.h/s1))/(1 - P.h/s2)))
     # Poverty severity
     pov_gap_sq <- (2 * pov_gap) - headcount -
-      (u^2 * (A * headcount + B * value_at_lq(headcount, A, B, C) -
+      (u^2 * (A * headcount + B * value_at_lb(headcount, A, B, C) -
                 ((r / 16) * log((1 - headcount / s1)/(1 - headcount / s2)))))
 
     # Elasticity of headcount index w.r.t mean (P.eh)
@@ -557,7 +551,7 @@ gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watt <- gd_compute_watts_lb(headcount, mean, povline, 0.01, A, B, C)
   }
 
   return(
@@ -578,32 +572,32 @@ gd_compute_poverty_stats_lq <- function(mean,
   )
 }
 
-#' Estimates poverty and inequality stats from Quadratic Lorenz fit
+#' Estimates poverty and inequality stats from beta Lorenz fit
 #'
 #' @param n_obs numeric: number of observations
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param p0 numeric: TO document
-#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[1]
-#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[2]
-#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[3]
+#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[1]
+#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[2]
+#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[3]
 #'
 #' @return list
 #' @export
 #'
 #' @examples
-#' estimate_lq(n_obs, mean, povline, p0, coefs)
+#' estimate_lb(n_obs, mean, povline, p0, coefs)
 #'
-gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
+gd_estimate_lb <- function(n_obs, mean, povline, p0, A, B, C) {
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original lorenz quadratic paper
+  # Compute key numbers from lorenz beta form
+  # Theorem 3 from original lorenz beta paper
   e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
   m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
   n <- (2 * B * e) - (4 * C) # n is called Beta in paper
   r <- (n^2) - (4 * m * e^2) # r is called K in paper
 
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+  validity <- check_curve_validity_lb(A, B, C, e, m, n, r)
 
   r <- sqrt(r)
   s1 <- (r - n) / (2 * m)
@@ -611,12 +605,12 @@ gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lb(mean, p0, A, B, C, e, m, n, r)
 
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lb(mean, povline, A, B, C, e, m, n, r, s1, s2)
 
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
@@ -657,7 +651,7 @@ gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
 #'
 #' @return list
 #'
-gd_compute_fit_lq <- function(welfare,
+gd_compute_fit_lb <- function(welfare,
                               population,
                               headcount,
                               A,
@@ -668,7 +662,7 @@ gd_compute_fit_lq <- function(welfare,
   ssez <- 0
 
   for (i in seq_along(welfare[-1])) {
-    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual <- welfare[i] - value_at_lb(population[i], A, B, C)
     residual_sq <- residual^2
     sse <- sse + residual_sq
     if (population[i] < headcount)
@@ -678,7 +672,7 @@ gd_compute_fit_lq <- function(welfare,
     }
   }
   lasti <- lasti + 1
-  residual <- welfare[lasti] - value_at_lq(population[lasti], A, B, C)
+  residual <- welfare[lasti] - value_at_lb(population[lasti], A, B, C)
   ssez <- ssez + residual^2
 
   out <- list(sse, ssez)
