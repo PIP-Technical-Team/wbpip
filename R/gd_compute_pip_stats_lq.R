@@ -457,17 +457,17 @@ gd_compute_mld_lq <- function(ct) {
 #'
 #' @return numeric
 #'
-gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
-  vec <- vector(mode = "numeric", length = n_quantile)
-  x1 <- 1 / n_quantile
-  q <- 0
+gd_compute_quantile_lq <- function(ct, n_quantile = 10) {
+  vec   <- vector(mode = "numeric", length = n_quantile)
+  x1    <- 1 / n_quantile
+  q     <- 0
   lastq <- 0
   for (i in seq_len(n_quantile - 1)) {
-    q <- value_at_lq(x1, A, B, C)
-    v <- q - lastq
+    q      <- value_at_lq(x1, ct)
+    v      <- q - lastq
     vec[i] <- v
-    lastq <- q
-    x1 <- x1 + 1 / n_quantile
+    lastq  <- q
+    x1     <- x1 + 1 / n_quantile
   }
   vec[n_quantile] <- 1 - lastq
 
