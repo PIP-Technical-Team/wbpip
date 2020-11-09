@@ -423,46 +423,19 @@ gd_compute_poverty_stats_lb <- function(mean,
 
   is_normal <- TRUE
 
-  # First derivative of the Lorenz curve
-  dl <- -(0.5 * B) - (0.25 * ((2 * m * headcount) + n) / tmp0)
+  # Poverty gap
+  u <- mean / povline
+  pg <- headcount - (u * value_at_lb(headcount, A, B, C))
 
-  # Second derivative of the Lorenz curve
-  ddl <- r^2 / (tmp0^3 * 8)
 
-  if (headcount < 0) {
-    headcount = pov_gap = pov_gap_sq = watt <- 0
-    eh = epg = ep = gh = gpg = gp  <- 0
-  } else {
+  # Poverty severity
+  p2 <- gd_compute_pov_severity_lb(u, headcount, pg, A, B, C)
 
-    # Poverty gap index (P.pg)
-    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
-
-    # P.p2 - Distributionally sensitive FGT poverty measure
-    #P.p2 <- (2*P.pg) - P.h - u^2 * (A*P.h + B*value_at_lb(P.h, A, B, C) - (r/16 *log((1 - P.h/s1))/(1 - P.h/s2)))
-    # Poverty severity
-    pov_gap_sq <- (2 * pov_gap) - headcount -
-      (u^2 * (A * headcount + B * value_at_lb(headcount, A, B, C) -
-                ((r / 16) * log((1 - headcount / s1)/(1 - headcount / s2)))))
-
-    # Elasticity of headcount index w.r.t mean (P.eh)
-    eh <- -povline / (mean * headcount * ddl)
-
-    # Elasticity of poverty gap index w.r.t mean (P.epg)
-    epg <- 1 - (headcount / pov_gap)
-
-    # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean (P.ep)
-    ep <- 2 * (1 - pov_gap / pov_gap_sq)
-
-    # PElasticity of headcount index w.r.t gini index (P.gh)
-    gh <- (1 - povline / mean) / (headcount * ddl)
-
-    # Elasticity of poverty gap index w.r.t gini index (P.gpg)
-    gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
-
-    # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
-    gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
-
-    watt <- gd_compute_watts_lb(headcount, mean, povline, 0.01, A, B, C)
+  # adjust pg and p2 if necessary
+  pg <- ifelse(headcount < pg, headcount - 0.00001, pg)
+  p2 <- ifelse(pg < p2, pg - 0.00001, p2)
+  pg <- ifelse(pg < 0, 0, pg)
+  p2 <- ifelse(p2 < 0, 0, p2)
   }
 
   return(
@@ -510,7 +483,7 @@ gd_estimate_lb <- function(n_obs, mean, povline, p0, A, B, C) {
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lb(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lb(mean, povline, A, B, C)
 
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
@@ -636,4 +609,293 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
   if (condition1 | condition2 | condition3) {return(NA)}
 
   return(headcount)
+}
+
+#' BETAI
+#'
+#' @param a numeric
+#' @param b numeric
+#' @param x numeric
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' BETAI(a, b, x)
+#'
+BETAI <- function(a, b, x) {
+  bt <- betai <- 0
+
+  if (x == 0 || x == 1) {
+    bt <- 0
+  } else {
+    bt <- exp((a * log(x)) + (b * log(1 - x)))
+  }
+
+  if (x < (a + 1)/(a + b + 2))
+    betai <- bt * BETAICF(a, b, x) / a
+  else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b)))
+    betai <- NA
+  else
+    betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
+
+  return(betai)
+}
+
+#' GAMMLN
+#'
+#' @param x numeric
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' GAMMLN(xx)
+#'
+GAMMLN <- function(xx) {
+
+  cof <- list(76.18009173, -86.50532033, 24.01409822, -1.231739516, 0.120858003e-2, -0.536382e-5)
+  stp <- 2.50662827465
+  half <- 0.5
+  one <- 1
+  fpf <- 5.5
+  # x = tmp = ser <- 0
+  x <- 0
+  tmp <- 0
+  ser <- 0
+
+  x <- xx - one
+  tmp <- x + fpf
+  if (tmp <= 0)
+    return(NA)
+
+  tmp <- (x + half) * log(tmp) - tmp
+  ser <- one
+
+  for (i in seq(1, 6, by = 1)) {
+    x <- sum(x, one)
+    ser <- sum(ser, cof[[i]] / x)
+  }
+
+  if (stp*ser <= 0)
+    return(NA)
+
+  return(tmp + log(stp * ser))
+}
+
+#' BETAICF
+#'
+#' @param a numeric
+#' @param b numeric
+#' @param x numeric
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' BETAICF(a, b, x)
+#'
+BETAICF <- function(a, b, x) {
+
+  eps <- 3e-7
+  # am = bm = az <- 1
+  am <- 1
+  bm <- 1
+  az <- 1
+  qab <- a + b
+  qap <- a + 1
+  qam <- a - 1
+  bz <- 1 - (qab * x / qap)
+
+  # d = app = bpp = ap = bp = aold = em = tem <- 0
+  d <- 0
+  app <- 0
+  bpp <- 0
+  ap <- 0
+  bp <- 0
+  aold <- 0
+  em <- 0
+  tem <- 0
+  for (m in seq(1, 100, by = 1)) {
+    em <- m
+    tem <- sum(em, em)
+    d <- em * (b - m) * x / ((qam + tem) * (a + tem))
+    ap <- az + (d * am)
+    bp <- bz + (d * bm)
+    d <- -(a + em) * (qab + em) * x / ((a + tem) * (qap + tem))
+    app <- ap + (d * az)
+    bpp <- bp + (d * bz)
+    aold <- az
+    am <- ap / bpp
+    bm <- bp / bpp
+    az <- app / bpp
+    bz <- 1
+    if ((abs(az - aold)) < (eps * abs(az)))
+      break
+  }
+  return(az)
+}
+
+#' Compute poverty severity for Lorenz Beta fit
+#'
+#' @param u
+#' @param headcount
+#' @param pg
+#' @param A
+#' @param B
+#' @param C
+#'
+#' @return numeric
+#'
+gd_compute_pov_severity_lb <- function(u, headcount, pg, A, B, C) {
+  u1 <- 1 - u
+  beta1 <- BETAI(a = 2 * B - 1,
+                 b = 2 * C + 1,
+                 x = headcount)
+  beta2 <- BETAI(a = 2 * B,
+                 b = 2 * C,
+                 x = headcount)
+  beta3 <- BETAI(a = 2 * B + 1,
+                 b = 2 * C - 1,
+                 x = headcount)
+
+  p2 <- u1 * (2 * pg - u1 * headcount) + A^2 * u^2 * (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+
+  return(p2)
+}
+
+#' rtSafe
+#'
+#' @param x1 numeric
+#' @param x2 numeric
+#' @param xacc numeric
+#' @param mean numeric: Welfare measure mean (income of consumption)
+#' @param povline numeric: Poverty line
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' rtSafe(x1, x2, xacc, povline, mean, A, B, C)
+#'
+rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
+
+  funcCall1 <- funcD(x1, mean, povline, A, B, C)
+  fl <- funcCall1[[1]]
+
+  funcCall2 <- funcD(x2, mean, povline, A, B, C)
+  fh <- funcCall2[[1]]
+  df <- funcCall2[[2]]
+
+  if (fl * fh >= 0) {
+    res <- rtNewt(mean = mean, povline = povline, A = A, B = B, C = C)
+    return(res)
+  }
+
+  if (fl < 0) {
+    xl <- x1
+    xh <- x2
+  } else {
+    xl <- x2
+    xh <- x1
+  }
+
+  rtsafe <- 0.5 * (x1 + x2)
+  dxold <- abs(x2 - x1)
+  dx <- dxold
+
+  funcCall3 <- funcD(rtsafe, mean, povline, A, B, C)
+  f <- funcCall3[[1]]
+  df <- funcCall3[[2]]
+
+  temp <- 0
+  for (i in seq(0, 99, by = 1)) {
+    tmp <- (((rtsafe - xh) * df) - f) * (((rtsafe - xl) * df) - f)
+    if (tmp >= 0 || abs(2 * f) > abs(dxold * df)) {
+      dxold <- dx
+      dx <- 0.5 * (xh - xl)
+      rtsafe <- xl + dx
+      if (xl == rtsafe) {return(rtsafe)}
+    } else {
+      dxold <- dx
+      dx <- f/df
+      temp <- temp - dx
+      if (temp == rtsafe) {return(rtsafe)}
+    }
+    if (abs(dx) < xacc) {return(rtsafe)}
+
+    funcCall4 <- funcD(rtsafe, mean, povline, A, B, C)
+    f <- funcCall4[[1]]
+
+    if (f < 0)
+      xl <- rtsafe
+    else
+      xh <- rtsafe
+  }
+
+  return(-1)
+}
+
+#' funcD
+#'
+#' @param x numeric
+#' @param mean numeric: Welfare measure mean (income of consumption)
+#' @param povline numeric: Poverty line
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' funcD(x, povline, mean, A, B, C)
+#'
+funcD <- function(x, mean, povline, A, B, C) {
+  x1 <- 1 - x
+  v1 <- (x^B) * (x1^C)
+  f <- (A * v1 * ((B/x) - (C/x1))) + (povline/mean) - 1
+  df <- A * v1 * (((B/x) - (C/x1))^2 - (B/x^2) - (C/x1^2))
+  return(list(f = f,
+              df = df))
+}
+
+#' rtNewt
+#'
+#' @param mean numeric: Welfare measure mean (income of consumption)
+#' @param povline numeric: Poverty line
+#' @param A numeric vector: lorenz curve coefficient
+#' @param B numeric vector: lorenz curve coefficient
+#' @param C numeric vector: lorenz curve coefficient
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' rtNewt(mean, povline, A, B, C)
+#'
+rtNewt <- function(mean, povline, A, B, C) {
+  x1 <- 0
+  x2 <- 1
+  xacc <- 1e-4
+  rtnewt <- 0.5 * (x1 + x2)
+
+  for (i in seq(0, 19, by = 1)) {
+    x <- rtnewt
+    v1 <- (x^B) * ((1 - x)^C)
+    f <- A * v1 * ((B / x) - C/(1 - x)) + (povline / mean) - 1
+    df <- A * v1 * (((B / x) - C / (1 - x))^2 - (B / x^2) - (C / (1 - x)^2))
+    dx <- f / df
+    rtnewt <- rtnewt - dx
+    if ((x1 - rtnewt) * (rtnewt - x2) < 0) {
+      rtnewt <- ifelse(rtnewt < x1, 0.5 * (x2 - x), 0.5 * (x - x1))
+    } else {
+      if (abs(dx) < xacc)
+        return(rtnewt)
+    }
+  }
+  return(-1)
 }
