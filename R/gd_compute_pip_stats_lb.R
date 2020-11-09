@@ -185,57 +185,30 @@ check_curve_validity_lb <- function(A, B, C) {
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
 #' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric: r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param nbins numeric: Number of bins used to compute gini
 #'
 #' @return numeric
 #'
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
-gd_compute_gini_lb <- function(A, B, C, e, m, n, r) {
+gd_compute_gini_lb <- function(A, B, C,nbins = 499) {
 
-  # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
-  # P.isValid <- (A + C) >= 0.9
-  # P.isNormal <- TRUE
+  out <- vector(mode = "numeric", length = nbins)
 
-  e1 <- abs(A + C - 1)
-  e2 <- 1 + (B / 2) + e
-
-  tmp1 <- n * (B + 2) / (4 * m)
-  tmp2 <- (r^2) / (8 * m)
-  tmp3 <- (2 * m) + n
-
-  if (m > 0) {
-    # tmpnum <- tmp3 + 2 * sqrt(m) * abs(e)
-    # tmpden <- n - 2 * abs(e) * sqrt(m)
-
-    # Formula from Datt paper
-    # CHECK that code matches formulas in paper
-    gini <- e2 + (tmp3/(4 * m)) * e1 - (n*abs(e) / (4 * m)) - ((r^2) / (8 * sqrt(m))) * log(abs(((tmp3 + (2 * sqrt(m) * e1)))/(n + (2 * sqrt(m) * abs(e)))))
-    #P.gi <- (e/2) - tmp1 - (tmp2 * log(abs(tmpnum/tmpden)) / sqrt(m))
-
-  } else {
-    tmp4 <- ((2*m) + n) / r
-    tmp4 <- ifelse(tmp4 < -1, -1, tmp4)
-    tmp4 <- ifelse(tmp4 > 1, 1, tmp4)
-
-    # Formula does not match with paper
-    gini <- e2 + (tmp3/(4*m)) * e1 - (n*abs(e)/(4*m)) + (tmp2 * (asin(tmp4) - asin(n/r)) / sqrt(-m))
-    # P.gi <- (e/2) - tmp1 + ((tmp2 * (asin(tmp4) - asin(n/r))) / sqrt(-m))
+  for (i in seq(from = 0, to = nbins, by = 1)) {
+    x <- (i * 0.002) + 0.001
+    out[i] <- 4 * value_at_lb(x, A, B, C) + 2 * value_at_lb(x + 0.001, A, B, C)
   }
 
+  gini <- sum(out)
+  gini <- 1 - ((gini - 1) / 1500) # Why 1500? Why is it hardcoded?
   return(gini)
 
 }
 
 #' Solves for beta Lorenz curves
 #'
-#' `value_at_lb()`solves for beta Lorenz curves with c = 1
-#' General beta form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#' `value_at_lb()`solves for beta Lorenz curves
 #'
 #' @param x numeric: point on curve
 #' @param A numeric vector: First lorenz curve coefficient
@@ -245,16 +218,10 @@ gd_compute_gini_lb <- function(A, B, C, e, m, n, r) {
 #' @return numeric
 #'
 value_at_lb <- function(x, A, B, C) {
-  e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  temp <- (m * x^2) + (n * x) + (e^2)
-  temp <- ifelse(temp < 0, 0, temp)
 
-  # Solving the equation of the Lorenz curve
-  estle <- -0.5 * ((B * x) + e + sqrt(temp))
+  out <- x - (A * (x^B) * ((1 - x)^C))
 
-  return(estle)
+  return(out)
 }
 
 #' Computes MLD from lorenz beta fit
@@ -425,18 +392,12 @@ gd_compute_polarization_lb <- function(mean,
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
 #' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
 #'
 #' @return list
 #'
-gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 
-  gini    <- gd_compute_gini_lb(A, B, C, e, m, n, r)
+  gini    <- gd_compute_gini_lb(A, B, C)
   median  <- mean * derive_lb(0.5, A, B, C)
   rmhalf  <- value_at_lb(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
