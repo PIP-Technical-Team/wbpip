@@ -716,7 +716,6 @@ gd_compute_poverty_stats_lq <- function(mean,
 gd_estimate_lq <- function(mean, povline, p0, ct) {
 
   validity <- check_curve_validity_lq(ct)
-  expand_components(ct)
 
 
   # Compute distributional measures -----------------------------------------
