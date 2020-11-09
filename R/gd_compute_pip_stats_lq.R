@@ -562,11 +562,11 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
 gd_compute_polarization_lq <- function(mean,
                                        p0,
                                        dcm,
-                                       A, B, C) {
+                                       ct) {
 
   pol <- 2 - (1 / p0) +
-    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
-    (p0 * mean * derive_lq(p0, A, B, C))
+    (dcm - (2 * value_at_lq(p0, ct) * mean)) /
+    (p0 * mean * derive_lq(p0, ct))
 
   return(pol)
 }
@@ -592,10 +592,10 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
 
   gini    <- gd_compute_gini_lq(ct)
   median  <- mean * derive_lq(0.5, ct)
-  rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
+  rmhalf  <- value_at_lq(p0, ct) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
-  pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
-  ris     <- value_at_lq(0.5, A, B, C)
+  pol     <- gd_compute_polarization_lq(mean, p0, dcm, ct)
+  ris     <- value_at_lq(0.5, ct)
   mld     <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
 
