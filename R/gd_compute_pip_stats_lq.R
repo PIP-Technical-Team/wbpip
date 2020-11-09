@@ -397,17 +397,17 @@ gd_compute_gini_lq <- function(ct) {
 #'
 #' @return numeric
 #'
-value_at_lq <- function(x, A, B, C) {
-  e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  temp <- (m * x^2) + (n * x) + (e^2)
-  temp <- ifelse(temp < 0, 0, temp)
+value_at_lq <- function(x, ct) {
 
-  # Solving the equation of the Lorenz curve
-  estle <- -0.5 * ((B * x) + e + sqrt(temp))
+  expand_components(ct)
 
-  return(estle)
+  # Formula in the paper
+  Lp <- - (1/2) * (B*x + e + (m*x^2 + n*x +e^2)^(1/2))
+
+  # Solving the equation of the Lorenz curve (DOn't know where this formula comes from)
+  #estle <- -0.5 * ((B * x) + e + sqrt(temp))
+
+  return(Lp)
 }
 
 #' Computes MLD from Lorenz Quadratic fit
@@ -590,8 +590,8 @@ gd_compute_polarization_lq <- function(mean,
 gd_compute_dist_stats_lq <- function(mean, p0, ct) {
   expand_components(ct)
 
-  gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
-  median  <- mean * derive_lq(0.5, A, B, C)
+  gini    <- gd_compute_gini_lq(ct)
+  median  <- mean * derive_lq(0.5, ct)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
   pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
