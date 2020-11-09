@@ -348,7 +348,8 @@ check_curve_validity_lq <- function(ct) {
 #'
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
-gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+gd_compute_gini_lq <- function(ct) {
+  expand_components(ct)
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
@@ -586,7 +587,8 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #'
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_compute_dist_stats_lq <- function(mean, p0, ct) {
+  expand_components(ct)
 
   gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
   median  <- mean * derive_lq(0.5, A, B, C)
