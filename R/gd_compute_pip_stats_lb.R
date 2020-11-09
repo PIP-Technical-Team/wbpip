@@ -1,6 +1,5 @@
 #' Computes poverty statistics from grouped data
 #'
-<<<<<<< HEAD
 #' @param population numeric: cumulative proportion of population
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
@@ -39,56 +38,18 @@ gd_compute_pip_stats_lq <- function(population,
                                     ppp = NULL,
                                     p0 = 0.5) {
   # Adjust mean if different PPP value is provided
-=======
-#' @param .data dataframe: grouped data
-#' @param mean numeric: Welfare mean
-#' @param povline numeric: Poverty line
-#' @param ppp numeric: PPP request by user
-#' @param default_ppp numeric: Default purchasing power parity
-
-#' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#'
-#' @return list
-#' @export
-#'
-#' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l)
-#
-gd_compute_pip_stats_lq <- function(.data,
-                                    mean,
-                                    povline,
-                                    ppp = NULL,
-                                    default_ppp,
-                                    popshare = NULL) {
-
-  n_obs <- nrow(.data)
-  population <- .data$population
-  welfare <- .data$welfare
-
-  p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
   if (!is.null(ppp)) {
     mean <- mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
   # STEP 1: Prep data to fit functional form
-<<<<<<< HEAD
   prepped_data <- create_functional_form_lq(welfare = welfare,
                                             population = population)
 
   # STEP 2: Estimate regression coefficients using LQ parameterization
   reg_results <- regres(prepped_data, is_lq = TRUE)
   reg_coef <- reg_results$coef
-=======
-  prepped_data <- create_functional_form_lq(population, welfare)
-
-  # STEP 2: Estimate regression coefficients using LQ parameterization
-  reg_results <- regres(prepped_data)
-  reg_coef <- reg_results$coef
-
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
   A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
@@ -109,11 +70,7 @@ gd_compute_pip_stats_lq <- function(.data,
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-<<<<<<< HEAD
   results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
-=======
-  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -126,11 +83,7 @@ gd_compute_pip_stats_lq <- function(.data,
 
 #' Prepares data for Lorenz Quadratic regression
 #'
-<<<<<<< HEAD
 #' @description  Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
-=======
-#' @description  Prepares data for regression on L(1-L) on (P^2-L), L(P-1) and
->>>>>>> 113ecea (Rename main Lorenz Quadratic file)
 #' (P-L). The last observation of (p,l), which by construction has the value
 #' (1, 1), is excluded since the functional form for the Lorenz curve already
 #' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
@@ -740,4 +693,3 @@ gd_compute_fit_lq <- function(welfare,
 
   return(out)
 }
-
