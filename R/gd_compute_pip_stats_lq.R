@@ -256,7 +256,7 @@ derive_lq <- function(x, ct, method = 1) {
     # Formula for first derivative of GQ Lorenz Curve
     val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
     z <- val
-    cli::cli_alert_success("Share of mean that corresponds to threshold {.val {z}}")
+    # cli::cli_alert_success("Share of mean that corresponds to threshold {.val {z}}")
   }
   #Isolating Z from headcount equation in table 2 in Datt paper
   if (method == 2) {
@@ -264,13 +264,13 @@ derive_lq <- function(x, ct, method = 1) {
     y <- ( (-2*m*H - n) / r)^2
 
     z <- - (mu/2)*((y*B - B + sqrt(y*m*(y-1)) )/(y-1))
-    cli::cli_alert_success("Threshold (poverty line) {.val {z}}")
+    # cli::cli_alert_success("Threshold (poverty line) {.val {z}}")
   }
 
-  Lp <- - (1/2) * (B*x + e + (m*x^2 + n*x +e^2)^(1/2))
+  # Lp <- - (1/2) * (B*x + e + (m*x^2 + n*x +e^2)^(1/2))
 
-  cli::cli_alert_success("Share of Popluation {.val {scales::percent(x, accuracy = .01)}}")
-  cli::cli_alert_success("Share of total welfare, L(p) {.val {scales::percent(Lp, accuracy = .01)}}")
+  # cli::cli_alert_success("Share of Popluation {.val {scales::percent(x, accuracy = .01)}}")
+  # cli::cli_alert_success("Share of total welfare, L(p) {.val {scales::percent(Lp, accuracy = .01)}}")
 
   return(z)
 }
@@ -415,15 +415,12 @@ value_at_lq <- function(x, ct) {
 #' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
 #' Quadratic fit
 #'
-#' @param dd numeric
-#' @param A numeric vector: lorenz curve coefficient
-#' @param B numeric vector: lorenz curve coefficient
-#' @param C numeric vector: lorenz curve coefficient
-#'
+#' @param ct list
 #' @return numeric
 #'
-gd_compute_mld_lq <- function(dd, A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C)
+gd_compute_mld_lq <- function(ct) {
+
+  x1 <- derive_lq(0.0005, ct)
   gap <- 0
   mld <- 0
   if (x1 == 0) {
@@ -432,9 +429,9 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
   else {
     mld <- log(x1) * 0.001
   }
-  x1 <- derive_lq(0, A, B, C)
+  x1 <- derive_lq(0, ct)
   for (xstep in seq(0, 0.998, 0.001)) {
-    x2 <- derive_lq(xstep + 0.001, A, B, C)
+    x2 <- derive_lq(xstep + 0.001, ct)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
       if (gap > 0.5) {
@@ -596,7 +593,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
   dcm     <- (1 - gini) * mean
   pol     <- gd_compute_polarization_lq(mean, p0, dcm, ct)
   ris     <- value_at_lq(0.5, ct)
-  mld     <- gd_compute_mld_lq(0.01, A, B, C)
+  mld     <- gd_compute_mld_lq(ct)
   deciles <- gd_compute_quantile_lq(A, B, C)
 
   return(list(
