@@ -67,8 +67,8 @@ gd_compute_pip_stats_lq <- function(population,
   reg_results <- create_functional_form_lq(population = population,
                                             welfare    = welfare)
 
-  reg_coef <- reg_results$coef_stat$estimate
 
+  reg_coef <- reg_results$coef_stat$estimate
 
   # What is is_lq? Where is it defined?
   if (is_lq) {
@@ -80,24 +80,22 @@ gd_compute_pip_stats_lq <- function(population,
   B <- reg_coef[2]
   C <- reg_coef[3]
 
+  ct <- get_components_lq(A, B, C)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #-----   components of poverty measures using parameters ------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-
   # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * mean
+    povline <- derive_lq(popshare, ct) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- mean * derive_lq(0.001, ct) + 4
+  z_max <- mean * derive_lq(0.980, ct) - 4
   z_min <- ifelse(z_min < 0, 0, z_min)
 
   results1 <- list(mean, povline, z_min, z_max, ppp)
@@ -113,7 +111,8 @@ gd_compute_pip_stats_lq <- function(population,
 
   return(res)
 
-}
+} # End of gd_compute_pip_stats_lq
+
 
 #' Prepares data for Lorenz Quadratic regression
 #'
@@ -202,30 +201,78 @@ create_functional_form_lq <- function(welfare,
   return(out)
 } # end  of create_functional_form_lq
 
+#' Title
+#'
+#' @param A numeric:
+#' @param B
+#' @param C
+#' @return
+#' @export
+#'
+#' @examples
+get_components_lq <- function(A,B,C){
+
+  e   <-  -(A + B + C + 1)
+  m   <-  (B^2) - (4 * A)
+  n   <-  (2 * B * e) - (4 * C)
+  k   <-  (n^2) - (4 * m * e^2)
+  r   <-  sqrt(k)
+  s1  <-  (r - n) / (2 * m)
+  s2  <-  -(r + n) / (2 * m)
+
+
+  return(list(
+    e  =  e,
+    m  =  m,
+    n  =  n,
+    k  =  k,
+    r  =  r,
+    s1 =  s1,
+    s2 =  s2,
+    A  = A,
+    B  = B,
+    C  = C
+  ))
+} # end of get_components_lq
 
 #' Returns the first derivative of the Lorenz quadratic
 #'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
 #' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 #'
-#' @param x numeric: point on curve
-#' @param A numeric vector: lorenz curve coefficient
-#' @param B numeric vector: lorenz curve coefficient
-#' @param C numeric vector: lorenz curve coefficient
+#' @param x numeric: point on curve (i.e., share of population)
+#' @param ct list: components from `get_components_lq`
+#' @param method numeric: Method 1 is the share of mean that corresponds to the
+#' threshold that produces the defiles share of population
 #'
 #' @return numeric
-#'
-derive_lq <- function(x, A, B, C) {
-  e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  tmp <- (m * x^2) + (n * x) + (e^2)
-  tmp <- ifelse(tmp < 0, 0, tmp)
+derive_lq <- function(x, ct, method = 1) {
+  expand_components(ct)
 
-  # Formula for first derivative of GQ Lorenz Curve
-  val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+  if (method == 1) { # have not idea where it comes from.
+    tmp <- (m * x^2) + (n * x) + (e^2)
+    tmp <- ifelse(tmp < 0, 0, tmp)
 
-  return(val)
+    # Formula for first derivative of GQ Lorenz Curve
+    val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+    z <- val
+    cli::cli_alert_success("Share of mean that corresponds to threshold {.val {z}}")
+  }
+  #Isolating Z from headcount equation in table 2 in Datt paper
+  if (method == 2) {
+    H <- x
+    y <- ( (-2*m*H - n) / r)^2
+
+    z <- - (mu/2)*((y*B - B + sqrt(y*m*(y-1)) )/(y-1))
+    cli::cli_alert_success("Threshold (poverty line) {.val {z}}")
+  }
+
+  Lp <- - (1/2) * (B*x + e + (m*x^2 + n*x +e^2)^(1/2))
+
+  cli::cli_alert_success("Share of Popluation {.val {scales::percent(x, accuracy = .01)}}")
+  cli::cli_alert_success("Share of total welfare, L(p) {.val {scales::percent(Lp, accuracy = .01)}}")
+
+  return(z)
 }
 
 #' Check validity of Lorenz Quadratic fit
@@ -249,13 +296,13 @@ derive_lq <- function(x, A, B, C) {
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
 #'
-check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
-
+check_curve_validity_lq <- function(ct) {
+  expand_components(ct)
   is_normal <- FALSE
   is_valid <- FALSE
 
-  # r needs to be > 0 because need to extract sq root
-  if (r < 0) {return(list(is_normal = is_normal,
+  # k needs to be > 0 because need to extract sq root
+  if (k < 0) {return(list(is_normal = is_normal,
                           is_valid = is_valid))}
 
   if (e > 0 || C < 0) {
@@ -676,20 +723,11 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @examples
 #' estimate_lq(n_obs, mean, povline, p0, coefs)
 #'
-gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
+gd_estimate_lq <- function(n_obs, mean, povline, p0, ct) {
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
+  validity <- check_curve_validity_lq(ct)
+  expand_components(ct)
 
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
 
   # Compute distributional measures -----------------------------------------
 
@@ -802,3 +840,30 @@ check_input_gd_compute_pip_stats_lq <- function(population,
 
 
 }
+
+
+expand_components <- function(ct) {
+  nct <- names(ct)
+  for (i in seq_along(nct)) {
+    assign(nct[i], ct[[i]], pos = 1)
+  }
+}
+
+
+# f1 <- function() {
+#   assign("x", 2, pos = 1)
+#   # nct <- names(ct)
+#   # for (i in seq_along(nct)) {
+#   #   assign(nct[i], ct[[i]], envir = )
+#   # }
+# }
+#
+# f2 <- function() {
+#   f1()
+#   x + 4
+# }
+# f2()
+#
+#
+#
+# expand_components()
