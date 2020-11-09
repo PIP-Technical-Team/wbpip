@@ -594,7 +594,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
   pol     <- gd_compute_polarization_lq(mean, p0, dcm, ct)
   ris     <- value_at_lq(0.5, ct)
   mld     <- gd_compute_mld_lq(ct)
-  deciles <- gd_compute_quantile_lq(A, B, C)
+  deciles <- gd_compute_quantile_lq(ct)
 
   return(list(
     gini         = gini,
