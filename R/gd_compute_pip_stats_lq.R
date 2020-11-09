@@ -102,7 +102,7 @@ gd_compute_pip_stats_lq <- function(population,
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(mean, povline, p0, ct)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -700,7 +700,6 @@ gd_compute_poverty_stats_lq <- function(mean,
 
 #' Estimates poverty and inequality stats from Quadratic Lorenz fit
 #'
-#' @param n_obs numeric: number of observations
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param p0 numeric: TO document
@@ -714,7 +713,7 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @examples
 #' estimate_lq(n_obs, mean, povline, p0, coefs)
 #'
-gd_estimate_lq <- function(n_obs, mean, povline, p0, ct) {
+gd_estimate_lq <- function(mean, povline, p0, ct) {
 
   validity <- check_curve_validity_lq(ct)
   expand_components(ct)
@@ -727,7 +726,7 @@ gd_estimate_lq <- function(n_obs, mean, povline, p0, ct) {
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, ct)
 
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
