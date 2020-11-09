@@ -497,7 +497,7 @@ gd_compute_quantile_lq <- function(ct, n_quantile = 10) {
 #' @examples
 #' watt_index_lq(headcount, dd, A, B, C)
 #'
-gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
+gd_compute_watts_lq <- function(headcount, mu, povline, dd, ct) {
   if (headcount <= 0) {
     return(0)
   }
@@ -511,17 +511,17 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   snw <- headcount * dd
   watts <- 0
 
-  x1 <- derive_lq(snw / 2, A, B, C)
+  x1 <- derive_lq(snw / 2, ct)
   if (x1 <= 0) {
     gap <- snw / 2
   } else {
     watts <- log(x1) * snw
   }
   xend <- headcount - snw
-  x1 <- derive_lq(0, A, B, C)
+  x1 <- derive_lq(0, ct)
   # Number of steps seems to be different from what happens in .Net codebase
   for (xstep in seq(0, xend, by = snw)) {
-    x2 <- derive_lq(xstep + snw, A, B, C)
+    x2 <- derive_lq(xstep + snw, ct)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + snw
       if (gap > 0.05) {
@@ -627,15 +627,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
 #'
 gd_compute_poverty_stats_lq <- function(mean,
                                         povline,
-                                        A,
-                                        B,
-                                        C,
-                                        e,
-                                        m,
-                                        n,
-                                        r,
-                                        s1,
-                                        s2) {
+                                        ct) {
   # Compute headcount
   bu <- B + (2 * povline / mean)
   u <- mean / povline
@@ -658,13 +650,13 @@ gd_compute_poverty_stats_lq <- function(mean,
   } else {
 
     # Poverty gap index (P.pg)
-    pov_gap <- headcount - (u * value_at_lq(headcount, A, B, C))
+    pov_gap <- headcount - (u * value_at_lq(headcount, ct))
 
     # P.p2 - Distributionally sensitive FGT poverty measure
     #P.p2 <- (2*P.pg) - P.h - u^2 * (A*P.h + B*value_at_lq(P.h, A, B, C) - (r/16 *log((1 - P.h/s1))/(1 - P.h/s2)))
     # Poverty severity
     pov_gap_sq <- (2 * pov_gap) - headcount -
-      (u^2 * (A * headcount + B * value_at_lq(headcount, A, B, C) -
+      (u^2 * (A * headcount + B * value_at_lq(headcount, ct) -
                 ((r / 16) * log((1 - headcount / s1)/(1 - headcount / s2)))))
 
     # Elasticity of headcount index w.r.t mean (P.eh)
@@ -685,7 +677,7 @@ gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, ct)
   }
 
   return(
@@ -730,7 +722,7 @@ gd_estimate_lq <- function(n_obs, mean, povline, p0, ct) {
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, ct)
 
 
   # Compute poverty stats ---------------------------------------------------
