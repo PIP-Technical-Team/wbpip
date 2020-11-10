@@ -4,9 +4,11 @@
 \alias{check_curve_validity_lb}
 \title{Check validity of lorenz beta fit}
 \usage{
-check_curve_validity_lb(A, B, C)
+check_curve_validity_lb(headcount, A, B, C)
 }
 \arguments{
+\item{headcount}{numeric: Poverty rate computed by gd_compute_poverty_stats_lb()}
+
 \item{A}{numeric: First regression coefficient}
 
 \item{B}{numeric: Second regression coefficient}

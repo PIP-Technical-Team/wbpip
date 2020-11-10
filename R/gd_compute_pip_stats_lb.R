@@ -144,6 +144,7 @@ derive_lb <- function(x, A, B, C) {
 #'
 #' `check_curve_validity_lb()` checks the validity of the lorenz beta fit
 #'
+#' @param headcount numeric: Poverty rate computed by gd_compute_poverty_stats_lb()
 #' @param A numeric: First regression coefficient
 #' @param B numeric: Second regression coefficient
 #' @param C numeric: Third regression coefficient
@@ -154,7 +155,7 @@ derive_lb <- function(x, A, B, C) {
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
 #'
-check_curve_validity_lb <- function(A, B, C) {
+check_curve_validity_lb <- function(headcount, A, B, C) {
 
   is_valid <- TRUE
 
@@ -174,7 +175,18 @@ check_curve_validity_lb <- function(A, B, C) {
     }
   }
 
-  return(list(is_valid = is_valid))
+  # WHAT IS THE RATIONAL HERE?
+  is_normal <- if (!is.na(headcount)) {
+    is_normal <- TRUE
+  } else {
+    is_normal <- FALSE
+  }
+
+  return(list(
+    is_valid = is_valid,
+    is_normal = is_normal
+    )
+  )
 
 }
 
@@ -411,16 +423,12 @@ gd_compute_poverty_stats_lb <- function(mean,
                                         A,
                                         B,
                                         C) {
-  is_normal <- FALSE
   # Compute headcount
   headcount <- gd_compute_headcount_lb(mean = mean,
                                        povline = povline,
                                        A = A,
                                        B = B,
                                        C = C)
-    if (is.na(headcount)) {return(NA)}
-
-    is_normal <- TRUE
 
     # Poverty gap
     u <- mean / povline
@@ -496,16 +504,14 @@ gd_compute_poverty_stats_lb <- function(mean,
 #'
 gd_estimate_lb <- function(n_obs, mean, povline, p0, A, B, C) {
 
-  validity <- check_curve_validity_lb(A, B, C)
-
-  # Compute distributional measures -----------------------------------------
-
+  # Compute distributional measures
   dist_stats <- gd_compute_dist_stats_lb(mean, p0, A, B, C)
 
-
-  # Compute poverty stats ---------------------------------------------------
-
+  # Compute poverty stats
   pov_stats <- gd_compute_poverty_stats_lb(mean, povline, A, B, C)
+
+  # Check validity
+  validity <- check_curve_validity_lb(headcount = pov_stats[["headcount"]], A, B, C)
 
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
