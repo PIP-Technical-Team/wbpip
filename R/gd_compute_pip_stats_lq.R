@@ -429,6 +429,32 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
 }
 
 
+#' Computes polarization index from parametric Lorenz fit
+#'
+#' Used for grouped data computations
+#'
+#' @param mean numeric: Welfare mean
+#' @param p0 numeric: To document
+#' @param dcm numeric: To document
+#' @param A numeric: Lorenz curve coefficient
+#' @param B numeric: Lorenz curve coefficient
+#' @param C numeric: Lorenz curve coefficient
+#'
+#' @return numeric
+#'
+gd_compute_polarization_lq <- function(mean,
+                                       p0,
+                                       dcm,
+                                       A, B, C) {
+
+  pol <- 2 - (1 / p0) +
+    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
+    (p0 * mean * derive_lq(p0, A, B, C))
+
+  return(pol)
+}
+
+
 #' Computes distributional stats from Lorenz Quadratic fit
 #'
 #' @param mean numeric: welfare mean
