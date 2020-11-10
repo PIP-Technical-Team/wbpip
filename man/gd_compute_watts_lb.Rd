@@ -4,12 +4,12 @@
 \alias{gd_compute_watts_lb}
 \title{Computes Watts Index from beta Lorenz fit}
 \usage{
-gd_compute_watts_lb(headcount, mu, povline, dd, A, B, C)
+gd_compute_watts_lb(headcount, mean, povline, dd, A, B, C)
 }
 \arguments{
 \item{headcount}{numeric: headcount index}
 
-\item{mu}{numeric}
+\item{mean}{numeric: Welfare mean}
 
 \item{povline}{numeric: poverty line}
 
