@@ -301,7 +301,7 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' having a zero poverty gap.
 #'
 #' @param headcount numeric: headcount index
-#' @param mu numeric
+#' @param mean numeric: Welfare mean
 #' @param povline numeric: poverty line
 #' @param dd numeric
 #' @param A numeric vector: lorenz curve coefficient
@@ -312,9 +312,9 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @export
 #'
 #' @examples
-#' watt_index_lb(headcount, dd, A, B, C)
+#' watt_index_lb(headcount, mean, dd, A, B, C)
 #'
-gd_compute_watts_lb <- function(headcount, mu, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
   if (headcount <= 0) {
     return(0)
   }
