@@ -35,23 +35,22 @@ MEASUREMENT AND ANALYSIS](http://ebrary.ifpri.org/utils/getfile/collection/p1573
 # Type 5 grouped data: 
 #  W=Percentage of the population in a given interval of incomes, 
 #  X=The mean income of that interval.
-
 datt <- tibble::tribble(
-         ~W,    ~X,      ~P,      ~L,
-        0.92,   24.84,  0.0092, 0.00208,
-        2.47,    35.8,  0.0339, 0.01013,
-        5.11,   45.36,   0.085, 0.03122,
-         7.9,    55.1,   0.164, 0.07083,
-        9.69,   64.92,  0.2609, 0.12808,
-       15.24,   77.08,  0.4133, 0.23498,
-       13.64,   91.75,  0.5497, 0.34887,
-       16.99,  110.64,  0.7196, 0.51994,
-          10,   134.9,  0.8196,  0.6427,
-        9.78,  167.76,  0.9174, 0.79201,
-        3.96,  215.48,   0.957, 0.86966,
-        1.81,  261.66,  0.9751, 0.91277,
-        2.49,  384.97,       1,       1
-  )
+  ~W,    ~X,      ~P,      ~L,
+  0.92,   24.84,  0.0092, 0.00208,
+  2.47,    35.8,  0.0339, 0.01013,
+  5.11,   45.36,   0.085, 0.03122,
+  7.9,    55.1,   0.164, 0.07083,
+  9.69,   64.92,  0.2609, 0.12808,
+  15.24,   77.08,  0.4133, 0.23498,
+  13.64,   91.75,  0.5497, 0.34887,
+  16.99,  110.64,  0.7196, 0.51994,
+  10,   134.9,  0.8196,  0.6427,
+  9.78,  167.76,  0.9174, 0.79201,
+  3.96,  215.48,   0.957, 0.86966,
+  1.81,  261.66,  0.9751, 0.91277,
+  2.49,  384.97,       1,       1
+)
 
 datt$W <- datt$W/100
 
@@ -62,7 +61,7 @@ L <- datt$L
 
 mu  <- 109.9 # mean
 z   <- 89    # poverty line
-
+p0  <- .5
 
 ff       <- create_functional_form_lq(L, P)
 reg_coef <- ff$coef_stat$estimate
@@ -72,15 +71,55 @@ B <- reg_coef[2]
 C <- reg_coef[3]
 
 ct <- get_components_lq(A, B, C)
-ct
 
 fgt <- fgt_lq(A, B, C, mu, z, ct)
 
 
-popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 1)
+derive_lq(fgt$headcount, ct)
 
-popshare_lq(A, B, C, fgt$headcount, mu, ct, method = 2)
 
+check_curve_validity_lq(ct)
+
+
+gd_compute_gini_lq(ct)
+
+
+value_at_lq(fgt$headcount, ct)
+
+
+value_at_lq(fgt$headcount, ct)
+
+
+gini    <- gd_compute_gini_lq(ct)
+dcm     <- (1 - gini) * mu
+pol     <- gd_compute_polarization_lq(mu, p0, dcm, ct)
+pol
+
+
+gd_compute_mld_lq(ct)
+
+gd_compute_quantile_lq(ct)
+
+gd_compute_quantile_lq(ct)
+
+# fully working distribution stats
+gd_compute_dist_stats_lq(mu, p0, ct)
+
+
+# fully working poverty stats
+gd_compute_poverty_stats_lq(mu, z, ct)
+
+results2 <- gd_estimate_lq(mu, z, p0, ct)
+results2
+
+results_fit <- gd_compute_fit_lq(L, P, results2$headcount,ct)
+
+gd_compute_pip_stats_lq(P, L, mu, z)
+
+res <- gd_compute_pip_stats_lq(P, L, mu, z)
+res$headcount
+res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+res2$povline
 
 
 
