@@ -121,6 +121,4 @@ res$headcount
 res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
 res2$povline
 
-
-
 ```

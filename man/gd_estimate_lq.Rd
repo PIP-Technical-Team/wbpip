@@ -26,6 +26,5 @@ list
 Estimates poverty and inequality stats from Quadratic Lorenz fit
 }
 \examples{
-estimate_lq(n_obs, mean, povline, p0, coefs)
 
 }

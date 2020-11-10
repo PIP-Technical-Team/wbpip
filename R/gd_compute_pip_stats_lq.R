@@ -256,6 +256,8 @@ get_components_lq <- function(A,B,C){
 #' threshold that produces the defiles share of population
 #'
 #' @return numeric
+#' @export
+#'
 derive_lq <- function(x, ct, method = 1) {
   expand_components(ct)
 
@@ -300,6 +302,7 @@ derive_lq <- function(x, ct, method = 1) {
 #' r = `sqrt(k)`
 #'
 #' @return list
+#' @export
 #'
 #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 #' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
@@ -347,6 +350,7 @@ check_curve_validity_lq <- function(ct) {
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
+#' @export
 #'
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
@@ -396,6 +400,7 @@ gd_compute_gini_lq <- function(ct) {
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
+#' @export
 #'
 value_at_lq <- function(x, ct) {
 
@@ -417,6 +422,7 @@ value_at_lq <- function(x, ct) {
 #'
 #' @param ct list
 #' @return numeric
+#' @export
 #'
 gd_compute_mld_lq <- function(ct) {
 
@@ -455,6 +461,7 @@ gd_compute_mld_lq <- function(ct) {
 #' @param n_quantile numeric: number of quantiles. Default 10
 #'
 #' @return numeric
+#' @export
 #'
 gd_compute_quantile_lq <- function(ct, n_quantile = 10) {
   vec   <- vector(mode = "numeric", length = n_quantile)
@@ -490,9 +497,6 @@ gd_compute_quantile_lq <- function(ct, n_quantile = 10) {
 #'
 #' @return numeric
 #' @export
-#'
-#' @examples
-#' watt_index_lq(headcount, dd, A, B, C)
 #'
 gd_compute_watts_lq <- function(headcount, mu, povline, dd, ct) {
   if (headcount <= 0) {
@@ -550,6 +554,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, ct) {
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
+#' @export
 #'
 gd_compute_polarization_lq <- function(mean,
                                        p0,
@@ -570,6 +575,7 @@ gd_compute_polarization_lq <- function(mean,
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
+#' @export
 #'
 gd_compute_dist_stats_lq <- function(mean, p0, ct) {
   expand_components(ct)
@@ -602,6 +608,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
+#' @export
 #'
 gd_compute_poverty_stats_lq <- function(mean,
                                         povline,
@@ -689,7 +696,6 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @export
 #'
 #' @examples
-#' estimate_lq(n_obs, mean, povline, p0, coefs)
 #'
 gd_estimate_lq <- function(mean, povline, p0, ct) {
 
@@ -741,6 +747,7 @@ gd_estimate_lq <- function(mean, povline, p0, ct) {
 #' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
+#' @export
 #'
 gd_compute_fit_lq <- function(welfare,
                               population,
@@ -775,6 +782,7 @@ gd_compute_fit_lq <- function(welfare,
 #' Title
 #' @inheritParams gd_compute_pip_stats_lq
 #' @return
+#' @export
 #'
 #' @examples
 check_input_gd_compute_pip_stats_lq <- function(population,
