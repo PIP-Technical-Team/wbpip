@@ -424,17 +424,10 @@ gd_compute_poverty_stats_lb <- function(mean,
 
     # Poverty gap
     u <- mean / povline
-    pg <- headcount - (u * value_at_lb(headcount, A, B, C))
-
+    pov_gap <- gd_compute_pov_gap_lb(u, headcount, A, B, C)
 
     # Poverty severity
-    p2 <- gd_compute_pov_severity_lb(u, headcount, pg, A, B, C)
-
-    # adjust pg and p2 if necessary
-    pg <- ifelse(headcount < pg, headcount - 0.00001, pg)
-    p2 <- ifelse(pg < p2, pg - 0.00001, p2)
-    pg <- ifelse(pg < 0, 0, pg)
-    p2 <- ifelse(p2 < 0, 0, p2)
+    pov_gap_sq <- gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
 
     # First derivative of the Lorenz curve
     dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
@@ -450,19 +443,19 @@ gd_compute_poverty_stats_lb <- function(mean,
     eh <- -povline / (mean * headcount * ddl)
 
     # Elasticity of poverty gap index w.r.t mean
-    epg <- 1 - (headcount / pg)
+    epg <- 1 - (headcount / pov_gap)
 
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
-    ep <- 2 * (1 - pg / p2)
+    ep <- 2 * (1 - pov_gap / pov_gap_sq)
 
     # PElasticity of headcount index w.r.t gini index
     gh <- (1 - povline / mean) / (headcount  * ddl)
 
     # Elasticity of poverty gap index w.r.t gini index
-    gpg <- 1 + (((mean / povline) - 1) * headcount / pg)
+    gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
 
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
-    gp <- 2 * (1 + (((mean / povline) - 1) * pg / p2))
+    gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
     # Watts index
     watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
@@ -765,18 +758,39 @@ BETAICF <- function(a, b, x) {
   return(az)
 }
 
-#' Compute poverty severity for Lorenz Beta fit
+#' Compute poverty gap for Lorenz Beta fit
 #'
-#' @param u numeric: Mean?
+#' @param u numeric: Normalized mean
 #' @param headcount numeric: Headcount
-#' @param pg numeric: Poverty gap
 #' @param A numeric: First regression parameter
 #' @param B numeric: Second regression parameter
 #' @param C numeric: Third regression parameter
 #'
 #' @return numeric
 #'
-gd_compute_pov_severity_lb <- function(u, headcount, pg, A, B, C) {
+gd_compute_pov_gap_lb <- function(u, headcount, A, B, C) {
+
+  pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
+  # REVIEW RATIONAL FOR THESE ADJUSTMENTS
+  # Adjust Poverty gap
+  pov_gap <- ifelse(headcount < pov_gap, headcount - 0.00001, pov_gap)
+  pov_gap <- ifelse(pov_gap < 0, 0, pov_gap)
+
+  return(pov_gap)
+}
+
+#' Compute poverty severity for Lorenz Beta fit
+#'
+#' @param u numeric: Mean?
+#' @param headcount numeric: Headcount
+#' @param pov_gap numeric: Poverty gap
+#' @param A numeric: First regression parameter
+#' @param B numeric: Second regression parameter
+#' @param C numeric: Third regression parameter
+#'
+#' @return numeric
+#'
+gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
   u1 <- 1 - u
   beta1 <- BETAI(a = 2 * B - 1,
                  b = 2 * C + 1,
@@ -788,9 +802,13 @@ gd_compute_pov_severity_lb <- function(u, headcount, pg, A, B, C) {
                  b = 2 * C - 1,
                  x = headcount)
 
-  p2 <- u1 * (2 * pg - u1 * headcount) + A^2 * u^2 * (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+  pov_gap_sq <- u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 * (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+  # REVIEW RATIONAL FOR THESE ADJUSTMENTS
+  # Adjust Poverty severity
+  pov_gap_sq <- ifelse(pov_gap < pov_gap_sq, pov_gap - 0.00001, pov_gap_sq)
+  pov_gap_sq <- ifelse(pov_gap_sq < 0, 0, pov_gap_sq)
 
-  return(p2)
+  return(pov_gap_sq)
 }
 
 #' rtSafe
