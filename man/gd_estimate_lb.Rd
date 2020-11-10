@@ -11,13 +11,13 @@ gd_estimate_lb(mean, povline, p0, A, B, C)
 
 \item{povline}{numeric: Poverty line}
 
-\item{p0}{numeric: TO document}
+\item{p0}{numeric: To document}
 
-\item{A}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[1]}}
+\item{A}{numeric vector: Lorenz curve coefficient. Output of \code{regres()$coef[1]}}
 
-\item{B}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[2]}}
+\item{B}{numeric vector: Lorenz curve coefficient. Output of \code{regres()$coef[2]}}
 
-\item{C}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[3]}}
+\item{C}{numeric vector: Lorenz curve coefficient. Output of \code{regres()$coef[3]}}
 }
 \value{
 list

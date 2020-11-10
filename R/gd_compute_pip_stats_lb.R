@@ -15,19 +15,6 @@
 #'
 #' @export
 #'
-#' @examples
-#' L <- c(0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
-#' 0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1)
-#' P <- c(0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
-#' 0.8196, 0.9174, 0.957, 0.9751, 1)
-#' mu  <- 109.9 # mean
-#' z   <- 89    # poverty line
-#' gd_compute_pip_stats_lq(P, L, mu, z)
-#'
-#' res <- gd_compute_pip_stats_lq(P, L, mu, z)
-#' res$headcount
-#' res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
-#' res2$povline
 #
 gd_compute_pip_stats_lq <- function(population,
                                     welfare,
@@ -47,10 +34,10 @@ gd_compute_pip_stats_lq <- function(population,
   prepped_data <- create_functional_form_lb(population, welfare)
 
   # STEP 2: Estimate regression coefficients using LB parameterization
-  reg_results <- regres(prepped_data)
+  reg_results <- regres(prepped_data, is_lq = FALSE)
   reg_coef <- reg_results$coef
 
-  A <- exp(reg_coef[1]) # Why do we use exp() here?
+  A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
 
@@ -276,7 +263,7 @@ gd_compute_mld_lb <- function(dd, A, B, C) {
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
       if (gap > 0.5) {
-        return(-1)
+        return(NA)
       }
     }
     else {
@@ -526,10 +513,10 @@ gd_compute_poverty_stats_lb <- function(mean,
 #'
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
-#' @param p0 numeric: TO document
-#' @param A numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[1]`
-#' @param B numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[2]`
-#' @param C numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[3]`
+#' @param p0 numeric: To document
+#' @param A numeric vector: Lorenz curve coefficient. Output of `regres()$coef[1]`
+#' @param B numeric vector: Lorenz curve coefficient. Output of `regres()$coef[2]`
+#' @param C numeric vector: Lorenz curve coefficient. Output of `regres()$coef[3]`
 #'
 #' @return list
 #' @export
@@ -623,10 +610,6 @@ gd_compute_fit_lb <- function(welfare,
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' DDLK(h, A, B, C)
 #'
 DDLK <- function(h, A, B, C) {
   tmp1 <- B * (1 - B) / (h^2)
@@ -679,10 +662,6 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #' @param x numeric
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' BETAI(a, b, x)
 #'
 BETAI <- function(a, b, x) {
   bt <- betai <- 0
@@ -705,13 +684,9 @@ BETAI <- function(a, b, x) {
 
 #' GAMMLN
 #'
-#' @param x numeric
+#' @param xx numeric: To be documented
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' GAMMLN(xx)
 #'
 GAMMLN <- function(xx) {
 
@@ -751,10 +726,6 @@ GAMMLN <- function(xx) {
 #' @param x numeric
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' BETAICF(a, b, x)
 #'
 BETAICF <- function(a, b, x) {
 
@@ -862,10 +833,6 @@ gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' rtSafe(x1, x2, xacc, povline, mean, A, B, C)
 #'
 rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 
@@ -922,7 +889,7 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
       xh <- rtsafe
   }
 
-  return(-1)
+  return(NA)
 }
 
 #' funcD
@@ -935,10 +902,6 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return list
-#' @export
-#'
-#' @examples
-#' funcD(x, povline, mean, A, B, C)
 #'
 funcD <- function(x, mean, povline, A, B, C) {
   x1 <- 1 - x
@@ -958,10 +921,6 @@ funcD <- function(x, mean, povline, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' rtNewt(mean, povline, A, B, C)
 #'
 rtNewt <- function(mean, povline, A, B, C) {
   x1 <- 0
@@ -983,5 +942,5 @@ rtNewt <- function(mean, povline, A, B, C) {
         return(rtnewt)
     }
   }
-  return(-1)
+  return(NA)
 }

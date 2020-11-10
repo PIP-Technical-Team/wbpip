@@ -21,7 +21,3 @@ numeric
 \description{
 DDLK
 }
-\examples{
-DDLK(h, A, B, C)
-
-}

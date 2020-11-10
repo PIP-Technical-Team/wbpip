@@ -19,7 +19,3 @@ numeric
 \description{
 BETAICF
 }
-\examples{
-BETAICF(a, b, x)
-
-}

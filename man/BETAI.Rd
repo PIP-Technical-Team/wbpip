@@ -19,7 +19,3 @@ numeric
 \description{
 BETAI
 }
-\examples{
-BETAI(a, b, x)
-
-}

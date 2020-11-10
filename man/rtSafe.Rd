@@ -29,7 +29,3 @@ numeric
 \description{
 rtSafe
 }
-\examples{
-rtSafe(x1, x2, xacc, povline, mean, A, B, C)
-
-}
