@@ -4,16 +4,10 @@
 \alias{gd_compute_mld_lq}
 \title{Computes MLD from Lorenz Quadratic fit}
 \usage{
-gd_compute_mld_lq(dd, A, B, C)
+gd_compute_mld_lq(ct)
 }
 \arguments{
-\item{dd}{numeric}
-
-\item{A}{numeric vector: lorenz curve coefficient}
-
-\item{B}{numeric vector: lorenz curve coefficient}
-
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{ct}{list}
 }
 \value{
 numeric

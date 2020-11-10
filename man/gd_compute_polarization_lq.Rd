@@ -4,7 +4,7 @@
 \alias{gd_compute_polarization_lq}
 \title{Computes polarization index from Quadratic Lorenz fit}
 \usage{
-gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
+gd_compute_polarization_lq(mean, p0, dcm, ct)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean}
@@ -13,11 +13,7 @@ gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
 
 \item{dcm}{numeric: To document}
 
-\item{A}{numeric: Lorenz curve coefficient}
-
-\item{B}{numeric: Lorenz curve coefficient}
-
-\item{C}{numeric: Lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}.}
 }
 \value{
 numeric

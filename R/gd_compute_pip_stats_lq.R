@@ -15,39 +15,49 @@
 #' @export
 #'
 #' @examples
-#' # gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, is_lq)
+#' L <- c(0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887, 0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1)
+#' P <- c(0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196, 0.8196, 0.9174, 0.957, 0.9751, 1)
+#' mu  <- 109.9 # mean
+#' z   <- 89    # poverty line
+#' gd_compute_pip_stats_lq(P, L, mu, z)
+#'
+#' res <- gd_compute_pip_stats_lq(P, L, mu, z)
+#' res$headcount
+#' res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+#' res2$povline
 gd_compute_pip_stats_lq <- function(population,
                                     welfare,
                                     mean,
-                                    default_ppp,
-                                    povline  = NULL,
-                                    ppp      = NULL,
-                                    popshare = NULL,
-                                    is_lq    = TRUE,
-                                    p0       = 0.5) {
+                                    povline     = NULL,
+                                    popshare    = NULL,
+                                    default_ppp = NULL,
+                                    ppp         = NULL,
+                                    is_lq       = TRUE,
+                                    p0          = 0.5) {
 
   check_input_gd_compute_pip_stats_lq(population,
                                       welfare,
                                       mean,
-                                      default_ppp,
                                       povline,
+                                      default_ppp,
                                       ppp,
                                       popshare,
                                       is_lq,
                                       p0)
 
+  # if (!is.null(ppp)) {
+  #
+  #   mean <- mean * default_ppp / ppp
+  #
+  # } else {
+  #
+  #   ppp <- default_ppp
+  #
+  # }
+
   #--------- Conditions ---------
 
 
-  if (!is.null(ppp)) {
-
-    mean <- mean * default_ppp / ppp
-
-  } else {
-
-    ppp <- default_ppp
-
-  }
 
   if (   ( is.null(povline) &&  is.null(popshare))
       || (!is.null(povline) && !is.null(popshare)) ) {
@@ -203,9 +213,9 @@ create_functional_form_lq <- function(welfare,
 
 #' Title
 #'
-#' @param A numeric:
-#' @param B
-#' @param C
+#' @param A numeric: First regression coefficient
+#' @param B numeric: Second regression coefficient
+#' @param C numeric: Third regression coefficient
 #' @return
 #' @export
 #'
@@ -279,15 +289,15 @@ derive_lq <- function(x, ct, method = 1) {
 #'
 #' `check_curve_validity_lq()` checks the validity of the Lorenz Quadratic fit
 #'
-#' @param A numeric: First regression coefficient
-#' @param B numeric: Second regression coefficient
-#' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param ct list: components from `get_components_lq`.
+#' A: First regression coefficient.
+#' B: Second regression coefficient.
+#' C: Third regression coefficient.
+#' e: e = -(A + B + C + 1): condition for the curve to go through (1, 1)
+#' m: m = (B^2) - (4 * A). m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
+#' n: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' k = (n^2) - (4 * m * e^2).
+#' r = `sqrt(k)`
 #'
 #' @return list
 #'
@@ -334,15 +344,7 @@ check_curve_validity_lq <- function(ct) {
 #'
 #' `gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
 #'
-#' @param A numeric: First regression coefficient
-#' @param B numeric: Second regression coefficient
-#' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric: r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
 #'
@@ -391,9 +393,7 @@ gd_compute_gini_lq <- function(ct) {
 #' General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 #'
 #' @param x numeric: point on curve
-#' @param A numeric vector: First lorenz curve coefficient
-#' @param B numeric vector: Second lorenz curve coefficient
-#' @param C numeric vector: Third lorenz curve coefficient
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
 #'
@@ -451,9 +451,8 @@ gd_compute_mld_lq <- function(ct) {
 #'
 #' `gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
 #'
-#' @param A numeric vector: lorenz curve coefficient
-#' @param B numeric vector: lorenz curve coefficient
-#' @param C numeric vector: lorenz curve coefficient
+#' @param ct list: components from `get_components_lq`.
+#' @param n_quantile numeric: number of quantiles. Default 10
 #'
 #' @return numeric
 #'
@@ -487,9 +486,7 @@ gd_compute_quantile_lq <- function(ct, n_quantile = 10) {
 #' @param mu numeric
 #' @param povline numeric: poverty line
 #' @param dd numeric
-#' @param A numeric vector: lorenz curve coefficient
-#' @param B numeric vector: lorenz curve coefficient
-#' @param C numeric vector: lorenz curve coefficient
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
 #' @export
@@ -550,9 +547,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, ct) {
 #' @param mean numeric: Welfare mean
 #' @param p0 numeric: To document
 #' @param dcm numeric: To document
-#' @param A numeric: Lorenz curve coefficient
-#' @param B numeric: Lorenz curve coefficient
-#' @param C numeric: Lorenz curve coefficient
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return numeric
 #'
@@ -572,15 +567,7 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @param mean numeric: welfare mean
 #' @param p0 numeric: To document
-#' @param A numeric: First regression coefficient
-#' @param B numeric: Second regression coefficient
-#' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
 #'
@@ -612,16 +599,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
 #'
 #' @param mean numeric: welfare mean
 #' @param povline numeric: Poverty line
-#' @param A numeric: First regression coefficient
-#' @param B numeric: Second regression coefficient
-#' @param C numeric: Third regression coefficient
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
-#' (1, 1)
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-#' an ellipse (m is called alpha in paper)
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
-#' @param s1 numeric: To document
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
 #'
@@ -760,9 +738,7 @@ gd_estimate_lq <- function(mean, povline, p0, ct) {
 #' @param welfare numeric: Welfare vector (grouped)
 #' @param population numeric: Population vector (grouped)
 #' @param headcount numeric: headcount index
-#' @param A numeric vector: Lorenz curve coefficient
-#' @param B numeric vector: Lorenz curve coefficient
-#' @param C numeric vector: Lorenz curve coefficient
+#' @param ct list: components from `get_components_lq`.
 #'
 #' @return list
 #'
@@ -796,6 +772,11 @@ gd_compute_fit_lq <- function(welfare,
 
 
 
+#' Title
+#' @inheritParams gd_compute_pip_stats_lq
+#' @return
+#'
+#' @examples
 check_input_gd_compute_pip_stats_lq <- function(population,
                                                 welfare,
                                                 mean,
@@ -829,6 +810,14 @@ check_input_gd_compute_pip_stats_lq <- function(population,
 }
 
 
+#' Expand component into parent function
+#'
+#' @param ct list: components from `get_components_lq`.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 expand_components <- function(ct) {
   nct <- names(ct)
   for (i in seq_along(nct)) {

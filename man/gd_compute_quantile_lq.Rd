@@ -4,14 +4,12 @@
 \alias{gd_compute_quantile_lq}
 \title{Compute quantiles from Lorenz Quandratic fit}
 \usage{
-gd_compute_quantile_lq(A, B, C, n_quantile = 10)
+gd_compute_quantile_lq(ct, n_quantile = 10)
 }
 \arguments{
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}.}
 
-\item{B}{numeric vector: lorenz curve coefficient}
-
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{n_quantile}{numeric: number of quantiles. Default 10}
 }
 \value{
 numeric

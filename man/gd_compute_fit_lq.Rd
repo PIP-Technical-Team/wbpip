@@ -5,7 +5,7 @@
 \title{Computes the sum of squares of error
 Measures the fit of the model to the data.}
 \usage{
-gd_compute_fit_lq(welfare, population, headcount, A, B, C)
+gd_compute_fit_lq(welfare, population, headcount, ct)
 }
 \arguments{
 \item{welfare}{numeric: Welfare vector (grouped)}
@@ -14,11 +14,7 @@ gd_compute_fit_lq(welfare, population, headcount, A, B, C)
 
 \item{headcount}{numeric: headcount index}
 
-\item{A}{numeric vector: Lorenz curve coefficient}
-
-\item{B}{numeric vector: Lorenz curve coefficient}
-
-\item{C}{numeric vector: Lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}.}
 }
 \value{
 list

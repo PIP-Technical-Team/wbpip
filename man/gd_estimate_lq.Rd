@@ -4,11 +4,9 @@
 \alias{gd_estimate_lq}
 \title{Estimates poverty and inequality stats from Quadratic Lorenz fit}
 \usage{
-gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+gd_estimate_lq(mean, povline, p0, ct)
 }
 \arguments{
-\item{n_obs}{numeric: number of observations}
-
 \item{mean}{numeric: Welfare mean}
 
 \item{povline}{numeric: Poverty line}

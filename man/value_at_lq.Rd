@@ -4,16 +4,12 @@
 \alias{value_at_lq}
 \title{Solves for quadratic Lorenz curves}
 \usage{
-value_at_lq(x, A, B, C)
+value_at_lq(x, ct)
 }
 \arguments{
 \item{x}{numeric: point on curve}
 
-\item{A}{numeric vector: First lorenz curve coefficient}
-
-\item{B}{numeric vector: Second lorenz curve coefficient}
-
-\item{C}{numeric vector: Third lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}.}
 }
 \value{
 numeric

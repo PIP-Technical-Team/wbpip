@@ -4,7 +4,7 @@
 \alias{gd_compute_watts_lq}
 \title{Computes Watts Index from Quadratic Lorenz fit}
 \usage{
-gd_compute_watts_lq(headcount, mu, povline, dd, A, B, C)
+gd_compute_watts_lq(headcount, mu, povline, dd, ct)
 }
 \arguments{
 \item{headcount}{numeric: headcount index}
@@ -15,11 +15,7 @@ gd_compute_watts_lq(headcount, mu, povline, dd, A, B, C)
 
 \item{dd}{numeric}
 
-\item{A}{numeric vector: lorenz curve coefficient}
-
-\item{B}{numeric vector: lorenz curve coefficient}
-
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}.}
 }
 \value{
 numeric

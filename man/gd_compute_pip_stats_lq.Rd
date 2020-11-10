@@ -8,39 +8,30 @@ gd_compute_pip_stats_lq(
   population,
   welfare,
   mean,
-  default_ppp,
-  type = 1,
   povline = NULL,
-  ppp = NULL,
   popshare = NULL,
+  default_ppp = NULL,
+  ppp = NULL,
   is_lq = TRUE,
   p0 = 0.5
 )
 }
 \arguments{
-\item{population}{numeric: population vector whose form depends on on \code{type}.}
+\item{population}{numeric: cumulative proportion of population.}
 
-\item{welfare}{numeric: welfare vector whose form depends on on \code{type}.}
+\item{welfare}{numeric: cumulative proportion of income held by that
+proportion of the population (Lorenz Curve).}
 
-\item{mean}{numeric: Welfare mean if \code{type = 1} or \code{type = 2}}
-
-\item{default_ppp}{numeric: Default purchasing power parity}
-
-\item{type}{numeric: Type of data. if \code{type = 1}, \code{population} must be the
-cumulative proportion of population and \code{welfare} must be the cumulative
-proportion of income held by that proportion of the population (Lorenz Curve).
-if \code{type = 2}, \code{population} must be the proportion of population and
-\code{welfare} must be the proportion of income.
-If \code{type = 5}, then \code{population} must be the Percentage
-of the population in a given interval of incomes, whereas \code{welfare} must be
-the mean income of that interval. Default is 1.}
+\item{mean}{numeric: Welfare mean}
 
 \item{povline}{numeric: Poverty line}
 
-\item{ppp}{numeric: PPP request by user}
-
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional}
+
+\item{default_ppp}{numeric: Default purchasing power parity}
+
+\item{ppp}{numeric: PPP request by user}
 
 \item{is_lq}{boolean: indicates whether the estimation of lorenz quadratic}
 }
@@ -51,5 +42,14 @@ list
 Computes poverty statistics from grouped data
 }
 \examples{
-# gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, is_lq)
+L <- c(0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887, 0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1)
+P <- c(0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196, 0.8196, 0.9174, 0.957, 0.9751, 1)
+mu  <- 109.9 # mean
+z   <- 89    # poverty line
+gd_compute_pip_stats_lq(P, L, mu, z)
+
+res <- gd_compute_pip_stats_lq(P, L, mu, z)
+res$headcount
+res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+res2$povline
 }

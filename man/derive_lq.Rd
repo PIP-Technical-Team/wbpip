@@ -4,16 +4,15 @@
 \alias{derive_lq}
 \title{Returns the first derivative of the Lorenz quadratic}
 \usage{
-derive_lq(x, A, B, C)
+derive_lq(x, ct, method = 1)
 }
 \arguments{
-\item{x}{numeric: point on curve}
+\item{x}{numeric: point on curve (i.e., share of population)}
 
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{ct}{list: components from \code{get_components_lq}}
 
-\item{B}{numeric vector: lorenz curve coefficient}
-
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{method}{numeric: Method 1 is the share of mean that corresponds to the
+threshold that produces the defiles share of population}
 }
 \value{
 numeric
