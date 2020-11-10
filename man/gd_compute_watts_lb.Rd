@@ -32,7 +32,3 @@ gaps, as measured by the log of the ratio of the poverty line to income,
 where the mean is formed over the whole population, counting the nonpoor as
 having a zero poverty gap.
 }
-\examples{
-watt_index_lb(headcount, mean, dd, A, B, C)
-
-}

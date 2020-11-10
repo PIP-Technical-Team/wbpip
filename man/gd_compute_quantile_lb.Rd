@@ -12,6 +12,8 @@ gd_compute_quantile_lb(A, B, C, n_quantile = 10)
 \item{B}{numeric vector: lorenz curve coefficient}
 
 \item{C}{numeric vector: lorenz curve coefficient}
+
+\item{n_quantile}{numeric: Number of quantiles to return}
 }
 \value{
 numeric

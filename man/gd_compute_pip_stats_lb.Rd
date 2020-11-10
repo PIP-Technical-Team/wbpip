@@ -33,6 +33,3 @@ list
 \description{
 Computes poverty statistics from grouped data
 }
-\examples{
-gd_estimate_lb(.data, , povline, default_ppp, ppp, popshare, p, l)
-}

@@ -25,7 +25,3 @@ list
 \description{
 funcD
 }
-\examples{
-funcD(x, povline, mean, A, B, C)
-
-}

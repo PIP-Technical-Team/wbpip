@@ -28,6 +28,8 @@ an ellipse (m is called alpha in paper)}
 \item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper}
 
 \item{s1}{numeric: To document}
+
+\item{s2}{numeric: To document}
 }
 \value{
 list

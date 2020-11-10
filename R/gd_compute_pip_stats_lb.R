@@ -12,8 +12,6 @@
 #' @return list
 #' @export
 #'
-#' @examples
-#' gd_estimate_lb(.data, , povline, default_ppp, ppp, popshare, p, l)
 #
 gd_compute_pip_stats_lb <- function(.data,
                                     mean,
@@ -36,10 +34,10 @@ gd_compute_pip_stats_lb <- function(.data,
   prepped_data <- create_functional_form_lb(population, welfare)
 
   # STEP 2: Estimate regression coefficients using LB parameterization
-  reg_results <- regres(prepped_data)
+  reg_results <- regres(prepped_data, is_lq = FALSE)
   reg_coef <- reg_results$coef
 
-  A <- exp(reg_coef[1]) # Why do we use exp() here?
+  A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
 
@@ -264,7 +262,7 @@ gd_compute_mld_lb <- function(dd, A, B, C) {
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
       if (gap > 0.5) {
-        return(-1)
+        return(NA)
       }
     }
     else {
@@ -283,6 +281,7 @@ gd_compute_mld_lb <- function(dd, A, B, C) {
 #' @param A numeric vector: lorenz curve coefficient
 #' @param B numeric vector: lorenz curve coefficient
 #' @param C numeric vector: lorenz curve coefficient
+#' @param n_quantile numeric: Number of quantiles to return
 #'
 #' @return numeric
 #'
@@ -323,8 +322,6 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @export
 #'
-#' @examples
-#' watt_index_lb(headcount, mean, dd, A, B, C)
 #'
 gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
   if (headcount <= 0) {
@@ -516,16 +513,14 @@ gd_compute_poverty_stats_lb <- function(mean,
 #' @param n_obs numeric: number of observations
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
-#' @param p0 numeric: TO document
-#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[1]
-#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[2]
-#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lb()$coef[3]
+#' @param p0 numeric: To document
+#' @param A numeric vector: Lorenz curve coefficient. Output of `regres()$coef[1]`
+#' @param B numeric vector: Lorenz curve coefficient. Output of `regres()$coef[2]`
+#' @param C numeric vector: Lorenz curve coefficient. Output of `regres()$coef[3]`
 #'
 #' @return list
 #' @export
 #'
-#' @examples
-#' estimate_lb(n_obs, mean, povline, p0, coefs)
 #'
 gd_estimate_lb <- function(n_obs, mean, povline, p0, A, B, C) {
 
@@ -615,10 +610,6 @@ gd_compute_fit_lb <- function(welfare,
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' DDLK(h, A, B, C)
 #'
 DDLK <- function(h, A, B, C) {
   tmp1 <- B * (1 - B) / (h^2)
@@ -671,10 +662,6 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #' @param x numeric
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' BETAI(a, b, x)
 #'
 BETAI <- function(a, b, x) {
   bt <- betai <- 0
@@ -697,13 +684,9 @@ BETAI <- function(a, b, x) {
 
 #' GAMMLN
 #'
-#' @param x numeric
+#' @param xx numeric: To be documented
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' GAMMLN(xx)
 #'
 GAMMLN <- function(xx) {
 
@@ -743,10 +726,6 @@ GAMMLN <- function(xx) {
 #' @param x numeric
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' BETAICF(a, b, x)
 #'
 BETAICF <- function(a, b, x) {
 
@@ -854,10 +833,6 @@ gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' rtSafe(x1, x2, xacc, povline, mean, A, B, C)
 #'
 rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 
@@ -914,7 +889,7 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
       xh <- rtsafe
   }
 
-  return(-1)
+  return(NA)
 }
 
 #' funcD
@@ -927,10 +902,6 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return list
-#' @export
-#'
-#' @examples
-#' funcD(x, povline, mean, A, B, C)
 #'
 funcD <- function(x, mean, povline, A, B, C) {
   x1 <- 1 - x
@@ -950,10 +921,6 @@ funcD <- function(x, mean, povline, A, B, C) {
 #' @param C numeric vector: lorenz curve coefficient
 #'
 #' @return numeric
-#' @export
-#'
-#' @examples
-#' rtNewt(mean, povline, A, B, C)
 #'
 rtNewt <- function(mean, povline, A, B, C) {
   x1 <- 0
@@ -975,5 +942,5 @@ rtNewt <- function(mean, povline, A, B, C) {
         return(rtnewt)
     }
   }
-  return(-1)
+  return(NA)
 }

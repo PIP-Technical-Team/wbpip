@@ -7,15 +7,11 @@
 GAMMLN(xx)
 }
 \arguments{
-\item{x}{numeric}
+\item{xx}{numeric: To be documented}
 }
 \value{
 numeric
 }
 \description{
 GAMMLN
-}
-\examples{
-GAMMLN(xx)
-
 }

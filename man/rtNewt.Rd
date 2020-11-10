@@ -23,7 +23,3 @@ numeric
 \description{
 rtNewt
 }
-\examples{
-rtNewt(mean, povline, A, B, C)
-
-}
