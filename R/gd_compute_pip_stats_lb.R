@@ -411,81 +411,79 @@ gd_compute_poverty_stats_lb <- function(mean,
                                         A,
                                         B,
                                         C) {
-
   is_normal <- FALSE
   # Compute headcount
   headcount <- gd_compute_headcount_lb(mean = mean,
                                        povline = povline,
                                        A = A,
                                        B = B,
-                                       C = C) {
-  if (is.na(headcount)) {return(NA)}
+                                       C = C)
+    if (is.na(headcount)) {return(NA)}
 
-  is_normal <- TRUE
+    is_normal <- TRUE
 
-  # Poverty gap
-  u <- mean / povline
-  pg <- headcount - (u * value_at_lb(headcount, A, B, C))
+    # Poverty gap
+    u <- mean / povline
+    pg <- headcount - (u * value_at_lb(headcount, A, B, C))
 
 
-  # Poverty severity
-  p2 <- gd_compute_pov_severity_lb(u, headcount, pg, A, B, C)
+    # Poverty severity
+    p2 <- gd_compute_pov_severity_lb(u, headcount, pg, A, B, C)
 
-  # adjust pg and p2 if necessary
-  pg <- ifelse(headcount < pg, headcount - 0.00001, pg)
-  p2 <- ifelse(pg < p2, pg - 0.00001, p2)
-  pg <- ifelse(pg < 0, 0, pg)
-  p2 <- ifelse(p2 < 0, 0, p2)
-}
+    # adjust pg and p2 if necessary
+    pg <- ifelse(headcount < pg, headcount - 0.00001, pg)
+    p2 <- ifelse(pg < p2, pg - 0.00001, p2)
+    pg <- ifelse(pg < 0, 0, pg)
+    p2 <- ifelse(p2 < 0, 0, p2)
 
-# First derivative of the Lorenz curve
-dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
+    # First derivative of the Lorenz curve
+    dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
 
-# Second derivative of the Lorenz curve
-ddl <- A * (headcount^B) *
-  ((1 - headcount)^C) *
-  ((B * (1 - B) / headcount^2) +
-     (2 * B * C / (headcount * (1 - headcount))) +
-     (C * (1 - C) / ((1 - headcount)^2)))
+    # Second derivative of the Lorenz curve
+    ddl <- A * (headcount^B) *
+      ((1 - headcount)^C) *
+      ((B * (1 - B) / headcount^2) +
+         (2 * B * C / (headcount * (1 - headcount))) +
+         (C * (1 - C) / ((1 - headcount)^2)))
 
-# Elasticity of headcount index w.r.t mean
-eh <- -povline / (mean * headcount * ddl)
+    # Elasticity of headcount index w.r.t mean
+    eh <- -povline / (mean * headcount * ddl)
 
-# Elasticity of poverty gap index w.r.t mean
-epg <- 1 - (headcount / pg)
+    # Elasticity of poverty gap index w.r.t mean
+    epg <- 1 - (headcount / pg)
 
-# Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
-ep <- 2 * (1 - pg / p2)
+    # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
+    ep <- 2 * (1 - pg / p2)
 
-# PElasticity of headcount index w.r.t gini index
-gh <- (1 - povline / mean) / (headcount  * ddl)
+    # PElasticity of headcount index w.r.t gini index
+    gh <- (1 - povline / mean) / (headcount  * ddl)
 
-# Elasticity of poverty gap index w.r.t gini index
-gpg <- 1 + (((mean / povline) - 1) * headcount / pg)
+    # Elasticity of poverty gap index w.r.t gini index
+    gpg <- 1 + (((mean / povline) - 1) * headcount / pg)
 
-# Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
-gp <- 2 * (1 + (((mean / povline) - 1) * pg / p2))
+    # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
+    gp <- 2 * (1 + (((mean / povline) - 1) * pg / p2))
 
-# Watts index
-watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
+    # Watts index
+    watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
 
-  return(
-    list(
-      headcount = headcount,
-      pg = pov_gap,
-      p2 = pov_gap_sq,
-      eh = eh,
-      epg = epg,
-      ep = ep,
-      gh = gh,
-      gpg = gpg,
-      gp = gp,
-      watt = watt,
-      dl = dl,
-      ddl = ddl
+    return(
+      list(
+        headcount = headcount,
+        pg = pov_gap,
+        p2 = pov_gap_sq,
+        eh = eh,
+        epg = epg,
+        ep = ep,
+        gh = gh,
+        gpg = gpg,
+        gp = gp,
+        watt = watt,
+        dl = dl,
+        ddl = ddl
+      )
     )
-  )
-}
+  }
 
 #' Estimates poverty and inequality stats from beta Lorenz fit
 #'
@@ -769,12 +767,12 @@ BETAICF <- function(a, b, x) {
 
 #' Compute poverty severity for Lorenz Beta fit
 #'
-#' @param u
-#' @param headcount
-#' @param pg
-#' @param A
-#' @param B
-#' @param C
+#' @param u numeric: Mean?
+#' @param headcount numeric: Headcount
+#' @param pg numeric: Poverty gap
+#' @param A numeric: First regression parameter
+#' @param B numeric: Second regression parameter
+#' @param C numeric: Third regression parameter
 #'
 #' @return numeric
 #'
