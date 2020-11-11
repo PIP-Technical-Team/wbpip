@@ -60,7 +60,11 @@ md_compute_pip_stats <- function(welfare,
   return(list(
     poverty_line = adjusted_povline[["povline"]],
     mean = mean,
+<<<<<<< HEAD
     median = median,
+=======
+    meadian = median,
+>>>>>>> 86b110647ac3f9d9d709fba9e20ec7904488d6c6
     headcount = pov_stats[["headcount"]],
     poverty_gap = pov_stats[["poverty_gap"]],
     poverty_severity = pov_stats[["poverty_severity"]],
