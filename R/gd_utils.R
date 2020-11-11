@@ -6,6 +6,7 @@
 #'
 #' @param df dataframe: Output of `create_functional_form_lq()` or
 #' `create_functional_form_lb()`
+#' @param is_lq logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz
 #'
 #' @return list
 #'
@@ -25,7 +26,6 @@ regres <- function(df, is_lq = TRUE) {
   mse <- sse / (nrow(df) - length(coef)) # Mean squared error
   se <- unname(sqrt(diag(stats::vcov(res)))) # Standard error
   # REVIEW:
-  # Where is isLQ defined?
   # Why exp() if isLQ == FALSE?
   if (!is_lq) {coef[1] <- exp(coef[1])}
 

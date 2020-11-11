@@ -26,7 +26,10 @@ test_that("md_compute_mld returns expected results for perfect equality", {
 test_that("md_compute_mld returns expected results for perfect inequality", {
   # Test for perfect inequality
   # MLD should be positive
-  out <- md_compute_mld(welfare = c(rep(0, 999), 1000))
+  # out <- md_compute_mld(welfare = c(rep(0, 999), 1000))
+  # expect_true(out > 0)
+
+  out <- md_compute_mld(welfare = c(rep(1, 999), 1000))
   expect_true(out > 0)
 })
 
