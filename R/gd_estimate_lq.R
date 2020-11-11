@@ -13,8 +13,6 @@
 #' @return list
 #' @export
 #'
-#' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
 #
 gd_compute_pip_stats_lq <- function(.data,
                                     mean,
@@ -327,6 +325,7 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
 #' @param A numeric vector: lorenz curve coefficient
 #' @param B numeric vector: lorenz curve coefficient
 #' @param C numeric vector: lorenz curve coefficient
+#' @param n_quantile numeric: Number of quantiles to return
 #'
 #' @return numeric
 #'
@@ -367,8 +366,6 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @export
 #'
-#' @examples
-#' watt_index_lq(headcount, dd, A, B, C)
 #'
 gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   if (headcount <= 0) {
@@ -494,6 +491,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
 #' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
 #' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
 #' @param s1 numeric: To document
+#' @param s2 numeric: To document
 #'
 #' @return list
 #'
@@ -584,15 +582,13 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param p0 numeric: TO document
-#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[1]
-#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[2]
-#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[3]
+#' @param A numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[1]`
+#' @param B numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[2]`
+#' @param C numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[3]`
 #'
 #' @return list
 #' @export
 #'
-#' @examples
-#' estimate_lq(n_obs, mean, povline, p0, coefs)
 #'
 gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
 

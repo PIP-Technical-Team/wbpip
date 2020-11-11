@@ -15,19 +15,15 @@ gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
 
 \item{p0}{numeric: TO document}
 
-\item{A}{numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef\link{1}}
+\item{A}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[1]}}
 
-\item{B}{numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef\link{2}}
+\item{B}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[2]}}
 
-\item{C}{numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef\link{3}}
+\item{C}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[3]}}
 }
 \value{
 list
 }
 \description{
 Estimates poverty and inequality stats from Quadratic Lorenz fit
-}
-\examples{
-estimate_lq(n_obs, mean, povline, p0, coefs)
-
 }
