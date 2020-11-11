@@ -13,4 +13,5 @@ usethis::use_data(md_ABC_2000_income,
                   md_DEF_2000_consumption,
                   md_GHI_2000_consumption,
                   md_GHI_2000_income,
-                  version = 3, overwrite = TRUE)
+                  version = 3,
+                  overwrite = TRUE)
