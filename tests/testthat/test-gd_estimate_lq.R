@@ -20,6 +20,15 @@ lorenz_welfare <- c(5.824760527229386e-05,
                     0.48753116241194566,
                     1)
 
+test_that("name of components does not change", {
+  fix_names_ct <- c("e", "m", "n", "k", "r", "s1", "s2", "A", "B", "C")
+
+  ct <- get_components_lq(2, -1, 3)
+  res_names_ct <- names(ct)
+
+  expect_equal(fix_names_ct, res_names_ct)
+})
+
 
 test_that("create_functional_form_lq works as expected", {
 
@@ -138,14 +147,14 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     r    = 1.3477796260474386
   )
   benchmark <- list(
-    gini = 0.32126464221602591,
-    median = 42.247782467994874,
-    rmhalf = 30.338461373077628,
-    dcm = 34.999705316492175,
+    gini         = 0.32126464221602591,
+    median       = 42.247782467994874,
+    rmhalf       = 30.338461373077628,
+    dcm          = 34.999705316492175,
     polarization = 0.22066218253919992,
-    ris = 0.29417085441813828,
-    mld = 0.1897890974403306,
-    deciles = c(0.037459351271787455,
+    ris          = 0.29417085441813828,
+    mld          = 0.1897890974403306,
+    deciles      = c(0.037459351271787455,
                 0.050102491249992831,
                 0.060098424008397155,
                 0.0689612882777707,
@@ -176,13 +185,17 @@ test_that("gd_compute_dist_stats_lq works as expected", {
 
 test_that("gd_compute_polarization_lq works as expected", {
   mean <- 51.5660557757944
-  p0 <- 0.5
-  dcm <- 34.999705316492175
-  ct <- list(
+  p0   <- 0.5
+  dcm  <- 34.999705316492175
+
+  ct   <- list(
+
     A = 0.795981535745657,
     B = -1.4445933880119242,
     C = 0.14728191995919815
+
   )
+
   benchmark <- 0.22066218253919992
 
   out <- gd_compute_polarization_lq(mean = mean,
@@ -214,17 +227,17 @@ test_that("compute_poverty_stats_lq works as expected", {
 
   benchmark <- list(
     headcount = 0.76005810499191284,
-    pg = 0.27617606019159308,
-    p2 = 0.12832887439632906,
-    eh = -0.87181309219603054,
-    epg = -1.7520781651553494,
-    ep = -2.3041920454886071,
-    gh = -0.093916119652440649,
-    gpg = 0.70353220826204077,
-    gp = 1.5363306438390838,
-    watt = 0.39088363448720104,
-    dl = 1.1207307654300092,
-    ddl = 1.691340795153677
+    pg        = 0.27617606019159308,
+    p2        = 0.12832887439632906,
+    eh        = -0.87181309219603054,
+    epg       = -1.7520781651553494,
+    ep        = -2.3041920454886071,
+    gh        = -0.093916119652440649,
+    gpg       = 0.70353220826204077,
+    gp        = 1.5363306438390838,
+    watt      = 0.39088363448720104,
+    dl        = 1.1207307654300092,
+    ddl       = 1.691340795153677
   )
 
   out <- gd_compute_poverty_stats_lq(mean = mean,
