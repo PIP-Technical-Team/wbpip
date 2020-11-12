@@ -176,6 +176,11 @@ md_clean_data <- function(dt, ...) {
                         wrap = TRUE)
   } # end of weight check
 
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   add data to list and return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   ll[["data"]] <- dt
   return(ll)
 }
@@ -186,13 +191,15 @@ md_clean_data <- function(dt, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 nng_msg <- function(nng, x) {
-  msg     <- paste0(nng, " zero or negative values in variable `", x, "` were dropped")
-  rlang::inform(c(i = msg))
+
+  cli::cli_alert_info("{nng} zero or negative values in variable
+                      {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
 
 nna_msg <- function(nna, x) {
-  msg     <- paste0(nna, " NA values in variable `", x, "` were dropped")
-  rlang::inform(c(i = msg))
+  cli::cli_alert_info("{nna} NA values in variable
+                      {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
+
