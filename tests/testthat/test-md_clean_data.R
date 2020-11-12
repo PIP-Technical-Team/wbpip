@@ -34,6 +34,7 @@ test_that("Negative or zeros are dropped in weight", {
   expect_equal(11, nd$nng_weight)
 })
 
+context("md_clean_data: Treatment of weight variable")
 
 test_that("when weight is not provided, variable `weight` is created equal to 1",
           {
@@ -50,15 +51,14 @@ test_that("Data is sorted by welfare variable",{
                 welfare = "welfare")$data
 
   setorder(dt2, weight_h) # sort data by other variable
-
-  o1 <- order(dt2$welfare)
+  welf1 <- sort(dt2$welfare)
 
   dt3 <- md_clean_data(dt2,
                 welfare = "welfare")$data
 
-  o2    <- order(dt3$welfare)
+  welf2 <- dt3$welfare
 
-  expect_identical(o1, o2)
+  expect_equal(welf1, welf2, check.attributes = FALSE)
 
 })
 
