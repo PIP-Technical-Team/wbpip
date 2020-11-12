@@ -4,11 +4,14 @@
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights, optional.
+#' @param gini numeric: Gini. Output of [md_compute_gini()].
+#' @param weighted_median numeric: Median. Output of [md_compute_quantiles()].
 #'
 #' @references
-#' Ravallion, M., Chen, S. 1996.
+#' Ravallion, M., S. Chen. 1996.
 #' "[What Can New Survey Data Tell Us about Recent Changes in Distribution and Poverty?](http://documents1.worldbank.org/curated/en/202781468739531561/pdf/multi-page.pdf)".
-#' _Policy Research Working Paper 1694_. Washington, DC: World Bank.
+#' Policy Research Working Paper 1694.
+#' World Bank, Washington, DC.
 #'
 #' @examples
 #' # Simple example
@@ -19,10 +22,13 @@
 #'
 #' # Microdata example
 #' data("md_ABC_2000_income")
-#' md_compute_polarization(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
+#' md_compute_polarization(
+#'   md_ABC_2000_income$welfare,
+#'   md_ABC_2000_income$weight)
 #'
-#' @export
-md_compute_polarization <- function(welfare, weight = NULL) {
+#' @keywords internal
+md_compute_polarization <- function(welfare, weight = NULL,
+                                    gini, weighted_median) {
 
   # Set all weights to 1 if none are supplied
   if (is.null(weight)) weight <- rep(1, length(welfare))
@@ -34,18 +40,6 @@ md_compute_polarization <- function(welfare, weight = NULL) {
 
   # Calculate weighted mean
   weighted_mean <- stats::weighted.mean(x = welfare, w = weight)
-
-  # Calculate Gini
-  gini <- md_compute_gini(welfare = welfare, weight = weight)
-
-  # Calculate Lorenz
-  lz <- md_compute_lorenz(welfare = welfare, weight = weight)
-
-  # Calculate weighted median
-  weighted_median <- md_compute_quantiles(
-    lwelfare = lz$lorenz_welfare,
-    lweight = lz$lorenz_weight,
-    percentile = lz$welfare)[['median']]
 
   # Calculate poverty stats (for headcount and poverty gap)
   pov_stats <- md_compute_poverty_stats(welfare = welfare,

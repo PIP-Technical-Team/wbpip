@@ -4,12 +4,16 @@
 \alias{md_compute_polarization}
 \title{Wolfson polarization index}
 \usage{
-md_compute_polarization(welfare, weight = NULL)
+md_compute_polarization(welfare, weight = NULL, gini, weighted_median)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
 \item{weight}{numeric: A vector of weights, optional.}
+
+\item{gini}{numeric: Gini. Output of \code{\link[=md_compute_gini]{md_compute_gini()}}.}
+
+\item{weighted_median}{numeric: Median. Output of \code{\link[=md_compute_quantiles]{md_compute_quantiles()}}.}
 }
 \description{
 Compute the Wolfson polarization index for microdata.
@@ -23,11 +27,15 @@ md_compute_polarization(welfare = 1:10, weight = 1:10)
 
 # Microdata example
 data("md_ABC_2000_income")
-md_compute_polarization(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
+md_compute_polarization(
+  md_ABC_2000_income$welfare,
+  md_ABC_2000_income$weight)
 
 }
 \references{
-Ravallion, M., Chen, S. 1996.
+Ravallion, M., S. Chen. 1996.
 "\href{http://documents1.worldbank.org/curated/en/202781468739531561/pdf/multi-page.pdf}{What Can New Survey Data Tell Us about Recent Changes in Distribution and Poverty?}".
-\emph{Policy Research Working Paper 1694}. Washington, DC: World Bank.
+Policy Research Working Paper 1694.
+World Bank, Washington, DC.
 }
+\keyword{internal}
