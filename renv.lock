@@ -67,10 +67,10 @@
     },
     "clipr": {
       "Package": "clipr",
-      "Version": "0.7.0",
+      "Version": "0.7.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "08cf4045c149a0f0eaf405324c7495bd"
+      "Hash": "ebaa97ac99cc2daf04e77eecc7b781d7"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -326,10 +326,10 @@
     },
     "rstudioapi": {
       "Package": "rstudioapi",
-      "Version": "0.11",
+      "Version": "0.12",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "33a5b27a03da82ac4b1d43268f80088a"
+      "Hash": "7849949afe010c2bdaffe05ccff4c731"
     },
     "stringi": {
       "Package": "stringi",
@@ -389,10 +389,10 @@
     },
     "waldo": {
       "Package": "waldo",
-      "Version": "0.2.2",
+      "Version": "0.2.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6aa53cb78ef07cfcd7bcee7435f1d1f5"
+      "Hash": "181d1a31b1ba2009ef20926f2ee0570c"
     },
     "withr": {
       "Package": "withr",
