@@ -26,25 +26,24 @@ gd_clean_data <- function(welfare,
                  welfare    = welfare,
                  data_type  = data_type)
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   Standardize types 2 and 5   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   # Standardize according to input distribution
   if (data_type == 5) {
     temp <- standardize_type5(population = population,
                               welfare = welfare,
                               min_welfare_default = min_welfare_default,
                               max_welfare_default = max_welfare_default)
-  } else if (data_type == 1) {
-    temp <- standardize_type1(population = population,
-                              welfare = welfare)
+  }
 
-  } else {
+  if (data_type == 2) {
     temp <- standardize_type2(population = population,
                               welfare = welfare,
                               min_welfare_default = min_welfare_default,
                               max_welfare_default = max_welfare_default)
   }
-
-  gdf[["data"]][["population"]] <- temp[["lorenz_pop"]]
-  gdf[["data"]][["welfare"]] <- temp[["lorenz_welfare"]]
 
   return(gdf)
 }
@@ -84,33 +83,6 @@ standardize_type5 <- function(population,
   return(list(lorenz_pop = lorenz_pop,
               lorenz_welfare = lorenz_welfare))
 }
-
-
-#' standardize_type1
-#' Standardize grouped data of type 1 distribution
-#' @param population numeric: population, cumulative proportion of population
-#' @param welfare numeric: welfare, cumulative proportion of income / consumption
-#' held by that proportion of the population
-#'
-#' @return list
-#' @export
-#'
-standardize_type1 <- function(population,
-                              welfare) {
-  nobs <- length(population)
-  lorenz_pop <- vector(mode = "numeric", length = nobs)
-  lorenz_welfare <- vector(mode = "numeric", length = nobs)
-  sum_population <- population[nobs]
-  sum_welfare <- welfare[nobs]
-  # Compute points on the lorenz curve
-  for (i in seq_along(population)) {
-    lorenz_pop[i] <- population[i] / sum_population
-    lorenz_welfare[i] <- welfare[i] / sum_welfare
-  }
-  return(list(lorenz_pop = lorenz_pop,
-              lorenz_welfare = lorenz_welfare))
-}
-
 
 #' standardize_type2
 #' Standardize grouped data of type 2 distribution
