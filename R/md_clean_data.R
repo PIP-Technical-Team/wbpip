@@ -131,6 +131,9 @@ md_clean_data <- function(dt, ...) {
       nng_msg(nng, welf)
     }
 
+    setorderv(dt, welf)
+    cli::cli_alert_info("Data has been sorted by variable {.val {welf}}")
+
   } # End of welfare check
 
   #--------- WEIGHT ---------
