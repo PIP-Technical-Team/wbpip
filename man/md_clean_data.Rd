@@ -16,9 +16,9 @@ For instance, welfare = "income", weight = "peso'.}
 \value{
 list of elements whose main object is a dataframe (in data.table format)
 with the necessary transformations to be included in PIP methods. Data is available in
-element $data. The other elements provide the number of observations that were modified
+element \verb{$data}. The other elements provide the number of observations that were modified
 depending on test performed. The name of elements are in the form p_s, where p (or prefix)
-refers to the test, whereas s (for suffix) refers to the name of the variable evaluated.
+refers to the test and s (the suffix) refers to the name of the variable evaluated.
 Prefix are:
 
 \emph{nna:}  Number of NA in variable

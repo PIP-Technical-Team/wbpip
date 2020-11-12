@@ -48,41 +48,38 @@ gd_clean_data <- function(welfare,
   return(gdf)
 }
 
-#' standardize_type5
-#' Standardize grouped data of type 5 distribution
-#' @param population numeric: population, in percentage of the population in a given interval of incomes.
-#' @param welfare numeric: welfare, the mean income / consumption of that interval
-#' @param min_welfare_default numeric:
-#' @param max_welfare_default numeric:
+#' Standardize type 5
 #'
-#' @return list
+#' @param welfare
+#' @param population
+#'
+#' @return
 #' @export
 #'
-standardize_type5 <- function(population,
-                              welfare,
-                              min_welfare_default,
-                              max_welfare_default) {
-  nobs <- length(population)
-  lorenz_pop <- vector(mode = "numeric", length = nobs)
-  lorenz_welfare <- vector(mode = "numeric", length = nobs)
-  sum_population <- sum(population)
-  sum_welfare <- sum(population * welfare)
-  min_welfare <- min(welfare)
-  max_welfare <- max(welfare)
-  min_welfare_default <- if(min_welfare < min_welfare_default) min_welfare else min_welfare_default
-  max_welfare_default <- if(max_welfare > max_welfare_default) max_welfare else max_welfare_default
-  mean_welfare <- sum_welfare / sum_population
-  # Compute points on the lorenz curve
-  lorenz_pop[1] <- population[1] / sum_population
-  lorenz_welfare[1] <- population[1] * welfare[1] / sum_population / mean_welfare
-  for (i in seq(2, nobs)) {
-    lorenz_pop[i] <- population[i] / sum_population + lorenz_pop[i-1]
-    lorenz_welfare[i] <- population[i] * welfare[i] / sum_population / mean_welfare + lorenz_welfare[i-1]
+#' @examples
+standardize_type5 <- function(welfare,
+                population) {
+
+  if (sum(population) == 100) {
+    population <- population/100
+    cli::cli_alert_info("variable {.val population} has been rescaled to
+                        range (0,1]", wrap = TRUE)
   }
 
-  return(list(lorenz_pop = lorenz_pop,
-              lorenz_welfare = lorenz_welfare))
+  # sum_population      <- sum(population)
+  mean_welfare        <- sum(population * welfare)
+  min_welfare         <- min(welfare)
+  max_welfare         <- max(welfare)
+
+  # Compute points on the lorenz curve
+  lorenz_pop     <- cumsum(population)
+  share_welfare  <- population * (welfare/mean_welfare)
+  lorenz_welfare <- cumsum(share_welfare)
+
+  return(data.table(population = lorenz_pop,
+                    welfare    = lorenz_welfare))
 }
+
 
 #' standardize_type2
 #' Standardize grouped data of type 2 distribution
@@ -121,6 +118,14 @@ standardize_type2 <- function(population,
 
 
 
+#' Check Groupd Data inputs
+#'
+#' @inheritParams gd_clean_data
+#'
+#' @return
+#' @export
+#'
+#' @examples
 check_gd_input <- function(population,
                            welfare,
                            data_type) {
@@ -132,8 +137,11 @@ check_gd_input <- function(population,
   assertthat::assert_that(length(population) == length(welfare))
   assertthat::is.number(population)
   assertthat::is.number(welfare)
-  assertthat::assert_that(sum(is.na(population)) == 0)
-  assertthat::assert_that(sum(is.na(welfare)) == 0)
+
+  assertthat::assert_that(sum(is.na(population)) == 0,
+                          msg = "Data can't have NA in population")
+  assertthat::assert_that(sum(is.na(welfare)) == 0,
+                          msg = "Data can't have NA in welfare")
 
   # Check data type
   assertthat::assert_that(length(data_type) == 1)
@@ -180,20 +188,58 @@ check_gd_input <- function(population,
 
   #--------- type 5 (or 3) ---------
 
+  if (data_type %in% c(3, 5)) {
+
+    assertthat::assert_that(sum(population) %in% c(1, 100))
+
+  }
+
 }
 
 
 
+#' standardize_type5_old
+#' Standardize grouped data of type 5 distribution
+#' @param population numeric: population, in percentage of the population in a given interval of incomes.
+#' @param welfare numeric: welfare, the mean income / consumption of that interval
+#' @param min_welfare_default numeric:
+#' @param max_welfare_default numeric:
+#'
+#' @return list
+#' @export
+#'
+standardize_type5_old <- function(population,
+                                  welfare,
+                                  min_welfare_default,
+                                  max_welfare_default) {
+  nobs                <- length(population)
+  lorenz_pop          <- vector(mode = "numeric", length = nobs)
+  lorenz_welfare      <- vector(mode = "numeric", length = nobs)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------   TYPE 2   ---------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  sum_population      <- sum(population)
+  sum_welfare         <- sum(population * welfare)
+  min_welfare         <- min(welfare)
+  max_welfare         <- max(welfare)
 
+  min_welfare_default <- ifelse(min_welfare < min_welfare_default,
+                                min_welfare,
+                                min_welfare_default)
 
+  max_welfare_default <- ifelse(max_welfare > max_welfare_default,
+                                max_welfare,
+                                max_welfare_default)
 
+  mean_welfare        <- sum_welfare / sum_population
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------   TYPE 5/3   ---------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Compute points on the lorenz curve
+  lorenz_pop[1]     <- population[1] / sum_population
+  lorenz_welfare[1] <- population[1] * welfare[1] / sum_population / mean_welfare
+  for (i in seq(2, nobs)) {
+    lorenz_pop[i] <- population[i] / sum_population + lorenz_pop[i-1]
+    lorenz_welfare[i] <- population[i] * welfare[i] / sum_population / mean_welfare + lorenz_welfare[i-1]
+  }
 
+  return(data.table(population = lorenz_pop,
+                    welfare    = lorenz_welfare))
+}
 
