@@ -165,6 +165,12 @@ md_clean_data <- function(dt, ...) {
       nng_msg(nng, wht)
 
     }
+  } else { # If weight is not provided
+
+    dt[, weight := 1]
+    cli::cli_alert_info("since {.val weight} is not provided, variable
+                        {.field `weight = 1`} has been created",
+                        wrap = TRUE)
   } # end of weight check
 
   ll[["data"]] <- dt
