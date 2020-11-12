@@ -23,9 +23,8 @@ surveys comparable over time and across countries.
 \details{
 Note that the CPI value to be used must be pre-adjusted so that welfare
 aggregates are comparable across surveys within a given country. This implies
-that adjustments to account for temporal and spatial factors within the
-survey as well as currency changes between surveys must already have been
-made.
+that temporal and spatial factors within the survey as well as currency
+changes between surveys must already have been made.
 }
 \references{
 Azevedo, J.P, Corral, P. A., Jolliffe, D. M., Lakner, C., Mahler,
