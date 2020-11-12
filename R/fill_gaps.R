@@ -184,26 +184,6 @@ fg_get_weights <- function(df) {
 #' @noRd
 check_inputs_fill_gaps <- function() {
 
-  # CHECK for incorrect NA's
-  if (is.na(request_year)) {
-    rlang::abort('`request_year` can\'t be NA.')
-  }
-  if (anyNA(survey_year)) {
-    rlang::abort(c('`survey_year` can\'t contain missing values:',
-                   x = sprintf('Found %s missing values in `survey_year.`',
-                               sum(is.na(survey_year)))
-    ))
-  }
-  if (anyNA(predicted_request_mean)) {
-    rlang::abort(c('`predicted_request_mean` can\'t contain missing values:',
-                   x = sprintf('Found %s missing values in `predicted_request_mean`',
-                               sum(is.na(predicted_request_mean)))
-    ))
-  }
-  if (is.na(poverty_line)) {
-    rlang::abort('`poverty_line` can\'t be NA.')
-  }
-
   # Check for names in data input
   if (!'df0' %in% names(data))
     rlang::abort(c('`data$df0` not found.'))
@@ -264,5 +244,26 @@ check_inputs_fill_gaps <- function() {
   if (length(predicted_request_mean) == 2 & is.null(data$df1))
     rlang::abort(c('You supplied two survey means, but only one survey data frame.',
                    i = 'Pass an additonal data frame to argument `df1 in `data`.'))
+
+
+  # CHECK for incorrect NA's
+  if (is.na(request_year)) {
+    rlang::abort('`request_year` can\'t be NA.')
+  }
+  if (anyNA(survey_year)) {
+    rlang::abort(c('`survey_year` can\'t contain missing values:',
+                   x = sprintf('Found %s missing values in `survey_year.`',
+                               sum(is.na(survey_year)))
+    ))
+  }
+  if (anyNA(predicted_request_mean)) {
+    rlang::abort(c('`predicted_request_mean` can\'t contain missing values:',
+                   x = sprintf('Found %s missing values in `predicted_request_mean`',
+                               sum(is.na(predicted_request_mean)))
+    ))
+  }
+  if (is.na(poverty_line)) {
+    rlang::abort('`poverty_line` can\'t be NA.')
+  }
 
 }
