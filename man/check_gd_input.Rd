@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_clean_data.R
 \name{check_gd_input}
 \alias{check_gd_input}
-\title{Check Groupd Data inputs}
+\title{Check Group Data inputs}
 \usage{
 check_gd_input(population, welfare, data_type)
 }
@@ -25,5 +25,5 @@ the mean income of that interval. Default is 1.}
 
 }
 \description{
-Check Groupd Data inputs
+Check Group Data inputs
 }
