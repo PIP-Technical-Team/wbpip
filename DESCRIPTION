@@ -25,6 +25,7 @@ Depends:
 Imports: 
     dplyr,
     rlang,
+    purrr, 
     data.table,
     tibble,
     assertthat

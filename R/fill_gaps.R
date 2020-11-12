@@ -1,29 +1,74 @@
-#' @import purrr
-#' @import assertthat
-NULL
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= '2.15.1')
+  utils::globalVariables(
+    c('df0', 'predicted_request_mean', 'request_year',
+      'survey_year', 'data', 'poverty_line')
+  )
 
 #' Fill gaps
 #'
-#' Calculate poverty statistics for a common request year by applying the World
-#' Bank official method for interpolating and extrapolating surveys.
+#' Calculate poverty statistics for a request year for which survey data is not
+#' available.
+#'
+#' The predicted request year mean(s) must be in comparable international
+#' dollars and adjusted for differences in purchasing-power, and changes in
+#' prices and currencies.
+#'
+#' The survey data must contain a column named _welfare_ and optionally a column
+#' named _weight_ if welfare values are to be weighted.
 #'
 #' @param request_year integer: A value with the request year.
 #' @param data list: A list with one or two data frames containing survey data.
-#' @param survey_mean numeric: A vector with one or two survey means.
+#'   See details.
+#' @param predicted_request_mean numeric: A vector with one or two survey means.
+#'   See details.
 #' @param survey_year numeric: A vector with one or two survey years.
-#' @param proxy list: A list with proxy values to be used to estimate the growth
-#'   rate.
 #' @param data_type character: Type of data, either micro or grouped.
 #' @param poverty_line numeric: Daily poverty line in international dollars.
 #'
+#' @seealso [deflate_welfare_mean()] [predict_request_year_mean()]
+#'
 #' @examples
+#' # Load example data
+#' data('md_ABC_2000_income')
+#' data('md_ABC_2010_income')
+#' md_ABC_2010_income <-
+#'    md_clean_data(md_ABC_2010_income,
+#'      welfare = 'welfare',
+#'      weight = 'weight')$data
+#'
+#' # Extrapolation
+#' res <- fill_gaps(
+#'   request_year = 2005,
+#'   survey_year = 2000,
+#'   data = list(df0 = md_ABC_2000_income),
+#'   predicted_request_mean = 13,
+#'   data_type = 'microdata',
+#'   poverty_line = 1.9)
+#'
+#' # Interpolatation (monotonic)
+#' res <- fill_gaps(
+#'   request_year = 2005,
+#'   survey_year = c(2000, 2010),
+#'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
+#'   predicted_request_mean = c(13, 13),
+#'   data_type = 'microdata',
+#'   poverty_line = 1.9)
+#'
+#' # Interpolatation (non-monotonic)
+#' res <- fill_gaps(
+#'   request_year = 2005,
+#'   survey_year = c(2000, 2010),
+#'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
+#'   predicted_request_mean = c(14, 17),
+#'   data_type = 'microdata',
+#'   poverty_line = 1.9)
 #'
 #' @export
 fill_gaps <- function(request_year,
                       data = list(df0, df1 = NULL),
-                      survey_mean,
+                      predicted_request_mean,
                       survey_year,
-                      proxy = list(value0, value1 = NULL, req_value),
                       data_type = c('microdata', 'groupdata'),
                       poverty_line = 1.9) {
 
@@ -34,15 +79,9 @@ fill_gaps <- function(request_year,
   # Match arguments
   data_type <- match.arg(data_type)
 
-  # Adjust proxy values for potential decimal survey years.
-  proxy <- fg_adjust_decimal(survey_year, proxy)
-
-  # Calculate request year mean
-  request_year_mean <- fg_calculate_request_mean(survey_mean, proxy)
-
   # Calculate poverty stats
   if (data_type == 'microdata') {
-    if (length(request_year_mean) == 1) {
+    if (length(predicted_request_mean) == 1) {
 
       weights0 <- fg_get_weights(data$df0)
 
@@ -51,7 +90,7 @@ fill_gaps <- function(request_year,
                                   weight = weights0,
                                   povline = poverty_line,
                                   default_ppp = 1,
-                                  requested_mean = request_year_mean)
+                                  requested_mean = predicted_request_mean)
 
     } else {
 
@@ -63,14 +102,14 @@ fill_gaps <- function(request_year,
                                   weight = weights0,
                                   povline = poverty_line,
                                   default_ppp = 1,
-                                  requested_mean = request_year_mean[1])
+                                  requested_mean = predicted_request_mean[1])
 
       # Calculate statistics for the second survey year
       dl1 <- md_compute_pip_stats(welfare = data$df1$welfare,
                                   weight = weights1,
                                   povline = poverty_line,
                                   default_ppp = 1,
-                                  requested_mean = request_year_mean[2])
+                                  requested_mean = predicted_request_mean[2])
 
       # Calculate poverty statistics for the request year (weighted average)
       out <- fg_adjust_poverty_stats(dl0, dl1, survey_year, request_year)
@@ -78,6 +117,8 @@ fill_gaps <- function(request_year,
 
 
   } else if (data_type == 'groupdata') {
+
+    message('Note: Grouped functions are not implemented yet.')
 
     # GROUPED DATA
     # out <- gd_compute_pip_stats()
@@ -93,68 +134,6 @@ fill_gaps <- function(request_year,
 
 }
 
-#' fg_extrapolate_survey_mean
-#'
-#' @param survey_mean numeric: A vector with survey means.
-#' @param proxy list: A list with proxy values.
-#' @return numeric
-#' @noRd
-fg_extrapolate_survey_mean <- function(survey_mean, proxy) {
-  # Growth factor = request_value / value
-  growth_factor <-
-    purrr::map_dbl(c(proxy$value0, proxy$value1), .f = function(x, y) {y / x},
-                   y = proxy$req_value)
-  # Extrapolated value = survey_mean * growth factor
-  out <- purrr::map2_dbl(survey_mean, growth_factor,
-                         .f = function(x, y) {x * y})
-  return(out)
-}
-
-#' fg_interpolate_survey_mean
-#'
-#' Interpolate survey means based on growth
-#'
-#' @param survey_mean numeric: A vector with survey means.
-#' @param proxy list: A list with proxy values.
-#' @return numeric
-#' @noRd
-fg_interpolate_survey_mean <- function(survey_mean, proxy) {
-
-  # Growth factor = (req_value - value0) / (value1 - value0)
-  growth_factor <- (proxy$req_value - proxy$value0) / (proxy$value1 - proxy$value0)
-
-  # Interpolated value = growth factor * (mean1 - mean0) + mean0
-  out <- growth_factor * (survey_mean[2] - survey_mean[1]) + survey_mean[1]
-
-  return(out)
-}
-
-#' fg_calculate_request_mean
-#'
-#' @param survey_mean numeric: A vector with one or two survey means.
-#' @param proxy list: A list with proxy values.
-#' @return numeric
-#' @noRd
-fg_calculate_request_mean <- function(survey_mean, proxy) {
-  if (length(survey_mean) == 1) {
-    if (fg_is_one_point_adjusted(survey_mean, proxy$value0, proxy$req_value)) {
-      request_mean <- fg_extrapolate_survey_mean(survey_mean, proxy)
-    } else {
-      request_mean <- NA
-    }
-  } else {
-    proxy_values <- c(proxy$value0, proxy$value1)
-    if (fg_is_non_monotonic(survey_mean, proxy_values, proxy$req_value)) {
-      request_mean <- fg_extrapolate_survey_mean(survey_mean, proxy)
-    } else if (fg_is_same_direction_interpolated(survey_mean, proxy_values, proxy$req_value)) {
-      request_mean <- fg_interpolate_survey_mean(survey_mean, proxy)
-    } else {
-      request_mean <- NA
-    }
-  }
-  return(request_mean)
-}
-
 #' fg_adjust_poverty_stats
 #'
 #' Calculate a weighted average for poverty statistics based on the difference
@@ -168,27 +147,25 @@ fg_calculate_request_mean <- function(survey_mean, proxy) {
 #' @return numeric
 #' @noRd
 fg_adjust_poverty_stats <- function(stats0, stats1, survey_year, request_year) {
-  purrr::map2(stats0, stats1,
-              .f = function(measure0, measure1, survey_year, request_year) {
-                ((survey_year[2] - request_year) * measure0 +
-                   (request_year - survey_year[1]) * measure1) /
-                  (survey_year[2] - survey_year[1])
-              }, survey_year, request_year)
 
+  # Calculate a weighted average for the poverty stats by taking the
+  # difference between the two survey years and the request year
+  out <-
+    purrr::map2(
+      stats0, stats1,
+      .f = function(measure0, measure1, survey_year, request_year) {
+        ((survey_year[2] - request_year) * measure0 +
+           (request_year - survey_year[1]) * measure1) /
+          (survey_year[2] - survey_year[1])
+      }, survey_year, request_year)
+
+  # Set distributional statistics to missing
+  # It does not make sense to interpolate these values
+  out[c('polarization', 'gini', 'mld', 'median', 'deciles')] <- NA
+
+  return(out)
 }
 
-#' fg_adjust_decimal
-#' @param survey_year numeric: A vector with one or two survey means.
-#' @param x list: A list with proxy values.
-#' @return numeric: A vector with one or two survey years.
-#' @noRd
-fg_adjust_decimal <- function(survey_year, x) {
-  x$value0 <- get_decimal_year_value(survey_year[1], x$value0)
-  if (!is.null(x$value1)) {
-    x$value1 <- get_decimal_year_value(survey_year[2], x$value1)
-  }
-  return(x)
-}
 #' fg_get_weights
 #' @param df data.frame: A data frame with a welfare column.
 #' @return numeric:
@@ -202,123 +179,90 @@ fg_get_weights <- function(df) {
   return(weights)
 }
 
-#' is_monotonic
-#' @param x1 numeric: Value for the first year.
-#' @param x2 numeric: Value for the second year.
-#' @param r numeric: Value for the request year.
-#' @return logical
-#' @noRd
-is_monotonic <- function(x1, x2, r) {((r - x1) * (x2 - r)) > 0}
-
-#' is_same_direction
-#' @param x numeric: A vector with values to compare.
-#' @param y numeric: A vector with values to compare.
-#' @return logical
-#' @noRd
-is_same_direction <- function(x, y) {(x[2] - x[1]) * (y[2] - y[1]) > 0}
-
-#' fg_is_non_monotonic
-#' @param survey_mean numeric: A vector with one or two survey means.
-#' @return logical
-#' @noRd
-fg_is_non_monotonic <- function(survey_mean, proxy_value, req_value) {
-
-  # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
-  if (length(survey_mean) == 1) return(FALSE)
-
-  if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
-    if (!is_same_direction(x = proxy_value, y = survey_mean)) {
-      return(TRUE)
-    } else {
-      return(FALSE)
-    }
-  } else {
-    return(TRUE)
-  }
-}
-
-#' fg_is_same_direction_interpolated
-#' @param survey_mean numeric: A vector with one or two survey means.
-#' @return logical
-#' @noRd
-fg_is_same_direction_interpolated <- function(survey_mean, proxy_value, req_value) {
-
-  # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
-  if (length(survey_mean) == 1) return(FALSE)
-
-  if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
-    if (is_same_direction(x = proxy_value, y = survey_mean)) {
-      return(TRUE)
-    }
-  } else {
-    return(FALSE)
-  }
-}
-
-#' fg_is_one_point_adjusted
-#' @param survey_mean numeric: A vector with one or two survey means.
-#' @return numeric
-#' @noRd
-fg_is_one_point_adjusted <- function(survey_mean, proxy_value, req_value){
-
-  # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
-
-  if (length(survey_mean) == 1) {
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
-}
-
 #' check_inputs_fill_gaps
 #' @return logical
 #' @noRd
 check_inputs_fill_gaps <- function() {
 
-  # request_year
-  assertthat::assert_that(is.numeric(request_year))
-  assertthat::assert_that(!length(request_year) > 1,
-                          msg = paste0(
-                            'You can only interpolate or extrapolate to one request year ',
-                            'at a time.'))
-
-  # welfare
-  assertthat::assert_that('welfare' %in% colnames(data$df0))
-  assertthat::assert_that(is.numeric(data$df0$welfare))
-  if (!is.null(data$df1)) assertthat::assert_that('welfare' %in% colnames(data$df1))
-  if (!is.null(data$df1)) assertthat::assert_that(is.numeric(data$df1$welfare))
-
-  # survey_mean
-  if (!is.null(survey_mean)) assertthat::assert_that(is.numeric(survey_mean))
-  assertthat::assert_that(!length(survey_mean) > 2,
-                          msg = 'You can\'t interpolate between more than to surveys.')
-
-  # survey_year
-  assertthat::assert_that(is.numeric(survey_year))
-  assertthat::assert_that(!length(survey_year) > 2,
-                          msg = 'You can\'t interpolate between more than to surveys.')
-
-  # proxy
-  assertthat::assert_that(is.numeric(proxy$value0))
-  if (!is.null(proxy$value1)) assertthat::assert_that(is.numeric(proxy$value1))
-  assertthat::assert_that(is.numeric(proxy$req_value))
-
-  # proxy vs survey year
-  if (get_weights(survey_year[1])[1] != 1)
-    assertthat::assert_that(length(proxy$value0) == 2,
-                            msg = 'You must supply two calendar year values,
-                            since you supplied a decimal survey year.')
-  if (length(survey_year) == 2) {
-    if (get_weights(survey_year[2])[1] != 1)
-      assertthat::assert_that(length(proxy$value1) == 2,
-                              msg = 'You must supply two calendar year values,
-                              since you supplied a decimal survey year.')
+  # CHECK for incorrect NA's
+  if (is.na(request_year)) {
+    rlang::abort('`request_year` can\'t be NA.')
+  }
+  if (anyNA(survey_year)) {
+    rlang::abort(c('`survey_year` can\'t contain missing values:',
+                   x = sprintf('Found %s missing values in `survey_year.`',
+                               sum(is.na(survey_year)))
+    ))
+  }
+  if (anyNA(predicted_request_mean)) {
+    rlang::abort(c('`predicted_request_mean` can\'t contain missing values:',
+                   x = sprintf('Found %s missing values in `predicted_request_mean`',
+                               sum(is.na(predicted_request_mean)))
+    ))
+  }
+  if (is.na(poverty_line)) {
+    rlang::abort('`poverty_line` can\'t be NA.')
   }
 
-  # poverty_line
-  assertthat::assert_that(is.numeric(poverty_line))
+  # Check for names in data input
+  if (!'df0' %in% names(data))
+    rlang::abort(c('`data$df0` not found.'))
+  if (length(data) == 2 & !'df1' %in% names(data))
+    rlang::abort(c('`data$df1` not found.'))
+
+  # CHECK for column names
+  if (!'welfare' %in% colnames(data$df0))
+    rlang::abort(c('`data$df0` needs to contain a column named welfare.'))
+  if (!is.null(data$df1) & !'welfare' %in% colnames(data$df1))
+    rlang::abort(c('`data$df1` needs to contain a column named welfare.'))
+
+  # CHECK for correct classes
+  if (!is.numeric(request_year))
+    rlang::abort(c('`request_year` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(request_year))))
+  if (!is.numeric(predicted_request_mean))
+    rlang::abort(c('`predicted_request_mean` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(predicted_request_mean))))
+  if (!is.numeric(survey_year))
+    rlang::abort(c('`survey_year` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(survey_year))))
+  if (!is.numeric(poverty_line))
+    rlang::abort(c('`poverty_line` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(poverty_line))))
+  if (!is.numeric(data$df0$welfare))
+    rlang::abort(c('`data$df0$welfare` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(data$df0$welfare))))
+  if (!is.null(data$df1) & !is.numeric(data$df1$welfare))
+    rlang::abort(c('`data$df1$welfare` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.',
+                               class(data$df1$welfare))))
+
+  # CHECK for compatible lengths
+  if (length(survey_year) > 2)
+    rlang::abort(c('`survey_year` has too many values.',
+                   i = 'You can\'t interpolate between more than two surveys.'))
+  if (length(predicted_request_mean) > 2)
+    rlang::abort(c('`predicted_request_mean` has too many values.',
+                   i = 'You can\'t interpolate between more than two surveys.'))
+  if (length(request_year) > 1)
+    rlang::abort(c('`request_year` has too many values.',
+                   i = 'You can only interpolate or extrapolate to one request year at a time.'))
+  if (length(poverty_line) > 1)
+    rlang::abort(c('`poverty_line` has too many values.',
+                   i = 'You can only supply one poverty line at a time.'))
+  if (length(survey_year) != length(predicted_request_mean))
+    rlang::abort(c('`survey_year` and `predicted_request_mean` must have compatible lengths:',
+                   x = sprintf('`survey_year` has length %s.',
+                               length(survey_year)),
+                   x = sprintf('`predicted_request_mean` has length %s.',
+                               length(predicted_request_mean))))
+  if (length(predicted_request_mean) == 2 & is.null(data$df1))
+    rlang::abort(c('You supplied two survey means, but only one survey data frame.',
+                   i = 'Pass an additonal data frame to argument `df1 in `data`.'))
 
 }
