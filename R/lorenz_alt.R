@@ -1,7 +1,7 @@
 #' lorenz
 #'
 #' Given a vector of weights and welfare, this functions computes the
-#' Lorenz curve and selveral other related indicators.
+#' Lorenz curve and several other related indicators.
 #' @param welfare numeric: vector of welfare measures
 #' @param weight numeric: vector of weights
 #' @param nbins numeric: number of points on the Lorenz curve
