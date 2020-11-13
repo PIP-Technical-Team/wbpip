@@ -24,18 +24,18 @@
 test_that("making sure standardization works", {
 
   dt1 <- gd_clean_data(gd,
-                       welfare    = L,
-                       population = P,
+                       welfare    = "L",
+                       population = "P",
                        data_type  = 1)
 
   dt2 <- gd_clean_data(gd,
-                       welfare    = R,
-                       population = W,
+                       welfare    = "R",
+                       population = "W",
                        data_type  = 2)
 
   dt5 <- gd_clean_data(gd,
-                       welfare    = X,
-                       population = W,
+                       welfare    = "X",
+                       population = "W",
                        data_type  = 5)
 
   colnames <- c("population", "welfare")

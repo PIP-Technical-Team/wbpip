@@ -9,9 +9,9 @@ gd_clean_data(dt, welfare, population, data_type = 1)
 \arguments{
 \item{dt}{Data frame.}
 
-\item{welfare}{numeric: welfare vector whose form depends on on \code{type} (NSE).}
+\item{welfare}{numeric: welfare vector whose form depends on on \code{type} (SE).}
 
-\item{population}{numeric: population vector whose form depends on on \code{type} (NSE).}
+\item{population}{numeric: population vector whose form depends on on \code{type} (SE).}
 
 \item{data_type}{numeric: Type of data.
 If \code{type = 1}, \code{population} must be the
@@ -24,7 +24,7 @@ of the population in a given interval of incomes, whereas \code{welfare} must be
 the mean income of that interval. Default is 1.}
 }
 \value{
-
+dataframe
 }
 \description{
 Clean Group Data
