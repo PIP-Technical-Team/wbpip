@@ -1,8 +1,8 @@
 #' Clean Group Data
 #'
 #' @param dt Data frame.
-#' @param welfare numeric: welfare vector whose form depends on on `type` (NSE).
-#' @param population numeric: population vector whose form depends on on `type` (NSE).
+#' @param welfare numeric: welfare vector whose form depends on on `type` (SE).
+#' @param population numeric: population vector whose form depends on on `type` (SE).
 #' @param data_type numeric: Type of data.
 #' If `type = 1`, `population` must be the
 #' cumulative proportion of population and `welfare` must be the cumulative
@@ -13,7 +13,7 @@
 #' of the population in a given interval of incomes, whereas `welfare` must be
 #' the mean income of that interval. Default is 1.
 #'
-#' @return
+#' @return dataframe in data.table format
 #' @export
 #' @import data.table
 #'
@@ -28,8 +28,8 @@ gd_clean_data <- function(dt,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   # to make sure we can use non-standard evaluation... (do we want NSE?)
-  welfare    <- deparse(substitute(welfare))
-  population <- deparse(substitute(population))
+  # welfare    <- deparse(substitute(welfare))
+  # population <- deparse(substitute(population))
 
   if(!(inherits(dt, "data.table"))) {
     setDT(dt)
