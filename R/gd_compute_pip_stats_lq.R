@@ -259,7 +259,11 @@ get_components_lq <- function(A,B,C){
 #' @export
 #'
 derive_lq <- function(x, ct, method = 1) {
-  expand_components(ct)
+
+  m <- ct$m
+  n <- ct$n
+  B <- ct$B
+  e <- ct$e
 
   if (method == 1) { # have not idea where it comes from.
     tmp <- (m * x^2) + (n * x) + (e^2)
@@ -272,8 +276,8 @@ derive_lq <- function(x, ct, method = 1) {
   }
   #Isolating Z from headcount equation in table 2 in Datt paper
   if (method == 2) {
-    H <- x
-    y <- ( (-2*m*H - n) / r)^2
+
+    y <- ( (-2*m*x - n) / r)^2
 
     z <- - (mu/2)*((y*B - B + sqrt(y*m*(y-1)) )/(y-1))
     # cli::cli_alert_success("Threshold (poverty line) {.val {z}}")
@@ -297,7 +301,7 @@ derive_lq <- function(x, ct, method = 1) {
 #' C: Third regression coefficient.
 #' e: e = -(A + B + C + 1): condition for the curve to go through (1, 1)
 #' m: m = (B^2) - (4 * A). m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-#' n: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' n: n = (2 * B * e) - (4 * C). n is called Beta in paper (Datt 1998 calls it n)
 #' k = (n^2) - (4 * m * e^2).
 #' r = `sqrt(k)`
 #'
@@ -310,9 +314,16 @@ derive_lq <- function(x, ct, method = 1) {
 #' Computational Tools For Poverty Measurement And Analysis}
 #'
 check_curve_validity_lq <- function(ct) {
-  expand_components(ct)
+
+  m <- ct$m
+  n <- ct$n
+  A <- ct$A
+  C <- ct$C
+  e <- ct$e
+  k <- ct$k
+
   is_normal <- FALSE
-  is_valid <- FALSE
+  is_valid  <- FALSE
 
   # k needs to be > 0 because need to extract sq root
   if (k < 0) {return(list(is_normal = is_normal,
@@ -355,7 +366,14 @@ check_curve_validity_lq <- function(ct) {
 #' @seealso \href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
 #' Computational Tools For Poverty Measurement And Analysis}
 gd_compute_gini_lq <- function(ct) {
-  expand_components(ct)
+
+  m <- ct$m
+  n <- ct$n
+  A <- ct$A
+  C <- ct$C
+  B <- ct$B
+  e <- ct$e
+  r <- ct$r
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
@@ -404,7 +422,10 @@ gd_compute_gini_lq <- function(ct) {
 #'
 value_at_lq <- function(x, ct) {
 
-  expand_components(ct)
+  m <- ct$m
+  n <- ct$n
+  B <- ct$B
+  e <- ct$e
 
   # Formula in the paper
   Lp <- - (1/2) * (B*x + e + (m*x^2 + n*x +e^2)^(1/2))
@@ -437,17 +458,25 @@ gd_compute_mld_lq <- function(ct) {
   }
   x1 <- derive_lq(0, ct)
   for (xstep in seq(0, 0.998, 0.001)) {
+
     x2 <- derive_lq(xstep + 0.001, ct)
+
     if ((x1 <= 0) || (x2 <= 0)) {
+
       gap <- gap + 0.001
+
       if (gap > 0.5) {
         return(-1)
       }
+
     }
     else {
+
       gap <- 0
       mld <- mld + (log(x1) + log(x2)) * 0.0005
+
     }
+
     x1 <- x2
   }
   return(-mld)
@@ -504,43 +533,60 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, ct) {
   }
 
   # x1 = x2 = xstep = xend = gap <- 0
-  x1 <- 0
-  x2 <- 0
+  x1    <- 0
+  x2    <- 0
   xstep <- 0
-  xend <- 0
-  gap <- 0
-  snw <- headcount * dd
+  xend  <- 0
+  gap   <- 0
+  snw   <- headcount * dd
   watts <- 0
 
   x1 <- derive_lq(snw / 2, ct)
   if (x1 <= 0) {
+
     gap <- snw / 2
+
   } else {
+
     watts <- log(x1) * snw
+
   }
+
   xend <- headcount - snw
   x1 <- derive_lq(0, ct)
+
   # Number of steps seems to be different from what happens in .Net codebase
   for (xstep in seq(0, xend, by = snw)) {
+
     x2 <- derive_lq(xstep + snw, ct)
     if ((x1 <= 0) || (x2 <= 0)) {
+
       gap <- gap + snw
       if (gap > 0.05) {
         return(NA)
       }
+
     } else {
+
       gap <- 0
       watts <- watts + (log(x1) + log(x2)) * snw * 0.5
+
     }
+
     x1 <- x2
   }
   if ((mu != 0) && (watts != 0)) {
+
     x1 <- povline / mu
+
     if (x1 > 0) {
+
       watts <- log(x1) * headcount - watts
+
       if (watts > 0) {
         return(watts)
       }
+
     }
     return(NA)
   }
@@ -578,7 +624,6 @@ gd_compute_polarization_lq <- function(mean,
 #' @export
 #'
 gd_compute_dist_stats_lq <- function(mean, p0, ct) {
-  expand_components(ct)
 
   gini    <- gd_compute_gini_lq(ct)
   median  <- mean * derive_lq(0.5, ct)
@@ -613,10 +658,20 @@ gd_compute_dist_stats_lq <- function(mean, p0, ct) {
 gd_compute_poverty_stats_lq <- function(mean,
                                         povline,
                                         ct) {
-  # Compute headcount
-  bu <- B + (2 * povline / mean)
-  u <- mean / povline
 
+  r  <- ct$r
+  n  <- ct$n
+  m  <- ct$m
+  A  <- ct$A
+  B  <- ct$B
+  C  <- ct$C
+  e  <- ct$e
+  s1 <- ct$s1
+  s2 <- ct$s2
+
+  # Compute headcount
+  bu        <- B + (2 * povline / mean)
+  u         <- mean / povline
   headcount <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
 
   tmp0 <- (m * headcount^2) + (n * headcount) + (e^2)
@@ -630,8 +685,10 @@ gd_compute_poverty_stats_lq <- function(mean,
   ddl <- r^2 / (tmp0^3 * 8)
 
   if (headcount < 0) {
+
     headcount = pov_gap = pov_gap_sq = watt <- 0
     eh = epg = ep = gh = gpg = gp  <- 0
+
   } else {
 
     # Poverty gap index (P.pg)
@@ -668,17 +725,17 @@ gd_compute_poverty_stats_lq <- function(mean,
   return(
     list(
       headcount = headcount,
-      pg = pov_gap,
-      p2 = pov_gap_sq,
-      eh = eh,
-      epg = epg,
-      ep = ep,
-      gh = gh,
-      gpg = gpg,
-      gp = gp,
-      watt = watt,
-      dl = dl,
-      ddl = ddl
+      pg        = pov_gap,
+      p2        = pov_gap_sq,
+      eh        = eh,
+      epg       = epg,
+      ep        = ep,
+      gh        = gh,
+      gpg       = gpg,
+      gp        = gp,
+      watt      = watt,
+      dl        = dl,
+      ddl       = ddl
     )
   )
 }
@@ -711,28 +768,28 @@ gd_estimate_lq <- function(mean, povline, p0, ct) {
 
   pov_stats <- gd_compute_poverty_stats_lq(mean, povline, ct)
 
-  out <- list(gini = dist_stats$gini,
-              median = dist_stats$median,
-              rmhalf = dist_stats$rmhalf,
-              pol = dist_stats$polarization,
-              ris = dist_stats$ris,
-              mld = dist_stats$mld,
-              dcm = dist_stats$dcm,
-              P.Decile = dist_stats$deciles,
+  out <- list(gini      = dist_stats$gini,
+              median    = dist_stats$median,
+              rmhalf    = dist_stats$rmhalf,
+              pol       = dist_stats$polarization,
+              ris       = dist_stats$ris,
+              mld       = dist_stats$mld,
+              dcm       = dist_stats$dcm,
+              P.Decile  = dist_stats$deciles,
               headcount = pov_stats$headcount,
-              pg = pov_stats$pg,
-              p2 = pov_stats$p2,
-              eh = pov_stats$eh,
-              epg = pov_stats$epg,
-              ep = pov_stats$ep,
-              gh = pov_stats$gh,
-              gpg = pov_stats$gpg,
-              gp = pov_stats$gp,
-              watt = pov_stats$watt,
-              dl = pov_stats$dl,
-              ddl = pov_stats$ddl,
+              pg        = pov_stats$pg,
+              p2        = pov_stats$p2,
+              eh        = pov_stats$eh,
+              epg       = pov_stats$epg,
+              ep        = pov_stats$ep,
+              gh        = pov_stats$gh,
+              gpg       = pov_stats$gpg,
+              gp        = pov_stats$gp,
+              watt      = pov_stats$watt,
+              dl        = pov_stats$dl,
+              ddl       = pov_stats$ddl,
               is_normal = validity$is_normal,
-              is_valid = validity$is_valid)
+              is_valid  = validity$is_valid)
 
   return(out)
 
@@ -754,30 +811,28 @@ gd_compute_fit_lq <- function(welfare,
                               headcount,
                               ct) {
   lasti  <- -1
-  sse  <- 0 # Sum of square error
-  ssez <- 0
+  sse    <- 0 # Sum of square error
+  ssez   <- 0
 
   for (i in seq_along(welfare[-1])) {
-    residual <- welfare[i] - value_at_lq(population[i], ct)
+    residual    <- welfare[i] - value_at_lq(population[i], ct)
     residual_sq <- residual^2
-    sse <- sse + residual_sq
+    sse         <- sse + residual_sq
     if (population[i] < headcount)
     {
-      ssez <- ssez  + residual_sq
+      ssez  <- ssez  + residual_sq
       lasti <- i
     }
   }
-  lasti <- lasti + 1
+  lasti    <- lasti + 1
   residual <- welfare[lasti] - value_at_lq(population[lasti], ct)
-  ssez <- ssez + residual^2
+  ssez     <- ssez + residual^2
 
   out <- list(sse, ssez)
   names(out) <- list("sse", "ssez")
 
   return(out)
 }
-
-
 
 #' Title
 #' @inheritParams gd_compute_pip_stats_lq
@@ -813,7 +868,6 @@ check_input_gd_compute_pip_stats_lq <- function(population,
                             msg = paste0("share of `welfare` must increase with each\n",
                                     "subsequent bin relative to its corresponging\n",
                                     "population. Make sure data is sorted correctly."))
-
 
 }
 

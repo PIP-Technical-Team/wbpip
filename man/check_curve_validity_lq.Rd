@@ -13,7 +13,7 @@ B: Second regression coefficient.
 C: Third regression coefficient.
 e: e = -(A + B + C + 1): condition for the curve to go through (1, 1)
 m: m = (B^2) - (4 * A). m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-n: n = (2 * B * e) - (4 * C). n is called Beta in paper
+n: n = (2 * B * e) - (4 * C). n is called Beta in paper (Datt 1998 calls it n)
 k = (n^2) - (4 * m * e^2).
 r = \code{sqrt(k)}}
 }
