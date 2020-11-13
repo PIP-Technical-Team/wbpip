@@ -28,5 +28,6 @@ Imports:
     purrr, 
     data.table,
     tibble,
-    assertthat
+    assertthat,
+    cli
 VignetteBuilder: knitr
