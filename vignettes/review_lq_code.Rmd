@@ -59,11 +59,10 @@ welfare <- c(5.824760527229386e-05,
              0.48753116241194566,
              1)
 
-df <- data.frame(population = population,
-                 welfare    = welfare)
 
 # Estimate poverty statistics
-gd_compute_pip_stats_lq(.data           = df,
+gd_compute_pip_stats_lq(welfare         = welfare,
+                        population      = population,
                         mean            = welfare_mean,
                         povline         = monthly_povline,
                         default_ppp     = ppp)

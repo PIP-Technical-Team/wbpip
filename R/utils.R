@@ -144,7 +144,7 @@ last_item <- function(x, word = "and") {
     y <- paste(x[1], word, x[2])
   }
   else {
-    y <- c(x[1:lx-1], paste(word, x[lx]))
+    y <- c(x[1:lx - 1], paste(word, x[lx]))
     y <- paste(y, collapse = ", ")
   }
   return(y)
