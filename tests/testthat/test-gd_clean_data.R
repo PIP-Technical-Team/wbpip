@@ -1,3 +1,5 @@
+# Recreate data from DAtt 1998 and Group 5 in povcalnet website.
+
   gd <- tibble::tribble(
     ~W,    ~X,      ~P,      ~L,
     0.92,   24.84,  0.0092, 0.00208,
@@ -50,26 +52,5 @@ test_that("making sure standardization works", {
   expect_equal(dt2, dt5)
   expect_equal(dt1a, dt2a)
   expect_equal(dt1a, dt5a)
-
-
-
-#
-#   dt5o <- standardize_type5_old(welfare         = gd$X,
-#                                 population          = gd$W,
-#                                 min_welfare_default = 1.7976931348623157e+308,
-#                                 max_welfare_default = -1.7976931348623157e+308)
-#
-#   dt5 <- standardize_type5(welfare    = gd$X,
-#                            population = gd$W)
-#
-#
-#
-#   dt2 <- standardize_type2(welfare    = gd$R,
-#                            population = gd$W)
-#
-#   check_gd_input(population = dt2$population,
-#                  welfare    = dt2$welfare,
-#                  data_type  = 1)
-
 
 })
