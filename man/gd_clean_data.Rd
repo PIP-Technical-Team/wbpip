@@ -4,12 +4,14 @@
 \alias{gd_clean_data}
 \title{Clean Group Data}
 \usage{
-gd_clean_data(welfare, population, data_type = 1)
+gd_clean_data(dt, welfare, population, data_type = 1)
 }
 \arguments{
-\item{welfare}{numeric: welfare vector whose form depends on on \code{type}.}
+\item{dt}{Data frame.}
 
-\item{population}{numeric: population vector whose form depends on on \code{type}.}
+\item{welfare}{numeric: welfare vector whose form depends on on \code{type} (NSE).}
+
+\item{population}{numeric: population vector whose form depends on on \code{type} (NSE).}
 
 \item{data_type}{numeric: Type of data.
 If \code{type = 1}, \code{population} must be the

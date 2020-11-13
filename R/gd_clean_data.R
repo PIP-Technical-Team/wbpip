@@ -1,8 +1,8 @@
 #' Clean Group Data
 #'
 #' @param dt Data frame.
-#' @param welfare numeric: welfare vector whose form depends on on `type`.
-#' @param population numeric: population vector whose form depends on on `type`.
+#' @param welfare numeric: welfare vector whose form depends on on `type` (NSE).
+#' @param population numeric: population vector whose form depends on on `type` (NSE).
 #' @param data_type numeric: Type of data.
 #' If `type = 1`, `population` must be the
 #' cumulative proportion of population and `welfare` must be the cumulative
@@ -230,6 +230,7 @@ check_gd_input <- function(population,
 
   #--------- type 5 (or 3) ---------
 
+  # Still need more tests
   if (data_type %in% c(3, 5)) {
 
     assertthat::assert_that(sum(population) %in% c(1, 100))
