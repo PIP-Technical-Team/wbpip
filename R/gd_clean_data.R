@@ -138,11 +138,12 @@ standardize_type2 <- function(population,
 
   varrescale <- vector()
   if (sum(population) == 100) {
-    population <- population/100
 
+    population <- population/100
     varrescale[length(varrescale) + 1] <- "population"
   }
   if (sum(welfare) == 100) {
+
     welfare <- welfare/100
     varrescale[length(varrescale) + 1] <- "welfare"
   }
