@@ -24,7 +24,7 @@ of the population in a given interval of incomes, whereas \code{welfare} must be
 the mean income of that interval. Default is 1.}
 }
 \value{
-dataframe
+dataframe in data.table format
 }
 \description{
 Clean Group Data

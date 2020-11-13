@@ -17,7 +17,6 @@
 #' @export
 #' @import data.table
 #'
-#' @examples
 gd_clean_data <- function(dt,
                           welfare,
                           population,
@@ -31,7 +30,7 @@ gd_clean_data <- function(dt,
   # welfare    <- deparse(substitute(welfare))
   # population <- deparse(substitute(population))
 
-  if(!(inherits(dt, "data.table"))) {
+  if (!(inherits(dt, "data.table"))) {
     setDT(dt)
   }
 
@@ -88,15 +87,14 @@ gd_clean_data <- function(dt,
 
 #' Standardize type 5
 #'
-#' @param welfare
-#' @param population
+#' @param welfare numeric: welfare vector
+#' @param population numeric: population vector
 #'
-#' @return
+#' @return data.table
 #' @export
 #'
-#' @examples
 standardize_type5 <- function(welfare,
-                population) {
+                              population) {
 
   if (sum(population) == 100) {
     population <- population/100
@@ -117,8 +115,8 @@ standardize_type5 <- function(welfare,
   return(data.table::data.table(
     population = lorenz_pop,
     welfare    = lorenz_welfare
-    )
-    )
+  )
+  )
 }
 
 #' standardize_type2
@@ -169,7 +167,6 @@ standardize_type2 <- function(population,
 #' @return
 #' @export
 #'
-#' @examples
 check_gd_input <- function(population,
                            welfare,
                            data_type) {
@@ -308,13 +305,13 @@ standardize_type2_old <- function(population,
   sum_welfare         <- sum(welfare)
   min_welfare         <- min(welfare)
   max_welfare         <- max(welfare)
-  min_welfare_default <- if(min_welfare < min_welfare_default) min_welfare else min_welfare_default
-  max_welfare_default <- if(max_welfare < max_welfare_default) max_welfare else max_welfare_default
+  min_welfare_default <- if (min_welfare < min_welfare_default) min_welfare else min_welfare_default
+  max_welfare_default <- if (max_welfare < max_welfare_default) max_welfare else max_welfare_default
   lorenz_pop[1]       <- population[1] / sum_population
   lorenz_welfare[1]   <- welfare[1] / sum_welfare
   for (i in seq(2, nobs)) {
-    lorenz_pop[i] <- lorenz_pop[i-1] + population[i] / sum_population
-    lorenz_welfare[i] <- lorenz_welfare[i-1] + welfare[i] / sum_welfare
+    lorenz_pop[i] <- lorenz_pop[i - 1] + population[i] / sum_population
+    lorenz_welfare[i] <- lorenz_welfare[i - 1] + welfare[i] / sum_welfare
   }
 
   return(list(lorenz_pop = lorenz_pop,

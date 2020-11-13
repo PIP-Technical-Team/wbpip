@@ -7,10 +7,12 @@
 standardize_type5(welfare, population)
 }
 \arguments{
-\item{population}{}
+\item{welfare}{numeric: welfare vector}
+
+\item{population}{numeric: population vector}
 }
 \value{
-
+data.table
 }
 \description{
 Standardize type 5
