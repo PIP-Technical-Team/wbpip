@@ -42,7 +42,7 @@ md_compute_dist_stats <- function(welfare,
                                     lweight    = lorenz[["lorenz_weight"]],
                                     percentile = lorenz[["welfare"]])
 
-  mean <- stats::weighted.mean(welfare, weight)
+  mean <- weighted.mean(welfare, weight)
 
   mld <- md_compute_mld(welfare = welfare,
                         weight  = weight)
