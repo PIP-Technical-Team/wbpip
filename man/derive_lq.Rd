@@ -20,5 +20,11 @@ numeric
 }
 \description{
 \code{derive_lq()} returns the first derivative of the quadratic Lorenz curves
-with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0.
+This function implements computes the derivative of equation (6b) in the
+original Lorenz Quadratic paper:
+\deqn{-(B / 2) - (\beta + 2 \alpha x) / (4 \sqrt(\alpha x^2 + \beta x + e^2)}
+}
+\seealso{
+\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 }

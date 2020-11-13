@@ -129,7 +129,10 @@ create_functional_form_lq <- function(welfare,
 #' Returns the first derivative of the quadratic Lorenz
 #'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
-#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0.
+#' This function implements computes the derivative of equation (6b) in the
+#' original Lorenz Quadratic paper:
+#' \deqn{-(B / 2) - (\beta + 2 \alpha x) / (4 \sqrt(\alpha x^2 + \beta x + e^2)}
 #'
 #' @param x numeric: point on curve
 #' @param A numeric vector: lorenz curve coefficient
@@ -138,15 +141,17 @@ create_functional_form_lq <- function(welfare,
 #'
 #' @return numeric
 #'
+#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
+#'
 derive_lq <- function(x, A, B, C) {
   e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  tmp <- (m * x^2) + (n * x) + (e^2)
-  tmp <- ifelse(tmp < 0, 0, tmp)
+  alpha <- (B^2) - (4 * A)
+  beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
+  tmp <- (alpha * x^2) + (beta * x) + (e^2)
+  tmp <- ifelse(tmp < 0, 0, tmp) # Why would we set tmp to 0? It would still fail: division by 0.
 
   # Formula for first derivative of GQ Lorenz Curve
-  val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+  val <- -(B / 2) - ((2 * alpha * x + beta) / (4 * sqrt(tmp)))
 
   return(val)
 }
