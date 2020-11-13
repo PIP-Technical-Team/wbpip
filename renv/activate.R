@@ -84,19 +84,11 @@ local({
   
   renv_bootstrap_download <- function(version) {
   
-    # if the renv version number has 4 components, assume it must
-    # be retrieved via github
-    nv <- numeric_version(version)
-    components <- unclass(nv)[[1]]
-  
-    methods <- if (length(components) == 4L) {
-      list(renv_bootstrap_download_github)
-    } else {
-      list(
-        renv_bootstrap_download_cran_latest,
-        renv_bootstrap_download_cran_archive
-      )
-    }
+    methods <- list(
+      renv_bootstrap_download_cran_latest,
+      renv_bootstrap_download_cran_archive,
+      renv_bootstrap_download_github
+    )
   
     for (method in methods) {
       path <- tryCatch(method(version), error = identity)
@@ -122,7 +114,7 @@ local({
     message("* Downloading renv ", version, " from CRAN ... ", appendLF = FALSE)
   
     info <- tryCatch(
-      download.packages("renv", destdir = tempdir(), quiet = TRUE),
+      download.packages("renv", destdir = tempdir()),
       condition = identity
     )
   
@@ -291,8 +283,8 @@ local({
       paste("renv", loadedversion, sep = "@")
   
     fmt <- paste(
-      "renv %1$s was loaded from project library, but this project is configured to use renv %2$s.",
-      "Use `renv::record(\"%3$s\")` to record renv %1$s in the lockfile.",
+      "renv %1$s was loaded from project library, but renv %2$s is recorded in lockfile.",
+      "Use `renv::record(\"%3$s\")` to record this version in the lockfile.",
       "Use `renv::restore(packages = \"renv\")` to install renv %2$s into the project library.",
       sep = "\n"
     )
@@ -334,7 +326,6 @@ local({
     return(TRUE)
 
   # load failed; attempt to bootstrap
-  message("Bootstrapping renv ", version, " ...")
   bootstrap(version, libpath)
 
   # exit early if we're just testing bootstrap
