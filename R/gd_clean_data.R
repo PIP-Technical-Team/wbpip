@@ -123,8 +123,6 @@ standardize_type5 <- function(welfare,
 #' Standardize grouped data of type 2 distribution
 #' @param population numeric: population, proportion of population
 #' @param welfare numeric: welfare, proportion of income / consumption
-#' @param min_welfare_default numeric:
-#' @param max_welfare_default numeric:
 #'
 #' @return list
 #' @export
@@ -156,15 +154,15 @@ standardize_type2 <- function(population,
   return(data.table::data.table(
     population = lorenz_pop,
     welfare    = lorenz_welfare
-    )
-    )
+  )
+  )
 }
 
 #' Check Group Data inputs
 #'
 #' @inheritParams gd_clean_data
 #'
-#' @return
+#' @return logical
 #' @export
 #'
 check_gd_input <- function(population,
@@ -288,8 +286,8 @@ standardize_type5_old <- function(population,
 #' Standardize grouped data of type 2 distribution
 #' @param population numeric: population, proportion of population
 #' @param welfare numeric: welfare, proportion of income / consumption
-#' @param min_welfare_default numeric:
-#' @param max_welfare_default numeric:
+#' @param min_welfare_default numeric: Minimum welfare
+#' @param max_welfare_default numeric: Maximum welfare
 #'
 #' @return list
 #' @export

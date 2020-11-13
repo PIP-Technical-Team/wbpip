@@ -17,9 +17,9 @@ standardize_type2_old(
 
 \item{welfare}{numeric: welfare, proportion of income / consumption}
 
-\item{min_welfare_default}{numeric:}
+\item{min_welfare_default}{numeric: Minimum welfare}
 
-\item{max_welfare_default}{numeric:}
+\item{max_welfare_default}{numeric: Maximum welfare}
 }
 \value{
 list

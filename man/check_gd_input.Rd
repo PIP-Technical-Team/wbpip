@@ -22,7 +22,7 @@ of the population in a given interval of incomes, whereas \code{welfare} must be
 the mean income of that interval. Default is 1.}
 }
 \value{
-
+logical
 }
 \description{
 Check Group Data inputs

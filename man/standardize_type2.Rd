@@ -11,10 +11,6 @@ standardize_type2(population, welfare)
 \item{population}{numeric: population, proportion of population}
 
 \item{welfare}{numeric: welfare, proportion of income / consumption}
-
-\item{min_welfare_default}{numeric:}
-
-\item{max_welfare_default}{numeric:}
 }
 \value{
 list
