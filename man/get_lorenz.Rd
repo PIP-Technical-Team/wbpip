@@ -13,7 +13,7 @@ get_lorenz(.data, welfare, weight, type = "microdata", nbins = NULL)
 
 \item{weight}{numeric: vector of weights}
 
-\item{type}{character: either 'microdata' or 'groupdata'. Defatult 'microdata'}
+\item{type}{character: either 'microdata' or 'groupdata'. Default 'microdata'}
 
 \item{nbins}{numeric: number of points on the Lorenz curve}
 }

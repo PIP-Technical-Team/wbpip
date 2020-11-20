@@ -45,6 +45,7 @@ gd_compute_pip_stats_lb <- function(population,
   # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
+
   if (!is.null(popshare)) {
     povline <- derive_lb(popshare, A, B, C) * mean
   }
@@ -122,7 +123,6 @@ create_functional_form_lb <- function(welfare,
 #'
 #' @return numeric
 #'
-
 derive_lb <- function(x, A, B, C) {
   if (x == 0) {
     if (B == 1) {return(1 - A)}
