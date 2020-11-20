@@ -31,7 +31,8 @@ gd_compute_pip_stats_lb <- function(population,
       ppp <- default_ppp
     }
   # STEP 1: Prep data to fit functional form
-  prepped_data <- create_functional_form_lb(population, welfare)
+  prepped_data <- create_functional_form_lb(welfare = welfare,
+                                            population = population)
 
   # STEP 2: Estimate regression coefficients using LB parameterization
   reg_results <- regres(prepped_data, is_lq = FALSE)
@@ -57,7 +58,7 @@ gd_compute_pip_stats_lb <- function(population,
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lb(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)
@@ -81,7 +82,7 @@ gd_compute_pip_stats_lb <- function(population,
 #'
 #' @seealso \href{https://econpapers.repec.org/article/ecmemetrp/v_3a48_3ay_3a1980_3ai_3a2_3ap_3a437-46.htm}{Original Beta Lorenz curve paper}
 
-create_functional_form_lq <- function(welfare,
+create_functional_form_lb <- function(welfare,
                                       population) {
   # CHECK inputs
   assertthat::assert_that(is.numeric(population))
@@ -96,13 +97,13 @@ create_functional_form_lq <- function(welfare,
   welfare <- welfare[1:nobs]
 
   # y
-  y <-  log(lorenz_pop - lorenz_welfare)
+  y <-  log(population - welfare)
   # x1
   x1 <- 1
   # x2
-  x2 <- log(lorenz_pop)
+  x2 <- log(population)
   # x3
-  x3 <- log(1 - lorenz_pop)
+  x3 <- log(1 - population)
 
   out <- data.frame(y, x1, x2, x3, stringsAsFactors = FALSE)
 
