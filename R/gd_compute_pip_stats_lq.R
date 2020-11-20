@@ -637,7 +637,7 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
               ris = dist_stats$ris,
               mld = dist_stats$mld,
               dcm = dist_stats$dcm,
-              P.Decile = dist_stats$deciles,
+              deciles = dist_stats$deciles,
               headcount = pov_stats$headcount,
               pg = pov_stats$pg,
               p2 = pov_stats$p2,
