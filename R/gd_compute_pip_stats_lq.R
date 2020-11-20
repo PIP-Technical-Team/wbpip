@@ -50,6 +50,7 @@ gd_compute_pip_stats_lq <- function(population,
   # STEP 2: Estimate regression coefficients using LQ parameterization
   reg_results <- regres(prepped_data, is_lq = TRUE)
   reg_coef <- reg_results$coef
+
   A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
@@ -427,7 +428,10 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   }
 }
 
-#' Computes polarization index from Quadratic Lorenz fit
+
+#' Computes polarization index from parametric Lorenz fit
+#'
+#' Used for grouped data computations
 #'
 #' @param mean numeric: Welfare mean
 #' @param p0 numeric: To document
@@ -449,6 +453,7 @@ gd_compute_polarization_lq <- function(mean,
 
   return(pol)
 }
+
 
 #' Computes distributional stats from Lorenz Quadratic fit
 #'
@@ -693,3 +698,5 @@ gd_compute_fit_lq <- function(welfare,
 
   return(out)
 }
+
+

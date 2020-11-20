@@ -20,7 +20,7 @@ data.frame
 }
 \description{
 Given a vector of weights and welfare, this functions computes the
-Lorenz curve and selveral other related indicators.
+Lorenz curve and several other related indicators.
 }
 \examples{
 data("md_ABC_2010_income")

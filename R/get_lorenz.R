@@ -5,7 +5,7 @@
 #'
 #' @param .data Household survey dataframe with at least a welfare variable
 #' @inheritParams md_compute_lorenz
-#' @param type character: either 'microdata' or 'groupdata'. Defatult 'microdata'
+#' @param type character: either 'microdata' or 'groupdata'. Default 'microdata'
 #'
 #' @return data.frame
 #' @export
