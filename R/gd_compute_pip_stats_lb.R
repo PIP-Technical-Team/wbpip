@@ -16,7 +16,7 @@
 #' @export
 #'
 #
-gd_compute_pip_stats_lq <- function(population,
+gd_compute_pip_stats_lb <- function(population,
                                     welfare,
                                     mean,
                                     povline = NULL,
