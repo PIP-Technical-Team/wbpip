@@ -14,8 +14,8 @@ if (getRversion() >= '2.15.1')
 #' dollars and adjusted for differences in purchasing-power, and changes in
 #' prices and currencies.
 #'
-#' The survey data must contain a column named _welfare_ and optionally a column
-#' named _weight_ if welfare values are to be weighted.
+#' The survey data must contain a column named *welfare* and optionally a column
+#' named *weight* if welfare values are to be weighted.
 #'
 #' @param request_year integer: A value with the request year.
 #' @param data list: A list with one or two data frames containing survey data.
@@ -81,40 +81,13 @@ fill_gaps <- function(request_year,
 
   # Calculate poverty stats
   if (data_type == 'microdata') {
-    if (length(predicted_request_mean) == 1) {
 
-      weights0 <- fg_get_weights(data$df0)
-
-      # Calculate poverty statistics for the request year
-      out <- md_compute_pip_stats(welfare = data$df0$welfare,
-                                  weight = weights0,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
-                                  requested_mean = predicted_request_mean)
-
-    } else {
-
-      weights0 <- fg_get_weights(data$df0)
-      weights1 <- fg_get_weights(data$df1)
-
-      # Calculate statistics for the first survey year
-      dl0 <- md_compute_pip_stats(welfare = data$df0$welfare,
-                                  weight = weights0,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
-                                  requested_mean = predicted_request_mean[1])
-
-      # Calculate statistics for the second survey year
-      dl1 <- md_compute_pip_stats(welfare = data$df1$welfare,
-                                  weight = weights1,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
-                                  requested_mean = predicted_request_mean[2])
-
-      # Calculate poverty statistics for the request year (weighted average)
-      out <- fg_adjust_poverty_stats(dl0, dl1, survey_year, request_year)
-    }
-
+    out <- md_fill_gaps(request_year = request_year,
+                        data = data,
+                        predicted_request_mean = predicted_request_mean,
+                        survey_year = survey_year,
+                        poverty_line = poverty_line
+                        )
 
   } else if (data_type == 'groupdata') {
 
@@ -164,19 +137,6 @@ fg_adjust_poverty_stats <- function(stats0, stats1, survey_year, request_year) {
   out[c('polarization', 'gini', 'mld', 'median', 'deciles')] <- NA
 
   return(out)
-}
-
-#' fg_get_weights
-#' @param df data.frame: A data frame with a welfare column.
-#' @return numeric:
-#' @noRd
-fg_get_weights <- function(df) {
-  if ('weight' %in% colnames(df)) {
-    weights <- df$weight
-  } else {
-    weights <- rep(1, length(df$welfare))
-  }
-  return(weights)
 }
 
 #' check_inputs_fill_gaps
