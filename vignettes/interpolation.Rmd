@@ -1,0 +1,133 @@
+---
+title: "How to interpolate between two surveys"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{interpolation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette explains how to calculate poverty statistics for a common request year for which survey data is not available. Specifically the vignette shows how to interpolate between two surveys from the same country.
+
+```{r setup}
+library(wbpip)
+```
+
+## Load and clean data
+
+We start off by loading two of the example datasets included in `wbpip`.
+
+```{r}
+# Load datasets
+data('md_ABC_2000_income')
+data('md_ABC_2010_income')
+```
+
+We need to clean the datasets to ensure that there aren't any missing values, and that the welfare values are sorted properly.
+
+```{r}
+# Clean datasets 
+dl <- list(md_ABC_2000_income, md_ABC_2010_income)
+dl <- lapply(dl, function(df) {
+  md_clean_data(df, welfare = 'welfare', weight = 'weight')$data
+})
+```
+
+## Calculate survey means
+
+We then calculate the weighted mean for both surveys. Note that welfare values for each survey are given in local currency units so we add `_lcu` as a suffix to the vector. This is helpful to distinguish these values from other conversions later on.
+
+```{r}
+# Calculate survey mean (in local currency units)
+svy_mean_lcu <- vapply(dl, FUN.VALUE = numeric(1), function(df) {
+  weighted.mean(df$welfare, df$weight)
+})
+print(svy_mean_lcu)
+```
+
+These survey means might look like they very large, but that is because the underlying welfare values are reported in yearly values. Since international poverty statistics typically are reported at daily levels, it might make more sense to convert them to daily values.
+
+```{r}
+# Convert to daily values 
+svy_mean_lcu <- svy_mean_lcu / 365 
+```
+
+## Convert to PPP-adjusted dollars 
+
+In order for poverty statistics to be comparable over time and across countries we also need to make sure that the survey means are adjusted to take different price levels into account. This can be done by converting them into purchasing power parity (PPP) adjusted dollars.
+
+We thus create a new vector, `svy_mean_ppp,` by using the function `deflate_welfare_mean()` to adjust the values. Here we imagine a PPP value of 1081, a CPI value for the first survey year of 0.6 and a CPI value for the second survey year of 0.9.
+
+```{r}
+svy_mean_ppp <- deflate_welfare_mean(
+  welfare_mean = svy_mean_lcu, 
+  ppp = 1081, 
+  cpi = c(0.6, 0.9))
+print(svy_mean_ppp)
+```
+
+This gives us a a daily welfare mean of \$`r round(svy_mean_ppp[1], 1)` in 2000 and a welfare mean of \$`r round(svy_mean_ppp[2], 1)` in 2010.
+
+## Calculate the predicted mean for the request year
+
+We are now almost ready to calculate poverty statistics for the request year we are interested in, but there is one final step we need to conduct first. We need to predict what the two survey means would have been in the request year.
+
+This can been done by calculating the difference in welfare for the two respective survey years and the request year. Since we don't know the value for the request year we need a set of proxy values to calculate the growth rate. Typically national accounts data, e.g. the Gross Domestic Product (GDP) or Household Final Consumption Expenditure (HFCE), is used for this purpose.
+
+Let's imagine that we are calculating poverty statistics for the year 2005 and that we are using GDP data as proxy values. Then we would need three GDP values; one for the first survey year (2000), one for the second survey year (2010) and one for the request year (2005).
+
+```{r}
+# Predict welfare means for the request year
+pred_mean_ppp <- predict_request_year_mean(
+  survey_year = c(2000, 2010), 
+  survey_mean = svy_mean_ppp,
+  proxy = list(
+    value0 = 1200, value1 = 1900, req_value = 1500
+  )
+)
+print(pred_mean_ppp)
+```
+
+We see that the two predicted survey means are identical. That is because all the supplied GDP values are moving in the same direction, implying that same-direction interpolation was used to compute the predicted means.
+
+## Calculate poverty statistics 
+
+We now have all the information we need to calculate poverty statistics for the request year.
+
+The function `fill_gaps()` takes the following main arguments;
+
+-   `request_year`: An integer value for the request year.
+
+-   `data`: A list with one or two country-year datasets.
+
+-   `predicted_request_mean` : A numeric vector with predicted mean(s) for the request year.
+
+-   `survey_year`: A numeric vector with the survey year(s).
+
+In addition you will also need to specify the type of data you are using (micro or grouped) and which value you are using for the poverty line.
+
+In this case we supply the cleaned datasets, predicted means and survey year for both surveys since want to interpolate between them. We then also supply 2005 as the request year, \$1.9 for the poverty line and specify the data type as `micro`.
+
+```{r}
+# Calculate poverty statitics for 2005 
+res <- fill_gaps(
+  request_year = 2005,
+  data = list(df0 = dl[[1]], df1 = dl[[2]]),
+  predicted_request_mean = pred_mean_ppp,
+  survey_year = c(2000, 2010), 
+  data_type = 'micro',
+  poverty_line = 1.9) 
+```
+
+The function returns a list of different poverty statistics, including the estimated welfare mean, headcount, poverty gap and poverty severity. Note that all distributional statistics (e.g. the Gini, Mean Log Deviation etc.) are set to NA since it does not make sense to calculate these when *interpolating* between two surveys.
+
+```{r}
+str(res)
+```
