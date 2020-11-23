@@ -26,7 +26,7 @@ gd_compute_pip_stats <- function(welfare,
                                  p0 = 0.5) {
 
 
-# Apply Lorenz quadratic fit ----------------------------------------------
+  # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(welfare         = welfare,
                                         population      = population,
                                         requested_mean  = requested_mean,
@@ -47,9 +47,23 @@ gd_compute_pip_stats <- function(welfare,
                                         p0              = p0)
 
 
-# Apply selection rules ---------------------------------------------------
+  # Apply selection rules ---------------------------------------------------
   out <- gd_select_lorenz(lq = results_lq,
                           lb = results_lb)
+
+  # Retun only subset of variables
+  out <- out[c("poverty_line",
+               "mean",
+               "median",
+               "headcount",
+               "poverty_gap",
+               "poverty_severity",
+               "watts",
+               "gini",
+               "mld",
+               "polarization",
+               "deciles")]
+
 
   return(out)
 }

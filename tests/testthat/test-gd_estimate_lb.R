@@ -279,7 +279,7 @@ test_that("gd_compute_poverty_stats_lb works as expected", {
 
   expect_equal(length(out), length(benchmark))
   expect_equal(names(out), c("headcount", "pg", "p2", "eh", "epg",
-                             "ep", "gh", "gpg", "gp", "watt", "dl", "ddl"))
+                             "ep", "gh", "gpg", "gp", "watts", "dl", "ddl"))
   # I ran this one in debug mode. The results are the same as the .Net codebase
   # but the results are modified in .Net by `(double)(float)`. Not sure what is
   # exactly happening... Seems that `float` generates a loss of precision...

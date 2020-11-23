@@ -77,15 +77,15 @@ gd_select_lorenz <- function(lq, lb) {
 
   if (is_valid) {
     if (use_GQ) {
-      sse    <- lq[["sse"]]
-      z_min  <- lq[["z_min"]]
-      z_max  <- lq[["z_max"]]
-      gini     <- lq[["gini"]]
-      median <- lq[["median"]]
-      pol    <- lq[["pol"]]
-      # rmed   <- lq[["rmed # Returns NULL: Figure out what the issue is!!
-      rmhalf <- lq[["rmhalf"]]
-      ris    <- lq[["ris"]]
+      sse             <- lq[["sse"]]
+      z_min           <- lq[["z_min"]]
+      z_max           <- lq[["z_max"]]
+      gini            <- lq[["gini"]]
+      median          <- lq[["median"]]
+      polarization    <- lq[["polarization"]]
+      # rmed          <- lq[["rmed # Returns NULL: Figure out what the issue is!!
+      rmhalf          <- lq[["rmhalf"]]
+      ris             <- lq[["ris"]]
 
       deciles <- lq[["deciles"]]
       if (lq[["mld"]] >= 0) {
@@ -106,7 +106,7 @@ gd_select_lorenz <- function(lq, lb) {
       ris    <- lb[["ris"]]
 
       deciles <- lb[["deciles"]]
-      pol <- lb[["pol"]]
+      polarization <- lb[["polarization"]]
 
       if (lb[["mld"]] >= 0) {
         mld <- lb[["mld"]]
@@ -123,84 +123,84 @@ gd_select_lorenz <- function(lq, lb) {
   if (!is_normal) return(NA)
   if (use_GQz)
   {
-    povline     <- lq[["povline"]]
-    headcount   <- lq[["headcount"]]
-    pg          <- lq[["pg"]]
-    p2          <- lq[["p2"]]
-    eh          <- lq[["eh"]]
-    epg         <- lq[["epg"]]
-    ep          <- lq[["ep"]]
-    gh          <- lq[["gh"]]
-    gpg         <- lq[["gpg"]]
-    gp          <- lq[["gp"]]
+    poverty_line     <- lq[["poverty_line"]]
+    headcount        <- lq[["headcount"]]
+    poverty_gap      <- lq[["poverty_gap"]]
+    poverty_severity <- lq[["poverty_severity"]]
+    eh               <- lq[["eh"]]
+    epg              <- lq[["epg"]]
+    ep               <- lq[["ep"]]
+    gh               <- lq[["gh"]]
+    gpg              <- lq[["gpg"]]
+    gp               <- lq[["gp"]]
 
-    if (lq[["watt"]] >= 0) {
-      watt <- lq[["watt"]]
-    } else if (lb[["watt"]] >= 0) {
-      watt <- lb[["watt"]]
+    if (lq[["watts"]] >= 0) {
+      watts <- lq[["watts"]]
+    } else if (lb[["watts"]] >= 0) {
+      watts <- lb[["watts"]]
     } else {
-      watt <- NA
+      watts <- NA
     }
   } else
   {
-    povline     <- lb[["povline"]]
-    headcount   <- lb[["headcount"]]
-    pg          <- lb[["pg"]]
-    p2          <- lb[["p2"]]
-    eh          <- lb[["eh"]]
-    epg         <- lb[["epg"]]
-    ep          <- lb[["ep"]]
-    gh          <- lb[["gh"]]
-    gpg         <- lb[["gpg"]]
-    gp          <- lb[["gp"]]
+    poverty_line     <- lb[["poverty_line"]]
+    headcount        <- lb[["headcount"]]
+    poverty_gap      <- lb[["poverty_gap"]]
+    poverty_severity <- lb[["poverty_severity"]]
+    eh               <- lb[["eh"]]
+    epg              <- lb[["epg"]]
+    ep               <- lb[["ep"]]
+    gh               <- lb[["gh"]]
+    gpg              <- lb[["gpg"]]
+    gp               <- lb[["gp"]]
 
-    if (lb[["watt"]] >= 0) {
-      watt <- lb[["watt"]]
-    } else if (lq[["watt"]] >= 0) {
-      watt <- lq[["watt"]]
+    if (lb[["watts"]] >= 0) {
+      watts <- lb[["watts"]]
+    } else if (lq[["watts"]] >= 0) {
+      watts <- lq[["watts"]]
     } else {
-      watt <- NA
+      watts <- NA
     }
   }
   # fix abnormal values
   if (headcount < 0) {
-    headcount <- NA
-    pg        <- NA
-    p2        <- NA
+    headcount        <- NA
+    poverty_gap      <- NA
+    poverty_severity <- NA
   }
 
   if (headcount > 1) {
-    headcount  <- 0.99999
-    pg         <- 0.99998
-    p2         <- 0.99997
+    headcount        <- 0.99999
+    poverty_gap      <- 0.99998
+    poverty_severity <- 0.99997
   }
 
   return(list(
-    mean          = datamean,
-    povline       = povline,
-    z_min         = z_min,
-    z_max         = z_max,
-    # ppp           = lq[["ppp"]],
-    gini          = gini,
-    median        = median,
-    # rmed          = rmed,
-    rmhalf        = rmhalf,
-    pol           = pol,
-    ris           = ris,
-    mld           = mld,
-    dcm           = lq[["dcm"]],
-    deciles       = deciles,
-    headcount     = headcount,
-    pg            = pg,
-    p2            = p2,
-    eh            = eh,
-    epg           = epg,
-    ep            = ep,
-    gh            = gh,
-    gpg           = gpg,
-    gp            = gp,
-    watt          = watt,
-    sse           = sse
+    mean             = datamean,
+    poverty_line     = poverty_line,
+    z_min            = z_min,
+    z_max            = z_max,
+    # ppp            = lq[["ppp"]],
+    gini             = gini,
+    median           = median,
+    # rmed           = rmed,
+    rmhalf           = rmhalf,
+    polarization     = polarization,
+    ris              = ris,
+    mld              = mld,
+    dcm              = lq[["dcm"]],
+    deciles          = deciles,
+    headcount        = headcount,
+    poverty_gap      = poverty_gap,
+    poverty_severity = poverty_severity,
+    eh               = eh,
+    epg              = epg,
+    ep               = ep,
+    gh               = gh,
+    gpg              = gpg,
+    gp               = gp,
+    watts            = watts,
+    sse              = sse
   ))
 
 }

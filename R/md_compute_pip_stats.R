@@ -59,16 +59,16 @@ md_compute_pip_stats <- function(welfare,
                                         weight  = population)
 
   return(list(
-    poverty_line = adjusted_povline[["povline"]],
-    mean = mean,
-    median = median,
-    headcount = pov_stats[["headcount"]],
-    poverty_gap = pov_stats[["poverty_gap"]],
+    poverty_line     = adjusted_povline[["povline"]],
+    mean             = mean,
+    median           = median,
+    headcount        = pov_stats[["headcount"]],
+    poverty_gap      = pov_stats[["poverty_gap"]],
     poverty_severity = pov_stats[["poverty_severity"]],
-    watts = pov_stats[["watts"]],
-    gini = dist_stats[["gini"]],
-    mld = dist_stats[["mld"]],
-    polarization = dist_stats[["polarization"]],
-    deciles = dist_stats[["quantiles"]]
+    watts            = pov_stats[["watts"]],
+    gini             = dist_stats[["gini"]],
+    mld              = dist_stats[["mld"]],
+    polarization     = dist_stats[["polarization"]],
+    deciles          = dist_stats[["quantiles"]]
   ))
 }

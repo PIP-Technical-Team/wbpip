@@ -47,7 +47,7 @@ gd_compute_pip_stats_lb <- function(welfare,
   z_min <- ifelse(z_min < 0, 0, z_min)
 
   results1 <- list(requested_mean, povline, z_min, z_max, ppp)
-  names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
+  names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
   results2 <- gd_estimate_lb(requested_mean, povline, p0, A, B, C)
@@ -328,13 +328,13 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
   xend <- 0
   gap <- 0
   snw <- headcount * dd
-  watt <- 0
+  watts <- 0
 
   x1 <- derive_lb(snw / 2, A, B, C)
   if (x1 <= 0) {
     gap <- snw / 2
   } else {
-    watt <- log(x1) * snw
+    watts <- log(x1) * snw
   }
   xend <- headcount - snw
   x1 <- derive_lb(0, A, B, C)
@@ -348,16 +348,16 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
       }
     } else {
       gap <- 0
-      watt <- watt + (log(x1) + log(x2)) * snw * 0.5
+      watts <- watts + (log(x1) + log(x2)) * snw * 0.5
     }
     x1 <- x2
   }
-  if ((mean != 0) && (watt != 0)) {
+  if ((mean != 0) && (watts != 0)) {
     x1 <- povline / mean
     if (x1 > 0) {
-      watt <- log(x1) * headcount - watt
-      if (watt > 0) {
-        return(watt)
+      watts <- log(x1) * headcount - watts
+      if (watts > 0) {
+        return(watts)
       }
     }
     return(NA)
@@ -481,7 +481,7 @@ gd_compute_poverty_stats_lb <- function(mean,
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
     # Watts index
-    watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
+    watts <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
 
     return(
       list(
@@ -494,7 +494,7 @@ gd_compute_poverty_stats_lb <- function(mean,
         gh = gh,
         gpg = gpg,
         gp = gp,
-        watt = watt,
+        watts = watts,
         dl = dl,
         ddl = ddl
       )
@@ -528,21 +528,21 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
               rmhalf = dist_stats$rmhalf,
-              pol = dist_stats$polarization,
+              polarization = dist_stats$polarization,
               ris = dist_stats$ris,
               mld = dist_stats$mld,
               dcm = dist_stats$dcm,
               deciles = dist_stats$deciles,
               headcount = pov_stats$headcount,
-              pg = pov_stats$pg,
-              p2 = pov_stats$p2,
+              poverty_gap = pov_stats$pg,
+              poverty_severity = pov_stats$p2,
               eh = pov_stats$eh,
               epg = pov_stats$epg,
               ep = pov_stats$ep,
               gh = pov_stats$gh,
               gpg = pov_stats$gpg,
               gp = pov_stats$gp,
-              watt = pov_stats$watt,
+              watts = pov_stats$watts,
               dl = pov_stats$dl,
               ddl = pov_stats$ddl,
               is_normal = validity$is_normal,

@@ -59,7 +59,7 @@ gd_compute_pip_stats_lq <- function(welfare,
   z_min <- ifelse(z_min < 0, 0, z_min)
 
   results1 <- list(requested_mean, povline, z_min, z_max, ppp)
-  names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
+  names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
   results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
@@ -531,7 +531,7 @@ gd_compute_poverty_stats_lq <- function(mean,
   ddl <- r^2 / (tmp0^3 * 8)
 
   if (headcount < 0) {
-    headcount = pov_gap = pov_gap_sq = watt <- 0
+    headcount = pov_gap = pov_gap_sq = watts <- 0
     eh = epg = ep = gh = gpg = gp  <- 0
   } else {
 
@@ -563,7 +563,7 @@ gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watts <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
   }
 
   return(
@@ -577,7 +577,7 @@ gd_compute_poverty_stats_lq <- function(mean,
       gh = gh,
       gpg = gpg,
       gp = gp,
-      watt = watt,
+      watts = watts,
       dl = dl,
       ddl = ddl
     )
@@ -624,21 +624,21 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
               rmhalf = dist_stats$rmhalf,
-              pol = dist_stats$polarization,
+              polarization = dist_stats$polarization,
               ris = dist_stats$ris,
               mld = dist_stats$mld,
               dcm = dist_stats$dcm,
               deciles = dist_stats$deciles,
               headcount = pov_stats$headcount,
-              pg = pov_stats$pg,
-              p2 = pov_stats$p2,
+              poverty_gap = pov_stats$pg,
+              poverty_severity = pov_stats$p2,
               eh = pov_stats$eh,
               epg = pov_stats$epg,
               ep = pov_stats$ep,
               gh = pov_stats$gh,
               gpg = pov_stats$gpg,
               gp = pov_stats$gp,
-              watt = pov_stats$watt,
+              watts = pov_stats$watts,
               dl = pov_stats$dl,
               ddl = pov_stats$ddl,
               is_normal = validity$is_normal,
