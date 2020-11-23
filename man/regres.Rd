@@ -9,6 +9,8 @@ regres(df, is_lq = TRUE)
 \arguments{
 \item{df}{dataframe: Output of \code{create_functional_form_lq()} or
 \code{create_functional_form_lb()}}
+
+\item{is_lq}{logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz}
 }
 \value{
 list

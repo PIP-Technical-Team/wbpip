@@ -7,9 +7,9 @@
 #'
 #' @return list of elements whose main object is a dataframe (in data.table format)
 #' with the necessary transformations to be included in PIP methods. Data is available in
-#' element $data. The other elements provide the number of observations that were modified
+#' element `$data`. The other elements provide the number of observations that were modified
 #' depending on test performed. The name of elements are in the form p_s, where p (or prefix)
-#' refers to the test, whereas s (for suffix) refers to the name of the variable evaluated.
+#' refers to the test and s (the suffix) refers to the name of the variable evaluated.
 #' Prefix are:
 #'
 #' *nna:*  Number of NA in variable
@@ -131,6 +131,9 @@ md_clean_data <- function(dt, ...) {
       nng_msg(nng, welf)
     }
 
+    setorderv(dt, welf)
+    cli::cli_alert_info("Data has been sorted by variable {.val {welf}}")
+
   } # End of welfare check
 
   #--------- WEIGHT ---------
@@ -165,7 +168,18 @@ md_clean_data <- function(dt, ...) {
       nng_msg(nng, wht)
 
     }
+  } else { # If weight is not provided
+
+    dt[, weight := 1]
+    cli::cli_alert_info("since {.val weight} is not provided, variable
+                        {.field `weight = 1`} has been created",
+                        wrap = TRUE)
   } # end of weight check
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   add data to list and return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   ll[["data"]] <- dt
   return(ll)
@@ -177,13 +191,15 @@ md_clean_data <- function(dt, ...) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 nng_msg <- function(nng, x) {
-  msg     <- paste0(nng, " zero or negative values in variable `", x, "` were dropped")
-  rlang::inform(c(i = msg))
+
+  cli::cli_alert_info("{nng} zero or negative values in variable
+                      {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
 
 nna_msg <- function(nna, x) {
-  msg     <- paste0(nna, " NA values in variable `", x, "` were dropped")
-  rlang::inform(c(i = msg))
+  cli::cli_alert_info("{nna} NA values in variable
+                      {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
+

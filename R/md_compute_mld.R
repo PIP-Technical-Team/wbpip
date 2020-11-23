@@ -44,5 +44,6 @@ md_compute_mld <- function(welfare,
       mld <- mld + weight[i] / sum_weights * log(mean_welfare)
     }
   }
+
   return(mld)
 }

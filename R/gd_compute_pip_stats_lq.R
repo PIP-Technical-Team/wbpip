@@ -1,51 +1,57 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param .data dataframe: grouped data
+#' @param population numeric: cumulative proportion of population
+#' @param welfare numeric: cumulative proportion of income held by that
+#' proportion of the population (Lorenz Curve).
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
-#' @param ppp numeric: PPP request by user
-#' @param default_ppp numeric: Default purchasing power parity
-
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional
-#' @param isLQ boolean: indicates whether the estimation of lorenz quadratic
+#' @param default_ppp numeric: Default purchasing power parity
+#' @param ppp numeric: PPP request by user
+#' @param p0 numeric: To document
 #'
 #' @return list
+#'
 #' @export
 #'
 #' @examples
-#' gd_estimate_lq(.data, , povline, default_ppp, ppp, popshare, p, l, isLQ)
+#' L <- c(0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
+#' 0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1)
+#' P <- c(0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
+#' 0.8196, 0.9174, 0.957, 0.9751, 1)
+#' mu  <- 109.9 # mean
+#' z   <- 89    # poverty line
+#' gd_compute_pip_stats_lq(P, L, mu, z)
+#'
+#' res <- gd_compute_pip_stats_lq(P, L, mu, z)
+#' res$headcount
+#' res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+#' res2$povline
 #
-gd_compute_pip_stats_lq <- function(.data,
+gd_compute_pip_stats_lq <- function(population,
+                                    welfare,
                                     mean,
-                                    povline,
-                                    ppp = NULL,
-                                    default_ppp,
+                                    povline = NULL,
                                     popshare = NULL,
-                                    isLQ = TRUE) {
-
-  n_obs <- nrow(.data)
-  population <- .data$population
-  welfare <- .data$welfare
-
-  p0 <- 0.5 # What is this? Should be moved as a function parameter (?)
+                                    default_ppp = NULL,
+                                    ppp = NULL,
+                                    p0 = 0.5) {
+  # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
     mean <- mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
   # STEP 1: Prep data to fit functional form
-  prepped_data <- create_functional_form_lq(population, welfare)
+  prepped_data <- create_functional_form_lq(welfare = welfare,
+                                            population = population)
 
   # STEP 2: Estimate regression coefficients using LQ parameterization
-  reg_results <- regres(prepped_data)
+  reg_results <- regres(prepped_data, is_lq = TRUE)
   reg_coef <- reg_results$coef
 
-  # What is isLQ? Where is it defined?
-  if (isLQ)
-    A <- reg_coef[1]
-  else
-    A <- exp(reg_coef[1]) # Why exp() if isLQ == FALSE?
+  A <- reg_coef[1]
   B <- reg_coef[2]
   C <- reg_coef[3]
 
@@ -65,7 +71,7 @@ gd_compute_pip_stats_lq <- function(.data,
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(n_obs, mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -78,42 +84,42 @@ gd_compute_pip_stats_lq <- function(.data,
 
 #' Prepares data for Lorenz Quadratic regression
 #'
-#' @description  Prepares data for regression on L(1-L) on (P^2-L), L(P-1) and
+#' @description  Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
 #' (P-L). The last observation of (p,l), which by construction has the value
 #' (1, 1), is excluded since the functional form for the Lorenz curve already
 #' forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
 #' original paper.
 #'
-#' @param lorenz_pop numeric: Population vector from empirical Lorenz curve
-#' @param lorenz_welfare numeric: Welfare vector from empirical Lorenz curve
+#' @param welfare numeric: Welfare vector from empirical Lorenz curve
+#' @param population numeric: Population vector from empirical Lorenz curve
 #'
 #' @return data.frame
 #'
 #' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 #' @seealso \href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
 
-create_functional_form_lq <- function(lorenz_pop,
-                                      lorenz_welfare) {
+create_functional_form_lq <- function(welfare,
+                                      population) {
   # CHECK inputs
-  assertthat::assert_that(is.numeric(lorenz_pop))
-  assertthat::assert_that(is.numeric(lorenz_welfare))
-  assertthat::assert_that(length(lorenz_pop) == length(lorenz_welfare))
-  assertthat::assert_that(length(lorenz_pop) > 1)
+  assertthat::assert_that(is.numeric(population))
+  assertthat::assert_that(is.numeric(welfare))
+  assertthat::assert_that(length(population) == length(welfare))
+  assertthat::assert_that(length(population) > 1)
 
   # Remove last observation (the functional form for the Lorenz curve already forces
   # it to pass through the point (1, 1)
-  nobs <- length(lorenz_pop) - 1
-  lorenz_pop <- lorenz_pop[1:nobs]
-  lorenz_welfare <- lorenz_welfare[1:nobs]
+  nobs <- length(population) - 1
+  population <- population[1:nobs]
+  welfare <- welfare[1:nobs]
 
   # L(1-L)
-  y <- lorenz_welfare * (1 - lorenz_welfare)
+  y <- welfare * (1 - welfare)
   # (P^2-L)
-  x1 <- lorenz_pop^2 - lorenz_welfare
+  x1 <- population^2 - welfare
   # L(P-1)
-  x2 <- lorenz_welfare * (lorenz_pop - 1)
+  x2 <- welfare * (population - 1)
   # P-L
-  x3 <- lorenz_pop - lorenz_welfare
+  x3 <- population - welfare
 
   out <- data.frame(y, x1, x2, x3, stringsAsFactors = FALSE)
 
@@ -124,7 +130,10 @@ create_functional_form_lq <- function(lorenz_pop,
 #' Returns the first derivative of the quadratic Lorenz
 #'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
-#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0.
+#' This function implements computes the derivative of equation (6b) in the
+#' original Lorenz Quadratic paper:
+#' \deqn{-(B / 2) - (\beta + 2 \alpha x) / (4 \sqrt(\alpha x^2 + \beta x + e^2)}
 #'
 #' @param x numeric: point on curve
 #' @param A numeric vector: lorenz curve coefficient
@@ -133,15 +142,17 @@ create_functional_form_lq <- function(lorenz_pop,
 #'
 #' @return numeric
 #'
+#' @seealso \href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
+#'
 derive_lq <- function(x, A, B, C) {
   e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  tmp <- (m * x^2) + (n * x) + (e^2)
-  tmp <- ifelse(tmp < 0, 0, tmp)
+  alpha <- (B^2) - (4 * A)
+  beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
+  tmp <- (alpha * x^2) + (beta * x) + (e^2)
+  tmp <- ifelse(tmp < 0, 0, tmp) # Why would we set tmp to 0? It would still fail: division by 0.
 
   # Formula for first derivative of GQ Lorenz Curve
-  val <- -(0.5 * B) - (0.25 * (2 * m * x + n) / sqrt(tmp))
+  val <- -(B / 2) - ((2 * alpha * x + beta) / (4 * sqrt(tmp)))
 
   return(val)
 }
@@ -327,6 +338,7 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
 #' @param A numeric vector: lorenz curve coefficient
 #' @param B numeric vector: lorenz curve coefficient
 #' @param C numeric vector: lorenz curve coefficient
+#' @param n_quantile numeric: Number of quantiles to return
 #'
 #' @return numeric
 #'
@@ -367,8 +379,6 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @export
 #'
-#' @examples
-#' watt_index_lq(headcount, dd, A, B, C)
 #'
 gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   if (headcount <= 0) {
@@ -418,7 +428,10 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
   }
 }
 
-#' Computes polarization index from Quadratic Lorenz fit
+
+#' Computes polarization index from parametric Lorenz fit
+#'
+#' Used for grouped data computations
 #'
 #' @param mean numeric: Welfare mean
 #' @param p0 numeric: To document
@@ -440,6 +453,7 @@ gd_compute_polarization_lq <- function(mean,
 
   return(pol)
 }
+
 
 #' Computes distributional stats from Lorenz Quadratic fit
 #'
@@ -494,6 +508,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
 #' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
 #' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper
 #' @param s1 numeric: To document
+#' @param s2 numeric: To document
 #'
 #' @return list
 #'
@@ -580,21 +595,18 @@ gd_compute_poverty_stats_lq <- function(mean,
 
 #' Estimates poverty and inequality stats from Quadratic Lorenz fit
 #'
-#' @param n_obs numeric: number of observations
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param p0 numeric: TO document
-#' @param A numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[1]
-#' @param B numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[2]
-#' @param C numeric vector: Lorenz curve coefficient. Output of regres_lq()$coef[3]
+#' @param A numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[1]`
+#' @param B numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[2]`
+#' @param C numeric vector: Lorenz curve coefficient. Output of `regres_lq()$coef[3]`
 #'
 #' @return list
 #' @export
 #'
-#' @examples
-#' estimate_lq(n_obs, mean, povline, p0, coefs)
 #'
-gd_estimate_lq <- function(n_obs, mean, povline, p0, A, B, C) {
+gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
   # Compute key numbers from Lorenz quadratic form
   # Theorem 3 from original lorenz quadratic paper
@@ -686,4 +698,5 @@ gd_compute_fit_lq <- function(welfare,
 
   return(out)
 }
+
 
