@@ -1,8 +1,8 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: cumulative proportion of population
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
+#' @param population numeric: cumulative proportion of population
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param popshare numeric: Share of population living below the poverty line.
@@ -22,15 +22,15 @@
 #' 0.8196, 0.9174, 0.957, 0.9751, 1)
 #' mu  <- 109.9 # mean
 #' z   <- 89    # poverty line
-#' gd_compute_pip_stats_lq(P, L, mu, z)
+#' gd_compute_pip_stats_lq(L, P, mu, z)
 #'
-#' res <- gd_compute_pip_stats_lq(P, L, mu, z)
+#' res <- gd_compute_pip_stats_lq(L, P, mu, z)
 #' res$headcount
-#' res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+#' res2 <- gd_compute_pip_stats_lq(L, P, mu, popshare = res$headcount)
 #' res2$povline
 #
-gd_compute_pip_stats_lq <- function(population,
-                                    welfare,
+gd_compute_pip_stats_lq <- function(welfare,
+                                    population,
                                     mean,
                                     povline = NULL,
                                     popshare = NULL,

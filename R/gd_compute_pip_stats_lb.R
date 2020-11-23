@@ -1,8 +1,8 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: cumulative proportion of population
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
+#' @param population numeric: cumulative proportion of population
 #' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
 #' @param popshare numeric: Share of population living below the poverty line.
@@ -16,8 +16,8 @@
 #' @export
 #'
 #
-gd_compute_pip_stats_lb <- function(population,
-                                    welfare,
+gd_compute_pip_stats_lb <- function(welfare,
+                                    population,
                                     mean,
                                     povline = NULL,
                                     popshare = NULL,

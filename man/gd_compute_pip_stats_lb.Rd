@@ -5,8 +5,8 @@
 \title{Computes poverty statistics from grouped data}
 \usage{
 gd_compute_pip_stats_lb(
-  population,
   welfare,
+  population,
   mean,
   povline = NULL,
   popshare = NULL,
@@ -16,10 +16,10 @@ gd_compute_pip_stats_lb(
 )
 }
 \arguments{
-\item{population}{numeric: cumulative proportion of population}
-
 \item{welfare}{numeric: cumulative proportion of income held by that
 proportion of the population (Lorenz Curve).}
+
+\item{population}{numeric: cumulative proportion of population}
 
 \item{mean}{numeric: Welfare mean}
 
