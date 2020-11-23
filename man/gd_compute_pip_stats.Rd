@@ -6,9 +6,9 @@
 \usage{
 gd_compute_pip_stats(
   welfare,
+  povline,
   population,
-  mean,
-  povline = NULL,
+  requested_mean,
   popshare = NULL,
   default_ppp = NULL,
   ppp = NULL,
@@ -19,11 +19,11 @@ gd_compute_pip_stats(
 \item{welfare}{numeric: cumulative proportion of income held by that
 proportion of the population (Lorenz Curve).}
 
+\item{povline}{numeric: Poverty line}
+
 \item{population}{numeric: cumulative proportion of population}
 
-\item{mean}{numeric: Welfare mean}
-
-\item{povline}{numeric: Poverty line}
+\item{requested_mean}{numeric: Welfare mean}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional}

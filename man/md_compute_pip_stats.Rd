@@ -7,11 +7,11 @@
 md_compute_pip_stats(
   welfare,
   povline,
-  weight = NULL,
-  ppp = NULL,
-  default_ppp = 1,
+  population = NULL,
   requested_mean = NULL,
-  popshare = NULL
+  popshare = NULL,
+  default_ppp = 1,
+  ppp = NULL
 )
 }
 \arguments{
@@ -19,16 +19,17 @@ md_compute_pip_stats(
 
 \item{povline}{numeric: Monthly poverty line in international dollars}
 
-\item{weight}{numeric: A vector of weights, optional, a vector of 1s if not specified.}
-
-\item{ppp}{numeric: PPP requested by user}
-
-\item{default_ppp}{numeric: Default purchasing power parity}
+\item{population}{numeric: A vector of population weights, optional, a vector
+of 1s if not specified.}
 
 \item{requested_mean}{numeric: Welfare mean in international dollars}
 
 \item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median)}
+
+\item{default_ppp}{numeric: Default purchasing power parity}
+
+\item{ppp}{numeric: PPP requested by user}
 }
 \value{
 list

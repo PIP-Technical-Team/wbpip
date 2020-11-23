@@ -1,15 +1,6 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param welfare numeric: cumulative proportion of income held by that
-#' proportion of the population (Lorenz Curve).
-#' @param population numeric: cumulative proportion of population
-#' @param mean numeric: Welfare mean
-#' @param povline numeric: Poverty line
-#' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#' @param default_ppp numeric: Default purchasing power parity
-#' @param ppp numeric: PPP request by user
-#' @param p0 numeric: To document
+#' @inheritParams gd_compute_pip_stats
 #'
 #' @return list
 #'
@@ -30,16 +21,16 @@
 #' res2$povline
 #
 gd_compute_pip_stats_lq <- function(welfare,
+                                    povline,
                                     population,
-                                    mean,
-                                    povline = NULL,
+                                    requested_mean,
                                     popshare = NULL,
                                     default_ppp = NULL,
                                     ppp = NULL,
                                     p0 = 0.5) {
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    mean <- mean * default_ppp / ppp
+    requested_mean <- requested_mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
@@ -59,19 +50,19 @@ gd_compute_pip_stats_lq <- function(welfare,
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * mean
+    povline <- derive_lq(popshare, A, B, C) * requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
+  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
   z_min <- ifelse(z_min < 0, 0, z_min)
 
-  results1 <- list(mean, povline, z_min, z_max, ppp)
+  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)

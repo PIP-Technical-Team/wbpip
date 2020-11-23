@@ -28,13 +28,13 @@ welfare <- c(5.824760527229386e-05,
 
 lq <- gd_compute_pip_stats_lq(welfare         = welfare,
                               population      = population,
-                              mean            = welfare_mean,
+                              requested_mean  = welfare_mean,
                               povline         = monthly_povline,
                               default_ppp     = ppp)
 
 lb <- gd_compute_pip_stats_lb(welfare         = welfare,
                               population      = population,
-                              mean            = welfare_mean,
+                              requested_mean  = welfare_mean,
                               povline         = monthly_povline,
                               default_ppp     = ppp)
 

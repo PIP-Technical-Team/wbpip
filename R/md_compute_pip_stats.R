@@ -4,37 +4,38 @@
 #'
 #' @param welfare numeric: A vector of income or consumption values
 #' @param povline numeric: Monthly poverty line in international dollars
-#' @param weight numeric: A vector of weights, optional, a vector of 1s if not specified.
-#' @param ppp numeric: PPP requested by user
-#' @param default_ppp numeric: Default purchasing power parity
+#' @param population numeric: A vector of population weights, optional, a vector
+#' of 1s if not specified.
 #' @param requested_mean numeric: Welfare mean in international dollars
 #' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median)
+#' @param default_ppp numeric: Default purchasing power parity
+#' @param ppp numeric: PPP requested by user
 #'
 #' @return list
 #' @export
 #'
 md_compute_pip_stats <- function(welfare,
                                  povline,
-                                 weight = NULL,
-                                 ppp = NULL,
-                                 default_ppp = 1,
+                                 population = NULL,
                                  requested_mean = NULL,
-                                 popshare = NULL) {
+                                 popshare = NULL,
+                                 default_ppp = 1,
+                                 ppp = NULL) {
 
   # set all weights to 1 if none are supplied
-  if (is.null(weight) == TRUE) {
-    weight <- rep(1, length(welfare))
+  if (is.null(population) == TRUE) {
+    population <- rep(1, length(welfare))
   }
 
   # make sure the data is sorted
   ordy    <- order(welfare)   # order of welfare
   welfare <- welfare[ordy]    #order weight
-  weight  <- weight[ordy]     # order welfare
+  population  <- population[ordy]     # order welfare
 
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(welfare = welfare,
-                                      weight  = weight)
+                                      weight  = population)
 
   # Take care of potentially undefined values
   if (is.null(ppp)) {ppp <- default_ppp}
@@ -48,14 +49,14 @@ md_compute_pip_stats <- function(welfare,
   # Retrieve poverty line in Local Currency Unit (LCU)
   adjusted_povline <- md_compute_povline_lcu(welfare = welfare,
                                              povline = povline,
-                                             weight  = weight,
+                                             weight  = population,
                                              popshare = popshare,
                                              requested_mean = mean,
                                              data_mean = data_mean)
   # Compute poverty stats
   pov_stats <- md_compute_poverty_stats(welfare = welfare,
                                         povline_lcu = adjusted_povline[["povline_lcu"]],
-                                        weight  = weight)
+                                        weight  = population)
 
   return(list(
     poverty_line = adjusted_povline[["povline"]],

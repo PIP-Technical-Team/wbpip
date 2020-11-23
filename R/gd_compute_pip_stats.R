@@ -1,10 +1,10 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: cumulative proportion of population
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
-#' @param mean numeric: Welfare mean
 #' @param povline numeric: Poverty line
+#' @param population numeric: cumulative proportion of population
+#' @param requested_mean numeric: Welfare mean
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional
 #' @param default_ppp numeric: Default purchasing power parity
@@ -17,9 +17,9 @@
 #'
 #
 gd_compute_pip_stats <- function(welfare,
+                                 povline,
                                  population,
-                                 mean,
-                                 povline = NULL,
+                                 requested_mean,
                                  popshare = NULL,
                                  default_ppp = NULL,
                                  ppp = NULL,
@@ -29,9 +29,8 @@ gd_compute_pip_stats <- function(welfare,
 # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(welfare         = welfare,
                                         population      = population,
-                                        mean            = mean,
+                                        requested_mean  = requested_mean,
                                         povline         = povline,
-                                        default_ppp     = ppp,
                                         popshare        = popshare,
                                         default_ppp     = default_ppp,
                                         ppp             = ppp,
@@ -40,9 +39,8 @@ gd_compute_pip_stats <- function(welfare,
   # Apply Lorenz beta fit ----------------------------------------------
   results_lb <- gd_compute_pip_stats_lb(welfare         = welfare,
                                         population      = population,
-                                        mean            = mean,
+                                        requested_mean  = requested_mean,
                                         povline         = povline,
-                                        default_ppp     = ppp,
                                         popshare        = popshare,
                                         default_ppp     = default_ppp,
                                         ppp             = ppp,

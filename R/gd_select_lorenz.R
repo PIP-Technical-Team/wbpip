@@ -2,17 +2,17 @@
 #'
 #' Select best Lorenz fit and adjust the returned statistics if needed
 #'
-#' @param lq list: output of `gd_compute_pip_stats_lb()`
-#' @param lb list: output of `gd_compute_pip_stats_lq()`
-#' @param n_quantile numeric: Number of quantiles to be returned
+#' @param lq list: Results from Lorenz Quadratic functional form.
+#' output of `gd_compute_pip_stats_lq()`
+#' @param lb list: Results from Lorenz Beta functional form.
+#' output of `gd_compute_pip_stats_lb()`
 #'
 #' @return list
 #' @export
 #'
 
-gd_select_lorenz <- function(lq, lb, n_quantile = 10) {
+gd_select_lorenz <- function(lq, lb) {
 
-  # deciles <- vector(mode = "numeric", length = n_quantile)
   datamean <- lq[["mean"]]
 
   is_valid <- lq[["is_valid"]] | lb[["is_valid"]]
