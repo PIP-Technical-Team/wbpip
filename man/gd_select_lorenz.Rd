@@ -4,14 +4,14 @@
 \alias{gd_select_lorenz}
 \title{Select best Lorenz fit}
 \usage{
-gd_select_lorenz(lq, lb, n_quantile = 10)
+gd_select_lorenz(lq, lb)
 }
 \arguments{
-\item{lq}{list: output of \code{gd_compute_pip_stats_lb()}}
+\item{lq}{list: Results from Lorenz Quadratic functional form.
+output of \code{gd_compute_pip_stats_lq()}}
 
-\item{lb}{list: output of \code{gd_compute_pip_stats_lq()}}
-
-\item{n_quantile}{numeric: Number of quantiles to be returned}
+\item{lb}{list: Results from Lorenz Beta functional form.
+output of \code{gd_compute_pip_stats_lb()}}
 }
 \value{
 list
