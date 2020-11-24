@@ -19,6 +19,15 @@ test_that('fill_gaps() works correctly', {
                     predicted_request_mean = 5,
                     data_type = 'microdata')
   expect_equal(res, res2)
+  # Test that fill_gaps() works with missing welfare values
+  skip('fill_gaps() doesn\'t handle data cleaning')
+  df3 <- data.frame(welfare = c(1:1000, NA))
+  res3 <- fill_gaps(request_year = 2005,
+                    survey_year = c(2000),
+                    data = list(df0 = df3),
+                    predicted_request_mean = 5,
+                    data_type = 'microdata')
+  expect_equal(res, res3)
 })
 
 test_that('check_inputs_fill_gaps() catches input errors', {
