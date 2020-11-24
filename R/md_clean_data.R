@@ -17,11 +17,9 @@
 #' *ina:*  Index of obs with NA in variable
 #' *ing:*  Index of obs with negative values
 #' @export
-#' @import data.table
-#'
 md_clean_data <- function(dt, ...) {
 
-  if(!(inherits(dt, "data.table"))) {
+  if (!(inherits(dt, "data.table"))) {
     setDT(dt)
   }
 
@@ -37,10 +35,9 @@ md_clean_data <- function(dt, ...) {
   # parse ellipsis as a list, where names are the the names of
   # the arguments, and contents the names of the variables to
   # be evaluated.
-  cols     <- eval(substitute(alist(...)))
+  cols <- eval(substitute(alist(...)))
   # cols  <- as.list(match.call())[-(1:2)]
   # cols  <- as.list(substitute(list(...)))[-1L]
-
 
   # Name of columns
   colnames <- unlist(cols, use.names = FALSE)
@@ -56,10 +53,9 @@ md_clean_data <- function(dt, ...) {
     nocols   <- paste0("`", colnames[nocolind], "`")
     nocols   <- last_item(nocols)
 
-
     msg     <- "Variables provided do not exist in data"
-    hint    <- "Make sure the variables you want to evaluate exist in dataframe"
-    problem <- paste("variable(s)", nocols, "is(are) not part of the dataframe")
+    hint    <- "Make sure the variables you want to evaluate exist in the data frame"
+    problem <- paste("variable(s)", nocols, "is(are) not part of the data frame")
     rlang::abort(c(
                   msg,
                   i = hint,
@@ -192,7 +188,7 @@ md_clean_data <- function(dt, ...) {
 
 nng_msg <- function(nng, x) {
 
-  cli::cli_alert_info("{nng} zero or negative values in variable
+  cli::cli_alert_info("{nng} negative values in variable
                       {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
