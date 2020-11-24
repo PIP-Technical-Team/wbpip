@@ -1,32 +1,23 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: cumulative proportion of population
-#' @param welfare numeric: cumulative proportion of income held by that
-#' proportion of the population (Lorenz Curve).
-#' @param mean numeric: Welfare mean
-#' @param povline numeric: Poverty line
-#' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#' @param default_ppp numeric: Default purchasing power parity
-#' @param ppp numeric: PPP request by user
-#' @param p0 numeric: To document
+#' @inheritParams gd_compute_pip_stats
 #'
 #' @return list
 #'
 #' @export
 #'
 #
-gd_compute_pip_stats_lb <- function(population,
-                                    welfare,
-                                    mean,
-                                    povline = NULL,
+gd_compute_pip_stats_lb <- function(welfare,
+                                    povline,
+                                    population,
+                                    requested_mean,
                                     popshare = NULL,
                                     default_ppp = NULL,
                                     ppp = NULL,
                                     p0 = 0.5) {
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    mean <- mean * default_ppp / ppp
+    requested_mean <- requested_mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
@@ -47,19 +38,19 @@ gd_compute_pip_stats_lb <- function(population,
   # intead of a poverty line
 
   if (!is.null(popshare)) {
-    povline <- derive_lb(popshare, A, B, C) * mean
+    povline <- derive_lb(popshare, A, B, C) * requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- mean * derive_lb(0.001, A, B, C) + 4
-  z_max <- mean * derive_lb(0.980, A, B, C) - 4
+  z_min <- requested_mean * derive_lb(0.001, A, B, C) + 4
+  z_max <- requested_mean * derive_lb(0.980, A, B, C) - 4
   z_min <- ifelse(z_min < 0, 0, z_min)
 
-  results1 <- list(mean, povline, z_min, z_max, ppp)
-  names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
+  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lb(mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lb(requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)
@@ -337,13 +328,13 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
   xend <- 0
   gap <- 0
   snw <- headcount * dd
-  watt <- 0
+  watts <- 0
 
   x1 <- derive_lb(snw / 2, A, B, C)
   if (x1 <= 0) {
     gap <- snw / 2
   } else {
-    watt <- log(x1) * snw
+    watts <- log(x1) * snw
   }
   xend <- headcount - snw
   x1 <- derive_lb(0, A, B, C)
@@ -357,16 +348,16 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
       }
     } else {
       gap <- 0
-      watt <- watt + (log(x1) + log(x2)) * snw * 0.5
+      watts <- watts + (log(x1) + log(x2)) * snw * 0.5
     }
     x1 <- x2
   }
-  if ((mean != 0) && (watt != 0)) {
+  if ((mean != 0) && (watts != 0)) {
     x1 <- povline / mean
     if (x1 > 0) {
-      watt <- log(x1) * headcount - watt
-      if (watt > 0) {
-        return(watt)
+      watts <- log(x1) * headcount - watts
+      if (watts > 0) {
+        return(watts)
       }
     }
     return(NA)
@@ -490,7 +481,7 @@ gd_compute_poverty_stats_lb <- function(mean,
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
     # Watts index
-    watt <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
+    watts <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
 
     return(
       list(
@@ -503,7 +494,7 @@ gd_compute_poverty_stats_lb <- function(mean,
         gh = gh,
         gpg = gpg,
         gp = gp,
-        watt = watt,
+        watts = watts,
         dl = dl,
         ddl = ddl
       )
@@ -537,21 +528,21 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
               rmhalf = dist_stats$rmhalf,
-              pol = dist_stats$polarization,
+              polarization = dist_stats$polarization,
               ris = dist_stats$ris,
               mld = dist_stats$mld,
               dcm = dist_stats$dcm,
-              P.Decile = dist_stats$deciles,
+              deciles = dist_stats$deciles,
               headcount = pov_stats$headcount,
-              pg = pov_stats$pg,
-              p2 = pov_stats$p2,
+              poverty_gap = pov_stats$pg,
+              poverty_severity = pov_stats$p2,
               eh = pov_stats$eh,
               epg = pov_stats$epg,
               ep = pov_stats$ep,
               gh = pov_stats$gh,
               gpg = pov_stats$gpg,
               gp = pov_stats$gp,
-              watt = pov_stats$watt,
+              watts = pov_stats$watts,
               dl = pov_stats$dl,
               ddl = pov_stats$ddl,
               is_normal = validity$is_normal,

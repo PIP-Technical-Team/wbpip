@@ -5,10 +5,10 @@
 \title{Computes poverty statistics from grouped data}
 \usage{
 gd_compute_pip_stats_lq(
-  population,
   welfare,
-  mean,
-  povline = NULL,
+  povline,
+  population,
+  requested_mean,
   popshare = NULL,
   default_ppp = NULL,
   ppp = NULL,
@@ -16,14 +16,14 @@ gd_compute_pip_stats_lq(
 )
 }
 \arguments{
-\item{population}{numeric: cumulative proportion of population}
-
 \item{welfare}{numeric: cumulative proportion of income held by that
 proportion of the population (Lorenz Curve).}
 
-\item{mean}{numeric: Welfare mean}
-
 \item{povline}{numeric: Poverty line}
+
+\item{population}{numeric: cumulative proportion of population}
+
+\item{requested_mean}{numeric: Welfare mean}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional}
@@ -47,10 +47,19 @@ P <- c(0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
 0.8196, 0.9174, 0.957, 0.9751, 1)
 mu  <- 109.9 # mean
 z   <- 89    # poverty line
-gd_compute_pip_stats_lq(P, L, mu, z)
+gd_compute_pip_stats_lq(welfare = L,
+population = P,
+requested_mean = mu,
+povline = z)
 
-res <- gd_compute_pip_stats_lq(P, L, mu, z)
+res <- gd_compute_pip_stats_lq(welfare = L,
+population = P,
+requested_mean = mu,
+povline = z)
 res$headcount
-res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+res2 <- gd_compute_pip_stats_lq(welfare = L,
+population = P,
+requested_mean = mu,
+popshare = res$headcount)
 res2$povline
 }

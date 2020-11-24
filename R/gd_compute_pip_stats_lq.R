@@ -1,15 +1,6 @@
 #' Computes poverty statistics from grouped data
 #'
-#' @param population numeric: cumulative proportion of population
-#' @param welfare numeric: cumulative proportion of income held by that
-#' proportion of the population (Lorenz Curve).
-#' @param mean numeric: Welfare mean
-#' @param povline numeric: Poverty line
-#' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#' @param default_ppp numeric: Default purchasing power parity
-#' @param ppp numeric: PPP request by user
-#' @param p0 numeric: To document
+#' @inheritParams gd_compute_pip_stats
 #'
 #' @return list
 #'
@@ -22,24 +13,33 @@
 #' 0.8196, 0.9174, 0.957, 0.9751, 1)
 #' mu  <- 109.9 # mean
 #' z   <- 89    # poverty line
-#' gd_compute_pip_stats_lq(P, L, mu, z)
+#' gd_compute_pip_stats_lq(welfare = L,
+#' population = P,
+#' requested_mean = mu,
+#' povline = z)
 #'
-#' res <- gd_compute_pip_stats_lq(P, L, mu, z)
+#' res <- gd_compute_pip_stats_lq(welfare = L,
+#' population = P,
+#' requested_mean = mu,
+#' povline = z)
 #' res$headcount
-#' res2 <- gd_compute_pip_stats_lq(P, L, mu, popshare = res$headcount)
+#' res2 <- gd_compute_pip_stats_lq(welfare = L,
+#' population = P,
+#' requested_mean = mu,
+#' popshare = res$headcount)
 #' res2$povline
 #
-gd_compute_pip_stats_lq <- function(population,
-                                    welfare,
-                                    mean,
-                                    povline = NULL,
+gd_compute_pip_stats_lq <- function(welfare,
+                                    povline,
+                                    population,
+                                    requested_mean,
                                     popshare = NULL,
                                     default_ppp = NULL,
                                     ppp = NULL,
                                     p0 = 0.5) {
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    mean <- mean * default_ppp / ppp
+    requested_mean <- requested_mean * default_ppp / ppp
   } else {
       ppp <- default_ppp
     }
@@ -59,19 +59,19 @@ gd_compute_pip_stats_lq <- function(population,
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * mean
+    povline <- derive_lq(popshare, A, B, C) * requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
+  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
   z_min <- ifelse(z_min < 0, 0, z_min)
 
-  results1 <- list(mean, povline, z_min, z_max, ppp)
-  names(results1) <- list("mean", "povline", "z_min", "z_max", "ppp")
+  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -540,7 +540,7 @@ gd_compute_poverty_stats_lq <- function(mean,
   ddl <- r^2 / (tmp0^3 * 8)
 
   if (headcount < 0) {
-    headcount = pov_gap = pov_gap_sq = watt <- 0
+    headcount = pov_gap = pov_gap_sq = watts <- 0
     eh = epg = ep = gh = gpg = gp  <- 0
   } else {
 
@@ -572,7 +572,7 @@ gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    watt <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watts <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
   }
 
   return(
@@ -586,7 +586,7 @@ gd_compute_poverty_stats_lq <- function(mean,
       gh = gh,
       gpg = gpg,
       gp = gp,
-      watt = watt,
+      watts = watts,
       dl = dl,
       ddl = ddl
     )
@@ -633,21 +633,21 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
   out <- list(gini = dist_stats$gini,
               median = dist_stats$median,
               rmhalf = dist_stats$rmhalf,
-              pol = dist_stats$polarization,
+              polarization = dist_stats$polarization,
               ris = dist_stats$ris,
               mld = dist_stats$mld,
               dcm = dist_stats$dcm,
-              P.Decile = dist_stats$deciles,
+              deciles = dist_stats$deciles,
               headcount = pov_stats$headcount,
-              pg = pov_stats$pg,
-              p2 = pov_stats$p2,
+              poverty_gap = pov_stats$pg,
+              poverty_severity = pov_stats$p2,
               eh = pov_stats$eh,
               epg = pov_stats$epg,
               ep = pov_stats$ep,
               gh = pov_stats$gh,
               gpg = pov_stats$gpg,
               gp = pov_stats$gp,
-              watt = pov_stats$watt,
+              watts = pov_stats$watts,
               dl = pov_stats$dl,
               ddl = pov_stats$ddl,
               is_normal = validity$is_normal,
