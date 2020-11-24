@@ -1,8 +1,8 @@
 ---
-title: "review_lq_code"
+title: "review_select_lorenz"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{review_lq_code}
+  %\VignetteIndexEntry{review_select_lorenz}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,11 +21,16 @@ library(wbpip)
 ## Background
 Povcalnet uses two methods to estimate poverty and inequality statistics from 
 grouped data.  
-* One method is based on fitting a Lorenz Quadratic functional form to the 
-grouped data  
-* the other one uses a Beta Lorenz function
 
-This vignette focuses on the Lorenz Quadratic method.
+- One method is based on fitting a Lorenz Quadratic functional form to the 
+grouped data  
+- the other one uses a Beta Lorenz function  
+
+Povcalnet then choose the statistics to be returned based on a set of rules.
+
+This vignette focuses on the higher level `gd_compute_pip_stats()` function that
+handles the application of both functional forms and the selection of the final
+results.
 
 ## High level example
 ```{r}
@@ -61,10 +66,12 @@ welfare <- c(5.824760527229386e-05,
 
 
 # Estimate poverty statistics
-gd_compute_pip_stats_lq(welfare         = welfare,
-                        population      = population,
-                        requested_mean  = welfare_mean,
-                        povline         = monthly_povline,
-                        default_ppp     = ppp)
-```
+out <- gd_compute_pip_stats(welfare         = welfare,
+                            population      = population,
+                            requested_mean  = welfare_mean,
+                            povline         = monthly_povline,
+                            default_ppp     = ppp)
 
+out
+
+```

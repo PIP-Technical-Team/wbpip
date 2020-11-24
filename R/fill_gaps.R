@@ -86,10 +86,10 @@ fill_gaps <- function(request_year,
       weights0 <- fg_get_weights(data$df0)
 
       # Calculate poverty statistics for the request year
-      out <- md_compute_pip_stats(welfare = data$df0$welfare,
-                                  weight = weights0,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
+      out <- md_compute_pip_stats(welfare        = data$df0$welfare,
+                                  population     = weights0,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
                                   requested_mean = predicted_request_mean)
 
     } else {
@@ -98,17 +98,17 @@ fill_gaps <- function(request_year,
       weights1 <- fg_get_weights(data$df1)
 
       # Calculate statistics for the first survey year
-      dl0 <- md_compute_pip_stats(welfare = data$df0$welfare,
-                                  weight = weights0,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
+      dl0 <- md_compute_pip_stats(welfare        = data$df0$welfare,
+                                  population     = weights0,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
                                   requested_mean = predicted_request_mean[1])
 
       # Calculate statistics for the second survey year
-      dl1 <- md_compute_pip_stats(welfare = data$df1$welfare,
-                                  weight = weights1,
-                                  povline = poverty_line,
-                                  default_ppp = 1,
+      dl1 <- md_compute_pip_stats(welfare        = data$df1$welfare,
+                                  population     = weights1,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
                                   requested_mean = predicted_request_mean[2])
 
       # Calculate poverty statistics for the request year (weighted average)
