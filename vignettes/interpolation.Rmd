@@ -52,7 +52,7 @@ svy_mean_lcu <- vapply(dl, FUN.VALUE = numeric(1), function(df) {
 print(svy_mean_lcu)
 ```
 
-These survey means might look like they very large, but that is because the underlying welfare values are reported in yearly values. Since international poverty statistics typically are reported at daily levels, it might make more sense to convert them to daily values.
+These survey means might look like they are very large, but that is because the underlying welfare values are reported in yearly values. Since international poverty lines are reported in (international) dollars per day, the survey mean also needs to be converted to daily values.
 
 ```{r}
 # Convert to daily values 
@@ -63,7 +63,7 @@ svy_mean_lcu <- svy_mean_lcu / 365
 
 In order for poverty statistics to be comparable over time and across countries we also need to make sure that the survey means are adjusted to take different price levels into account. This can be done by converting them into purchasing power parity (PPP) adjusted dollars.
 
-We thus create a new vector, `svy_mean_ppp,` by using the function `deflate_welfare_mean()` to adjust the values. Here we imagine a PPP value of 1081, a CPI value for the first survey year of 0.6 and a CPI value for the second survey year of 0.9.
+We thus create a new vector, `svy_mean_ppp,` by using the function `deflate_welfare_mean()` to adjust the values. Here we imagine a PPP value of 1081, a CPI value for the first survey year of 0.6 and a CPI value for the second survey year of 0.9. The CPI is based on the PPP year, meaning that if the PPP exchange rate is provided to year 2011, then the CPI value for 2011 will be 1 (if we except cases for which 2011 saw a change if currency).
 
 ```{r}
 svy_mean_ppp <- deflate_welfare_mean(
@@ -73,15 +73,13 @@ svy_mean_ppp <- deflate_welfare_mean(
 print(svy_mean_ppp)
 ```
 
-This gives us a a daily welfare mean of \$`r round(svy_mean_ppp[1], 1)` in 2000 and a welfare mean of \$`r round(svy_mean_ppp[2], 1)` in 2010.
+This gives us a daily welfare mean of \$`r round(svy_mean_ppp[1], 1)` in 2000 and a welfare mean of \$`r round(svy_mean_ppp[2], 1)` in 2010.
 
 ## Calculate the predicted mean for the request year
 
-We are now almost ready to calculate poverty statistics for the request year we are interested in, but there is one final step we need to conduct first. We need to predict what the two survey means would have been in the request year.
+We are now almost ready to calculate poverty statistics for the year we are interested in, but there is one final step we need to conduct first. We need to predict the value of the daily welfare mean for the request year (Year for which there is no availble survey). For this prediction, national accounts data, e.g. the Gross Domestic Product (GDP) or Household Final Consumption Expenditure (HFCE), are used for to approximate the growth of the daily welfare mean.
 
-This can been done by calculating the difference in welfare for the two respective survey years and the request year. Since we don't know the value for the request year we need a set of proxy values to calculate the growth rate. Typically national accounts data, e.g. the Gross Domestic Product (GDP) or Household Final Consumption Expenditure (HFCE), is used for this purpose.
-
-Let's imagine that we are calculating poverty statistics for the year 2005 and that we are using GDP data as proxy values. Then we would need three GDP values; one for the first survey year (2000), one for the second survey year (2010) and one for the request year (2005).
+Let's imagine that we are calculating poverty statistics for the year 2005, and that we are using GDP data as proxy values. Then we would need three GDP values; one for the first survey year (2000), one for the second survey year (2010) and one for the request year (2005).
 
 ```{r}
 # Predict welfare means for the request year
