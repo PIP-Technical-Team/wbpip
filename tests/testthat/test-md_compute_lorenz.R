@@ -1,6 +1,6 @@
 df <- readr::read_rds("../testdata/microdata_lorenz.rds")
 
-test_that("md_compute_lorenz returns expected results", {
+test_that("md_compute_lorenz() returns expected results", {
 
   out <- md_compute_lorenz(welfare = df$welfare,
                            weight = df$weight)

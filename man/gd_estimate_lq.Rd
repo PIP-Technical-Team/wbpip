@@ -7,17 +7,20 @@
 gd_estimate_lq(mean, povline, p0, A, B, C)
 }
 \arguments{
-\item{mean}{numeric: Welfare mean}
+\item{mean}{numeric: Welfare mean.}
 
-\item{povline}{numeric: Poverty line}
+\item{povline}{numeric: Poverty line.}
 
-\item{p0}{numeric: TO document}
+\item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
 
-\item{A}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[1]}}
+\item{A}{numeric: Lorenz curve coefficient. Output of
+\code{regres_lq()$coef[1]}.}
 
-\item{B}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[2]}}
+\item{B}{numeric: Lorenz curve coefficient. Output of
+\code{regres_lq()$coef[2]}.}
 
-\item{C}{numeric vector: Lorenz curve coefficient. Output of \code{regres_lq()$coef[3]}}
+\item{C}{numeric: Lorenz curve coefficient. Output of
+\code{regres_lq()$coef[3]}.}
 }
 \value{
 list
@@ -25,3 +28,4 @@ list
 \description{
 Estimates poverty and inequality stats from Quadratic Lorenz fit
 }
+\keyword{internal}

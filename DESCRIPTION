@@ -29,6 +29,5 @@ Imports:
     data.table,
     tibble,
     assertthat,
-    cli,
-    purrr
+    cli
 VignetteBuilder: knitr

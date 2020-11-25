@@ -23,7 +23,7 @@ library(wbpip)
 data("md_ABC_2000_income")
 
 # Basic cleaning operation (remove missings, negative values, etc.)
-df <- wbpip::md_clean_data(md_ABC_2000_income, 
+df <- wbpip:::md_clean_data(md_ABC_2000_income, 
                            welfare = "welfare", 
                            weight  = "weight")
 df <- df$data
@@ -53,7 +53,7 @@ ppp_value <- 58.16
 # distribution using a different mean.
 welfare_mean <- 225
 
-out <- md_compute_pip_stats(welfare        = df$welfare,
+out <- wbpip:::md_compute_pip_stats(welfare        = df$welfare,
                             population     = df$weight,
                             povline        = poverty_line,
                             default_ppp    = ppp_value,

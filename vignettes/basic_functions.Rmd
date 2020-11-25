@@ -27,7 +27,7 @@ Basic functions are meant to be used with single datasets.
 ```{r}
 data("md_ABC_2000_income")
 
-md_compute_gini(welfare = md_ABC_2000_income$welfare, 
+wbpip:::md_compute_gini(welfare = md_ABC_2000_income$welfare, 
                 weight = md_ABC_2000_income$weight)
 ```
 

@@ -7,15 +7,15 @@
 gd_compute_headcount_lb(mean, povline, A, B, C)
 }
 \arguments{
-\item{mean}{numeric: Welfare measure mean (income of consumption)}
+\item{mean}{numeric: Welfare measure mean (income of consumption).}
 
-\item{povline}{numeric: Poverty line}
+\item{povline}{numeric: Poverty line.}
 
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{A}{numeric: Lorenz curve coefficient.}
 
-\item{B}{numeric vector: lorenz curve coefficient}
+\item{B}{numeric: Lorenz curve coefficient.}
 
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{C}{numeric: Lorenz curve coefficient.}
 }
 \value{
 numeric
@@ -23,3 +23,4 @@ numeric
 \description{
 Compute the headcount statistic from Lorenz Beta fit
 }
+\keyword{internal}

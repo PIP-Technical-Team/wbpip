@@ -1,21 +1,21 @@
-#' Computes poverty statistics from grouped data
+#' Computes poverty statistics (grouped)
+#'
+#' Compute poverty statistics for grouped data by selecting the best functional
+#' fit for the Lorenz curve (either beta or quadrtic).
 #'
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
-#' @param povline numeric: Poverty line
-#' @param population numeric: cumulative proportion of population
-#' @param requested_mean numeric: Welfare mean
+#' @param povline numeric: Poverty line.
+#' @param population numeric: cumulative proportion of population.
+#' @param requested_mean numeric: Welfare mean.
 #' @param popshare numeric: Share of population living below the poverty line.
-#' Optional
-#' @param default_ppp numeric: Default purchasing power parity
-#' @param ppp numeric: PPP request by user
-#' @param p0 numeric: To document
+#' Optional.
+#' @param default_ppp numeric: Default purchasing power parity.
+#' @param ppp numeric: PPP request by user.
+#' @param p0 numeric: **TO BE DOCUMENTED**.
 #'
 #' @return list
-#'
-#' @export
-#'
-#
+#' @keywords internal
 gd_compute_pip_stats <- function(welfare,
                                  povline,
                                  population,

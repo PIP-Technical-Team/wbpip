@@ -2,30 +2,29 @@
 % Please edit documentation in R/md_compute_lorenz.R
 \name{md_compute_lorenz}
 \alias{md_compute_lorenz}
-\title{md_compute_lorenz
-Given a vector of weights and welfare, this functions computes the
-Lorenz curve}
+\title{Lorenz curve}
 \usage{
-md_compute_lorenz(welfare, weight = NULL, nbins = NULL)
+md_compute_lorenz(welfare, weight, nbins = NULL)
 }
 \arguments{
-\item{welfare}{numeric: vector of welfare measures}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: vector of weights}
+\item{weight}{numeric: A vector of weights.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve}
+\item{nbins}{numeric: number of points on the Lorenz curve.}
 }
 \value{
 data.frame
-
-#' @examples
-md_compute_lorenz(welfare = 1:2000, weight = 1:2000)
-
-data("md_ABC_2000_income")
-md_compute_lorenz(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
 }
 \description{
-md_compute_lorenz
-Given a vector of weights and welfare, this functions computes the
-Lorenz curve
+Compute the Lorenz curve for microdata.
 }
+\details{
+Given a vector of weights and welfare, this functions computes the
+Lorenz curve.
+}
+\examples{
+wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+
+}
+\keyword{internal}

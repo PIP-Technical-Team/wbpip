@@ -2,15 +2,15 @@
 % Please edit documentation in R/gd_utils.R
 \name{regres}
 \alias{regres}
-\title{Performs linear regression on lorenz formatted input}
+\title{Perform linear regression on Lorenz formatted input}
 \usage{
 regres(df, is_lq = TRUE)
 }
 \arguments{
-\item{df}{dataframe: Output of \code{create_functional_form_lq()} or
-\code{create_functional_form_lb()}}
+\item{df}{data.frame: Output of \code{create_functional_form_lq()} or
+\code{create_functional_form_lb()}.}
 
-\item{is_lq}{logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz}
+\item{is_lq}{logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz.}
 }
 \value{
 list
@@ -20,3 +20,4 @@ list
 Quadratic). There is no intercept in the regression. The coefficients of
 regressions are estimated by ordinary least squares.
 }
+\keyword{internal}

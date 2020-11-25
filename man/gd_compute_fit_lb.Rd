@@ -8,17 +8,17 @@ Measures the fit of the model to the data.}
 gd_compute_fit_lb(welfare, population, headcount, A, B, C)
 }
 \arguments{
-\item{welfare}{numeric: Welfare vector (grouped)}
+\item{welfare}{numeric: Welfare vector (grouped).}
 
-\item{population}{numeric: Population vector (grouped)}
+\item{population}{numeric: Population vector (grouped).}
 
-\item{headcount}{numeric: headcount index}
+\item{headcount}{numeric: Headcount index.}
 
-\item{A}{numeric vector: Lorenz curve coefficient}
+\item{A}{numeric: Lorenz curve coefficient.}
 
-\item{B}{numeric vector: Lorenz curve coefficient}
+\item{B}{numeric: Lorenz curve coefficient.}
 
-\item{C}{numeric vector: Lorenz curve coefficient}
+\item{C}{numeric: Lorenz curve coefficient.}
 }
 \value{
 list
@@ -27,3 +27,4 @@ list
 Computes the sum of squares of error
 Measures the fit of the model to the data.
 }
+\keyword{internal}
