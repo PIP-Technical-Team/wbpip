@@ -47,7 +47,7 @@ if (getRversion() >= '2.15.1')
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
-#' # Interpolatation (monotonic)
+#' # Interpolation (monotonic)
 #' res <- fill_gaps(
 #'   request_year = 2005,
 #'   survey_year = c(2000, 2010),
@@ -56,7 +56,7 @@ if (getRversion() >= '2.15.1')
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
-#' # Interpolatation (non-monotonic)
+#' # Interpolation (non-monotonic)
 #' res <- fill_gaps(
 #'   request_year = 2005,
 #'   survey_year = c(2000, 2010),
@@ -83,39 +83,6 @@ fill_gaps <- function(request_year,
 
   # Calculate poverty stats
   if (distribution_type == 'micro') {
-    if (length(predicted_request_mean) == 1) {
-
-      weights0 <- fg_get_weights(data$df0)
-
-      # Calculate poverty statistics for the request year
-      out <- md_compute_pip_stats(welfare        = data$df0$welfare,
-                                  population     = weights0,
-                                  povline        = poverty_line,
-                                  default_ppp    = 1,
-                                  requested_mean = predicted_request_mean)
-
-    } else {
-
-      weights0 <- fg_get_weights(data$df0)
-      weights1 <- fg_get_weights(data$df1)
-
-      # Calculate statistics for the first survey year
-      dl0 <- md_compute_pip_stats(welfare        = data$df0$welfare,
-                                  population     = weights0,
-                                  povline        = poverty_line,
-                                  default_ppp    = 1,
-                                  requested_mean = predicted_request_mean[1])
-
-      # Calculate statistics for the second survey year
-      dl1 <- md_compute_pip_stats(welfare        = data$df1$welfare,
-                                  population     = weights1,
-                                  povline        = poverty_line,
-                                  default_ppp    = 1,
-                                  requested_mean = predicted_request_mean[2])
-
-      # Calculate poverty statistics for the request year (weighted average)
-      out <- fg_adjust_poverty_stats(dl0, dl1, survey_year, request_year)
-    }
 
     out <- md_fill_gaps(request_year = request_year,
                         data = data,
