@@ -1,8 +1,8 @@
-fpath  <- system.file("testdata", "lorenz.csv", package = "wbpip")
+fpath  <- system.file("testdata", "lorenz.csv", package="wbpip")
 lz     <- read.csv(fpath,
                    col.names = c("y", "lorenzW", "lorenzY"))
 
-test_that("md_compute_quantiles() output is formatted as expected", {
+test_that("md_compute_quantiles output is formatted as expected", {
   out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
                               lweight    = lz$lorenzW,
                               percentile = lz$y)
@@ -21,7 +21,7 @@ test_that("md_compute_quantiles() output is formatted as expected", {
 
 })
 
-test_that("md_compute_quantiles() computations are correct", {
+test_that("md_compute_quantiles computations are correct", {
   out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
                               lweight    = lz$lorenzW,
                               percentile = lz$y)

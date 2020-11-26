@@ -1,17 +1,17 @@
-#' Perform linear regression on Lorenz formatted input
+#' Performs linear regression on lorenz formatted input
 #'
 #' `regres()` performs linear regression on lorenz formatted input (Beta or
 #' Quadratic). There is no intercept in the regression. The coefficients of
 #' regressions are estimated by ordinary least squares.
 #'
-#' @param df data.frame: Output of `create_functional_form_lq()` or
-#' `create_functional_form_lb()`.
-#' @param is_lq logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz.
+#' @param df dataframe: Output of `create_functional_form_lq()` or
+#' `create_functional_form_lb()`
+#' @param is_lq logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz
 #'
 #' @return list
-#' @keywords internal
-regres <- function(df, is_lq = TRUE) {
+#'
 
+regres <- function(df, is_lq = TRUE) {
   #CHECK inputs
   assertthat::are_equal(ncol(df), 4)
   assertthat::are_equal(names(df), c("y", "x1", "x2", "x3"))

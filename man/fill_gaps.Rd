@@ -9,7 +9,7 @@ fill_gaps(
   data = list(df0, df1 = NULL),
   predicted_request_mean,
   survey_year,
-  distribution_type = c("micro", "group", "aggregate", "imputed"),
+  data_type = c("microdata", "groupdata"),
   poverty_line = 1.9
 )
 }
@@ -24,8 +24,7 @@ See details.}
 
 \item{survey_year}{numeric: A vector with one or two survey years.}
 
-\item{distribution_type}{character: Type of distribution, either micro,
-group, aggregate or imputed.}
+\item{data_type}{character: Type of data, either micro or grouped.}
 
 \item{poverty_line}{numeric: Daily poverty line in international dollars.}
 }
@@ -46,7 +45,7 @@ named \emph{weight} if welfare values are to be weighted.
 data('md_ABC_2000_income')
 data('md_ABC_2010_income')
 md_ABC_2010_income <-
-   wbpip:::md_clean_data(md_ABC_2010_income,
+   md_clean_data(md_ABC_2010_income,
      welfare = 'welfare',
      weight = 'weight')$data
 
@@ -56,7 +55,7 @@ res <- fill_gaps(
   survey_year = 2000,
   data = list(df0 = md_ABC_2000_income),
   predicted_request_mean = 13,
-  distribution_type = 'micro',
+  data_type = 'microdata',
   poverty_line = 1.9)
 
 # Interpolatation (monotonic)
@@ -65,7 +64,7 @@ res <- fill_gaps(
   survey_year = c(2000, 2010),
   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
   predicted_request_mean = c(13, 13),
-  distribution_type = 'micro',
+  data_type = 'microdata',
   poverty_line = 1.9)
 
 # Interpolatation (non-monotonic)
@@ -74,7 +73,7 @@ res <- fill_gaps(
   survey_year = c(2000, 2010),
   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
   predicted_request_mean = c(14, 17),
-  distribution_type = 'micro',
+  data_type = 'microdata',
   poverty_line = 1.9)
 
 }

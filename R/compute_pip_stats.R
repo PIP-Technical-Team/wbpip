@@ -1,6 +1,6 @@
-#' Compute default PIP statistics (microdata)
+#' Compute default PIP statistics from microdata
 #'
-#' Compute poverty and distributional statistics for microdata.
+#' Compute poverty and distributional statistics
 #'
 #' @param welfare numeric: A vector of income or consumption values
 #' @param povline numeric: Monthly poverty line in international dollars
@@ -11,11 +11,11 @@
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param default_ppp numeric: Default purchasing power parity
 #' @param ppp numeric: PPP requested by user
-#' @param distribution_type character: Type of distribution, either micro,
-#'   group, aggregate or imputed.
-#'
+#' @param distribution_type character: The type of data to be provided as imput
+#' to the function.
 #' @return list
 #' @export
+#'
 compute_pip_stats <- function(welfare,
                               povline,
                               population = NULL,
@@ -23,14 +23,15 @@ compute_pip_stats <- function(welfare,
                               popshare = NULL,
                               default_ppp = 1,
                               ppp = NULL,
-                              distribution_type = c("micro",
+                              distribution_type = c("microdata",
                                                     "group",
                                                     "aggregate",
-                                                    "imputed")) {
+                                                    "imputed")
+) {
 
-  distribution_type <- match.arg(distribution_type)
+  type <- match.arg(distribution_type)
 
-  if (distribution_type == "micro") {
+  if (type == "microdata") {
 
     out <- md_compute_pip_stats(welfare        = welfare,
                                 povline        = povline,
@@ -42,7 +43,7 @@ compute_pip_stats <- function(welfare,
 
     return(out)
 
-  } else if (distribution_type == "group") {
+  } else if (type == "group") {
 
     out <- gd_compute_pip_stats(welfare        = welfare,
                                 povline        = povline,
@@ -54,11 +55,11 @@ compute_pip_stats <- function(welfare,
 
     return(out)
 
-  } else if (distribution_type == "aggregate") {
+  } else if (type == "aggregate") {
 
     return(NA)
 
-  } else if (distribution_type == "imputed") {
+  } else if (type == "imputed") {
 
     return(NA)
 

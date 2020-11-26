@@ -7,18 +7,17 @@
 value_at_lb(x, A, B, C)
 }
 \arguments{
-\item{x}{numeric: Point on curve.}
+\item{x}{numeric: point on curve}
 
-\item{A}{numeric: First Lorenz curve coefficient.}
+\item{A}{numeric vector: First lorenz curve coefficient}
 
-\item{B}{numeric: Second Lorenz curve coefficient.}
+\item{B}{numeric vector: Second lorenz curve coefficient}
 
-\item{C}{numeric: Third Lorenz curve coefficient.}
+\item{C}{numeric vector: Third lorenz curve coefficient}
 }
 \value{
 numeric
 }
 \description{
-\code{value_at_lb()}solves for beta Lorenz curves.
+\code{value_at_lb()}solves for beta Lorenz curves
 }
-\keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_compute_pip_stats.R
 \name{gd_compute_pip_stats}
 \alias{gd_compute_pip_stats}
-\title{Computes poverty statistics (grouped)}
+\title{Computes poverty statistics from grouped data}
 \usage{
 gd_compute_pip_stats(
   welfare,
@@ -19,26 +19,24 @@ gd_compute_pip_stats(
 \item{welfare}{numeric: cumulative proportion of income held by that
 proportion of the population (Lorenz Curve).}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line}
 
-\item{population}{numeric: cumulative proportion of population.}
+\item{population}{numeric: cumulative proportion of population}
 
-\item{requested_mean}{numeric: Welfare mean.}
+\item{requested_mean}{numeric: Welfare mean}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
-Optional.}
+Optional}
 
-\item{default_ppp}{numeric: Default purchasing power parity.}
+\item{default_ppp}{numeric: Default purchasing power parity}
 
-\item{ppp}{numeric: PPP request by user.}
+\item{ppp}{numeric: PPP request by user}
 
-\item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{p0}{numeric: To document}
 }
 \value{
 list
 }
 \description{
-Compute poverty statistics for grouped data by selecting the best functional
-fit for the Lorenz curve (either beta or quadrtic).
+Computes poverty statistics from grouped data
 }
-\keyword{internal}

@@ -52,31 +52,3 @@ get_weights <- function(year) {
   return(out)
 }
 
-check_numeric <- function(x) {
-
-  msg <- "`x` must be a numeric vector"
-  hint <- sprintf("You've supplied a %s vector.", class(x))
-
-  if (!is.numeric(x))
-    rlang::abort(c(
-      msg,
-      i = hint
-    ))
-}
-
-check_equal_length <- function(x, y) {
-
-  len_x <- length(x)
-  len_y <- length(y)
-
-  msg <- '`x` and `y` must be of the same length'
-  hint <- sprintf("`x` is of length %s and `y` is of length %s",
-                  len_x,
-                  len_y)
-
-  if (len_x != len_y)
-    rlang::abort(c(
-      msg,
-      i = hint
-    ))
-}

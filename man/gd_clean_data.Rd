@@ -2,33 +2,30 @@
 % Please edit documentation in R/gd_clean_data.R
 \name{gd_clean_data}
 \alias{gd_clean_data}
-\title{Clean data (grouped)}
+\title{Clean Group Data}
 \usage{
 gd_clean_data(dt, welfare, population, data_type = 1)
 }
 \arguments{
-\item{dt}{data.frame: A table with survey data.}
+\item{dt}{Data frame.}
 
 \item{welfare}{numeric: welfare vector whose form depends on on \code{type} (SE).}
 
-\item{population}{numeric: population vector whose form depends on on \code{type}
-(SE).}
+\item{population}{numeric: population vector whose form depends on on \code{type} (SE).}
 
-\item{data_type}{numeric: Type of data. See details.}
+\item{data_type}{numeric: Type of data.
+If \code{type = 1}, \code{population} must be the
+cumulative proportion of population and \code{welfare} must be the cumulative
+proportion of income held by that proportion of the population (Lorenz Curve).
+If \code{type = 2}, \code{population} must be the proportion of population and
+\code{welfare} must be the proportion of income.
+If \code{type = 5}, then \code{population} must be the Percentage
+of the population in a given interval of incomes, whereas \code{welfare} must be
+the mean income of that interval. Default is 1.}
 }
 \value{
-data.table
+dataframe in data.table format
 }
 \description{
-Clean grouped data to be used in PIP methods.
+Clean Group Data
 }
-\details{
-If \code{data_type = 1} \code{population} must be the cumulative proportion of
-population and \code{welfare} must be the cumulative proportion of income held by
-that proportion of the population (Lorenz curve). If \code{data_type = 2},
-\code{population} must be the proportion of population and \code{welfare} must be the
-proportion of income. If \code{data_type = 5}, then \code{population} must be the
-Percentage of the population in a given interval of incomes, whereas
-\code{welfare} must be the mean income of that interval.
-}
-\keyword{internal}

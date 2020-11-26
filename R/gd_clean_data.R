@@ -1,23 +1,22 @@
-#' Clean data (grouped)
+#' Clean Group Data
 #'
-#' Clean grouped data to be used in PIP methods.
-#'
-#' If `data_type = 1` `population` must be the cumulative proportion of
-#' population and `welfare` must be the cumulative proportion of income held by
-#' that proportion of the population (Lorenz curve). If `data_type = 2`,
-#' `population` must be the proportion of population and `welfare` must be the
-#' proportion of income. If `data_type = 5`, then `population` must be the
-#' Percentage of the population in a given interval of incomes, whereas
-#' `welfare` must be the mean income of that interval.
-#'
-#' @param dt data.frame: A table with survey data.
+#' @param dt Data frame.
 #' @param welfare numeric: welfare vector whose form depends on on `type` (SE).
-#' @param population numeric: population vector whose form depends on on `type`
-#'   (SE).
-#' @param data_type numeric: Type of data. See details.
+#' @param population numeric: population vector whose form depends on on `type` (SE).
+#' @param data_type numeric: Type of data.
+#' If `type = 1`, `population` must be the
+#' cumulative proportion of population and `welfare` must be the cumulative
+#' proportion of income held by that proportion of the population (Lorenz Curve).
+#' If `type = 2`, `population` must be the proportion of population and
+#' `welfare` must be the proportion of income.
+#' If `type = 5`, then `population` must be the Percentage
+#' of the population in a given interval of incomes, whereas `welfare` must be
+#' the mean income of that interval. Default is 1.
 #'
-#' @return data.table
-#' @keywords internal
+#' @return dataframe in data.table format
+#' @export
+#' @import data.table
+#'
 gd_clean_data <- function(dt,
                           welfare,
                           population,
@@ -92,8 +91,10 @@ gd_clean_data <- function(dt,
 #' @param population numeric: population vector
 #'
 #' @return data.table
-#' @noRd
-standardize_type5 <- function(welfare, population) {
+#' @export
+#'
+standardize_type5 <- function(welfare,
+                              population) {
 
   if (sum(population) == 100) {
     population <- population/100
@@ -124,7 +125,8 @@ standardize_type5 <- function(welfare, population) {
 #' @param welfare numeric: welfare, proportion of income / consumption
 #'
 #' @return list
-#' @noRd
+#' @export
+#'
 standardize_type2 <- function(population,
                               welfare) {
 
@@ -159,12 +161,13 @@ standardize_type2 <- function(population,
 #' Check Group Data inputs
 #'
 #' @inheritParams gd_clean_data
+#'
 #' @return logical
-#' @noRd
+#' @export
+#'
 check_gd_input <- function(population,
                            welfare,
                            data_type) {
-
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #---------   Basic checks   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -220,6 +223,7 @@ check_gd_input <- function(population,
 
   }
 
+
   #--------- type 5 (or 3) ---------
 
   # Still need more tests
@@ -231,6 +235,8 @@ check_gd_input <- function(population,
 
 }
 
+
+
 #' standardize_type5_old
 #' Standardize grouped data of type 5 distribution
 #' @param population numeric: population, in percentage of the population in a given interval of incomes.
@@ -239,7 +245,8 @@ check_gd_input <- function(population,
 #' @param max_welfare_default numeric:
 #'
 #' @return list
-#' @noRd
+#' @export
+#'
 standardize_type5_old <- function(population,
                                   welfare,
                                   min_welfare_default,
@@ -267,8 +274,8 @@ standardize_type5_old <- function(population,
   lorenz_pop[1]     <- population[1] / sum_population
   lorenz_welfare[1] <- population[1] * welfare[1] / sum_population / mean_welfare
   for (i in seq(2, nobs)) {
-    lorenz_pop[i] <- population[i] / sum_population + lorenz_pop[i - 1]
-    lorenz_welfare[i] <- population[i] * welfare[i] / sum_population / mean_welfare + lorenz_welfare[i - 1]
+    lorenz_pop[i] <- population[i] / sum_population + lorenz_pop[i-1]
+    lorenz_welfare[i] <- population[i] * welfare[i] / sum_population / mean_welfare + lorenz_welfare[i-1]
   }
 
   return(data.table(population = lorenz_pop,
@@ -283,7 +290,8 @@ standardize_type5_old <- function(population,
 #' @param max_welfare_default numeric: Maximum welfare
 #'
 #' @return list
-#' @noRd
+#' @export
+#'
 standardize_type2_old <- function(population,
                                   welfare,
                                   min_welfare_default,

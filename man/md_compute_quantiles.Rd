@@ -2,7 +2,7 @@
 % Please edit documentation in R/md_compute_quantiles.R
 \name{md_compute_quantiles}
 \alias{md_compute_quantiles}
-\title{Compute quantiles}
+\title{md_compute_quantiles}
 \usage{
 md_compute_quantiles(lwelfare, lweight, percentile, n_quantile = 10)
 }
@@ -21,9 +21,6 @@ Lorenz curve provided by the user.  default is 10.}
 list
 }
 \description{
-Compute quantiles for microdata.
-}
-\details{
 Calculate share of total welfare in each quantile from Lorenz curve and
 the its corresponding percentile. That is, it requires a vector with the
 cumulative share of the population (\code{lweight}), a vector with cumulative
@@ -31,10 +28,10 @@ share of welfare (\code{lwelfare}), and a vector the corresponding monetary valu
 of each percentile (\code{percentile}).
 }
 \examples{
-lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
-wbpip:::md_compute_quantiles(lwelfare   = lz$welfare,
-                     lweight    = lz$lorenz_weight,
-                     percentile = lz$lorenz_welfare,
-                     n_quantile = 10)
+fpath  <- system.file("testdata", "lorenz.csv", package="wbpip")
+lz     <- read.csv(fpath,
+                   col.names = c("y", "lorenzW", "lorenzY"))
+md_compute_quantiles(lwelfare   = lz$lorenzY,
+                     lweight    = lz$lorenzW,
+                     percentile = lz$y)
 }
-\keyword{internal}

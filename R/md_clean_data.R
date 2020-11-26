@@ -1,39 +1,26 @@
-#' @import data.table
-NULL
-
-# Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
-  utils::globalVariables(
-    c('weight')
-  )
-
-#' Clean data (micro)
+#' Check microdata to be used in PIP methods
 #'
-#' Clean microdata to be used in PIP methods.
-#'
-#' `md_clean_data()` returns a list of elements whose main object is a
-#' data.table with the necessary transformations to be included in PIP methods.
-#' Data is available in element `$data`. The other elements provide the number
-#' of observations that were modified depending on test performed. The name of
-#' elements are in the form p_s, where p (or prefix) refers to the test and s
-#' (the suffix) refers to the name of the variable evaluated.
-#'
-#' Prefixes are:
-#' * nna: Number of NA in variable
-#' * nng: Number of negative values
-#' * ina: Index of obs with NA in variable
-#' * ing: Index of obs with negative values
-#'
-#' @param dt data.frame: A table with survey data.
+#' @param dt Data frame.
 #' @param ... list of arguments that correspond to specific variable names.
 #' Arguments available are in `getOption("wbpip.agrs_to_check")`.
 #' For instance, welfare = "income", weight = "peso'.
-#' @return list
-#' @keywords internal
+#'
+#' @return list of elements whose main object is a dataframe (in data.table format)
+#' with the necessary transformations to be included in PIP methods. Data is available in
+#' element `$data`. The other elements provide the number of observations that were modified
+#' depending on test performed. The name of elements are in the form p_s, where p (or prefix)
+#' refers to the test and s (the suffix) refers to the name of the variable evaluated.
+#' Prefix are:
+#'
+#' *nna:*  Number of NA in variable
+#' *nng:*  Number of negative values
+#' *ina:*  Index of obs with NA in variable
+#' *ing:*  Index of obs with negative values
+#' @export
 md_clean_data <- function(dt, ...) {
 
   if (!(inherits(dt, "data.table"))) {
-    data.table::setDT(dt)
+    setDT(dt)
   }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

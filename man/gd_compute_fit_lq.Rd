@@ -2,27 +2,28 @@
 % Please edit documentation in R/gd_compute_pip_stats_lq.R
 \name{gd_compute_fit_lq}
 \alias{gd_compute_fit_lq}
-\title{Computes the sum of squares of error}
+\title{Computes the sum of squares of error
+Measures the fit of the model to the data.}
 \usage{
 gd_compute_fit_lq(welfare, population, headcount, A, B, C)
 }
 \arguments{
-\item{welfare}{numeric: Welfare vector (grouped).}
+\item{welfare}{numeric: Welfare vector (grouped)}
 
-\item{population}{numeric: Population vector (grouped).}
+\item{population}{numeric: Population vector (grouped)}
 
-\item{headcount}{numeric: Headcount index.}
+\item{headcount}{numeric: headcount index}
 
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric vector: Lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric vector: Lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric vector: Lorenz curve coefficient}
 }
 \value{
 list
 }
 \description{
+Computes the sum of squares of error
 Measures the fit of the model to the data.
 }
-\keyword{internal}

@@ -28,9 +28,8 @@ survey as well as currency changes between surveys must already have been
 made.
 }
 \references{
-Azevedo, J. P., P. A. Corral, D. Jolliffe, C. Lakner, D. G. Mahler,
-J. Montes, M. C. Nguyen, E. B. Prydz. 2018.
+Azevedo, J.P, Corral, P. A., Jolliffe, D. M., Lakner, C., Mahler,
+D.G, Montes, J., Nguyen, M. C., Prydz, E. B. 2018.
 "\href{http://documents1.worldbank.org/curated/en/651541537208471889/pdf/129963-WP-PUBLIC-Disclosed-9-19-2018.pdf}{Prices used in Global Poverty Measurement}".
-Global Poverty Monitoring Technical Note 3.
-World Bank, Washington, DC.
+\emph{Global Poverty Monitoring Technical Note 3}. Washington, DC: World Bank.
 }

@@ -7,29 +7,29 @@
 gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
 }
 \arguments{
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric: welfare mean}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line}
 
-\item{A}{numeric: First regression coefficient.}
+\item{A}{numeric: First regression coefficient}
 
-\item{B}{numeric: Second regression coefficient.}
+\item{B}{numeric: Second regression coefficient}
 
-\item{C}{numeric: Third regression coefficient.}
+\item{C}{numeric: Third regression coefficient}
 
 \item{e}{numeric: e = -(A + B + C + 1): condition for the curve to go through
-(1, 1).}
+(1, 1)}
 
 \item{m}{numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-an ellipse (m is called alpha in paper).}
+an ellipse (m is called alpha in paper)}
 
-\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper.}
+\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
 
-\item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper.}
+\item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper}
 
-\item{s1}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{s1}{numeric: To document}
 
-\item{s2}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{s2}{numeric: To document}
 }
 \value{
 list
@@ -37,4 +37,3 @@ list
 \description{
 Computes poverty stats from Lorenz Quadratic fit
 }
-\keyword{internal}

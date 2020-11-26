@@ -7,25 +7,25 @@
 gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
 }
 \arguments{
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric: welfare mean}
 
-\item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{p0}{numeric: To document}
 
-\item{A}{numeric: First regression coefficient.}
+\item{A}{numeric: First regression coefficient}
 
-\item{B}{numeric: Second regression coefficient.}
+\item{B}{numeric: Second regression coefficient}
 
-\item{C}{numeric: Third regression coefficient.}
+\item{C}{numeric: Third regression coefficient}
 
 \item{e}{numeric: e = -(A + B + C + 1): condition for the curve to go through
-(1, 1).}
+(1, 1)}
 
 \item{m}{numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-an ellipse (m is called alpha in paper).}
+an ellipse (m is called alpha in paper)}
 
-\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper.}
+\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
 
-\item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper.}
+\item{r}{numeric:r = (n^2) - (4 * m * e^2). r is called K in paper}
 }
 \value{
 list
@@ -33,4 +33,3 @@ list
 \description{
 Computes distributional stats from Lorenz Quadratic fit
 }
-\keyword{internal}

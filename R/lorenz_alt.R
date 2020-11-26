@@ -1,30 +1,29 @@
-#' @import data.table
-NULL
-
-# Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
-  utils::globalVariables(
-    c('bins', '.')
-  )
-
-#' lorenz_alt
+#' lorenz
 #'
 #' Given a vector of weights and welfare, this functions computes the
 #' Lorenz curve and several other related indicators.
+#' @param welfare numeric: vector of welfare measures
+#' @param weight numeric: vector of weights
+#' @param nbins numeric: number of points on the Lorenz curve
+#' @param na.rm logical: Set to TRUE to remove missing
 #'
-#' @param welfare numeric: A vector of income or consumption values.
-#' @param weight numeric: A vector of weights.
-#' @param nbins numeric: number of points on the Lorenz curve.
-#' @param na.rm logical: Set to TRUE to remove missing.
+#' @return data.frame
+#' @export
+#' @import data.table
 #'
 #' @examples
-#' wbpip:::lorenz_alt(welfare = 1:2000, weight = rep(1, 2000))
-#'
-#' @return data.table
-#' @keywords internal
-lorenz_alt <- function(welfare, weight,
-                       nbins  = NULL,
-                       na.rm  = FALSE) {
+#' data("md_ABC_2010_income")
+#' df <- md_ABC_2010_income
+#' lz <- lorenz_alt(df$welfare, df$weight)[]
+lorenz_alt <- function(welfare,
+                    weight = NULL,
+                    nbins  = NULL,
+                    na.rm  = FALSE) {
+
+  # Set all weights to 1 if none are supplied
+  if (is.null(weight)) {
+    weight <- rep(1, length(welfare))
+  }
 
   nobs <- length(weight)
 
@@ -35,11 +34,12 @@ lorenz_alt <- function(welfare, weight,
   #--------- Create data.table for fast calculations ---------
   dt <- data.table::data.table(welfare = welfare,
                                weight  = weight)
-  data.table::setorder(dt, welfare)  # sort and index by reference
+  data.table::setorder(dt, welfare)  # sort and indez by reference
+
 
   #--------- constants ---------
   total_pop <- dt[, sum(weight, na.rm = na.rm)]  # total population
-  mean_welf <- dt[, stats::weighted.mean(welfare, weight, na.rm = na.rm)]
+  mean_welf <- dt[, weighted.mean(welfare, weight, na.rm = na.rm)]
 
   #--------- variables ---------
 
@@ -100,6 +100,7 @@ lorenz_alt <- function(welfare, weight,
   attr(dtc$gn_lorenz ,        "label") <- "generalized Lorenz curve"
   attr(dtc$cum_mean_welfare , "label") <- "cumulative mean"
   attr(dtc$maxw ,             "label") <- "Bin threshold"
+
 
   return(dtc)
 

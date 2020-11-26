@@ -1,25 +1,34 @@
-#' Lorenz curve
-#'
-#' Compute the Lorenz curve for microdata.
-#'
+#' md_compute_lorenz
 #' Given a vector of weights and welfare, this functions computes the
-#' Lorenz curve.
-#'
-#' @param welfare numeric: A vector of income or consumption values.
-#' @param weight numeric: A vector of weights.
-#' @param nbins numeric: number of points on the Lorenz curve.
-#'
-#' @examples
-#' wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' Lorenz curve
+#' @param welfare numeric: vector of welfare measures
+#' @param weight numeric: vector of weights
+#' @param nbins numeric: number of points on the Lorenz curve
 #'
 #' @return data.frame
-#' @keywords internal
-md_compute_lorenz <- function(welfare, weight, nbins = NULL) {
+#'
+#' #' @examples
+#' md_compute_lorenz(welfare = 1:2000, weight = 1:2000)
+#'
+#' data("md_ABC_2000_income")
+#' md_compute_lorenz(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
+#'
+#' @export
+#'
+
+md_compute_lorenz <- function(welfare,
+                              weight = NULL,
+                              nbins  = NULL) {
+
+  # Set all weights to 1 if none are supplied
+  if (is.null(weight)) {
+    weight <- rep(1, length(welfare))
+  }
 
   nobs <- length(weight)
+
   if (is.null(nbins)) {
-    # Define number of points on the Lorenz curve
-    if (nobs > 1000) nbins <- 100 else nbins <- 20
+    nbins <- ifelse(nobs > 1000, 100, 20) # Define number of points on the Lorenz curve
   }
 
   # Placeholder for Lorenz curve

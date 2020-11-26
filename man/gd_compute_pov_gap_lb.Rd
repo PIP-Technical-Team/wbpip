@@ -7,15 +7,15 @@
 gd_compute_pov_gap_lb(u, headcount, A, B, C)
 }
 \arguments{
-\item{u}{numeric: Normalized mean.}
+\item{u}{numeric: Normalized mean}
 
-\item{headcount}{numeric: Headcount.}
+\item{headcount}{numeric: Headcount}
 
-\item{A}{numeric: First regression parameter.}
+\item{A}{numeric: First regression parameter}
 
-\item{B}{numeric: Second regression parameter.}
+\item{B}{numeric: Second regression parameter}
 
-\item{C}{numeric: Third regression parameter.}
+\item{C}{numeric: Third regression parameter}
 }
 \value{
 numeric
@@ -23,4 +23,3 @@ numeric
 \description{
 Compute poverty gap for Lorenz Beta fit
 }
-\keyword{internal}

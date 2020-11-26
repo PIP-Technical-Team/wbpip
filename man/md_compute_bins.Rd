@@ -2,55 +2,63 @@
 % Please edit documentation in R/md_compute_bins.R
 \name{md_compute_bins}
 \alias{md_compute_bins}
-\title{Compute bins}
+\title{md_compute_bins}
 \usage{
-md_compute_bins(welfare, weight, nbins = 100, na.rm = FALSE, output = "simple")
+md_compute_bins(
+  welfare,
+  weight = NULL,
+  nbins = 100,
+  na.rm = FALSE,
+  output = "simple"
+)
 }
 \arguments{
-\item{welfare}{numeric: A vector of income or consumption values.}
+\item{welfare}{numeric: vector of welfare measures}
 
-\item{weight}{numeric: A vector of weights.}
+\item{weight}{numeric: vector of weights}
 
-\item{nbins}{numeric: Number of bins.}
+\item{nbins}{numeric: number of bins}
 
 \item{na.rm}{logical: If TRUE it will exclude all NA in calculations}
 
 \item{output}{character: It has two varieties. 1) it could be a vector of
 variables to retain after calculations (variables available are "welfare",
-"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of
-two key words, "simple" or "full". \code{output = "simple"} is equivalent to
-\code{output = "bins"} (which is the default). \code{output = "full"} if equivalent
-to a vector with all the variables available, \code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
+"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of two
+key words, "simple" or "full". \code{output = "simple"} is equivalent to
+\code{output = "bins"} (which is the default). \code{output = "full"} if equivalent to
+a vector with all the variables available,
+\code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
 }
 \value{
-data.table
+dataframe in data.table format
 }
 \description{
-Compute bins for microdata.
-}
-\details{
 Compute percentiles (bins) accumulating by population rather than by welfare.
-It differs from the common way to calculate percentiles because the
-categories are defined by the ideal size of the quantile rather than by the
-cutpoints.
-
-This is why the function is called \code{bins} rather than quantiles because it
+It differs from the common way to calculate percentiles because the categories
+are defined by the ideal size of the quantile rather than by the cutpoints.
+This is way we call the function \code{bins} rather than quantiles because it
 actually divides the population in equal bins sorted by the welfare aggregate
-rather than calculate proper percentiles.
-
-This function however, yields less unequally sized categories when 1) the
-cutpoint value is frequent, 2) when using weights high variance or 3) when
-the number of observations in the dataset is not a product of the number of
-quantiles. Keep in mind that it may not work properly on small datasets or if
-calculated for small groups. If the number of observations in the dataset or
-group is small, tabulate afterwards to check the results. you may use \verb{tp <- df[, sum(weight)]; df[, round((sum(weight)/(tp))*100, digits = 2) , by = bins]}.
+rather than calculate proper percentiles. This function however,  yields less
+unequally sized categories when 1) the cutpoint value is frequent, 2) when
+using weights high variance or 3) when the number of observations in the
+dataset is not a product of the number of quantiles.
+Keep in mind that it may not work properly
+on small datasets or if calculated for small groups. If the number of
+observations in the dataset or group is small, tabulate afterwards to
+check the results. you may use
+\verb{tp <- df[, sum(weight)]; df[, round((sum(weight)/(tp))*100, digits = 2) , by = bins]}.
 }
 \examples{
-wbpip:::md_compute_bins(welfare = 1:2000, weight = rep(1, 2000))
-wbpip:::md_compute_bins(welfare = 1:2000, weight = rep(1, 2000),
- output = 'full')
-wbpip:::md_compute_bins(welfare = 1:2000, weight = rep(1, 2000),
-  output = c('cum_pop', 'cum_prop_pop'))
+data("md_ABC_2010_income")
+df <- md_ABC_2000_income
+md_compute_bins(df$welfare,
+                df$weight)[]
 
+md_compute_bins(df$welfare,
+                df$weight,
+                output = "full")[]
+
+md_compute_bins(df$welfare,
+                df$weight,
+                output = c("cum_pop", "cum_prop_pop"))[]
 }
-\keyword{internal}

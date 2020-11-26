@@ -4,31 +4,39 @@
 \alias{md_compute_poverty_stats}
 \title{Compute Poverty Statistics}
 \usage{
-md_compute_poverty_stats(welfare, weight, povline_lcu)
+md_compute_poverty_stats(welfare, povline_lcu, weight = NULL)
 }
 \arguments{
-\item{welfare}{numeric: A vector of income or consumption values.}
+\item{welfare}{numeric: A vector of income or consumption values}
 
-\item{weight}{numeric: A vector of weights.}
+\item{povline_lcu}{numeric: Poverty line in Local Currency Unit (LCU)}
 
-\item{povline_lcu}{numeric: Poverty line in Local Currency Unit (LCU).}
+\item{weight}{numeric: A vector of weights, optional, a vector of 1s if not specified.}
 }
 \value{
-list
+List object containing poverty headcount, poverty gap, poverty severity and the watts index
 }
 \description{
-Compute poverty statictics for microdata.
+Compute the poverty headcount, poverty gap, poverty severity and
+the watts index for a micro data set.
 }
 \details{
 Given a vector of consumption or income values and their respective weights
 \code{md_compute_poverty_stats()} computes poverty headcount, poverty gap,
 poverty severity and the watts index.
+
+Negative values are dropped from computations.
 }
 \examples{
-wbpip:::md_compute_poverty_stats(
-  welfare = 1:2000,
-  weight = rep(1, 2000),
-  povline_lcu = 10)
+# simple example (no weights)
+md_compute_poverty_stats(welfare = 1:100, povline_lcu = 10)
+
+# with weights
+md_compute_poverty_stats(welfare = 1:100, povline_lcu = 10, weight = 1:100)
+
+# using a micro data set
+data("md_ABC_2000_income")
+md_compute_poverty_stats(md_ABC_2000_income$welfare, 2500000, md_ABC_2000_income$weight)
+
 
 }
-\keyword{internal}

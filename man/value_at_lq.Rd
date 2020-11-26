@@ -7,13 +7,13 @@
 value_at_lq(x, A, B, C)
 }
 \arguments{
-\item{x}{numeric: Point on curve.}
+\item{x}{numeric: point on curve}
 
-\item{A}{numeric: First Lorenz curve coefficient.}
+\item{A}{numeric vector: First lorenz curve coefficient}
 
-\item{B}{numeric: Second Lorenz curve coefficient.}
+\item{B}{numeric vector: Second lorenz curve coefficient}
 
-\item{C}{numeric: Third Lorenz curve coefficient.}
+\item{C}{numeric vector: Third lorenz curve coefficient}
 }
 \value{
 numeric
@@ -22,4 +22,3 @@ numeric
 \code{value_at_lq()}solves for quadratic Lorenz curves with c = 1
 General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 }
-\keyword{internal}

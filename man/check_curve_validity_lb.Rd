@@ -2,31 +2,28 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{check_curve_validity_lb}
 \alias{check_curve_validity_lb}
-\title{Check validity of Lorenz beta fit}
+\title{Check validity of lorenz beta fit}
 \usage{
 check_curve_validity_lb(headcount, A, B, C)
 }
 \arguments{
-\item{headcount}{numeric: Poverty rate computed by
-gd_compute_poverty_stats_lb().}
+\item{headcount}{numeric: Poverty rate computed by gd_compute_poverty_stats_lb()}
 
-\item{A}{numeric: First regression coefficient.}
+\item{A}{numeric: First regression coefficient}
 
-\item{B}{numeric: Second regression coefficient.}
+\item{B}{numeric: Second regression coefficient}
 
-\item{C}{numeric: Third regression coefficient.}
+\item{C}{numeric: Third regression coefficient}
 }
 \value{
 list
 }
 \description{
-\code{check_curve_validity_lb()} checks the validity of the Lorenz beta fit
+\code{check_curve_validity_lb()} checks the validity of the lorenz beta fit
 }
-\references{
-Datt, G. 1998. "\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{Computational Tools For Poverty Measurement And Analysis}". FCND
-Discussion Paper 50. World Bank, Washington, DC.
+\seealso{
+\href{https://econpapers.repec.org/article/ecmemetrp/v_3a48_3ay_3a1980_3ai_3a2_3ap_3a437-46.htm}{Original Beta Lorenz curve paper}
 
-Kakwani, N. 1980. "\href{https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46}{On a Class of Poverty Measures}".
-\emph{Econometrica 48} (2): 437-46.
+\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{
+Computational Tools For Poverty Measurement And Analysis}
 }
-\keyword{internal}

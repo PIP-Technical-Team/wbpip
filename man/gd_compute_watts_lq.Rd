@@ -9,17 +9,17 @@ gd_compute_watts_lq(headcount, mu, povline, dd, A, B, C)
 \arguments{
 \item{headcount}{numeric: headcount index}
 
-\item{mu}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{mu}{numeric}
 
 \item{povline}{numeric: poverty line}
 
-\item{dd}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{dd}{numeric}
 
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric vector: lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric vector: lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric vector: lorenz curve coefficient}
 }
 \value{
 numeric
@@ -32,4 +32,3 @@ gaps, as measured by the log of the ratio of the poverty line to income,
 where the mean is formed over the whole population, counting the nonpoor as
 having a zero poverty gap.
 }
-\keyword{internal}

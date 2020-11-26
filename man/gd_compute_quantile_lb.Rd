@@ -7,18 +7,17 @@
 gd_compute_quantile_lb(A, B, C, n_quantile = 10)
 }
 \arguments{
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric vector: lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric vector: lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric vector: lorenz curve coefficient}
 
-\item{n_quantile}{numeric: Number of quantiles to return.}
+\item{n_quantile}{numeric: Number of quantiles to return}
 }
 \value{
 numeric
 }
 \description{
-\code{gd_compute_quantile_lb()} computes quantiles from a Lorenz beta fit.
+\code{gd_compute_quantile_lb()} computes quantiles from a lorenz beta fit.
 }
-\keyword{internal}

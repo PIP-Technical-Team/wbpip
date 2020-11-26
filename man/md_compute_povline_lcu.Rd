@@ -7,7 +7,7 @@
 md_compute_povline_lcu(
   welfare,
   povline,
-  weight,
+  weight = NULL,
   popshare,
   requested_mean,
   data_mean
@@ -16,21 +16,20 @@ md_compute_povline_lcu(
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{povline}{numeric: Poverty line in international dollars (PPP).}
+\item{povline}{numeric: Poverty line in internationl dollars (PPP)}
 
-\item{weight}{numeric: A vector of weights.}
+\item{weight}{numeric: A vector of weights, optional.}
 
-\item{popshare}{numeric: Share of population for which the corresponding.
-quantile is desired. Default .5 (i.e., weighted median).}
+\item{popshare}{numeric: Share of population for which the corresponding
+quantile is desired. Default .5 (i.e., weighted median)}
 
-\item{requested_mean}{numeric: requested mean (adjusted with PPPs).}
+\item{requested_mean}{numeric: requested mean (adjusted with PPPs)}
 
-\item{data_mean}{numeric: Data mean.}
+\item{data_mean}{numeric: Data mean}
 }
 \value{
 list
 }
 \description{
-Compute the LCU poverty line for microdata.
+Compute poverty line in Local Currency Unit (LCU)
 }
-\keyword{internal}

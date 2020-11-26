@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{create_functional_form_lb}
 \alias{create_functional_form_lb}
-\title{create_functional_form_lb}
+\title{Prepares data for lorenz beta regression}
 \usage{
 create_functional_form_lb(welfare, population)
 }
@@ -15,15 +15,10 @@ create_functional_form_lb(welfare, population)
 data.frame
 }
 \description{
-Prepare data for Lorenz beta regression.
+Prepares data for regression. The last observation of (p,l), which by construction has the value
+(1, 1), is excluded since the functional form for the Lorenz curve already
+forces it to pass through the point (1, 1).
 }
-\details{
-Prepares data for regression. The last observation of (p,l), which by
-construction has the value (1, 1), is excluded since the functional form for
-the Lorenz curve already forces it to pass through the point (1, 1).
+\seealso{
+\href{https://econpapers.repec.org/article/ecmemetrp/v_3a48_3ay_3a1980_3ai_3a2_3ap_3a437-46.htm}{Original Beta Lorenz curve paper}
 }
-\references{
-Kakwani, N. 1980. "\href{https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46}{On a Class of Poverty Measures}".
-\emph{Econometrica 48} (2): 437-46.
-}
-\keyword{internal}

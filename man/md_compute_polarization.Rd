@@ -4,29 +4,32 @@
 \alias{md_compute_polarization}
 \title{Wolfson polarization index}
 \usage{
-md_compute_polarization(welfare, weight, gini, weighted_median)
+md_compute_polarization(welfare, weight = NULL, gini, weighted_median)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights.}
+\item{weight}{numeric: A vector of weights, optional.}
 
 \item{gini}{numeric: Gini. Output of \code{\link[=md_compute_gini]{md_compute_gini()}}.}
 
 \item{weighted_median}{numeric: Median. Output of \code{\link[=md_compute_quantiles]{md_compute_quantiles()}}.}
 }
-\value{
-numeric
-}
 \description{
 Compute the Wolfson polarization index for microdata.
 }
 \examples{
-wbpip:::md_compute_polarization(
-  welfare = 1:2000,
-  weight = rep(1, 2000),
-  gini = 0.4,
-  weighted_median = 1000)
+# Simple example
+md_compute_polarization(welfare = 1:10)
+
+# Include weights
+md_compute_polarization(welfare = 1:10, weight = 1:10)
+
+# Microdata example
+data("md_ABC_2000_income")
+md_compute_polarization(
+  md_ABC_2000_income$welfare,
+  md_ABC_2000_income$weight)
 
 }
 \references{

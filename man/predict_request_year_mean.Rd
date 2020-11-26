@@ -69,7 +69,7 @@ predict_request_year_mean(
 
 }
 \references{
-Prydz, E. B., D. Jolliffe, C. Lakner, D. G. Mahler, P. Sangraula. 2019.
+Prydz, E.B., D. Jolliffe, C. Lakner, D.G. Mahler, P. Sangraula. 2019.
 "\href{http://documents1.worldbank.org/curated/en/664751553100573765/pdf/135460-WP-PUBLIC-Disclosed-3-21-2019.pdf}{National Accounts Data used in Global Poverty Measurement}".
 Global Poverty Monitoring Technical Note 8.
 World Bank, Washington, DC.

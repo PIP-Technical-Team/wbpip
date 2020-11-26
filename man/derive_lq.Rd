@@ -7,27 +7,24 @@
 derive_lq(x, A, B, C)
 }
 \arguments{
-\item{x}{numeric: Point on curve.}
+\item{x}{numeric: point on curve}
 
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric vector: lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric vector: lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric vector: lorenz curve coefficient}
 }
 \value{
 numeric
 }
 \description{
 \code{derive_lq()} returns the first derivative of the quadratic Lorenz curves
-with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0. This
-function implements computes the derivative of equation (6b) in the original
-Lorenz Quadratic paper: \deqn{-(B / 2) - (\beta + 2 \alpha x) / (4
-\sqrt(\alpha x^2 + \beta x + e^2)}
+with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0.
+This function implements computes the derivative of equation (6b) in the
+original Lorenz Quadratic paper:
+\deqn{-(B / 2) - (\beta + 2 \alpha x) / (4 \sqrt(\alpha x^2 + \beta x + e^2)}
 }
-\references{
-Villasenor, J., B. C. Arnold. 1989.
-"\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Elliptical Lorenz curves}".
-\emph{Journal of Econometrics 40} (2): 327-338.
+\seealso{
+\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 }
-\keyword{internal}

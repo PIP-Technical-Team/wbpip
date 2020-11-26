@@ -2,24 +2,23 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{gd_compute_mld_lb}
 \alias{gd_compute_mld_lb}
-\title{Computes MLD from Lorenz beta fit}
+\title{Computes MLD from lorenz beta fit}
 \usage{
 gd_compute_mld_lb(dd, A, B, C)
 }
 \arguments{
-\item{dd}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{dd}{numeric}
 
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric vector: lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric vector: lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric vector: lorenz curve coefficient}
 }
 \value{
 numeric
 }
 \description{
 \code{gd_compute_mld_lb()} computes the Mean Log deviation (MLD) from a Lorenz
-beta fit.
+beta fit
 }
-\keyword{internal}

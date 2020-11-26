@@ -7,16 +7,15 @@
 gd_select_lorenz(lq, lb)
 }
 \arguments{
-\item{lq}{list: Results from Lorenz Quadratic functional form. output of
-\code{gd_compute_pip_stats_lq()}.}
+\item{lq}{list: Results from Lorenz Quadratic functional form.
+output of \code{gd_compute_pip_stats_lq()}}
 
-\item{lb}{list: Results from Lorenz Beta functional form. output of
-\code{gd_compute_pip_stats_lb()}.}
+\item{lb}{list: Results from Lorenz Beta functional form.
+output of \code{gd_compute_pip_stats_lb()}}
 }
 \value{
 list
 }
 \description{
-Select best Lorenz fit and adjust the returned statistics if needed.
+Select best Lorenz fit and adjust the returned statistics if needed
 }
-\keyword{internal}

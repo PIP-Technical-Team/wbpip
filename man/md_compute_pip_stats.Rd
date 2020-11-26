@@ -2,7 +2,7 @@
 % Please edit documentation in R/md_compute_pip_stats.R
 \name{md_compute_pip_stats}
 \alias{md_compute_pip_stats}
-\title{Compute default PIP statistics}
+\title{Compute default PIP statistics from microdata}
 \usage{
 md_compute_pip_stats(
   welfare,
@@ -15,9 +15,9 @@ md_compute_pip_stats(
 )
 }
 \arguments{
-\item{welfare}{numeric: A vector of income or consumption values.}
+\item{welfare}{numeric: A vector of income or consumption values}
 
-\item{povline}{numeric: Monthly poverty line in international dollars.}
+\item{povline}{numeric: Monthly poverty line in international dollars}
 
 \item{population}{numeric: A vector of population weights, optional, a vector
 of 1s if not specified.}
@@ -25,16 +25,15 @@ of 1s if not specified.}
 \item{requested_mean}{numeric: Welfare mean in international dollars}
 
 \item{popshare}{numeric: Share of population for which the corresponding
-quantile is desired. Default .5 (i.e., weighted median).}
+quantile is desired. Default .5 (i.e., weighted median)}
 
-\item{default_ppp}{numeric: Default purchasing power parity.}
+\item{default_ppp}{numeric: Default purchasing power parity}
 
-\item{ppp}{numeric: PPP requested by user.}
+\item{ppp}{numeric: PPP requested by user}
 }
 \value{
 list
 }
 \description{
-Compute poverty and distributional statistics for microdata.
+Compute poverty and distributional statistics from microdata records
 }
-\keyword{internal}

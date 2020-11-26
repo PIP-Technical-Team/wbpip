@@ -2,25 +2,24 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{gd_compute_poverty_stats_lb}
 \alias{gd_compute_poverty_stats_lb}
-\title{Computes poverty stats from Lorenz beta fit}
+\title{Computes poverty stats from lorenz beta fit}
 \usage{
 gd_compute_poverty_stats_lb(mean, povline, A, B, C)
 }
 \arguments{
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric: welfare mean}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line}
 
-\item{A}{numeric: First regression coefficient.}
+\item{A}{numeric: First regression coefficient}
 
-\item{B}{numeric: Second regression coefficient.}
+\item{B}{numeric: Second regression coefficient}
 
-\item{C}{numeric: Third regression coefficient.}
+\item{C}{numeric: Third regression coefficient}
 }
 \value{
 list
 }
 \description{
-Computes poverty stats from Lorenz beta fit
+Computes poverty stats from lorenz beta fit
 }
-\keyword{internal}

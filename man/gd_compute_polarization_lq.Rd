@@ -7,17 +7,17 @@
 gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
 }
 \arguments{
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric: Welfare mean}
 
-\item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{p0}{numeric: To document}
 
-\item{dcm}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{dcm}{numeric: To document}
 
-\item{A}{numeric: Lorenz curve coefficient.}
+\item{A}{numeric: Lorenz curve coefficient}
 
-\item{B}{numeric: Lorenz curve coefficient.}
+\item{B}{numeric: Lorenz curve coefficient}
 
-\item{C}{numeric: Lorenz curve coefficient.}
+\item{C}{numeric: Lorenz curve coefficient}
 }
 \value{
 numeric
@@ -25,4 +25,3 @@ numeric
 \description{
 Used for grouped data computations
 }
-\keyword{internal}

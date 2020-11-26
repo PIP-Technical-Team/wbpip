@@ -7,24 +7,22 @@
 create_functional_form_lq(welfare, population)
 }
 \arguments{
-\item{welfare}{numeric: Welfare vector from empirical Lorenz curve.}
+\item{welfare}{numeric: Welfare vector from empirical Lorenz curve}
 
-\item{population}{numeric: Population vector from empirical Lorenz curve.}
+\item{population}{numeric: Population vector from empirical Lorenz curve}
 }
 \value{
 data.frame
 }
 \description{
-Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and (P-L). The last
-observation of (p,l), which by construction has the value (1, 1), is excluded
-since the functional form for the Lorenz curve already forces it to pass
-through the point (1, 1). Equation 15 in Lorenz Quadratic original paper.
+Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and
+(P-L). The last observation of (p,l), which by construction has the value
+(1, 1), is excluded since the functional form for the Lorenz curve already
+forces it to pass through the point (1, 1). Equation 15 in Lorenz Quadratic
+original paper.
 }
-\references{
-Krause, M. 2013. "\href{https://doi.org/10.1016/j.jeconom.2013.01.001}{Corrigendum to Elliptical Lorenz curves}". \emph{Journal of
-Econometrics 174} (1): 44.
+\seealso{
+\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Original quadratic Lorenz curve paper}
 
-Villasenor, J., B. C. Arnold. 1989. "\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Elliptical Lorenz curves}".
-\emph{Journal of Econometrics 40} (2): 327-338.
+\href{https://www.sciencedirect.com/science/article/abs/pii/S0304407613000158?via\%3Dihub}{Corrigendum to Elliptical Lorenz Curves}
 }
-\keyword{internal}

@@ -3,7 +3,7 @@
 #' Compute the Wolfson polarization index for microdata.
 #'
 #' @param welfare numeric: A vector of income or consumption values.
-#' @param weight numeric: A vector of weights.
+#' @param weight numeric: A vector of weights, optional.
 #' @param gini numeric: Gini. Output of [md_compute_gini()].
 #' @param weighted_median numeric: Median. Output of [md_compute_quantiles()].
 #'
@@ -14,16 +14,29 @@
 #' World Bank, Washington, DC.
 #'
 #' @examples
-#' wbpip:::md_compute_polarization(
-#'   welfare = 1:2000,
-#'   weight = rep(1, 2000),
-#'   gini = 0.4,
-#'   weighted_median = 1000)
+#' # Simple example
+#' md_compute_polarization(welfare = 1:10)
 #'
-#' @return numeric
+#' # Include weights
+#' md_compute_polarization(welfare = 1:10, weight = 1:10)
+#'
+#' # Microdata example
+#' data("md_ABC_2000_income")
+#' md_compute_polarization(
+#'   md_ABC_2000_income$welfare,
+#'   md_ABC_2000_income$weight)
+#'
 #' @keywords internal
-md_compute_polarization <- function(welfare, weight, gini,
-                                    weighted_median) {
+md_compute_polarization <- function(welfare, weight = NULL,
+                                    gini, weighted_median) {
+
+  # Set all weights to 1 if none are supplied
+  if (is.null(weight)) weight <- rep(1, length(welfare))
+
+  # Make sure data is sorted
+  ordy    <- order(welfare)   # order of welfare
+  welfare <- welfare[ordy]    # order weight
+  weight  <- weight[ordy]     # order welfare
 
   # Calculate weighted mean
   weighted_mean <- stats::weighted.mean(x = welfare, w = weight)
@@ -31,7 +44,7 @@ md_compute_polarization <- function(welfare, weight, gini,
   # Calculate poverty stats (for headcount and poverty gap)
   pov_stats <- md_compute_poverty_stats(welfare = welfare,
                                         weight = weight,
-                                        povline_lcu = weighted_median)
+                                        povline = weighted_median)
 
   # Calculate mean for the bottom 50 %
   mean_below50 <- weighted_median * (1 - pov_stats$poverty_gap / pov_stats$headcount)
