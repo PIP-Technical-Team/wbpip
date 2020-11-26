@@ -4,7 +4,7 @@
 \alias{md_compute_mld}
 \title{Mean Log Deviation}
 \usage{
-md_compute_mld(welfare, weight = NULL)
+md_compute_mld(welfare, weight)
 }
 \arguments{
 \item{welfare}{numeric: vector of welfare measures}
@@ -19,7 +19,7 @@ Given a vector of weights and welfare, this functions computes the
 Mean Log Deviation (MLD).
 }
 \examples{
-wbpip:::md_compute_mld(welfare = 1:2000)
+wbpip:::md_compute_mld(welfare = 1:2000, weight = rep(1, 2000))
 
 }
 \keyword{internal}

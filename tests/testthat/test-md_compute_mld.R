@@ -33,7 +33,9 @@ test_that("md_compute_mld() returns expected results for perfect inequality", {
 
 test_that("md_compute_mld() values change in the expected direction", {
   # Compare MLD values for two known distributions
-  lower_expected_mld  <- md_compute_mld(welfare = c(rep(20, 999), 10000))  # Less inequal
-  higher_expected_mld <- md_compute_mld(welfare = c(rep(20, 999), 100000)) # More inequal
+  lower_expected_mld  <- md_compute_mld(welfare = c(rep(20, 999), 10000),
+                                        weight  = rep(1, 1000))  # Less inequal
+  higher_expected_mld <- md_compute_mld(welfare = c(rep(20, 999), 100000),
+                                        weight  = rep(1, 1000)) # More inequal
   expect_true(lower_expected_mld < higher_expected_mld)
 })

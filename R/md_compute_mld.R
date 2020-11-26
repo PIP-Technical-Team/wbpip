@@ -9,10 +9,10 @@
 #' @return numeric
 #'
 #' @examples
-#' wbpip:::md_compute_mld(welfare = 1:2000)
+#' wbpip:::md_compute_mld(welfare = 1:2000, weight = rep(1, 2000))
 #'
 #' @keywords internal
-md_compute_mld <- function(welfare, weight = NULL) {
+md_compute_mld <- function(welfare, weight) {
 
   # Compute MLD
   weighted_welfare     <- weight * welfare
