@@ -23,9 +23,6 @@ lorenz_welfare <- c(5.824760527229386e-05,
 
 test_that("create_functional_form_lq works as expected", {
 
-  lp <- lorenz_pop[-10]
-  lw <- lorenz_welfare[-10]
-
   y <- c(5.8244212488773904e-05,
          0.00060366455931185,
          0.0037805319592489148,
@@ -65,8 +62,8 @@ test_that("create_functional_form_lq works as expected", {
           0.21933329830711679,
           0.22136883758805431)
 
-  out <- create_functional_form_lq(welfare = lw,
-                                   population = lp)
+  out <- create_functional_form_lq(welfare = lorenz_welfare,
+                                   population = lorenz_pop)
 
   expect_true(is.data.frame(out))
   expect_equal(dim(out), c(9, 4))
