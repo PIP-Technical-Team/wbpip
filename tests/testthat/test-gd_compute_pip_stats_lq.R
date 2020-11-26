@@ -23,9 +23,6 @@ lorenz_welfare <- c(5.824760527229386e-05,
 
 test_that("create_functional_form_lq works as expected", {
 
-  lp <- lorenz_pop[-10]
-  lw <- lorenz_welfare[-10]
-
   y <- c(5.8244212488773904e-05,
          0.00060366455931185,
          0.0037805319592489148,

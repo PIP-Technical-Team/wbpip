@@ -4,27 +4,28 @@
 \alias{md_compute_dist_stats}
 \title{Compute distributional statistics}
 \usage{
-md_compute_dist_stats(welfare, weight = NULL, nbins = NULL, n_quantile = 10)
+md_compute_dist_stats(welfare, weight, nbins = NULL, n_quantile = 10)
 }
 \arguments{
-\item{welfare}{numeric: vector of welfare measures}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: vector of weights}
+\item{weight}{numeric: A vector of weights.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve}
+\item{nbins}{numeric: number of points on the Lorenz curve.}
 
-\item{n_quantile}{numeric: Number of quantiles for which share of total income
-is desired. It can't be larger that the total number of percentiles in the
-Lorenz curve provided by the user.  default is 10.}
+\item{n_quantile}{numeric: Number of quantiles for which share of total
+income is desired. It can't be larger that the total number of percentiles
+in the Lorenz curve provided by the user. Default is 10.}
 }
 \value{
 data.frame
-
-#' @examples#'
-data("md_ABC_2000_income")
-md_compute_dist_stats(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
 }
 \description{
-Given a vector of weights and welfare, this functions computes the
-various distributional statistics
+Given a vector of weights and welfare, this functions computes the various
+distributional statistics.
 }
+\examples{
+wbpip:::md_compute_dist_stats(welfare = 1:2000, weight = rep(1, 2000))
+
+}
+\keyword{internal}

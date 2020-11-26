@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_pip_stats.R
 \name{compute_pip_stats}
 \alias{compute_pip_stats}
-\title{Compute default PIP statistics from microdata}
+\title{Compute default PIP statistics (microdata)}
 \usage{
 compute_pip_stats(
   welfare,
@@ -12,7 +12,7 @@ compute_pip_stats(
   popshare = NULL,
   default_ppp = 1,
   ppp = NULL,
-  distribution_type = c("microdata", "group", "aggregate", "imputed")
+  distribution_type = c("micro", "group", "aggregate", "imputed")
 )
 }
 \arguments{
@@ -32,12 +32,12 @@ quantile is desired. Default .5 (i.e., weighted median)}
 
 \item{ppp}{numeric: PPP requested by user}
 
-\item{distribution_type}{character: The type of data to be provided as imput
-to the function.}
+\item{distribution_type}{character: Type of distribution, either micro,
+group, aggregate or imputed.}
 }
 \value{
 list
 }
 \description{
-Compute poverty and distributional statistics
+Compute poverty and distributional statistics for microdata.
 }

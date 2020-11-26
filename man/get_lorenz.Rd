@@ -2,31 +2,38 @@
 % Please edit documentation in R/get_lorenz.R
 \name{get_lorenz}
 \alias{get_lorenz}
-\title{get_lorenz}
+\title{Lorenz curve}
 \usage{
-get_lorenz(.data, welfare, weight, type = "microdata", nbins = NULL)
+get_lorenz(
+  .data,
+  welfare,
+  weight,
+  distribution_type = c("micro", "group", "aggregate", "imputed"),
+  nbins = NULL
+)
 }
 \arguments{
-\item{.data}{Household survey dataframe with at least a welfare variable}
+\item{.data}{Household survey data frame with at least a welfare variable.}
 
-\item{welfare}{numeric: vector of welfare measures}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: vector of weights}
+\item{weight}{numeric: A vector of weights.}
 
-\item{type}{character: either 'microdata' or 'groupdata'. Default 'microdata'}
+\item{distribution_type}{character: Type of distribution, either micro,
+group, aggregate or imputed.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve}
+\item{nbins}{numeric: number of points on the Lorenz curve.}
 }
 \value{
 data.frame
 }
 \description{
-Use function \code{md_compute_lorenz()} to calculate quantiles. In addition, this
-function makes sure data is properly cleaned using \code{md_clean_data}
+Calculate points on the Lorenz curve. \strong{TO BE DOCUMENTED}.
 }
 \examples{
 data("md_ABC_2000_income")
 df     <- md_ABC_2000_income
 lorenz <- get_lorenz(df, welfare, weight)
 str(lorenz)
+
 }

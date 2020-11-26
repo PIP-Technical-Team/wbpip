@@ -7,17 +7,17 @@
 gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
 }
 \arguments{
-\item{u}{numeric: Mean?}
+\item{u}{numeric: Mean? \strong{TO BE DOCUMENTED}.}
 
-\item{headcount}{numeric: Headcount}
+\item{headcount}{numeric: Headcount.}
 
-\item{pov_gap}{numeric: Poverty gap}
+\item{pov_gap}{numeric: Poverty gap.}
 
-\item{A}{numeric: First regression parameter}
+\item{A}{numeric: First regression parameter.}
 
-\item{B}{numeric: Second regression parameter}
+\item{B}{numeric: Second regression parameter.}
 
-\item{C}{numeric: Third regression parameter}
+\item{C}{numeric: Third regression parameter.}
 }
 \value{
 numeric
@@ -25,3 +25,4 @@ numeric
 \description{
 Compute poverty severity for Lorenz Beta fit
 }
+\keyword{internal}

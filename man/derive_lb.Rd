@@ -7,17 +7,18 @@
 derive_lb(x, A, B, C)
 }
 \arguments{
-\item{x}{numeric: point on curve}
+\item{x}{numeric: Point on curve.}
 
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{A}{numeric: Lorenz curve coefficient.}
 
-\item{B}{numeric vector: lorenz curve coefficient}
+\item{B}{numeric: Lorenz curve coefficient.}
 
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{C}{numeric: Lorenz curve coefficient.}
 }
 \value{
 numeric
 }
 \description{
-\code{derive_lb()} returns the first derivative of the beta Lorenz curves
+\code{derive_lb()} returns the first derivative of a beta Lorenz curve.
 }
+\keyword{internal}

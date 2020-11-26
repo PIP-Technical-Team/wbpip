@@ -32,7 +32,7 @@ if (getRversion() >= '2.15.1')
 #' @return numeric
 #' @seealso [deflate_welfare_mean()] [fill_gaps()]
 #' @references
-#' Prydz, E.B., D. Jolliffe, C. Lakner, D.G. Mahler, P. Sangraula. 2019.
+#' Prydz, E. B., D. Jolliffe, C. Lakner, D. G. Mahler, P. Sangraula. 2019.
 #' "[National Accounts Data used in Global Poverty Measurement](http://documents1.worldbank.org/curated/en/664751553100573765/pdf/135460-WP-PUBLIC-Disclosed-3-21-2019.pdf)".
 #' Global Poverty Monitoring Technical Note 8.
 #' World Bank, Washington, DC.

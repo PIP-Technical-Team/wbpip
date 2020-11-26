@@ -1,23 +1,19 @@
-
-context("infer_poverty: uniform distribution of welfare")
-test_that("multiplication works", {
+test_that("md_infer_poverty_line() works for uniform distribution of welfare", {
   set.seed(10010)
   uv   <- 5
   ps   <- runif(1)
   size <- 1001
-  expect_equal(md_infer_poverty_line(rep(uv, size),
+  expect_equal(md_infer_poverty_line(welfare = rep(uv, size),
+                                     weight = rep(1, 1000),
                                      popshare = ps),
                uv)
-
   expect_equal(md_infer_poverty_line(rep(uv, size),
                                      sample(1:500, size, replace = TRUE),
                                      popshare = ps),
                uv)
-
 })
 
-context("infer_poverty: works in any point of the distribution")
-test_that("2 digits of tolerance", {
+test_that("md_infer_poverty_line() works in any point of the distribution", {
 
   fgt <- function(welfare,
                   povline,
@@ -32,7 +28,6 @@ test_that("2 digits of tolerance", {
 
     return(x)
   }
-
 
   set.seed(10010)
   tl     <- 2 # tolerance

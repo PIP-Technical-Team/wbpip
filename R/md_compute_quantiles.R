@@ -1,4 +1,6 @@
-#' md_compute_quantiles
+#' Compute quantiles
+#'
+#' Compute quantiles for microdata.
 #'
 #' Calculate share of total welfare in each quantile from Lorenz curve and
 #' the its corresponding percentile. That is, it requires a vector with the
@@ -13,16 +15,14 @@
 #' Lorenz curve provided by the user.  default is 10.
 #' @param percentile numeric: Monetary value each percentile.
 #'
-#' @return list
-#' @export
-#'
 #' @examples
-#' fpath  <- system.file("testdata", "lorenz.csv", package="wbpip")
-#' lz     <- read.csv(fpath,
-#'                    col.names = c("y", "lorenzW", "lorenzY"))
-#' md_compute_quantiles(lwelfare   = lz$lorenzY,
-#'                      lweight    = lz$lorenzW,
-#'                      percentile = lz$y)
+#' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' wbpip:::md_compute_quantiles(lwelfare   = lz$welfare,
+#'                      lweight    = lz$lorenz_weight,
+#'                      percentile = lz$lorenz_welfare,
+#'                      n_quantile = 10)
+#' @return list
+#' @keywords internal
 md_compute_quantiles <- function(lwelfare,
                                  lweight,
                                  percentile,

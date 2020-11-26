@@ -36,7 +36,7 @@ We need to clean the datasets to ensure that there aren't any missing values, an
 # Clean datasets 
 dl <- list(md_ABC_2000_income, md_ABC_2010_income)
 dl <- lapply(dl, function(df) {
-  md_clean_data(df, welfare = 'welfare', weight = 'weight')$data
+  wbpip:::md_clean_data(df, welfare = 'welfare', weight = 'weight')$data
 })
 ```
 
@@ -59,7 +59,7 @@ These survey means might look like they are very large, but that is because the 
 svy_mean_lcu <- svy_mean_lcu / 365 
 ```
 
-## Convert to PPP-adjusted dollars 
+## Convert to PPP-adjusted dollars
 
 In order for poverty statistics to be comparable over time and across countries we also need to make sure that the survey means are adjusted to take different price levels into account. This can be done by converting them into purchasing power parity (PPP) adjusted dollars.
 
@@ -95,7 +95,7 @@ print(pred_mean_ppp)
 
 We see that the two predicted survey means are identical. That is because all the supplied GDP values are moving in the same direction, implying that same-direction interpolation was used to compute the predicted means.
 
-## Calculate poverty statistics 
+## Calculate poverty statistics
 
 We now have all the information we need to calculate poverty statistics for the request year.
 
@@ -120,7 +120,7 @@ res <- fill_gaps(
   data = list(df0 = dl[[1]], df1 = dl[[2]]),
   predicted_request_mean = pred_mean_ppp,
   survey_year = c(2000, 2010), 
-  data_type = 'micro',
+  distribution_type = 'micro',
   poverty_line = 1.9) 
 ```
 

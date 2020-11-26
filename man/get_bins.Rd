@@ -2,42 +2,41 @@
 % Please edit documentation in R/get_bins.R
 \name{get_bins}
 \alias{get_bins}
-\title{get_bins}
+\title{Bins}
 \usage{
 get_bins(
   .data,
   welfare,
   weight,
-  type = "microdata",
+  distribution_type = c("micro", "group", "aggregate", "imputed"),
   nbins = 100,
   output = "simple"
 )
 }
 \arguments{
-\item{.data}{Household survey dataframe with at least a welfare variable}
+\item{.data}{Household survey data frame with at least a welfare variable.}
 
-\item{welfare}{numeric: vector of welfare measures}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: vector of weights}
+\item{weight}{numeric: A vector of weights.}
 
-\item{type}{character: either 'microdata' or 'groupdata'. Default 'microdata'}
+\item{distribution_type}{character: Type of distribution, either micro,
+group, aggregate or imputed.}
 
-\item{nbins}{numeric: number of bins}
+\item{nbins}{numeric: Number of bins.}
 
 \item{output}{character: It has two varieties. 1) it could be a vector of
 variables to retain after calculations (variables available are "welfare",
-"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of two
-key words, "simple" or "full". \code{output = "simple"} is equivalent to
-\code{output = "bins"} (which is the default). \code{output = "full"} if equivalent to
-a vector with all the variables available,
-\code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
+"weight", "cum_pop", "cum_prop_pop", and "bins"). 2) It could be a one of
+two key words, "simple" or "full". \code{output = "simple"} is equivalent to
+\code{output = "bins"} (which is the default). \code{output = "full"} if equivalent
+to a vector with all the variables available, \code{output = c("welfare", "weight", "cum_pop", "cum_prop_pop","bins")}}
 }
 \value{
 data.frame
 }
 \description{
-Use function \code{md_compute_bins()} to calculate quantiles. In addition, this
-function makes sure data is properly cleaned using \code{md_clean_data}
+Calculate bins. \strong{TO BE DOCUMENTED}.
 }
 \examples{
 data("md_ABC_2000_income")
@@ -48,4 +47,5 @@ str(bins)
 
 bins <- get_bins(df, welfare, weight, output = "full")
 str(bins)
+
 }

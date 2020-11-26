@@ -1,28 +1,18 @@
-#' md_compute_mld
+#' Mean Log Deviation
+#'
 #' Given a vector of weights and welfare, this functions computes the
-#' Mean Log Deviation (MLD)
+#' Mean Log Deviation (MLD).
+#'
 #' @param welfare numeric: vector of welfare measures
 #' @param weight numeric: vector of weights
 #'
 #' @return numeric
-#' @export
 #'
 #' @examples
-#' md_compute_mld(welfare = 1:2000, weight = 1:2000)
+#' wbpip:::md_compute_mld(welfare = 1:2000, weight = rep(1, 2000))
 #'
-#' data("md_ABC_2000_income")
-#' md_compute_mld(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
-
-md_compute_mld <- function(welfare,
-                           weight = NULL) {
-
-  # Set all weights to 1 if none are supplied
-  if (is.null(weight)) weight <- rep(1, length(welfare))
-
-  # Make sure data is sorted
-  ordy    <- order(welfare)   # order of welfare
-  welfare <- welfare[ordy]    #order weight
-  weight  <- weight[ordy]     # order welfare
+#' @keywords internal
+md_compute_mld <- function(welfare, weight) {
 
   # Compute MLD
   weighted_welfare     <- weight * welfare

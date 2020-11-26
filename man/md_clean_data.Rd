@@ -2,30 +2,37 @@
 % Please edit documentation in R/md_clean_data.R
 \name{md_clean_data}
 \alias{md_clean_data}
-\title{Check microdata to be used in PIP methods}
+\title{Clean data (micro)}
 \usage{
 md_clean_data(dt, ...)
 }
 \arguments{
-\item{dt}{Data frame.}
+\item{dt}{data.frame: A table with survey data.}
 
 \item{...}{list of arguments that correspond to specific variable names.
 Arguments available are in \code{getOption("wbpip.agrs_to_check")}.
 For instance, welfare = "income", weight = "peso'.}
 }
 \value{
-list of elements whose main object is a dataframe (in data.table format)
-with the necessary transformations to be included in PIP methods. Data is available in
-element \verb{$data}. The other elements provide the number of observations that were modified
-depending on test performed. The name of elements are in the form p_s, where p (or prefix)
-refers to the test and s (the suffix) refers to the name of the variable evaluated.
-Prefix are:
-
-\emph{nna:}  Number of NA in variable
-\emph{nng:}  Number of negative values
-\emph{ina:}  Index of obs with NA in variable
-\emph{ing:}  Index of obs with negative values
+list
 }
 \description{
-Check microdata to be used in PIP methods
+Clean microdata to be used in PIP methods.
 }
+\details{
+\code{md_clean_data()} returns a list of elements whose main object is a
+data.table with the necessary transformations to be included in PIP methods.
+Data is available in element \verb{$data}. The other elements provide the number
+of observations that were modified depending on test performed. The name of
+elements are in the form p_s, where p (or prefix) refers to the test and s
+(the suffix) refers to the name of the variable evaluated.
+
+Prefixes are:
+\itemize{
+\item nna: Number of NA in variable
+\item nng: Number of negative values
+\item ina: Index of obs with NA in variable
+\item ing: Index of obs with negative values
+}
+}
+\keyword{internal}

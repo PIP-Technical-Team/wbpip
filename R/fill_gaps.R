@@ -23,8 +23,9 @@ if (getRversion() >= '2.15.1')
 #' @param predicted_request_mean numeric: A vector with one or two survey means.
 #'   See details.
 #' @param survey_year numeric: A vector with one or two survey years.
-#' @param data_type character: Type of data, either micro or grouped.
 #' @param poverty_line numeric: Daily poverty line in international dollars.
+#' @param distribution_type character: Type of distribution, either micro,
+#'   group, aggregate or imputed.
 #'
 #' @seealso [deflate_welfare_mean()] [predict_request_year_mean()]
 #'
@@ -33,7 +34,7 @@ if (getRversion() >= '2.15.1')
 #' data('md_ABC_2000_income')
 #' data('md_ABC_2010_income')
 #' md_ABC_2010_income <-
-#'    md_clean_data(md_ABC_2010_income,
+#'    wbpip:::md_clean_data(md_ABC_2010_income,
 #'      welfare = 'welfare',
 #'      weight = 'weight')$data
 #'
@@ -43,7 +44,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = 2000,
 #'   data = list(df0 = md_ABC_2000_income),
 #'   predicted_request_mean = 13,
-#'   data_type = 'microdata',
+#'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
 #' # Interpolatation (monotonic)
@@ -52,7 +53,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(13, 13),
-#'   data_type = 'microdata',
+#'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
 #' # Interpolatation (non-monotonic)
@@ -61,7 +62,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(14, 17),
-#'   data_type = 'microdata',
+#'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
 #' @export
@@ -69,7 +70,8 @@ fill_gaps <- function(request_year,
                       data = list(df0, df1 = NULL),
                       predicted_request_mean,
                       survey_year,
-                      data_type = c('microdata', 'groupdata'),
+                      distribution_type =
+                        c("micro", "group", "aggregate", "imputed"),
                       poverty_line = 1.9) {
 
   # CHECKS
@@ -77,10 +79,43 @@ fill_gaps <- function(request_year,
   check_inputs_fill_gaps()
 
   # Match arguments
-  data_type <- match.arg(data_type)
+  distribution_type <- match.arg(distribution_type)
 
   # Calculate poverty stats
-  if (data_type == 'microdata') {
+  if (distribution_type == 'micro') {
+    if (length(predicted_request_mean) == 1) {
+
+      weights0 <- fg_get_weights(data$df0)
+
+      # Calculate poverty statistics for the request year
+      out <- md_compute_pip_stats(welfare        = data$df0$welfare,
+                                  population     = weights0,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
+                                  requested_mean = predicted_request_mean)
+
+    } else {
+
+      weights0 <- fg_get_weights(data$df0)
+      weights1 <- fg_get_weights(data$df1)
+
+      # Calculate statistics for the first survey year
+      dl0 <- md_compute_pip_stats(welfare        = data$df0$welfare,
+                                  population     = weights0,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
+                                  requested_mean = predicted_request_mean[1])
+
+      # Calculate statistics for the second survey year
+      dl1 <- md_compute_pip_stats(welfare        = data$df1$welfare,
+                                  population     = weights1,
+                                  povline        = poverty_line,
+                                  default_ppp    = 1,
+                                  requested_mean = predicted_request_mean[2])
+
+      # Calculate poverty statistics for the request year (weighted average)
+      out <- fg_adjust_poverty_stats(dl0, dl1, survey_year, request_year)
+    }
 
     out <- md_fill_gaps(request_year = request_year,
                         data = data,
@@ -89,7 +124,7 @@ fill_gaps <- function(request_year,
                         poverty_line = poverty_line
                         )
 
-  } else if (data_type == 'groupdata') {
+  } else if (distribution_type == 'group') {
 
     message('Note: Grouped functions are not implemented yet.')
 
