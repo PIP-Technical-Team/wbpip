@@ -24,7 +24,6 @@ See details.}
 
 \item{survey_year}{numeric: A vector with one or two survey years.}
 
-
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}
 
@@ -60,7 +59,7 @@ res <- fill_gaps(
   distribution_type = 'micro',
   poverty_line = 1.9)
 
-# Interpolatation (monotonic)
+# Interpolation (monotonic)
 res <- fill_gaps(
   request_year = 2005,
   survey_year = c(2000, 2010),
@@ -69,7 +68,7 @@ res <- fill_gaps(
   distribution_type = 'micro',
   poverty_line = 1.9)
 
-# Interpolatation (non-monotonic)
+# Interpolation (non-monotonic)
 res <- fill_gaps(
   request_year = 2005,
   survey_year = c(2000, 2010),
