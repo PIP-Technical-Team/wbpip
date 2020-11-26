@@ -79,7 +79,7 @@ gd_compute_pip_stats_lb <- function(welfare,
 #'
 #' @return data.frame
 #' @keywords internal
-create_functional_form_lb <- function(welfare,population) {
+create_functional_form_lb <- function(welfare, population) {
   # CHECK inputs
   assertthat::assert_that(is.numeric(population))
   assertthat::assert_that(is.numeric(welfare))

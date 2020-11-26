@@ -65,8 +65,8 @@ test_that("create_functional_form_lq works as expected", {
           0.21933329830711679,
           0.22136883758805431)
 
-  out <- create_functional_form_lq(welfare = lorenz_welfare,
-                                   population = lorenz_pop)
+  out <- create_functional_form_lq(welfare = lw,
+                                   population = lp)
 
   expect_true(is.data.frame(out))
   expect_equal(dim(out), c(9, 4))
