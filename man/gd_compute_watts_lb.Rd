@@ -7,19 +7,19 @@
 gd_compute_watts_lb(headcount, mean, povline, dd, A, B, C)
 }
 \arguments{
-\item{headcount}{numeric: headcount index}
+\item{headcount}{numeric: Headcount index.}
 
-\item{mean}{numeric: Welfare mean}
+\item{mean}{numeric: Welfare mean.}
 
-\item{povline}{numeric: poverty line}
+\item{povline}{numeric: Poverty line.}
 
-\item{dd}{numeric}
+\item{dd}{numeric: \strong{TO BE DOCUMENTED}.}
 
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{A}{numeric: Lorenz curve coefficient.}
 
-\item{B}{numeric vector: lorenz curve coefficient}
+\item{B}{numeric: Lorenz curve coefficient.}
 
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{C}{numeric: Lorenz curve coefficient.}
 }
 \value{
 numeric
@@ -32,3 +32,4 @@ gaps, as measured by the log of the ratio of the poverty line to income,
 where the mean is formed over the whole population, counting the nonpoor as
 having a zero poverty gap.
 }
+\keyword{internal}

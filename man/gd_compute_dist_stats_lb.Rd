@@ -2,24 +2,25 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{gd_compute_dist_stats_lb}
 \alias{gd_compute_dist_stats_lb}
-\title{Computes distributional stats from lorenz beta fit}
+\title{Computes distributional stats from Lorenz beta fit}
 \usage{
 gd_compute_dist_stats_lb(mean, p0, A, B, C)
 }
 \arguments{
-\item{mean}{numeric: welfare mean}
+\item{mean}{numeric: Welfare mean.}
 
-\item{p0}{numeric: To document}
+\item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
 
-\item{A}{numeric: First regression coefficient}
+\item{A}{numeric: First regression coefficient.}
 
-\item{B}{numeric: Second regression coefficient}
+\item{B}{numeric: Second regression coefficient.}
 
-\item{C}{numeric: Third regression coefficient}
+\item{C}{numeric: Third regression coefficient.}
 }
 \value{
 list
 }
 \description{
-Computes distributional stats from lorenz beta fit
+Computes distributional stats from Lorenz beta fit
 }
+\keyword{internal}

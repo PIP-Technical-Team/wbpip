@@ -1,15 +1,17 @@
-#' get_bins
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= '2.15.1')
+  utils::globalVariables(
+    c('type', '.')
+  )
+
+#' Bins
 #'
-#' Use function `md_compute_bins()` to calculate quantiles. In addition, this
-#' function makes sure data is properly cleaned using `md_clean_data`
+#' Calculate bins. **TO BE DOCUMENTED**.
 #'
-#' @param .data Household survey dataframe with at least a welfare variable
+#' @param .data Household survey data frame with at least a welfare variable.
 #' @inheritParams md_compute_bins
-#' @param type character: either 'microdata' or 'groupdata'. Default 'microdata'
-#'
-#' @return data.frame
-#' @export
-#' @import data.table
+#' @param distribution_type character: Type of distribution, either micro,
+#'   group, aggregate or imputed.
 #'
 #' @examples
 #' data("md_ABC_2000_income")
@@ -20,12 +22,18 @@
 #'
 #' bins <- get_bins(df, welfare, weight, output = "full")
 #' str(bins)
+#'
+#' @return data.frame
+#' @export
 get_bins <-  function(.data,
                       welfare,
                       weight,
-                      type   = "microdata",
+                      distribution_type = c("micro", "group", "aggregate", "imputed"),
                       nbins  = 100,
                       output = "simple") {
+
+  # Match arg
+  distribution_type <- match.arg(distribution_type)
 
   if (inherits(.data, "grouped_df")) {
 
@@ -37,24 +45,22 @@ get_bins <-  function(.data,
                     output  = output)
 
     return(dplyr::do(.data,
-                     do.call(get_bins,c(list(.data =.), args_in)
+                     do.call(get_bins,c(list(.data = .), args_in)
                      )
     )
     )
   }
 
   # Check arguments
-
   welfare <- deparse(substitute(welfare))
   weight  <- deparse(substitute(weight))
-
 
   # Organize argument to parse to md_clean_data
   args <- list(dt      = .data,
                welfare = welfare,
                weight  = weight)
 
-  if (type == "microdata") {
+  if (distribution_type == "micro") {
     # Clean data
     df <- do.call(md_clean_data, args)$data
 
@@ -64,17 +70,15 @@ get_bins <-  function(.data,
                                nbins  = nbins,
                                output = output)
 
-
-
-  } else if (type == "groupdata") {
+  } else if (distribution_type == "group") {
 
     rlang::inform("process for group data not ready yet")
     gini <- NA
 
   } else {
-    msg     <- "Wrong `type`"
-    hint    <- "Make sure `type` is either 'microdata' or 'group data'"
-    problem <- paste("your `type` is", type)
+    msg     <- "Wrong `distribution_type`"
+    hint    <- "Make sure `distribution_type` is either 'micro' or 'group'"
+    problem <- paste("your `distribution_type` is", distribution_type)
     rlang::abort(c(
       msg,
       i = hint,

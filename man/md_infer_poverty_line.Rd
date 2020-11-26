@@ -2,11 +2,11 @@
 % Please edit documentation in R/md_infer_poverty_line.R
 \name{md_infer_poverty_line}
 \alias{md_infer_poverty_line}
-\title{md_infer_poverty_line}
+\title{Infer poverty line}
 \usage{
 md_infer_poverty_line(
   welfare,
-  weight = NULL,
+  weight,
   popshare = 0.5,
   na.rm = FALSE,
   include = FALSE
@@ -15,27 +15,31 @@ md_infer_poverty_line(
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights, optional.}
+\item{weight}{numeric: A vector of weights.}
 
-\item{popshare}{numeric: Share of population for which the corresponding
-quantile is desired. Default .5 (i.e., weighted median)}
+\item{popshare}{numeric: Share of population for which the corresponding.
+quantile is desired. Default .5 (i.e., weighted median).}
 
-\item{na.rm}{logical: Set to TRUE to remove missing from computations}
+\item{na.rm}{logical: Set to TRUE to remove missing from computations.}
 
-\item{include}{logical:}
+\item{include}{logical: \strong{TO BE DOCUMENTED}.}
 }
 \value{
 numeric
 }
 \description{
-calculate percentiles corresponding to the specified  Shared of population
-(percentages)
+Infer poverty line for microdata.
+}
+\details{
+This function calculate percentiles corresponding to the specified share of
+population (in percentages).
 }
 \examples{
-df <- md_ABC_2000_income
-# median
-md_infer_poverty_line(df$welfare, df$weight)
-md_infer_poverty_line(df$welfare, df$weight, popshare = .2)
-md_infer_poverty_line(df$welfare, df$weight, popshare = .6)
+wbpip:::md_infer_poverty_line(1:2000, weight = rep(1, 2000))
+wbpip:::md_infer_poverty_line(1:2000, weight = rep(1, 2000),
+  popshare = .2)
+wbpip:::md_infer_poverty_line(1:2000, weight = rep(1, 2000),
+  popshare = .6)
 
 }
+\keyword{internal}

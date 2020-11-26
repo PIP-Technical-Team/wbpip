@@ -2,28 +2,28 @@
 % Please edit documentation in R/lorenz_alt.R
 \name{lorenz_alt}
 \alias{lorenz_alt}
-\title{lorenz}
+\title{lorenz_alt}
 \usage{
-lorenz_alt(welfare, weight = NULL, nbins = NULL, na.rm = FALSE)
+lorenz_alt(welfare, weight, nbins = NULL, na.rm = FALSE)
 }
 \arguments{
-\item{welfare}{numeric: vector of welfare measures}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: vector of weights}
+\item{weight}{numeric: A vector of weights.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve}
+\item{nbins}{numeric: number of points on the Lorenz curve.}
 
-\item{na.rm}{logical: Set to TRUE to remove missing}
+\item{na.rm}{logical: Set to TRUE to remove missing.}
 }
 \value{
-data.frame
+data.table
 }
 \description{
 Given a vector of weights and welfare, this functions computes the
 Lorenz curve and several other related indicators.
 }
 \examples{
-data("md_ABC_2010_income")
-df <- md_ABC_2010_income
-lz <- lorenz_alt(df$welfare, df$weight)[]
+wbpip:::lorenz_alt(welfare = 1:2000, weight = rep(1, 2000))
+
 }
+\keyword{internal}

@@ -7,13 +7,13 @@
 gd_compute_quantile_lq(A, B, C, n_quantile = 10)
 }
 \arguments{
-\item{A}{numeric vector: lorenz curve coefficient}
+\item{A}{numeric: Lorenz curve coefficient.}
 
-\item{B}{numeric vector: lorenz curve coefficient}
+\item{B}{numeric: Lorenz curve coefficient.}
 
-\item{C}{numeric vector: lorenz curve coefficient}
+\item{C}{numeric: Lorenz curve coefficient.}
 
-\item{n_quantile}{numeric: Number of quantiles to return}
+\item{n_quantile}{numeric: Number of quantiles to return.}
 }
 \value{
 numeric
@@ -21,3 +21,4 @@ numeric
 \description{
 \code{gd_compute_quantile_lq()} computes quantiles from a Lorenz Quadratic fit.
 }
+\keyword{internal}

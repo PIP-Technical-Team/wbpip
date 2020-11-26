@@ -2,11 +2,9 @@
 % Please edit documentation in R/md_compute_mld.R
 \name{md_compute_mld}
 \alias{md_compute_mld}
-\title{md_compute_mld
-Given a vector of weights and welfare, this functions computes the
-Mean Log Deviation (MLD)}
+\title{Mean Log Deviation}
 \usage{
-md_compute_mld(welfare, weight = NULL)
+md_compute_mld(welfare, weight)
 }
 \arguments{
 \item{welfare}{numeric: vector of welfare measures}
@@ -17,13 +15,11 @@ md_compute_mld(welfare, weight = NULL)
 numeric
 }
 \description{
-md_compute_mld
 Given a vector of weights and welfare, this functions computes the
-Mean Log Deviation (MLD)
+Mean Log Deviation (MLD).
 }
 \examples{
-md_compute_mld(welfare = 1:2000, weight = 1:2000)
+wbpip:::md_compute_mld(welfare = 1:2000, weight = rep(1, 2000))
 
-data("md_ABC_2000_income")
-md_compute_mld(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
 }
+\keyword{internal}

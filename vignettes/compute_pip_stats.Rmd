@@ -80,7 +80,7 @@ out <- compute_pip_stats(welfare           = micro$welfare,
                          popshare          = NULL,
                          default_ppp       = ppp,
                          ppp               = NULL,
-                         distribution_type = "microdata")
+                         distribution_type = "micro")
 
 out
 

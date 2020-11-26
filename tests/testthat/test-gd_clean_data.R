@@ -1,6 +1,6 @@
 # Recreate data from DAtt 1998 and Group 5 in povcalnet website.
 
-  gd <- tibble::tribble(
+gd <- tibble::tribble(
     ~W,    ~X,      ~P,      ~L,
     0.92,   24.84,  0.0092, 0.00208,
     2.47,    35.8,  0.0339, 0.01013,
@@ -15,11 +15,9 @@
     3.96,  215.48,   0.957, 0.86966,
     1.81,  261.66,  0.9751, 0.91277,
     2.49,  384.97,       1,       1
-  )
-
-  setDT(gd)
-
-  gd[, R := (W*X)/sum(W*X)]
+)
+setDT(gd)
+gd[, R := (W*X)/sum(W*X)]
 
 test_that("making sure standardization works", {
 

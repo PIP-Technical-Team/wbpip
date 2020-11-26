@@ -4,12 +4,12 @@
 \alias{md_compute_gini}
 \title{Gini coefficient}
 \usage{
-md_compute_gini(welfare, weight = NULL)
+md_compute_gini(welfare, weight)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights, optional.}
+\item{weight}{numeric: A vector of weights.}
 }
 \value{
 numeric
@@ -20,18 +20,9 @@ Compute the Gini coefficient for microdata.
 \details{
 Given a vector of income or consumption values and their respective weights
 \code{md_compute_gini()} computes the Gini coefficient for the distribution.
-
-Note that negative values will be removed from the calculation.
 }
 \examples{
-# Simple example
-md_compute_gini(welfare = 1:10)
-
-# Include weights
-md_compute_gini(welfare = 1:10, weight = 1:10)
-
-# Microdata example
-data("md_ABC_2000_income")
-md_compute_gini(md_ABC_2000_income$welfare, md_ABC_2000_income$weight)
+wbpip:::md_compute_gini(welfare = 1:2000, weight = rep(1, 2000))
 
 }
+\keyword{internal}
