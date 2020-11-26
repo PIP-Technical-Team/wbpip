@@ -33,7 +33,7 @@ monthly_povline <- daily_povline * 365 / 12
 data("md_ABC_2000_income")
 
 # Basic cleaning operation (remove missings, negative values, etc.)
-micro <- wbpip::md_clean_data(md_ABC_2000_income, 
+micro <- wbpip:::md_clean_data(md_ABC_2000_income, 
                               welfare = "welfare", 
                               weight  = "weight")
 micro <- micro$data

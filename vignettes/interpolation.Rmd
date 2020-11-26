@@ -36,7 +36,7 @@ We need to clean the datasets to ensure that there aren't any missing values, an
 # Clean datasets 
 dl <- list(md_ABC_2000_income, md_ABC_2010_income)
 dl <- lapply(dl, function(df) {
-  md_clean_data(df, welfare = 'welfare', weight = 'weight')$data
+  wbpip:::md_clean_data(df, welfare = 'welfare', weight = 'weight')$data
 })
 ```
 
