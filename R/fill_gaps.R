@@ -117,6 +117,12 @@ fill_gaps <- function(request_year,
       out <- fg_adjust_poverty_stats(dl0, dl1, survey_year, request_year)
     }
 
+    out <- md_fill_gaps(request_year = request_year,
+                        data = data,
+                        predicted_request_mean = predicted_request_mean,
+                        survey_year = survey_year,
+                        poverty_line = poverty_line
+                        )
 
   } else if (distribution_type == 'group') {
 
@@ -166,19 +172,6 @@ fg_adjust_poverty_stats <- function(stats0, stats1, survey_year, request_year) {
   out[c('polarization', 'gini', 'mld', 'median', 'deciles')] <- NA
 
   return(out)
-}
-
-#' fg_get_weights
-#' @param df data.frame: A data frame with a welfare column.
-#' @return numeric:
-#' @noRd
-fg_get_weights <- function(df) {
-  if ('weight' %in% colnames(df)) {
-    weights <- df$weight
-  } else {
-    weights <- rep(1, length(df$welfare))
-  }
-  return(weights)
 }
 
 #' check_inputs_fill_gaps

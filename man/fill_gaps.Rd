@@ -24,6 +24,7 @@ See details.}
 
 \item{survey_year}{numeric: A vector with one or two survey years.}
 
+
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}
 

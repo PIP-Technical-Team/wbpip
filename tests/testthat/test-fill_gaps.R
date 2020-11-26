@@ -1,16 +1,3 @@
-# Load datasets
-data('md_ABC_2000_income')
-data('md_ABC_2010_income')
-data('md_DEF_2000_consumption')
-
-# Clean datasets
-md_ABC_2000_income <-
-  md_clean_data(md_ABC_2000_income, welfare = 'welfare',  weight = 'weight')$data
-md_ABC_2010_income <-
-  md_clean_data(md_ABC_2010_income, welfare = 'welfare', weight = 'weight')$data
-md_DEF_2000_consumption <-
-  md_clean_data(md_DEF_2000_consumption, welfare = 'welfare',  weight = 'weight')$data
-
 # Tests
 test_that('fill_gaps() works correctly', {
   # Test that fill_gaps() returns a list with all poverty stats
