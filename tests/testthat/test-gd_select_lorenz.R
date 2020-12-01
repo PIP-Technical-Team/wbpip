@@ -46,3 +46,246 @@ test_that('Outputs from gd_compute_pip_stats_* are consitents', {
     names(lb)
   )
 })
+
+
+# test gd_select_lorenz_pov() ---------------------------------------------
+
+#-----------------------------
+#  Qv  Bv  Qc  Bc pov_flag use
+#-----------------------------
+#  X   X   X   X   15     smaller SSEz
+#  X   X   X   O   14     Q
+#  X   X   O   X   13     B
+#  X   X   O   O   12     Q
+#-----------------------------
+#  X   O   X   X   11     Q
+#  X   O   X   O   10     Q
+#  X   O   O   X    9     B
+#  X   O   O   O    8     Q
+#-----------------------------
+#  O   X   X   X    7     B
+#  O   X   X   O    6     Q
+#  O   X   O   X    5     B
+#  O   X   O   O    4     B
+#-----------------------------
+#  O   O   X   X    3     smaller SSEz
+#  O   O   X   O    2     Q
+#  O   O   O   X    1     B
+#  O   O   O   O    0     Q
+#-----------------------------
+
+test_that('gd_select_lorenz_pov is correct when all fits are normal and valid', {
+
+  # Use smaller SSEz for selection
+  lq$is_valid  <- TRUE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- TRUE
+  lq$ssez      <- 2
+  lb$ssez      <- 1
+
+  # LB has better fit
+  # pov_flag = 15
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  # LQ has better fit
+  # pov_flag = 15
+  lb$ssez <- lq$ssez + 1
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+}
+)
+
+test_that('gd_select_lorenz_pov is correct when only LQ is normal and valid', {
+
+  # LB normal but not valid
+  # pov_flag = 11
+  lq$is_valid  <- TRUE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LB valid but not normal
+  # pov_flag = 14
+  lq$is_valid  <- TRUE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LB invalid and not normal
+  # pov_flag = 10
+  lq$is_valid  <- TRUE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+}
+)
+
+test_that('gd_select_lorenz_pov is correct when only LB is normal and valid', {
+
+  # LQ normal but not valid
+  # pov_flag = 7
+  lq$is_valid  <- FALSE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  # LQ valid but not normal
+  # pov_flag = 13
+  lq$is_valid  <- TRUE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  # LQ invalid and not normal
+  # pov_flag = 5
+  lq$is_valid  <- FALSE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+}
+)
+
+test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
+  # Both LQ and LB are normal. Best SSEz fit
+  lq$is_valid  <- FALSE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- TRUE
+  lq$ssez      <- 2
+  lb$ssez      <- 1
+
+  # pov_flag = 3
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  lb$ssez      <- lq$ssez + 1
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LQ is normal
+  # pov_flag = 2
+  lq$is_valid  <- FALSE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LB is normal
+  # pov_flag = 1
+  lq$is_valid  <- FALSE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  # Both LQ and LB are not normal
+  # pov_flag = 0
+  lq$is_valid  <- FALSE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+}
+)
+
+test_that('gd_select_lorenz_pov is correct for remaining cases', {
+
+  # Both LQ and LB are normal and not valid
+  # pov_flag = 12
+  lq$is_valid  <- TRUE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LQ is valid, LB is normal
+  # pov_flag = 9
+  lq$is_valid  <- TRUE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- TRUE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+
+  # LQ is valid, all rest is not
+  # pov_flag = 8
+  lq$is_valid  <- TRUE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- FALSE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LB is valid, LQ is normal
+  # pov_flag = 6
+  lq$is_valid  <- FALSE
+  lq$is_normal <- TRUE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    TRUE
+  )
+
+  # LB is valid
+  # pov_flag = 4
+  lq$is_valid  <- FALSE
+  lq$is_normal <- FALSE
+  lb$is_valid  <- TRUE
+  lb$is_normal <- FALSE
+  expect_equal(
+    gd_select_lorenz_pov(lq = lq, lb = lb),
+    FALSE
+  )
+}
+)

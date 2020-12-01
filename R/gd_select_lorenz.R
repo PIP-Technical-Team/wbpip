@@ -11,47 +11,14 @@
 #' @keywords internal
 gd_select_lorenz <- function(lq, lb) {
 
+  # Set default value
   datamean <- lq[["mean"]]
-
   is_valid <- lq[["is_valid"]] | lb[["is_valid"]]
   is_normal <- lq[["is_normal"]] | lb[["is_normal"]]
 
-  # first the poverty selection
-  #-----------------------------
-  #  Qv  Bv  Qc  Bc pov_flag use
-  #-----------------------------
-  #  X   X   X   X   15     smaller SSEz
-  #  X   X   X   O   14     Q
-  #  X   X   O   X   13     B
-  #  X   X   O   O   12     Q
-  #-----------------------------
-  #  X   O   X   X   11     Q
-  #  X   O   X   O   10     Q
-  #  X   O   O   X    9     B
-  #  X   O   O   O    8     Q
-  #-----------------------------
-  #  O   X   X   X    7     B
-  #  O   X   X   O    6     Q
-  #  O   X   O   X    5     B
-  #  O   X   O   O    4     B
-  #-----------------------------
-  #  O   O   X   X    3     smaller SSEz
-  #  O   O   X   O    2     Q
-  #  O   O   O   X    1     B
-  #  O   O   O   O    0     Q
-  #-----------------------------
-
-  pov_flag <- ifelse(lq[["is_valid"]], 8, 0) +
-    ifelse(lb[["is_valid"]], 4, 0) +
-    ifelse(lq[["is_normal"]], 2, 0) +
-    ifelse(lb[["is_normal"]], 1, 0)
-
-  use_GQz <- TRUE
-  if (pov_flag %in% c(13, 9, 7, 5, 4, 1) ) {
-    use_GQz <- FALSE
-  } else if (pov_flag %in% c(15, 3)) {
-    use_GQz <- lq[["ssez"]] <= lb[["ssez"]]
-  }
+  # Selection of Lorenz fit for poverty computations
+  use_lq_for_poverty <- gd_select_lorenz_pov(lq = lq,
+                                             lb = lb)
 
   # Making the distributional selection
   #-----------------------------
@@ -119,7 +86,7 @@ gd_select_lorenz <- function(lq, lb) {
   }
 
   if (!is_normal) return(NA)
-  if (use_GQz)
+  if (use_lq_for_poverty)
   {
     poverty_line     <- lq[["poverty_line"]]
     headcount        <- lq[["headcount"]]
@@ -201,4 +168,58 @@ gd_select_lorenz <- function(lq, lb) {
     sse              = sse
   ))
 
+}
+
+
+#' Select the Lorenz functional to compute poverty statistics
+#'
+#' @inheritParams gd_select_lorenz
+#'
+#' @return logical
+
+gd_select_lorenz_pov <- function(lq,
+                                 lb) {
+
+# Rules to be applied for Lorenz functional form selection ----------------
+  # SSEz = Sum of Squared Error up to the poverty line
+  # first the poverty selection
+  #-----------------------------
+  #  Qv  Bv  Qc  Bc pov_flag use
+  #-----------------------------
+  #  X   X   X   X   15     smaller SSEz
+  #  X   X   X   O   14     Q
+  #  X   X   O   X   13     B
+  #  X   X   O   O   12     Q
+  #-----------------------------
+  #  X   O   X   X   11     Q
+  #  X   O   X   O   10     Q
+  #  X   O   O   X    9     B
+  #  X   O   O   O    8     Q
+  #-----------------------------
+  #  O   X   X   X    7     B
+  #  O   X   X   O    6     Q
+  #  O   X   O   X    5     B
+  #  O   X   O   O    4     B
+  #-----------------------------
+  #  O   O   X   X    3     smaller SSEz
+  #  O   O   X   O    2     Q
+  #  O   O   O   X    1     B
+  #  O   O   O   O    0     Q
+  #-----------------------------
+
+  pov_flag <- ifelse(lq[["is_valid"]], 8, 0) +
+    ifelse(lb[["is_valid"]], 4, 0) +
+    ifelse(lq[["is_normal"]], 2, 0) +
+    ifelse(lb[["is_normal"]], 1, 0)
+
+  use_lq_for_poverty <- TRUE
+  if (pov_flag %in% c(13, 9, 7, 5, 4, 1) ) {
+    use_lq_for_poverty <- FALSE
+  } else if (pov_flag %in% c(15, 3)) {
+    use_lq_for_poverty <- lq[["ssez"]] <= lb[["ssez"]]
+  }
+
+  return(
+    use_lq_for_poverty
+  )
 }
