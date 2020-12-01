@@ -48,7 +48,7 @@ test_that('Outputs from gd_compute_pip_stats_* are consitents', {
 })
 
 
-# test gd_select_lorenz_pov() ---------------------------------------------
+# test use_lq_for_poverty() ---------------------------------------------
 
 #-----------------------------
 #  Qv  Bv  Qc  Bc pov_flag use
@@ -74,7 +74,7 @@ test_that('Outputs from gd_compute_pip_stats_* are consitents', {
 #  O   O   O   O    0     Q
 #-----------------------------
 
-test_that('gd_select_lorenz_pov is correct when all fits are normal and valid', {
+test_that('use_lq_for_poverty is correct when all fits are normal and valid', {
 
   # Use smaller SSEz for selection
   lq$is_valid  <- TRUE
@@ -87,7 +87,7 @@ test_that('gd_select_lorenz_pov is correct when all fits are normal and valid', 
   # LB has better fit
   # pov_flag = 15
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
@@ -95,13 +95,13 @@ test_that('gd_select_lorenz_pov is correct when all fits are normal and valid', 
   # pov_flag = 15
   lb$ssez <- lq$ssez + 1
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 }
 )
 
-test_that('gd_select_lorenz_pov is correct when only LQ is normal and valid', {
+test_that('use_lq_for_poverty is correct when only LQ is normal and valid', {
 
   # LB normal but not valid
   # pov_flag = 11
@@ -110,7 +110,7 @@ test_that('gd_select_lorenz_pov is correct when only LQ is normal and valid', {
   lb$is_valid  <- FALSE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -121,7 +121,7 @@ test_that('gd_select_lorenz_pov is correct when only LQ is normal and valid', {
   lb$is_valid  <- TRUE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -132,13 +132,13 @@ test_that('gd_select_lorenz_pov is correct when only LQ is normal and valid', {
   lb$is_valid  <- FALSE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 }
 )
 
-test_that('gd_select_lorenz_pov is correct when only LB is normal and valid', {
+test_that('use_lq_for_poverty is correct when only LB is normal and valid', {
 
   # LQ normal but not valid
   # pov_flag = 7
@@ -147,7 +147,7 @@ test_that('gd_select_lorenz_pov is correct when only LB is normal and valid', {
   lb$is_valid  <- TRUE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
@@ -158,7 +158,7 @@ test_that('gd_select_lorenz_pov is correct when only LB is normal and valid', {
   lb$is_valid  <- TRUE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
@@ -169,13 +169,13 @@ test_that('gd_select_lorenz_pov is correct when only LB is normal and valid', {
   lb$is_valid  <- TRUE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 }
 )
 
-test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
+test_that('use_lq_for_poverty is correct when both LQ and LB are invalid', {
   # Both LQ and LB are normal. Best SSEz fit
   lq$is_valid  <- FALSE
   lq$is_normal <- TRUE
@@ -186,13 +186,13 @@ test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
 
   # pov_flag = 3
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
   lb$ssez      <- lq$ssez + 1
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -203,7 +203,7 @@ test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
   lb$is_valid  <- FALSE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -214,7 +214,7 @@ test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
   lb$is_valid  <- FALSE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
@@ -225,13 +225,13 @@ test_that('gd_select_lorenz_pov is correct when both LQ and LB are invalid', {
   lb$is_valid  <- FALSE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 }
 )
 
-test_that('gd_select_lorenz_pov is correct for remaining cases', {
+test_that('use_lq_for_poverty is correct for remaining cases', {
 
   # Both LQ and LB are normal and not valid
   # pov_flag = 12
@@ -240,7 +240,7 @@ test_that('gd_select_lorenz_pov is correct for remaining cases', {
   lb$is_valid  <- TRUE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -251,7 +251,7 @@ test_that('gd_select_lorenz_pov is correct for remaining cases', {
   lb$is_valid  <- FALSE
   lb$is_normal <- TRUE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 
@@ -262,7 +262,7 @@ test_that('gd_select_lorenz_pov is correct for remaining cases', {
   lb$is_valid  <- FALSE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -273,7 +273,7 @@ test_that('gd_select_lorenz_pov is correct for remaining cases', {
   lb$is_valid  <- TRUE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     TRUE
   )
 
@@ -284,7 +284,7 @@ test_that('gd_select_lorenz_pov is correct for remaining cases', {
   lb$is_valid  <- TRUE
   lb$is_normal <- FALSE
   expect_equal(
-    gd_select_lorenz_pov(lq = lq, lb = lb),
+    use_lq_for_poverty(lq = lq, lb = lb),
     FALSE
   )
 }
