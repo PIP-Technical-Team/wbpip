@@ -233,17 +233,19 @@ retrieve_distributional <- function(lq,
   }
 
   return(
-    z_min            = z_min,
-    z_max            = z_max,
-    gini             = gini,
-    median           = median,
-    # rmed           = rmed,
-    rmhalf           = rmhalf,
-    polarization     = polarization,
-    ris              = ris,
-    mld              = mld,
-    deciles          = deciles,
-    sse              = sse
+    list(
+      z_min            = z_min,
+      z_max            = z_max,
+      gini             = gini,
+      median           = median,
+      # rmed           = rmed,
+      rmhalf           = rmhalf,
+      polarization     = polarization,
+      ris              = ris,
+      mld              = mld,
+      deciles          = deciles,
+      sse              = sse
+    )
   )
 }
 
@@ -318,18 +320,21 @@ retrieve_poverty <- function(lq,
     poverty_severity <- 0.99997
   }
 
-  return(list(
-    poverty_line     = poverty_line,
-    headcount        = headcount,
-    poverty_gap      = poverty_gap,
-    poverty_severity = poverty_severity,
-    eh               = eh,
-    epg              = epg,
-    ep               = ep,
-    gh               = gh,
-    gpg              = gpg,
-    gp               = gp,
-    watts            = watts
-  ))
+  return(
+    list
+    (
+      poverty_line     = poverty_line,
+      headcount        = headcount,
+      poverty_gap      = poverty_gap,
+      poverty_severity = poverty_severity,
+      eh               = eh,
+      epg              = epg,
+      ep               = ep,
+      gh               = gh,
+      gpg              = gpg,
+      gp               = gp,
+      watts            = watts
+    )
+  )
 
 }
