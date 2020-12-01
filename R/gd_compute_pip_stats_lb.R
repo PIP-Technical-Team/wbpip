@@ -581,7 +581,7 @@ gd_compute_fit_lb <- function(welfare,
                               C) {
   lasti  <- -1
   sse  <- 0 # Sum of square error
-  ssez <- 0
+  ssez <- 0 # Sum of square error up to poverty line threshold (see Datt paper)
 
   for (i in seq_along(welfare[-1])) {
     residual <- welfare[i] - value_at_lb(population[i], A, B, C)

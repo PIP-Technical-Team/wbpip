@@ -11,12 +11,85 @@
 #' @keywords internal
 gd_select_lorenz <- function(lq, lb) {
 
+  # Set default value
   datamean <- lq[["mean"]]
-
   is_valid <- lq[["is_valid"]] | lb[["is_valid"]]
   is_normal <- lq[["is_normal"]] | lb[["is_normal"]]
 
-  # first the poverty selection
+  # Selection of Lorenz fit for poverty statistics
+  use_lq_for_pov <- use_lq_for_poverty(lq = lq,
+                                       lb = lb)
+
+  # Selection of Lorenz fit for distributional statistics
+  use_lq_for_dist <- use_lq_for_distributional(lq = lq,
+                                               lb = lb)
+
+  # Retrieve distributional statistics
+  dist <- retrieve_distributional(lq = lq,
+                                  lb = lb,
+                                  is_valid = is_valid,
+                                  use_lq_for_dist = use_lq_for_dist)
+
+  # Retrieve poverty statistics
+  pov <- retrieve_poverty(lq = lq,
+                          lb = lb,
+                          is_normal = is_normal,
+                          use_lq_for_pov = use_lq_for_pov)
+
+  return(list(
+    mean             = datamean,
+    poverty_line     = pov[["poverty_line"]],
+    z_min            = dist[["z_min"]],
+    z_max            = dist[["z_max"]],
+    # ppp            = lq[["ppp"]],
+    gini             = dist[["gini"]],
+    median           = dist[["median"]],
+    # rmed           = rmed,
+    rmhalf           = dist[["rmhalf"]],
+    polarization     = dist[["polarization"]],
+    ris              = dist[["ris"]],
+    mld              = dist[["mld"]],
+    dcm              = lq[["dcm"]],
+    deciles          = dist[["deciles"]],
+    headcount        = pov[["headcount"]],
+    poverty_gap      = pov[["poverty_gap"]],
+    poverty_severity = pov[["poverty_severity"]],
+    eh               = pov[["eh"]],
+    epg              = pov[["epg"]],
+    ep               = pov[["ep"]],
+    gh               = pov[["gh"]],
+    gpg              = pov[["gpg"]],
+    gp               = pov[["gp"]],
+    watts            = pov[["watts"]],
+    sse              = dist[["sse"]]
+  ))
+
+}
+
+
+#' Algorithm to decide which Lorenz fit to use for poverty statistics
+#'
+#'
+#' @inheritParams gd_select_lorenz
+#'
+#' @return logical:
+#' returns TRUE for Lorenz Quadratic
+#' returns FALSE for Lorenz Beta
+#' @keywords internal
+
+use_lq_for_poverty <- function(lq,
+                               lb) {
+
+  # Rules to be applied for Lorenz functional form selection ----------------
+
+  # X = Yes
+  # O = No
+  # Qv = Is Lorenz Quadratic fit valid?
+  # Bv = Is Lorenz Beta fit valid?
+  # Qc = Is Lorenz Quadratic fit normal?
+  # Bc = Is Lorenz Beta fit normal?
+  # SSEz = Sum of Squared Error up to the poverty line
+
   #-----------------------------
   #  Qv  Bv  Qc  Bc pov_flag use
   #-----------------------------
@@ -46,12 +119,33 @@ gd_select_lorenz <- function(lq, lb) {
     ifelse(lq[["is_normal"]], 2, 0) +
     ifelse(lb[["is_normal"]], 1, 0)
 
-  use_GQz <- TRUE
+  use_lq_for_pov <- TRUE
   if (pov_flag %in% c(13, 9, 7, 5, 4, 1) ) {
-    use_GQz <- FALSE
+    use_lq_for_pov <- FALSE
   } else if (pov_flag %in% c(15, 3)) {
-    use_GQz <- lq[["ssez"]] <= lb[["ssez"]]
+    use_lq_for_pov <- lq[["ssez"]] <= lb[["ssez"]]
   }
+
+  return(
+    use_lq_for_pov
+  )
+}
+
+#' Algorithm to decide which Lorenz fit to use for distributional statistics
+#'
+#'
+#' @inheritParams gd_select_lorenz
+#'
+#' @return logical:
+#' returns TRUE for Lorenz Quadratic
+#' returns FALSE for Lorenz Beta
+#' @keywords internal
+use_lq_for_distributional <- function(lq,
+                                      lb) {
+  # X = Yes
+  # O = No
+  # Qv = Is Lorenz Quadratic fit valid?
+  # Bv = Is Lorenz Beta fit valid?
 
   # Making the distributional selection
   #-----------------------------
@@ -63,18 +157,38 @@ gd_select_lorenz <- function(lq, lb) {
   #  O   O    0     n.a.
   #-----------------------------
 
-  use_GQ <- TRUE
+  use_lq_for_dist <- TRUE
   dis_flag <- ifelse(lq[["is_valid"]], 2, 0) +
     ifelse(lb[["is_valid"]], 1, 0)
 
   if (dis_flag == 3) {
-    use_GQ <- lq[["sse"]] <= lb[["sse"]]
+    use_lq_for_dist <- lq[["sse"]] <= lb[["sse"]]
   } else if (dis_flag == 1) {
-    use_GQ <- FALSE
+    use_lq_for_dist <- FALSE
   }
 
+  return(
+    use_lq_for_dist
+  )
+}
+
+#' Algorithm to retrieve correct distributional statistics
+#'
+#'
+#' @inheritParams gd_select_lorenz
+#' @param is_valid logical: Whether at least one of the Lorenz fit is valid
+#' @param is_lq_for_dist logical: Whether to use LQ (TRUE) or Beta fit (FALSE)
+#'
+#' @return list
+#'
+#' @keywords internal
+retrieve_distributional <- function(lq,
+                                    lb,
+                                    is_valid,
+                                    use_lq_for_dist) {
+
   if (is_valid) {
-    if (use_GQ) {
+    if (use_lq_for_dist) {
       sse             <- lq[["sse"]]
       z_min           <- lq[["z_min"]]
       z_max           <- lq[["z_max"]]
@@ -118,8 +232,41 @@ gd_select_lorenz <- function(lq, lb) {
     for (i in seq_along(deciles)) {deciles[i] <- NA}
   }
 
+  return(
+    list(
+      z_min            = z_min,
+      z_max            = z_max,
+      gini             = gini,
+      median           = median,
+      # rmed           = rmed,
+      rmhalf           = rmhalf,
+      polarization     = polarization,
+      ris              = ris,
+      mld              = mld,
+      deciles          = deciles,
+      sse              = sse
+    )
+  )
+}
+
+#' Algorithm to retrieve correct poverty statistics
+#'
+#'
+#' @inheritParams gd_select_lorenz
+#' @param is_normal logical: Whether at least one of the Lorenz fit is normal
+#' @param is_lq_for_pov logical: Whether to use LQ (TRUE) or Beta fit (FALSE)
+#'
+#' @return list
+#'
+#' @keywords internal
+#'
+retrieve_poverty <- function(lq,
+                             lb,
+                             is_normal,
+                             use_lq_for_pov) {
+
   if (!is_normal) return(NA)
-  if (use_GQz)
+  if (use_lq_for_pov)
   {
     poverty_line     <- lq[["poverty_line"]]
     headcount        <- lq[["headcount"]]
@@ -173,32 +320,21 @@ gd_select_lorenz <- function(lq, lb) {
     poverty_severity <- 0.99997
   }
 
-  return(list(
-    mean             = datamean,
-    poverty_line     = poverty_line,
-    z_min            = z_min,
-    z_max            = z_max,
-    # ppp            = lq[["ppp"]],
-    gini             = gini,
-    median           = median,
-    # rmed           = rmed,
-    rmhalf           = rmhalf,
-    polarization     = polarization,
-    ris              = ris,
-    mld              = mld,
-    dcm              = lq[["dcm"]],
-    deciles          = deciles,
-    headcount        = headcount,
-    poverty_gap      = poverty_gap,
-    poverty_severity = poverty_severity,
-    eh               = eh,
-    epg              = epg,
-    ep               = ep,
-    gh               = gh,
-    gpg              = gpg,
-    gp               = gp,
-    watts            = watts,
-    sse              = sse
-  ))
+  return(
+    list
+    (
+      poverty_line     = poverty_line,
+      headcount        = headcount,
+      poverty_gap      = poverty_gap,
+      poverty_severity = poverty_severity,
+      eh               = eh,
+      epg              = epg,
+      ep               = ep,
+      gh               = gh,
+      gpg              = gpg,
+      gp               = gp,
+      watts            = watts
+    )
+  )
 
 }
