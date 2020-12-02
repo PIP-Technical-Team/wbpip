@@ -31,12 +31,8 @@ gd_clean_data <- function(dt,
   # welfare    <- deparse(substitute(welfare))
   # population <- deparse(substitute(population))
 
-  if (!(inherits(dt, "data.table"))) {
-    setDT(dt)
-  }
-
-  welfare    <- dt[, get(welfare)]
-  population <- dt[, get(population)]
+  welfare    <- dt[[welfare]]
+  population <- dt[[population]]
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #---------   Check inputs   ---------
