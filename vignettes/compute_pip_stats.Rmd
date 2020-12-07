@@ -75,7 +75,7 @@ welfare <- c(5.824760527229386e-05,
 
 out <- compute_pip_stats(welfare           = micro$welfare,
                          povline           = monthly_povline,
-                         population        = micro$weights,
+                         population        = micro$weight,
                          requested_mean    = welfare_mean,
                          popshare          = NULL,
                          default_ppp       = ppp,

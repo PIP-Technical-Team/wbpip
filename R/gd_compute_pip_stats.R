@@ -6,7 +6,7 @@
 #' @param welfare numeric: cumulative proportion of income held by that
 #' proportion of the population (Lorenz Curve).
 #' @param povline numeric: Poverty line.
-#' @param population numeric: cumulative proportion of population.
+#' @param population numeric: Cumulative proportion of population.
 #' @param requested_mean numeric: Welfare mean.
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional.

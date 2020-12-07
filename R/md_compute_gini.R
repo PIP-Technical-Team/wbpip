@@ -18,7 +18,7 @@ NULL
 #' @keywords internal
 md_compute_gini <- function(welfare, weight) {
 
-  # Calculate Gini
+  # Compute weighted welfare
   weighted_welfare <- welfare * weight
   weighted_welfare_lag <- dplyr::lag(weighted_welfare, default = 0)
 
@@ -31,7 +31,7 @@ md_compute_gini <- function(welfare, weight) {
   # Normalize auc so it is always between 0 and 0.5
   auc <- auc / sum(weight) / sum(weighted_welfare)
 
-  # Compute gini
+  # Compute Gini
   gini <- 1 -  2 * auc
 
   return(gini)
