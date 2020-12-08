@@ -176,6 +176,56 @@ test_that('fill_gaps() interpolates correctly (non-monotonic) for micro vs group
   expect_identical(res$deciles, NA)
 })
 
+# fg_create_params
+test_that('fg_create_params() is working correctly', {
+
+  # One survey
+  out <- fg_create_params(
+    predicted_request_mean = 6,
+    data = list(df0 = md_DEF_2000_consumption),
+    default_ppp = 1,
+    ppp = NULL,
+    poverty_line = 1.9)
+  expect_identical(names(out), c('params0'))
+  expect_identical(names(out$params0),
+                   c('welfare', 'population', 'povline',
+                     'default_ppp', 'ppp', 'requested_mean'))
+  expect_identical(out$params0$welfare, md_DEF_2000_consumption$welfare)
+  expect_identical(out$params0$population, md_DEF_2000_consumption$weight)
+  expect_identical(out$params0$povline, 1.9)
+  expect_identical(out$params0$default_ppp, 1)
+  expect_true(is.null(out$params0$ppp))
+  expect_identical(out$params0$requested_mean, 6)
+
+  # Two surveys
+  out <- fg_create_params(
+    predicted_request_mean = c(4, 6),
+    data = list(df0 = md_GHI_2000_consumption, df1 = gd_GHI_2009_income),
+    default_ppp = 1,
+    ppp = NULL,
+    poverty_line = 1.9)
+  expect_identical(names(out), c('params0', 'params1'))
+  expect_identical(names(out$params0),
+                   c('welfare', 'population', 'povline',
+                     'default_ppp', 'ppp', 'requested_mean'))
+  expect_identical(names(out$params1),
+                   c('welfare', 'population', 'povline',
+                     'default_ppp', 'ppp', 'requested_mean'))
+  expect_identical(out$params0$welfare, md_GHI_2000_consumption$welfare)
+  expect_identical(out$params0$population, md_GHI_2000_consumption$weight)
+  expect_identical(out$params0$povline, 1.9)
+  expect_identical(out$params0$default_ppp, 1)
+  expect_true(is.null(out$params0$ppp))
+  expect_identical(out$params0$requested_mean, 4)
+  expect_identical(out$params1$welfare, gd_GHI_2009_income$welfare)
+  expect_identical(out$params1$population, gd_GHI_2009_income$weight)
+  expect_identical(out$params1$povline, 1.9)
+  expect_identical(out$params1$default_ppp, 1)
+  expect_true(is.null(out$params1$ppp))
+  expect_identical(out$params1$requested_mean, 6)
+
+})
+
 # check_inputs_fill_gaps()
 test_that('check_inputs_fill_gaps() catches input errors', {
   df <- data.frame(welfare = 1:1000, weight = rep(1, 1000))
@@ -365,4 +415,6 @@ test_that('check_inputs_fill_gaps() catches input errors', {
               predicted_request_mean = c(5, 10),
               distribution_type = c('micro', 'micro2')))
 })
+
+
 

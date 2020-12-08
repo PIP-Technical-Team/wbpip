@@ -123,7 +123,50 @@ fg_compute_pip_stats <- function(request_year,
     type <- rep(type, 2)
   }
 
-  # Initialize parameters
+  # Number of supplied surveys
+  n_surveys <- length(type)
+
+  # Create list of parameters
+  params <- fg_create_params(
+    predicted_request_mean = predicted_request_mean,
+    data = data,
+    poverty_line = poverty_line,
+    default_ppp = default_ppp,
+    ppp = ppp
+  )
+
+  # Calculate poverty stats
+  dl <- vector(mode = "list", length = n_surveys)
+  for (i in seq_along(type)) {
+    dl[[i]] <- do.call(fg_select_compute_pip_stats[[type[i]]], params[[i]])
+  }
+
+  # If interpolating between two surveys then calculate
+  # a weighted average for the request year
+  if (n_surveys == 2) {
+    out <- fg_adjust_poverty_stats(dl[[1]], dl[[2]], survey_year, request_year)
+    # Else returned the extrapolation for the request year as is
+  } else {
+    out <- dl[[1]]
+  }
+
+  return(out)
+}
+
+#' fg_compute_pip_stats
+#'
+#' Create parameters to be used in `fg_compute_pip_stats()`.
+#'
+#' @inheritParams fg_compute_pip_stats
+#' @return list
+#' @noRd
+fg_create_params <- function(predicted_request_mean,
+                             data,
+                             poverty_line,
+                             default_ppp,
+                             ppp ) {
+
+  # If one survey
   if (length(predicted_request_mean) == 1) {
     params <- list(
       params0 = list(
@@ -135,6 +178,7 @@ fg_compute_pip_stats <- function(request_year,
         requested_mean = predicted_request_mean[1]
       )
     )
+    # If two surveys (micro or grouped)
   } else {
     params <- list(
       params0 = list(
@@ -156,24 +200,9 @@ fg_compute_pip_stats <- function(request_year,
     )
   }
 
-  # Calculate poverty stats
-  dl <- list()
-  for (i in seq_along(type)) {
-    dl[[i]] <- do.call(fg_select_compute_pip_stats[[type[i]]], params[[i]])
-  }
+  return(params)
 
-  # If interpolating between two surveys then calculate
-  # a weighted average for the request year
-  if (length(dl) == 2) {
-    out <- fg_adjust_poverty_stats(dl[[1]], dl[[2]], survey_year, request_year)
-    # Else returned the extrapolation for the request year as is
-  } else {
-    out <- dl[[1]]
-  }
-
-  return(out)
 }
-
 
 #' fg_select_compute_pip_stats
 #'
