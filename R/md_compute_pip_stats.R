@@ -22,16 +22,6 @@ md_compute_pip_stats <- function(welfare,
                                  default_ppp = 1,
                                  ppp = NULL) {
 
-  # set all weights to 1 if none are supplied
-  if (is.null(population) == TRUE) {
-    population <- rep(1, length(welfare))
-  }
-
-  # make sure the data is sorted
-  ordy    <- order(welfare)   # order of welfare
-  welfare <- welfare[ordy]    #order weight
-  population  <- population[ordy]     # order welfare
-
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(welfare = welfare,
                                       weight  = population)

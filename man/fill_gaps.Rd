@@ -9,7 +9,9 @@ fill_gaps(
   data = list(df0, df1 = NULL),
   predicted_request_mean,
   survey_year,
-  distribution_type = c("micro", "group", "aggregate", "imputed"),
+  default_ppp,
+  ppp = NULL,
+  distribution_type,
   poverty_line = 1.9
 )
 }
@@ -24,8 +26,12 @@ See details.}
 
 \item{survey_year}{numeric: A vector with one or two survey years.}
 
-\item{distribution_type}{character: Type of distribution, either micro,
-group, aggregate or imputed.}
+\item{default_ppp}{numeric: Default purchasing power parity.}
+
+\item{ppp}{numeric: PPP request by user.}
+
+\item{distribution_type}{character: A vector with the type of distribution,
+must be either micro, group, aggregate or imputed.}
 
 \item{poverty_line}{numeric: Daily poverty line in international dollars.}
 }
@@ -56,6 +62,7 @@ res <- fill_gaps(
   survey_year = 2000,
   data = list(df0 = md_ABC_2000_income),
   predicted_request_mean = 13,
+  default_ppp = 1,
   distribution_type = 'micro',
   poverty_line = 1.9)
 
@@ -65,6 +72,7 @@ res <- fill_gaps(
   survey_year = c(2000, 2010),
   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
   predicted_request_mean = c(13, 13),
+  default_ppp = 1,
   distribution_type = 'micro',
   poverty_line = 1.9)
 
@@ -74,6 +82,7 @@ res <- fill_gaps(
   survey_year = c(2000, 2010),
   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
   predicted_request_mean = c(14, 17),
+  default_ppp = 1,
   distribution_type = 'micro',
   poverty_line = 1.9)
 

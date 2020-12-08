@@ -21,7 +21,7 @@ proportion of the population (Lorenz Curve).}
 
 \item{povline}{numeric: Poverty line.}
 
-\item{population}{numeric: cumulative proportion of population.}
+\item{population}{numeric: Cumulative proportion of population.}
 
 \item{requested_mean}{numeric: Welfare mean.}
 
