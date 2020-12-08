@@ -190,10 +190,10 @@ check_gd_input <- function(population,
     share_pop <- c(population[1], diff(population))
     share_wel <- c(welfare[1], diff(welfare))
 
-    assertthat::assert_that(sum(share_pop) == 1,
+    assertthat::assert_that(round(sum(share_pop), digits = 8) == 1,
                             msg = "Share of `population` does not sum up to 1")
 
-    assertthat::assert_that(sum(share_wel) == 1,
+    assertthat::assert_that(round(sum(share_wel), digits = 8) == 1,
                             msg = "Share of `welfare` does not sum up to 1")
 
     #--------- make sure  share of income is always increasing ---------
