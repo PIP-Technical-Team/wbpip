@@ -41,7 +41,8 @@
 #'
 #' @return data.table
 #' @keywords internal
-md_compute_bins <- function(welfare, weight,
+md_compute_bins <- function(welfare,
+                            weight,
                             nbins  = 100,
                             na.rm  = FALSE,
                             output = "simple") {
@@ -73,7 +74,7 @@ md_compute_bins <- function(welfare, weight,
 
   if ("simple" %in% output) {
 
-    return(dt[, "bins"])
+    return(dt[["bins"]])
 
   } else if ("full" %in% output) {
 
@@ -81,7 +82,7 @@ md_compute_bins <- function(welfare, weight,
 
   } else {
 
-    return(dt[, ..output])
+    return(dt[[output]])
 
   }
 }
