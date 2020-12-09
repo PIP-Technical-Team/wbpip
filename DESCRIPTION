@@ -25,9 +25,10 @@ Depends:
 Imports: 
     dplyr,
     rlang,
-    purrr, 
+    purrr,
     data.table,
     tibble,
     assertthat,
-    cli
+    cli,
+    collapse
 VignetteBuilder: knitr
