@@ -2,11 +2,29 @@ Package: wbpip
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    c(person(given = "Tony",
+            family = "Fujs",
+            role = c("aut", "cre"),
+            email = "tfujs@worldbank.org"),
+     person(given = "Aleksander",
+            family = "Eilertsen",
+            role = "aut",
+            email = "aeilertsen@worldbank.org"),
+     person(given = "R. Andrés",
+            family = "Castañeda",
+            role = "aut",
+            email = "acastanedaa@worldbank.org"),
+     person(given = "Ifeanyi",
+            family = "Nzegwu Edochie",
+            role = "aut",
+            email = "iedochie@worldbank.org"),
+     person(given = "Minh",
+            family = "Cong Nguyen",
+            role = "ctb",
+            email = "mnguyen3@worldbank.org"),
+     person(given = "World Bank",
+            role = "cph")
+     )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
