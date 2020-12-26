@@ -80,8 +80,36 @@ predict_request_year_mean <- function(survey_year, survey_mean,
 #' @param survey_mean numeric: A vector with one or two survey means.
 #' @param proxy list: A list with proxy values.
 #' @return numeric
-#' @noRd
+#' @export
 compute_predicted_mean <- function(survey_mean, proxy) {
+
+  #--------- verify missing values ---------
+  lsm <- length(survey_mean)
+
+  if (lsm == 1)  {
+
+    if (is.na(survey_mean)) {
+      return(NA)
+    }
+
+  } else {
+    if (sum(is.na(survey_mean)) == 0) {
+
+      survey_mean <- survey_mean
+
+    } else if (sum(is.na(survey_mean)) == 1) {
+
+      survey_mean <- survey_mean[which(!is.na(survey_mean))]
+
+    } else {
+
+      return(NA)
+
+    }
+  }
+
+  #--------- calculations ---------
+
   if (length(survey_mean) == 1) {
     if (is_one_point_adjusted(survey_mean, proxy$value0, proxy$req_value)) {
       pred_mean <- extrapolate_survey_mean(survey_mean, proxy)
