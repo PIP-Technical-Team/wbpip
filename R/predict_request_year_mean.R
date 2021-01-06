@@ -80,36 +80,8 @@ predict_request_year_mean <- function(survey_year, survey_mean,
 #' @param survey_mean numeric: A vector with one or two survey means.
 #' @param proxy list: A list with proxy values.
 #' @return numeric
-#' @export
+#' @noRd
 compute_predicted_mean <- function(survey_mean, proxy) {
-
-  #--------- verify missing values ---------
-  lsm <- length(survey_mean)
-
-  if (lsm == 1)  {
-
-    if (is.na(survey_mean)) {
-      return(NA)
-    }
-
-  } else {
-    if (sum(is.na(survey_mean)) == 0) {
-
-      survey_mean <- survey_mean
-
-    } else if (sum(is.na(survey_mean)) == 1) {
-
-      survey_mean <- survey_mean[which(!is.na(survey_mean))]
-
-    } else {
-
-      return(NA)
-
-    }
-  }
-
-  #--------- calculations ---------
-
   if (length(survey_mean) == 1) {
     if (is_one_point_adjusted(survey_mean, proxy$value0, proxy$req_value)) {
       pred_mean <- extrapolate_survey_mean(survey_mean, proxy)
@@ -179,7 +151,7 @@ interpolate_survey_mean <- function(survey_mean, proxy) {
 is_non_monotonic <- function(survey_mean, proxy_value, req_value) {
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
   if (length(survey_mean) == 1) return(FALSE)
 
   if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
@@ -203,7 +175,7 @@ is_non_monotonic <- function(survey_mean, proxy_value, req_value) {
 is_same_direction_interpolated <- function(survey_mean, proxy_value, req_value) {
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
   if (length(survey_mean) == 1) return(FALSE)
 
   if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
@@ -227,7 +199,7 @@ is_same_direction_interpolated <- function(survey_mean, proxy_value, req_value) 
 is_one_point_adjusted <- function(survey_mean, proxy_value, req_value){
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
 
   if (length(survey_mean) == 1) {
     return(TRUE)
