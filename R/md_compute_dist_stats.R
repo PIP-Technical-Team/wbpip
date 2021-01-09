@@ -18,27 +18,33 @@ md_compute_dist_stats <- function(welfare, weight,
                                   nbins  = NULL,
                                   n_quantile = 10) {
 
-  gini <- md_compute_gini(welfare = welfare,
-                          weight  = weight)
-
-  lorenz <- md_compute_lorenz(welfare = welfare,
-                              weight  = weight,
-                              nbins   = nbins)
-
-  quantiles <- md_compute_quantiles(lwelfare   = lorenz[["lorenz_welfare"]],
-                                    lweight    = lorenz[["lorenz_weight"]],
-                                    percentile = lorenz[["welfare"]])
-
   mean <- stats::weighted.mean(welfare, weight)
 
-  mld <- md_compute_mld(welfare = welfare,
-                        weight  = weight)
+  lorenz <- md_compute_lorenz(
+    welfare = welfare, weight  = weight,
+    nbins = nbins)
+  quantiles <- md_compute_quantiles(
+    lwelfare = lorenz[["lorenz_welfare"]],
+    lweight = lorenz[["lorenz_weight"]],
+    percentile = lorenz[["welfare"]])
+  median <- quantiles[["median"]]
+
+  gini <- md_compute_gini(
+    welfare = welfare, weight = weight)
+
+  mld <- md_compute_mld(
+    welfare = welfare, weight = weight)
+
+  polarization <- md_compute_polarization(
+    welfare = welfare, weight = weight,
+    gini = gini, weighted_mean = mean,
+    weighted_median = median)
 
   return(list(
     mean = mean,
-    median = quantiles[["median"]],
+    median = median,
     gini = gini,
-    polarization = NA,
+    polarization = polarization,
     mld = mld,
     quantiles = quantiles[["quantiles"]]
   ))
