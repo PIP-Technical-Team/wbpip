@@ -16,6 +16,8 @@ test_that('md_compute_polarization() computations are correct', {
     gini <- md_compute_gini(welfare = df$welfare, weight = df$weight)
     # Calculate Lorenz
     lz <- md_compute_lorenz(welfare = df$welfare, weight = df$weight)
+    # Calculate weighted mean
+    weighted_mean <- stats::weighted.mean(df$welfare, df$weight)
     # Calculate weighted median
     weighted_median <- md_compute_quantiles(
       lwelfare = lz$lorenz_welfare,
@@ -26,6 +28,7 @@ test_that('md_compute_polarization() computations are correct', {
       welfare = df$welfare,
       weight = df$weight,
       gini = gini,
+      weighted_mean = weighted_mean,
       weighted_median = weighted_median)
     return(pol)
   })
