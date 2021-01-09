@@ -151,7 +151,7 @@ interpolate_survey_mean <- function(survey_mean, proxy) {
 is_non_monotonic <- function(survey_mean, proxy_value, req_value) {
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
   if (length(survey_mean) == 1) return(FALSE)
 
   if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
@@ -175,7 +175,7 @@ is_non_monotonic <- function(survey_mean, proxy_value, req_value) {
 is_same_direction_interpolated <- function(survey_mean, proxy_value, req_value) {
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
   if (length(survey_mean) == 1) return(FALSE)
 
   if (is_monotonic(x1 = proxy_value[1], x2 = proxy_value[2], r = req_value)) {
@@ -199,7 +199,7 @@ is_same_direction_interpolated <- function(survey_mean, proxy_value, req_value) 
 is_one_point_adjusted <- function(survey_mean, proxy_value, req_value){
 
   # CHECKS
-  if (anyNA(proxy_value) | anyNA(req_value)) return(FALSE)
+  if (anyNA(proxy_value) | anyNA(req_value) | anyNA(survey_mean)) return(FALSE)
 
   if (length(survey_mean) == 1) {
     return(TRUE)
