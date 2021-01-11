@@ -15,8 +15,7 @@ md_DEF_2000_consumption <-
 md_GHI_2000_income <-
   md_clean_data(md_GHI_2000_income, welfare = 'welfare', weight = 'weight')$data
 gd_GHI_2009_income <- gd_clean_data(gd_GHI_2009_income, welfare = 'welfare',
-                                   population = 'weight', data_type = 5)
-names(gd_GHI_2009_income)[1] <- 'weight'
+                                    population = 'weight', gd_type = 5)
 
 # Output format (named list)
 test_that('fill_gaps() returns the correct output format', {
