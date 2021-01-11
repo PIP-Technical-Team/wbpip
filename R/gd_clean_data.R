@@ -2,11 +2,11 @@
 #'
 #' Clean grouped data to be used in PIP methods.
 #'
-#' If `data_type = 1` `population` must be the cumulative proportion of
+#' If `gd_type = 1` `population` must be the cumulative proportion of
 #' population and `welfare` must be the cumulative proportion of income held by
-#' that proportion of the population (Lorenz curve). If `data_type = 2`,
+#' that proportion of the population (Lorenz curve). If `gd_type = 2`,
 #' `population` must be the proportion of population and `welfare` must be the
-#' proportion of income. If `data_type = 5`, then `population` must be the
+#' proportion of income. If `gd_type = 5`, then `population` must be the
 #' Percentage of the population in a given interval of incomes, whereas
 #' `welfare` must be the mean income of that interval.
 #'
@@ -14,292 +14,160 @@
 #' @param welfare numeric: welfare vector whose form depends on on `type` (SE).
 #' @param population numeric: population vector whose form depends on on `type`
 #'   (SE).
-#' @param data_type numeric: Type of data. See details.
+#' @param gd_type numeric: Type of data. See details.
 #'
-#' @return data.table
+#' @return data.frame
 #' @keywords internal
-gd_clean_data <- function(dt,
-                          welfare,
-                          population,
-                          data_type = 1) {
+gd_clean_data <- function(dt, welfare, population,
+                          gd_type = 1) {
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Extract vectors   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Extract vectors
+  welfare_vector <- dt[[welfare]]
+  population_vector <- dt[[population]]
 
-  # to make sure we can use non-standard evaluation... (do we want NSE?)
-  # welfare    <- deparse(substitute(welfare))
-  # population <- deparse(substitute(population))
+  # Check inputs
+  check_inputs_gd_clean_data(
+    population = population_vector,
+    welfare = welfare_vector,
+    gd_type = gd_type)
 
-  welfare    <- dt[[welfare]]
-  population <- dt[[population]]
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Check inputs   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  check_gd_input(population = population,
-                 welfare    = welfare,
-                 data_type  = data_type)
-
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Build back type 1   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  if (data_type == 1) {
-    return(data.table::data.table(
-      population = population,
-      welfare    = welfare
-    ))
+  # Standardize data according to type
+  if (gd_type == 1) {
+    res <- gd_standardize_type1(
+      population = population_vector,
+      welfare = welfare_vector)
+  } else if (gd_type == 2) {
+    res <- gd_standardize_type2(
+      population = population_vector,
+      welfare = welfare_vector)
+  } else if (gd_type == 5) {
+    res <- gd_standardize_type5(
+      population = population_vector,
+      welfare = welfare_vector)
   }
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Standardize types 2 and 5   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Check that data was standardized correctly
+  validate_output_gd_clean_data(
+    population = res$population,
+    welfare = res$welfare)
 
-  # Standardize according to input distribution
-  if (data_type %in% c(3, 5)) {
-    ngd <- standardize_type5(population = population,
-                              welfare = welfare)
+  # Overwrite values in supplied data frame
+  dt[[welfare]] <- res$welfare
+  dt[[population]] <- res$population
 
-    # Check data was standardized correctly
-    check_gd_input(population = ngd$population,
-                   welfare    = ngd$welfare,
-                   data_type  = 1)
-  }
-
-  if (data_type == 2) {
-
-    #---------  make sure data is sorted ---------
-    ngd <- standardize_type2(population = population,
-                              welfare = welfare)
-
-    check_gd_input(population = ngd$population,
-                   welfare    = ngd$welfare,
-                   data_type  = 1)
-  }
-
-  return(ngd)
+  return(dt)
 }
 
-#' Standardize type 5
-#'
-#' @param welfare numeric: welfare vector
-#' @param population numeric: population vector
-#'
-#' @return data.table
-#' @noRd
-standardize_type5 <- function(welfare, population) {
-
-  if (sum(population) == 100) {
-    population <- population/100
-    cli::cli_alert_info("variable {.val population} has been rescaled to
-                        range (0,1]", wrap = TRUE)
-  }
-
-  # sum_population      <- sum(population)
-  mean_welfare        <- sum(population * welfare)
-  min_welfare         <- min(welfare)
-  max_welfare         <- max(welfare)
-
-  # Compute points on the lorenz curve
-  lorenz_pop     <- cumsum(population)
-  share_welfare  <- population * (welfare/mean_welfare)
-  lorenz_welfare <- cumsum(share_welfare)
-
-  return(data.table::data.table(
-    population = lorenz_pop,
-    welfare    = lorenz_welfare
-  )
-  )
-}
-
-#' standardize_type2
-#' Standardize grouped data of type 2 distribution
-#' @param population numeric: population, proportion of population
-#' @param welfare numeric: welfare, proportion of income / consumption
-#'
+#' gd_standardize_type1
+#' Standardize grouped data of type 1 distribution.
+#' @inheritParams gd_clean_data
 #' @return list
 #' @noRd
-standardize_type2 <- function(population,
-                              welfare) {
+gd_standardize_type1 <- function(population,
+                                 welfare) {
 
-  #--------- Make sure variables go from 0 to 1 ---------
 
-  varrescale <- vector()
-  if (sum(population) == 100) {
+  nobs <- length(population)
+  sum_population <- population[nobs]
+  sum_welfare <- welfare[nobs]
 
-    population <- population/100
-    varrescale[length(varrescale) + 1] <- "population"
-  }
-  if (sum(welfare) == 100) {
+  # Calculate points on the Lorenz curve
+  lorenz_pop <- population / sum_population
+  lorenz_welfare <- welfare / sum_welfare
 
-    welfare <- welfare/100
-    varrescale[length(varrescale) + 1] <- "welfare"
-  }
+  out <- list(
+    welfare = lorenz_welfare,
+    population = lorenz_pop)
 
-  cli::cli_alert_info("variable{?s} {.val {varrescale}} ha{?s/ve} been rescaled to
-                      range (0,1]", wrap = TRUE)
-
-  #--------- Cumulative vectors ---------
-  lorenz_pop     <- cumsum(population)
-  lorenz_welfare <- cumsum(welfare)
-
-  return(data.table::data.table(
-    population = lorenz_pop,
-    welfare    = lorenz_welfare
-  )
-  )
+  return(out)
 }
 
-#' Check Group Data inputs
-#'
+
+#' gd_standardize_type2
+#' Standardize grouped data of type 2 distribution.
+#' @inheritParams gd_clean_data
+#' @return list
+#' @noRd
+gd_standardize_type2 <- function(population,
+                                 welfare) {
+
+  # Calculate points on the Lorenz curve
+  lorenz_pop <- cumsum(population) / sum(population)
+  lorenz_welfare <- cumsum(welfare) / sum(welfare)
+
+  out <- list(
+    welfare = lorenz_welfare,
+    population = lorenz_pop)
+
+  return(out)
+}
+
+
+#' gd_standardize_type5
+#' Standardize grouped data of type 5 distribution.
+#' @inheritParams gd_clean_data
+#' @return list
+#' @noRd
+gd_standardize_type5 <- function(welfare, population) {
+
+  sum_population <- sum(population)
+  sum_welfare <- sum(population * welfare)
+
+  # Calculate points on the Lorenz curve
+  lorenz_pop <- cumsum(population) / sum_population
+  share_welfare <- population * (welfare / sum_welfare)
+  lorenz_welfare <- cumsum(share_welfare)
+
+  out <- list(welfare = lorenz_welfare,
+              population = lorenz_pop)
+
+  return(out)
+}
+
+#' check_inputs_gd_clean_data
 #' @inheritParams gd_clean_data
 #' @return logical
 #' @noRd
-check_gd_input <- function(population,
-                           welfare,
-                           data_type) {
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Basic checks   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+check_inputs_gd_clean_data <- function(population,
+                                       welfare,
+                                       gd_type) {
 
   # Check welfare and population
   assertthat::assert_that(length(population) == length(welfare))
   assertthat::is.number(population)
   assertthat::is.number(welfare)
-
   assertthat::assert_that(sum(is.na(population)) == 0,
-                          msg = "Data can't have NA in population")
+                          msg = "Data can't have NA in population.")
   assertthat::assert_that(sum(is.na(welfare)) == 0,
-                          msg = "Data can't have NA in welfare")
+                          msg = "Data can't have NA in welfare.")
 
   # Check data type
-  assertthat::assert_that(length(data_type) == 1)
-  assertthat::assert_that(data_type %in% c(1, 2, 5))
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   Checks based on type   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  #--------- Type 1 ---------
-  if (data_type == 1) {
-
-    #--------- check vector cumsum up to one ---------
-    share_pop <- c(population[1], diff(population))
-    share_wel <- c(welfare[1], diff(welfare))
-
-    assertthat::assert_that(round(sum(share_pop), digits = 8) == 1,
-                            msg = "Share of `population` does not sum up to 1")
-
-    assertthat::assert_that(round(sum(share_wel), digits = 8) == 1,
-                            msg = "Share of `welfare` does not sum up to 1")
-
-    #--------- make sure  share of income is always increasing ---------
-    # normalize welfare by population
-    norm_wel <- diff(share_wel/share_pop)
-
-    assertthat::assert_that(all(norm_wel >= 0),
-                            msg = paste0("share of `welfare` must increase with each\n",
-                                         "subsequent bin relative to its corresponging\n",
-                                         "population. Make sure data is sorted correctly."))
-
-  }
-
-  #--------- type 2 ---------
-
-  if (data_type == 2) {
-
-    assertthat::assert_that(sum(welfare) %in% c(1, 100))
-    assertthat::assert_that(sum(population) %in% c(1, 100))
-
-  }
-
-  #--------- type 5 (or 3) ---------
-
-  # Still need more tests
-  if (data_type %in% c(3, 5)) {
-
-    assertthat::assert_that(sum(population) %in% c(1, 100))
-
-  }
+  assertthat::assert_that(length(gd_type) == 1)
+  assertthat::assert_that(gd_type %in% c(1, 2, 5),
+                          msg = 'Data must be of type 1, 2 or 5.')
 
 }
 
-#' standardize_type5_old
-#' Standardize grouped data of type 5 distribution
-#' @param population numeric: population, in percentage of the population in a given interval of incomes.
-#' @param welfare numeric: welfare, the mean income / consumption of that interval
-#' @param min_welfare_default numeric:
-#' @param max_welfare_default numeric:
-#'
-#' @return list
+#' validate_output_gd_clean_data
+#' @inheritParams gd_clean_data
+#' @return logical
 #' @noRd
-standardize_type5_old <- function(population,
-                                  welfare,
-                                  min_welfare_default,
-                                  max_welfare_default) {
-  nobs                <- length(population)
-  lorenz_pop          <- vector(mode = "numeric", length = nobs)
-  lorenz_welfare      <- vector(mode = "numeric", length = nobs)
+validate_output_gd_clean_data <- function(population,
+                                          welfare) {
 
-  sum_population      <- sum(population)
-  sum_welfare         <- sum(population * welfare)
-  min_welfare         <- min(welfare)
-  max_welfare         <- max(welfare)
+  # Check that cumulative share sums to 1
+  share_pop <- c(population[1], diff(population))
+  share_wel <- c(welfare[1], diff(welfare))
+  assertthat::assert_that(round(sum(share_pop), digits = 8) == 1,
+                          msg = "Share of `population` does not sum up to 1")
+  assertthat::assert_that(round(sum(share_wel), digits = 8) == 1,
+                          msg = "Share of `welfare` does not sum up to 1")
 
-  min_welfare_default <- ifelse(min_welfare < min_welfare_default,
-                                min_welfare,
-                                min_welfare_default)
+  # Check that share of income is always increasing
+  norm_wel <- diff(share_wel / share_pop) # normalize welfare by population
+  assertthat::assert_that(all(norm_wel >= 0),
+                          msg = paste0("share of `welfare` must increase with each\n",
+                                       "subsequent bin relative to its corresponging\n",
+                                       "population. Make sure data is sorted correctly."))
 
-  max_welfare_default <- ifelse(max_welfare > max_welfare_default,
-                                max_welfare,
-                                max_welfare_default)
-
-  mean_welfare        <- sum_welfare / sum_population
-
-  # Compute points on the lorenz curve
-  lorenz_pop[1]     <- population[1] / sum_population
-  lorenz_welfare[1] <- population[1] * welfare[1] / sum_population / mean_welfare
-  for (i in seq(2, nobs)) {
-    lorenz_pop[i] <- population[i] / sum_population + lorenz_pop[i - 1]
-    lorenz_welfare[i] <- population[i] * welfare[i] / sum_population / mean_welfare + lorenz_welfare[i - 1]
-  }
-
-  return(data.table(population = lorenz_pop,
-                    welfare    = lorenz_welfare))
-}
-
-#' standardize_type2_old
-#' Standardize grouped data of type 2 distribution
-#' @param population numeric: population, proportion of population
-#' @param welfare numeric: welfare, proportion of income / consumption
-#' @param min_welfare_default numeric: Minimum welfare
-#' @param max_welfare_default numeric: Maximum welfare
-#'
-#' @return list
-#' @noRd
-standardize_type2_old <- function(population,
-                                  welfare,
-                                  min_welfare_default,
-                                  max_welfare_default) {
-  nobs                <- length(population)
-  lorenz_pop          <- vector(mode = "numeric", length = nobs)
-  lorenz_welfare      <- vector(mode = "numeric", length = nobs)
-  sum_population      <- sum(population)
-  sum_welfare         <- sum(welfare)
-  min_welfare         <- min(welfare)
-  max_welfare         <- max(welfare)
-  min_welfare_default <- if (min_welfare < min_welfare_default) min_welfare else min_welfare_default
-  max_welfare_default <- if (max_welfare < max_welfare_default) max_welfare else max_welfare_default
-  lorenz_pop[1]       <- population[1] / sum_population
-  lorenz_welfare[1]   <- welfare[1] / sum_welfare
-  for (i in seq(2, nobs)) {
-    lorenz_pop[i] <- lorenz_pop[i - 1] + population[i] / sum_population
-    lorenz_welfare[i] <- lorenz_welfare[i - 1] + welfare[i] / sum_welfare
-  }
-
-  return(list(lorenz_pop = lorenz_pop,
-              lorenz_welfare = lorenz_welfare))
 }
