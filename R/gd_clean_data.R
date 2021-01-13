@@ -58,7 +58,7 @@ gd_clean_data <- function(dt, welfare, population,
 
   if (!quiet) {
     cli::cli_alert_info(
-      "columns {.val welfare} and {.val {population}} been rescaled to range (0,1]",
+      'columns {.val welfare} and {.val {population}} have been rescaled to range (0,1]',
       wrap = TRUE)
   }
 
