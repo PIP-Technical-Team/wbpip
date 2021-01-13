@@ -26,22 +26,30 @@ dt_datt[, R := (W * X) / sum(W * X)]
 
 test_that('gd_clean_data() is working correctly', {
 
-  # Test against example dataset (type5)
-  dt <- gd_clean_data(
+  # Test for correct output class
+  res <- gd_clean_data(
     gd_GHI_2009_income,
     welfare = 'welfare',
     population = 'weight',
     gd_type = 5)
-  expect_identical(class(dt), class(gd_GHI_2009_income))
-  expect_identical(names(dt), names(gd_GHI_2009_income))
-  expect_equal(dt$weight, seq(0.1, 1, .1))
-  expect_equal(dt$welfare,
+  expect_identical(class(res), c('data.table', 'data.frame'))
+
+  # Test against example dataset (type5)
+  res <- gd_clean_data(
+    gd_GHI_2009_income,
+    welfare = 'welfare',
+    population = 'weight',
+    gd_type = 5)
+  expect_identical(class(res), c('data.table', 'data.frame'))
+  expect_identical(names(res), names(gd_GHI_2009_income))
+  expect_equal(res$weight, seq(0.1, 1, .1))
+  expect_equal(res$welfare,
                c(0.02292242, 0.05774930, 0.10232770, 0.15716421, 0.22252476,
                  0.29363491, 0.38883260, 0.50710468, 0.66958790, 1.00000000))
 
-  # Test for type1 production data example
+  # Test for type 1 production data example
   welfare <- c(0.305, 0.732, 1.226, 1.77, 2.36, 2.993, 3.667, 4.379, 5.129,
-               5.914,10.369, 15.752, 22.148, 29.705,38.748, 49.967, 64.962, 100)
+               5.914,10.369, 15.752, 22.148, 29.705, 38.748, 49.967, 64.962, 100)
   weight <- c(2, 4, 6,8, 10, 12, 14, 16, 18, 20, 30,	40,	50, 60,	70,	80,	90,	100)
   df <- data.frame(welfare = welfare, weight = weight)
   out <- gd_clean_data(df, welfare = 'welfare',
@@ -53,7 +61,7 @@ test_that('gd_clean_data() is working correctly', {
                  0.10369, 0.15752, 0.22148, 0.29705, 0.38748,
                  0.49967, 0.64962, 1.00000))
 
-  # Test for type2 production data example
+  # Test for type 2 production data example
   welfare <- c(1.2, 2, 2.7, 3.6, 5, 6, 8.6, 11.4, 15.9, 43.7)
   weight <- rep(10, 10)
   df <- data.frame(welfare = welfare, weight = weight)
@@ -64,8 +72,7 @@ test_that('gd_clean_data() is working correctly', {
                c(0.01198801, 0.03196803, 0.05894106, 0.09490509, 0.14485514,
                  0.20479520, 0.29070929, 0.40459540, 0.56343656, 1.00000000))
 
-
-  # Data type must be of type 1, 2 or 5
+  # Data type must be of 1, 2 or 5
   expect_error(gd_clean_data(
     gd_GHI_2009_income,
     welfare = 'welfare',
@@ -81,6 +88,15 @@ test_that('gd_clean_data() is working correctly', {
     welfare = 'welfare',
     population = 'population',
     gd_type = 5))
+
+  # Test that output messages are
+  # suppressed with silent = TRUE
+  expect_silent(gd_clean_data(
+    gd_GHI_2009_income,
+    welfare = 'welfare',
+    population = 'weight',
+    gd_type = 5,
+    quiet = TRUE))
 
 })
 

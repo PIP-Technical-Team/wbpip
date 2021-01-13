@@ -4,14 +4,16 @@
 \alias{md_clean_data}
 \title{Clean data (micro)}
 \usage{
-md_clean_data(dt, ...)
+md_clean_data(dt, welfare, weight = NULL, quiet = FALSE)
 }
 \arguments{
 \item{dt}{data.frame: A table with survey data.}
 
-\item{...}{list of arguments that correspond to specific variable names.
-Arguments available are in \code{getOption("wbpip.agrs_to_check")}.
-For instance, welfare = "income", weight = "peso'.}
+\item{welfare}{character: Name of welfare column.}
+
+\item{weight}{character: Name of weight column. Optional.}
+
+\item{quiet}{logical: If TRUE output messages are suppressed.}
 }
 \value{
 list

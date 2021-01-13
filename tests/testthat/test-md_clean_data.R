@@ -1,64 +1,80 @@
-context("md_clean_data: Conditions of arguments work correctly")
-test_that("Arguments that don't exist are errors", {
-  expect_error( md_clean_data(dt,
-                              welfsdfe = "welfare",
-                              weight  = "weight")
-                )
-})
+data('md_GHI_2000_income')
+data('md_DEF_2000_consumption')
 
-test_that("Variables that don't exist in data are errors", {
-  expect_error( md_clean_data(dt,
-                              welfare = "bla",
-                              weight  = "ble")
-                )
-})
+test_that('md_clean_data() is working correctly', {
 
-context("md_clean_data: Elimination is done correctly")
-nd <- md_clean_data(dt,
-                    welfare = "welfare",
-                    weight  = "weight")
+  # Test that res$data returns as a data.table
+  df <- data.frame(welfare = 1:10, weight = 1:10)
+  res <- md_clean_data(
+    df, welfare = 'welfare',
+    weight = 'weight' )
+  expect_identical(class(res$data), c('data.table', 'data.frame'))
 
-test_that("NA are dropped in welfare", {
-  expect_equal(15, nd$nna_welfare)
-})
+  # Test that welfare is being sorted
+  expect_true(is.unsorted(md_GHI_2000_income))
+  res <- md_clean_data(
+    md_GHI_2000_income, welfare = 'welfare',
+    weight = 'weight' )
+  expect_false(is.unsorted(res$data$welfare))
 
-test_that("NA are dropped in weight", {
-  expect_equal(17, nd$nna_weight)
-})
+  # Test that negative welfare values are removed
+  expect_true(any(sign(md_GHI_2000_income$welfare) == -1))
+  res <- md_clean_data(
+    md_GHI_2000_income, welfare = 'welfare',
+    weight = 'weight' )
+  expect_false(any(sign(res$data$welfare) == -1))
+  expect_equal(res$nng_welfare, 2)
 
-test_that("Negative are dropped in welfare", {
-  expect_equal(9, nd$nng_welfare)
-})
+  # Test that negative weight values are removed
+  df <- data.frame(welfare = 1:10, weight = c(1:9, -1))
+  res <- md_clean_data(
+    df, welfare = 'welfare',
+    weight = 'weight' )
+  expect_false(anyNA(res$data$weight))
+  expect_equal(res$nng_weight, 1)
 
-test_that("Negative or zeros are dropped in weight", {
-  expect_equal(11, nd$nng_weight)
-})
+  # Test that missing welfare values are removed
+  expect_true(anyNA(md_DEF_2000_consumption$welfare))
+  res <- md_clean_data(
+    md_DEF_2000_consumption, welfare = 'welfare',
+    weight = 'weight' )
+  expect_false(anyNA(res$data$welfare))
+  expect_equal(res$nna_welfare, 3)
 
-context("md_clean_data: Treatment of weight variable")
+  # Test that missing weight values are removed
+  df <- data.frame(welfare = 1:10, weight = c(1:9, NA))
+  res <- md_clean_data(
+    df, welfare = 'welfare',
+    weight = 'weight' )
+  expect_false(anyNA(res$data$weight))
+  expect_equal(res$nna_weight, 1)
 
-test_that("when weight is not provided, variable `weight` is created equal to 1",
-          {
+  # Test that combination of negatives
+  # and zeros are removed
+  df <- data.frame(
+    welfare = c(1:5, NA, -1, 8:10),
+    weight = c(NA, 2:7, -1, 9:10))
+  res <- md_clean_data(
+    df, welfare = 'welfare',
+    weight = 'weight' )
+  expect_equal(res$data$welfare, c(2:5, 9:10))
+  expect_equal(res$data$weight, c(2:5, 9:10))
 
-  dt2 <- md_clean_data(dt,
-                welfare = "welfare")$data
-  expect_equal(mean(dt2$weight), 1)
+  # Test weight equal to 1 is created
+  # if weight option is not provided
+  df <- data.frame(welfare = 1:10)
+  res <- md_clean_data(df, welfare = 'welfare')
+  expect_equal(res$data$weight, rep(1, 10))
 
-})
-
-test_that("Data is sorted by welfare variable",{
-
-  dt2 <- md_clean_data(dt,
-                welfare = "welfare")$data
-
-  setorder(dt2, weight_h) # sort data by other variable
-  welf1 <- sort(dt2$welfare)
-
-  dt3 <- md_clean_data(dt2,
-                welfare = "welfare")$data
-
-  welf2 <- dt3$welfare
-
-  expect_equal(welf1, welf2, check.attributes = FALSE)
+  # Test that output messages are
+  # suppressed with silent = TRUE
+  df <- data.frame(
+    welfare = c(1:5, NA, -1, 8:10),
+    weight = c(NA, 2:7, -1, 9:10))
+  expect_silent(md_clean_data(
+    df, welfare = 'welfare',
+    weight = 'weight',
+    quiet = TRUE))
 
 })
 

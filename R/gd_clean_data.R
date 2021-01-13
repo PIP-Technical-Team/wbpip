@@ -11,15 +11,20 @@
 #' `welfare` must be the mean income of that interval.
 #'
 #' @param dt data.frame: A table with survey data.
-#' @param welfare numeric: welfare vector whose form depends on on `type` (SE).
-#' @param population numeric: population vector whose form depends on on `type`
-#'   (SE).
+#' @param welfare character: Name of welfare column.
+#' @param population character: Name of population column.
 #' @param gd_type numeric: Type of data. See details.
+#' @param quiet logical: If TRUE output messages are suppressed.
 #'
-#' @return data.frame
+#' @return data.table
 #' @keywords internal
 gd_clean_data <- function(dt, welfare, population,
-                          gd_type = 1) {
+                          gd_type, quiet = FALSE) {
+
+  # Convert to data.table
+  if (!(inherits(dt, 'data.table'))) {
+    data.table::setDT(dt)
+  }
 
   # Extract vectors
   welfare_vector <- dt[[welfare]]
@@ -51,6 +56,12 @@ gd_clean_data <- function(dt, welfare, population,
     population = res$population,
     welfare = res$welfare)
 
+  if (!quiet) {
+    cli::cli_alert_info(
+      'columns {.val welfare} and {.val {population}} have been rescaled to range (0,1]',
+      wrap = TRUE)
+  }
+
   # Overwrite values in supplied data frame
   dt[[welfare]] <- res$welfare
   dt[[population]] <- res$population
@@ -65,7 +76,6 @@ gd_clean_data <- function(dt, welfare, population,
 #' @noRd
 gd_standardize_type1 <- function(population,
                                  welfare) {
-
 
   nobs <- length(population)
   sum_population <- population[nobs]
@@ -137,9 +147,9 @@ check_inputs_gd_clean_data <- function(population,
   assertthat::is.number(population)
   assertthat::is.number(welfare)
   assertthat::assert_that(sum(is.na(population)) == 0,
-                          msg = "Data can't have NA in population.")
+                          msg = 'Data can\'t have NA in population.')
   assertthat::assert_that(sum(is.na(welfare)) == 0,
-                          msg = "Data can't have NA in welfare.")
+                          msg = 'Data can\'t have NA in welfare.')
 
   # Check data type
   assertthat::assert_that(length(gd_type) == 1)
@@ -159,15 +169,15 @@ validate_output_gd_clean_data <- function(population,
   share_pop <- c(population[1], diff(population))
   share_wel <- c(welfare[1], diff(welfare))
   assertthat::assert_that(round(sum(share_pop), digits = 8) == 1,
-                          msg = "Share of `population` does not sum up to 1")
+                          msg = 'Share of `population` does not sum up to 1')
   assertthat::assert_that(round(sum(share_wel), digits = 8) == 1,
-                          msg = "Share of `welfare` does not sum up to 1")
+                          msg = 'Share of `welfare` does not sum up to 1')
 
   # Check that share of income is always increasing
   norm_wel <- diff(share_wel / share_pop) # normalize welfare by population
   assertthat::assert_that(all(norm_wel >= 0),
-                          msg = paste0("share of `welfare` must increase with each\n",
-                                       "subsequent bin relative to its corresponging\n",
-                                       "population. Make sure data is sorted correctly."))
+                          msg = paste0('share of `welfare` must increase with each\n',
+                                       'subsequent bin relative to its corresponging\n',
+                                       'population. Make sure data is sorted correctly.'))
 
 }

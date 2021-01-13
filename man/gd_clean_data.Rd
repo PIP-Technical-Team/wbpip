@@ -4,20 +4,21 @@
 \alias{gd_clean_data}
 \title{Clean data (grouped)}
 \usage{
-gd_clean_data(dt, welfare, population, gd_type = 1)
+gd_clean_data(dt, welfare, population, gd_type, quiet = FALSE)
 }
 \arguments{
 \item{dt}{data.frame: A table with survey data.}
 
-\item{welfare}{numeric: welfare vector whose form depends on on \code{type} (SE).}
+\item{welfare}{character: Name of welfare column.}
 
-\item{population}{numeric: population vector whose form depends on on \code{type}
-(SE).}
+\item{population}{character: Name of population column.}
 
 \item{gd_type}{numeric: Type of data. See details.}
+
+\item{quiet}{logical: If TRUE output messages are suppressed.}
 }
 \value{
-data.frame
+data.table
 }
 \description{
 Clean grouped data to be used in PIP methods.
