@@ -16,7 +16,7 @@ gd_compute_pip_stats(
 )
 }
 \arguments{
-\item{welfare}{numeric: cumulative proportion of income held by that
+\item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
 \item{povline}{numeric: Poverty line.}
@@ -39,6 +39,6 @@ list
 }
 \description{
 Compute poverty statistics for grouped data by selecting the best functional
-fit for the Lorenz curve (either beta or quadrtic).
+fit for the Lorenz curve (either beta or quadratic).
 }
 \keyword{internal}

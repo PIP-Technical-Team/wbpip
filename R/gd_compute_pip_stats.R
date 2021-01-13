@@ -1,9 +1,9 @@
 #' Computes poverty statistics (grouped)
 #'
 #' Compute poverty statistics for grouped data by selecting the best functional
-#' fit for the Lorenz curve (either beta or quadrtic).
+#' fit for the Lorenz curve (either beta or quadratic).
 #'
-#' @param welfare numeric: cumulative proportion of income held by that
+#' @param welfare numeric: Cumulative proportion of welfare held by that
 #' proportion of the population (Lorenz Curve).
 #' @param povline numeric: Poverty line.
 #' @param population numeric: Cumulative proportion of population.

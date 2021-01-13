@@ -16,7 +16,7 @@ gd_compute_pip_stats_lb(
 )
 }
 \arguments{
-\item{welfare}{numeric: cumulative proportion of income held by that
+\item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
 \item{povline}{numeric: Poverty line.}

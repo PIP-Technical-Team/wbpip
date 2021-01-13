@@ -19,8 +19,8 @@ gd_compute_pip_stats_lb <- function(welfare,
   if (!is.null(ppp)) {
     requested_mean <- requested_mean * default_ppp / ppp
   } else {
-      ppp <- default_ppp
-    }
+    ppp <- default_ppp
+  }
   # STEP 1: Prep data to fit functional form
   prepped_data <- create_functional_form_lb(welfare = welfare,
                                             population = population)
@@ -453,61 +453,61 @@ gd_compute_poverty_stats_lb <- function(mean,
                                        B = B,
                                        C = C)
 
-    # Poverty gap
-    u <- mean / povline
-    pov_gap <- gd_compute_pov_gap_lb(u, headcount, A, B, C)
+  # Poverty gap
+  u <- mean / povline
+  pov_gap <- gd_compute_pov_gap_lb(u, headcount, A, B, C)
 
-    # Poverty severity
-    pov_gap_sq <- gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
+  # Poverty severity
+  pov_gap_sq <- gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
 
-    # First derivative of the Lorenz curve
-    dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
+  # First derivative of the Lorenz curve
+  dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
 
-    # Second derivative of the Lorenz curve
-    ddl <- A * (headcount^B) *
-      ((1 - headcount)^C) *
-      ((B * (1 - B) / headcount^2) +
-         (2 * B * C / (headcount * (1 - headcount))) +
-         (C * (1 - C) / ((1 - headcount)^2)))
+  # Second derivative of the Lorenz curve
+  ddl <- A * (headcount^B) *
+    ((1 - headcount)^C) *
+    ((B * (1 - B) / headcount^2) +
+       (2 * B * C / (headcount * (1 - headcount))) +
+       (C * (1 - C) / ((1 - headcount)^2)))
 
-    # Elasticity of headcount index w.r.t mean
-    eh <- -povline / (mean * headcount * ddl)
+  # Elasticity of headcount index w.r.t mean
+  eh <- -povline / (mean * headcount * ddl)
 
-    # Elasticity of poverty gap index w.r.t mean
-    epg <- 1 - (headcount / pov_gap)
+  # Elasticity of poverty gap index w.r.t mean
+  epg <- 1 - (headcount / pov_gap)
 
-    # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
-    ep <- 2 * (1 - pov_gap / pov_gap_sq)
+  # Elasticity of distributionally sensitive FGT poverty measure w.r.t mean
+  ep <- 2 * (1 - pov_gap / pov_gap_sq)
 
-    # PElasticity of headcount index w.r.t gini index
-    gh <- (1 - povline / mean) / (headcount  * ddl)
+  # PElasticity of headcount index w.r.t gini index
+  gh <- (1 - povline / mean) / (headcount  * ddl)
 
-    # Elasticity of poverty gap index w.r.t gini index
-    gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
+  # Elasticity of poverty gap index w.r.t gini index
+  gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
 
-    # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
-    gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
+  # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index
+  gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    # Watts index
-    watts <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
+  # Watts index
+  watts <- gd_compute_watts_lb(headcount, mean, povline, 0.005, A, B, C)
 
-    return(
-      list(
-        headcount = headcount,
-        pg = pov_gap,
-        p2 = pov_gap_sq,
-        eh = eh,
-        epg = epg,
-        ep = ep,
-        gh = gh,
-        gpg = gpg,
-        gp = gp,
-        watts = watts,
-        dl = dl,
-        ddl = ddl
-      )
+  return(
+    list(
+      headcount = headcount,
+      pg = pov_gap,
+      p2 = pov_gap_sq,
+      eh = eh,
+      epg = epg,
+      ep = ep,
+      gh = gh,
+      gpg = gpg,
+      gp = gp,
+      watts = watts,
+      dl = dl,
+      ddl = ddl
     )
-  }
+  )
+}
 
 #' Estimates poverty and inequality stats from beta Lorenz fit
 #'
