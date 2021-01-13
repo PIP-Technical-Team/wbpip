@@ -25,190 +25,131 @@ if (getRversion() >= '2.15.1')
 #' * ing: Index of obs with negative values
 #'
 #' @param dt data.frame: A table with survey data.
-#' @param ... list of arguments that correspond to specific variable names.
-#' Arguments available are in `getOption("wbpip.agrs_to_check")`.
-#' For instance, welfare = "income", weight = "peso'.
+#' @param welfare character: Name of welfare column.
+#' @param weight character: Name of weight column. Optional.
+#' @param quiet logical: If TRUE output messages are suppressed.
 #' @return list
 #' @keywords internal
-md_clean_data <- function(dt, ...) {
+md_clean_data <- function(dt, welfare, weight = NULL, quiet = FALSE) {
 
+  # Convert to data.table
   if (!(inherits(dt, "data.table"))) {
     data.table::setDT(dt)
   }
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #--------- SET UP   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Column names
+  welfare_col <- welfare
+  weight_col <- weight
 
-  agrs_to_check <- getOption("wbpip.agrs_to_check")
-
-  # List to return
-  ll <- vector(mode = "list")
-
-  # parse ellipsis as a list, where names are the the names of
-  # the arguments, and contents the names of the variables to
-  # be evaluated.
-  cols <- eval(substitute(alist(...)))
-  # cols  <- as.list(match.call())[-(1:2)]
-  # cols  <- as.list(substitute(list(...)))[-1L]
-
-  # Name of columns
-  colnames <- unlist(cols, use.names = FALSE)
-
-  # Names of arguments
-  argnames <- names(cols)
-
-  #--------- Check that all the variables selected exist in dt ---------
-
-  if (!(all(colnames %in% names(dt)))) {
-
-    nocolind <- which(!(colnames %in% names(dt)))
-    nocols   <- paste0("`", colnames[nocolind], "`")
-    nocols   <- last_item(nocols)
-
-    msg     <- "Variables provided do not exist in data"
-    hint    <- "Make sure the variables you want to evaluate exist in the data frame"
-    problem <- paste("variable(s)", nocols, "is(are) not part of the data frame")
-    rlang::abort(c(
-                  msg,
-                  i = hint,
-                  x = problem
-                  ),
-                  class = "wbpip_error"
-                  )
-
-  }
-
-  #--------- Check that the names of the arguments are part of the variables to check ---------
-  if (!(all(argnames %in% agrs_to_check))) {
-
-    nocolind <- which(!(argnames %in% agrs_to_check))
-    nocols   <- paste0("`", argnames[nocolind], "`")
-    nocols   <- last_item(nocols)
-
-    args2   <- paste0("`", agrs_to_check, "`")
-    args2   <- last_item(args2)
-
-
-    msg     <- "Arguments provided are not valid"
-    hint    <- paste("Make sure the arguments are at least one among", args2)
-    problem <- paste("Argument(s)", nocols, "is(are) not valid")
-    rlang::abort(c(
-      msg,
-      i = hint,
-      x = problem
-    ),
-    class = "wbpip_error"
-    )
-
-  }
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #--------- CHECKs by variable   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Create output list
+  ll <- vector(mode = 'list')
 
   #--------- WELFARE ---------
 
-  if ("welfare" %in% argnames) {
-    welf <- as.character(cols$welfare)
-
-    # Check for missing values
-    nna <- dt[is.na(get(welf)) , .N]
-
-    if (nna > 0) {
-      ina <- dt[, which(is.na(get(welf)))]
-
-      dt  <- dt[!is.na(get(welf))] # remove values
-
-      ll[[paste0("nna_", welf)]] <- nna
-      ll[[paste0("ina_", welf)]] <- ina
-
-      nna_msg(nna, welf)
+  # Check for missing welfare values
+  nna <- dt[is.na(get(welfare_col)) , .N]
+  if (nna > 0) {
+    # Get which rows w/ missing values
+    ina <- dt[, which(is.na(get(welfare_col)))]
+    # Remove rows
+    dt  <- dt[!is.na(get(welfare_col))]
+    # Add to output list
+    ll[[paste0('nna_', welfare_col)]] <- nna
+    ll[[paste0('ina_', welfare_col)]] <- ina
+    # Print message
+    if (!quiet) {
+      nna_msg(nna, welfare_col)
     }
+  }
 
-    # Check for negative values
-    nng <- dt[get(welf) < 0 , .N]
-    if (nng > 0) {
-
-      ing <- dt[, which(get(welf) < 0)]
-
-      dt <- dt[get(welf) >= 0]
-
-      ll[[paste0("nng_", welf)]] <- nng
-      ll[[paste0("ing_", welf)]] <- ing
-
-      nng_msg(nng, welf)
+  # Check for negative welfare values
+  nng <- dt[get(welfare_col) < 0 , .N]
+  if (nng > 0) {
+    # Get which rows w/ negative values
+    ing <- dt[, which(get(welfare_col) < 0)]
+    # Remove rows
+    dt <- dt[get(welfare_col) >= 0]
+    # Add to output list
+    ll[[paste0('nng_', welfare_col)]] <- nng
+    ll[[paste0('ing_', welfare_col)]] <- ing
+    # Print message
+    if (!quiet) {
+      nng_msg(nng, welfare_col)
     }
+  }
 
-    setorderv(dt, welf)
-    cli::cli_alert_info("Data has been sorted by variable {.val {welf}}")
-
-  } # End of welfare check
+  # Order by increasing welfare values
+  if (is.unsorted(dt[[welfare_col]])) {
+    data.table::setorderv(dt, welfare_col)
+    if (!quiet) {
+      cli::cli_alert_info('Data has been sorted by variable {.val {welfare_col}}')
+    }
+  }
 
   #--------- WEIGHT ---------
-  if ("weight" %in% argnames) {
 
-    wht <- as.character(cols$weight)
+  if (!is.null(weight_col)) {
 
-    # Check for missing values
-    nna <- dt[is.na(get(wht)) , .N]
-
+    # Check for missing weight values
+    nna <- dt[is.na(get(weight_col)) , .N]
     if (nna > 0) {
-
-      ina <- dt[, which(is.na(get(wht)))]
-      dt <- dt[!is.na(get(wht))]
-
-      ll[[paste0("nna_", wht)]] <- nna
-      ll[[paste0("ina_", wht)]] <- ina
-
-      nna_msg(nna, wht)
+      # Get which rows w/ missing values
+      ina <- dt[, which(is.na(get(weight_col)))]
+      # Remove rows
+      dt <- dt[!is.na(get(weight_col))]
+      # Add to output list
+      ll[[paste0('nna_', weight_col)]] <- nna
+      ll[[paste0('ina_', weight_col)]] <- ina
+      # Print message
+      if (!quiet) {
+        nna_msg(nna, weight_col)
+      }
     }
 
-    # Check for negative values
-    nng <- dt[get(wht) <= 0 , .N]
-
+    # Check for negative weight values
+    nng <- dt[get(weight_col) <= 0 , .N]
     if (nng > 0) {
-      ing <- dt[, which(get(wht) <= 0)]
-      dt <- dt[get(wht) > 0]
-
-      ll[[paste0("nng_", wht)]] <- nng
-      ll[[paste0("ing_", wht)]] <- ing
-
-      nng_msg(nng, wht)
-
+      # Get which rows w/ negative values
+      ing <- dt[, which(get(weight_col) <= 0)]
+      # Remove rows
+      dt <- dt[get(weight_col) > 0]
+      # Add to output list
+      ll[[paste0('nng_', weight_col)]] <- nng
+      ll[[paste0('ing_', weight_col)]] <- ing
+      # Print message
+      if (!quiet) {
+        nng_msg(nng, weight_col)
+      }
     }
-  } else { # If weight is not provided
+  } else {
 
+    # Add weight column
     dt[, weight := 1]
-    cli::cli_alert_info("since {.val weight} is not provided, variable
-                        {.field `weight = 1`} has been created",
-                        wrap = TRUE)
-  } # end of weight check
+    if (!quiet) {
+      cli::cli_alert_info(
+        'since {.val weight} is not provided, variable {.field `weight = 1`} has been created',
+        wrap = TRUE)
+    }
+  }
+  # Add data to output list
+  ll[['data']] <- dt
 
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  #---------   add data to list and return   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  ll[["data"]] <- dt
   return(ll)
+
 }
 
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#---------   Messages   ---------
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+#' nng_msg
+#' @noRd
 nng_msg <- function(nng, x) {
-
   cli::cli_alert_info("{nng} negative values in variable
                       {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
 
+#' nna_msg
+#' @noRd
 nna_msg <- function(nna, x) {
   cli::cli_alert_info("{nna} NA values in variable
                       {.val {x}} were dropped", wrap = TRUE)
   invisible()
 }
-
