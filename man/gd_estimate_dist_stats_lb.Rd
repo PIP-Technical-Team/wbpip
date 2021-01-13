@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_compute_dist_stats.R
 \name{gd_estimate_dist_stats_lb}
 \alias{gd_estimate_dist_stats_lb}
-\title{Estimates poverty and inequality stats from beta Lorenz fit}
+\title{Estimates distributional stats from beta Lorenz fit}
 \usage{
 gd_estimate_dist_stats_lb(mean, p0, A, B, C)
 }
@@ -24,6 +24,6 @@ gd_estimate_dist_stats_lb(mean, p0, A, B, C)
 list
 }
 \description{
-Estimates poverty and inequality stats from beta Lorenz fit
+Estimates distributional stats from beta Lorenz fit
 }
 \keyword{internal}

@@ -107,7 +107,7 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 
 }
 
-#' Estimates poverty and inequality stats from beta Lorenz fit
+#' Estimates distributional stats from beta Lorenz fit
 #' @inheritParams gd_estimate_lb
 #' @return list
 #' @keywords internal
