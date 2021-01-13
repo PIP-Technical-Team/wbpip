@@ -12,6 +12,8 @@ proportion of the population (Lorenz Curve).}
 
 \item{population}{numeric: Cumulative proportion of population.}
 
+\item{mean}{numeric: Welfare mean.}
+
 \item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
 }
 \value{
