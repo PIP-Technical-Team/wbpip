@@ -47,5 +47,6 @@ Imports:
     data.table,
     tibble,
     assertthat,
-    cli
+    cli,
+    collapse
 VignetteBuilder: knitr

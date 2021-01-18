@@ -1,3 +1,9 @@
+data('md_ABC_2000_income')
+df <- md_clean_data(md_ABC_2000_income,
+                    welfare = 'welfare',
+                    weight = 'weight')$data
+
+
 test_that("md_infer_poverty_line() works for uniform distribution of welfare", {
   set.seed(10010)
   uv   <- 5
@@ -31,14 +37,14 @@ test_that("md_infer_poverty_line() works in any point of the distribution", {
 
   set.seed(10010)
   tl     <- 2 # tolerance
-  df     <- md_ABC_2000_income
+  # df     <- md_ABC_2000_income
   shares <- c(0, round(runif(15), digits = tl), 1)
 
   res <- lapply(shares, function(x){
 
     i1 <- md_infer_poverty_line(df$welfare, df$weight, popshare = x)
-    s1 <- fgt(df$welfar, i1, equal = TRUE)
-    hc <- weighted.mean(s1, df$weight, na.rm = TRUE)
+    s1 <- fgt(df$welfare, i1, equal = TRUE)
+    hc <- stats::weighted.mean(s1, df$weight, na.rm = TRUE)
     hc <- round(hc, digits = tl)
 
     expect_equal(hc, x)
