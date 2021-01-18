@@ -4,12 +4,20 @@
 \alias{md_compute_dist_stats}
 \title{Compute distributional statistics}
 \usage{
-md_compute_dist_stats(welfare, weight, nbins = NULL, n_quantile = 10)
+md_compute_dist_stats(
+  welfare,
+  weight,
+  mean = NULL,
+  nbins = NULL,
+  n_quantile = 10
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
 \item{weight}{numeric: A vector of weights.}
+
+\item{mean}{numeric: A value with the mean. Optional.}
 
 \item{nbins}{numeric: number of points on the Lorenz curve.}
 
