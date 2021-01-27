@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.3",
+    "Version": "4.0.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -396,10 +396,10 @@
     },
     "rmarkdown": {
       "Package": "rmarkdown",
-      "Version": "2.5",
+      "Version": "2.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "20a0a94af9e8f7040510447763aab3e9"
+      "Hash": "bc4bac38960b446c183957bfd563e763"
     },
     "rprojroot": {
       "Package": "rprojroot",

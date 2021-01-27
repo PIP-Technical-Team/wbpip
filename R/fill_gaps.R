@@ -173,7 +173,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df0$welfare,
         population = data$df0$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[1],
         ppp = ppp,
         requested_mean = predicted_request_mean[1]
       )
@@ -185,7 +185,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df0$welfare,
         population = data$df0$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[1],
         ppp = ppp,
         requested_mean = predicted_request_mean[1]
       ),
@@ -193,7 +193,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df1$welfare,
         population = data$df1$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[2],
         ppp = ppp,
         requested_mean = predicted_request_mean[2]
       )
