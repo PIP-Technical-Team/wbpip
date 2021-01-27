@@ -57,7 +57,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(13, 13),
-#'   default_ppp = 1,
+#'   default_ppp = c(1, 1),
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
@@ -67,7 +67,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(14, 17),
-#'   default_ppp = 1,
+#'   default_ppp = c(1, 1),
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
@@ -173,7 +173,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df0$welfare,
         population = data$df0$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[1],
         ppp = ppp,
         requested_mean = predicted_request_mean[1]
       )
@@ -185,7 +185,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df0$welfare,
         population = data$df0$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[1],
         ppp = ppp,
         requested_mean = predicted_request_mean[1]
       ),
@@ -193,7 +193,7 @@ fg_create_params <- function(predicted_request_mean,
         welfare = data$df1$welfare,
         population = data$df1$weight,
         povline = poverty_line,
-        default_ppp = default_ppp,
+        default_ppp = default_ppp[2],
         ppp = ppp,
         requested_mean = predicted_request_mean[2]
       )

@@ -90,7 +90,7 @@ test_that('fill_gaps() interpolates correctly (monotonic) for microdata', {
     survey_year = c(2000, 2010),
     data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
     predicted_request_mean = c(13, 13),
-    default_ppp = 1,
+    default_ppp = c(1, 1),
     distribution_type = 'micro',
     poverty_line = 1.9)
   expect_equal(res$poverty_line, 1.9)
@@ -136,7 +136,7 @@ test_that('fill_gaps() interpolates correctly (non-monotonic) for microdata', {
     survey_year = c(2000, 2010),
     data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
     predicted_request_mean = c(14, 17),
-    default_ppp = 1,
+    default_ppp = c(1, 1),
     distribution_type = 'micro',
     poverty_line = 1.9)
   expect_equal(res$poverty_line, 1.9)
@@ -159,7 +159,7 @@ test_that('fill_gaps() interpolates correctly (non-monotonic) for micro vs group
     survey_year = c(2000, 2009),
     data = list(df0 = md_GHI_2000_consumption, df1 = gd_GHI_2009_income),
     predicted_request_mean = c(4, 6),
-    default_ppp = 1,
+    default_ppp = c(1, 1),
     distribution_type = c('micro', 'group'),
     poverty_line = 1.9)
   expect_equal(res$poverty_line, 1.9)
@@ -200,7 +200,7 @@ test_that('fg_create_params() is working correctly', {
   out <- fg_create_params(
     predicted_request_mean = c(4, 6),
     data = list(df0 = md_GHI_2000_consumption, df1 = gd_GHI_2009_income),
-    default_ppp = 1,
+    default_ppp = c(1, 1),
     ppp = NULL,
     poverty_line = 1.9)
   expect_identical(names(out), c('params0', 'params1'))
