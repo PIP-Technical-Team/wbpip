@@ -57,7 +57,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(13, 13),
-#'   default_ppp = 1,
+#'   default_ppp = c(1, 1),
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
@@ -67,7 +67,7 @@ if (getRversion() >= '2.15.1')
 #'   survey_year = c(2000, 2010),
 #'   data = list(df0 = md_ABC_2000_income, df1 = md_ABC_2010_income),
 #'   predicted_request_mean = c(14, 17),
-#'   default_ppp = 1,
+#'   default_ppp = c(1, 1),
 #'   distribution_type = 'micro',
 #'   poverty_line = 1.9)
 #'
