@@ -161,10 +161,12 @@ use_lq_for_distributional <- function(lq,
   dis_flag <- ifelse(lq[["is_valid"]], 2, 0) +
     ifelse(lb[["is_valid"]], 1, 0)
 
-  if (dis_flag == 3) {
-    use_lq_for_dist <- lq[["sse"]] <= lb[["sse"]]
-  } else if (dis_flag == 1) {
-    use_lq_for_dist <- FALSE
+  if (!is.na(lb[["sse"]])) {
+    if (dis_flag == 3) {
+      use_lq_for_dist <- lq[["sse"]] <= lb[["sse"]]
+    } else if (dis_flag == 1) {
+      use_lq_for_dist <- FALSE
+    }
   }
 
   return(

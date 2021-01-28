@@ -326,7 +326,7 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @keywords internal
 gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
-  if (headcount <= 0) {
+  if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
 
@@ -579,26 +579,35 @@ gd_compute_fit_lb <- function(welfare,
                               A,
                               B,
                               C) {
-  lasti  <- -1
-  sse  <- 0 # Sum of square error
-  ssez <- 0 # Sum of square error up to poverty line threshold (see Datt paper)
 
-  for (i in seq_along(welfare[-1])) {
-    residual <- welfare[i] - value_at_lb(population[i], A, B, C)
-    residual_sq <- residual^2
-    sse <- sse + residual_sq
-    if (population[i] < headcount)
-    {
-      ssez <- ssez  + residual_sq
-      lasti <- i
+  if (!is.na(headcount)) {
+
+    lasti  <- -1
+    sse  <- 0 # Sum of square error
+    ssez <- 0 # Sum of square error up to poverty line threshold (see Datt paper)
+
+    for (i in seq_along(welfare[-1])) {
+      residual <- welfare[i] - value_at_lb(population[i], A, B, C)
+      residual_sq <- residual^2
+      sse <- sse + residual_sq
+      if (population[i] < headcount)
+      {
+        ssez <- ssez  + residual_sq
+        lasti <- i
+      }
     }
-  }
-  lasti <- lasti + 1
-  residual <- welfare[lasti] - value_at_lb(population[lasti], A, B, C)
-  ssez <- ssez + residual^2
+    lasti <- lasti + 1
+    residual <- welfare[lasti] - value_at_lb(population[lasti], A, B, C)
+    ssez <- ssez + residual^2
 
-  out <- list(sse, ssez)
-  names(out) <- list("sse", "ssez")
+    out <- list(sse, ssez)
+    names(out) <- list("sse", "ssez")
+
+  } else {
+
+    out <- list(sse = NA, ssez = NA)
+
+  }
 
   return(out)
 }
@@ -641,7 +650,7 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
                       B = B,
                       C = C)
   # Check headcount invalidity conditions
-  if (headcount < 0) {return(NA)}
+  if (headcount < 0 | is.na(headcount)) {return(NA)}
 
   condition1 <- is.na(BETAI(a = 2 * B - 1,
                             b = 2 * C + 1,
@@ -669,20 +678,25 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #' @return numeric
 #' @noRd
 BETAI <- function(a, b, x) {
-  bt <- betai <- 0
 
-  if (x == 0 || x == 1) {
-    bt <- 0
+  if (!is.na(x)) {
+    bt <- betai <- 0
+
+    if (x == 0 || x == 1) {
+      bt <- 0
+    } else {
+      bt <- exp((a * log(x)) + (b * log(1 - x)))
+    }
+
+    if (x < (a + 1)/(a + b + 2))
+      betai <- bt * BETAICF(a, b, x) / a
+    else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b)))
+      betai <- NA
+    else
+      betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
   } else {
-    bt <- exp((a * log(x)) + (b * log(1 - x)))
-  }
-
-  if (x < (a + 1)/(a + b + 2))
-    betai <- bt * BETAICF(a, b, x) / a
-  else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b)))
     betai <- NA
-  else
-    betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
+  }
 
   return(betai)
 }
