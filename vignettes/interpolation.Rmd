@@ -120,7 +120,7 @@ res <- fill_gaps(
   data = list(df0 = dl[[1]], df1 = dl[[2]]),
   predicted_request_mean = pred_mean_ppp,
   survey_year = c(2000, 2010), 
-  default_ppp = 1, 
+  default_ppp = c(1, 1),  
   distribution_type = 'micro',
   poverty_line = 1.9) 
 ```
@@ -130,4 +130,3 @@ The function returns a list of different poverty statistics, including the estim
 ```{r}
 str(res)
 ```
-
