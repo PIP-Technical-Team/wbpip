@@ -332,7 +332,7 @@ gd_compute_mld_lq <- function(dd, A, B, C) {
     gap <- 0.0005
   }
   else {
-    mld <- log(x1) * 0.001
+    mld <- suppressWarnings(log(x1) * 0.001)
   }
   x1 <- derive_lq(0, A, B, C)
   for (xstep in seq(0, 0.998, 0.001)) {

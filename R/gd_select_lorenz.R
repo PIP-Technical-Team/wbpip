@@ -200,13 +200,20 @@ retrieve_distributional <- function(lq,
       ris             <- lq[["ris"]]
 
       deciles <- lq[["deciles"]]
-      if (lq[["mld"]] >= 0) {
-        mld <- lq[["mld"]]
-      } else if (lb[["mld"]] >= 0) {
-        mld <- lb[["mld"]]
+
+      if (!is.nan(lq[["mld"]])) {
+        if (lq[["mld"]] >= 0) {
+          mld <- lq[["mld"]]
+        }
+      } else if (!is.nan(lb[["mld"]])) {
+        if (lb[["mld"]] >= 0) {
+          mld <- lb[["mld"]]
+        }
       } else {
         mld <- NA
       }
+
+
     } else {
       sse    <- lb[["sse"]]
       z_min  <- lb[["z_min"]]
@@ -220,13 +227,18 @@ retrieve_distributional <- function(lq,
       deciles <- lb[["deciles"]]
       polarization <- lb[["polarization"]]
 
-      if (lb[["mld"]] >= 0) {
-        mld <- lb[["mld"]]
-      } else if (lq[["mld"]] >= 0) {
-        mld <- lq[["mld"]]
+      if (!is.nan(lb[["mld"]])) {
+        if (lb[["mld"]] >= 0) {
+          mld <- lb[["mld"]]
+        }
+      } else if (!is.nan(lq[["mld"]])) {
+        if (lq[["mld"]] >= 0) {
+          mld <- lq[["mld"]]
+        }
       } else {
         mld <- NA
       }
+
     }
   } else {
     for (i in seq_along(deciles)) {deciles[i] <- NA}
