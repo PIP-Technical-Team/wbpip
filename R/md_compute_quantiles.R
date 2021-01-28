@@ -62,7 +62,7 @@ md_compute_quantiles <- function(lwelfare,
     lorenzw <- lweight[i]    # Cumulative share of population
     lorenzy <- lwelfare[i]   # Cumulative share of income / consumption
 
-    if (lorenzw >= nextQ) {
+    if (lorenzw > nextQ | assertthat::are_equal(lorenzw, nextQ, tolerance = 5e-05)) {
       if (nextQ == 0.5) {
         median <- yi
       }
