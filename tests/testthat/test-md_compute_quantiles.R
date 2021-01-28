@@ -1,11 +1,11 @@
-fpath  <- system.file("testdata", "lorenz.csv", package = "wbpip")
-lz     <- read.csv(fpath,
-                   col.names = c("y", "lorenzW", "lorenzY"))
+md_lorenz1 <- readRDS('../testdata/md_lorenz1.RDS')
+md_lorenz2 <- readRDS('../testdata/md_lorenz2.RDS')
 
 test_that("md_compute_quantiles() output is formatted as expected", {
-  out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
-                              lweight    = lz$lorenzW,
-                              percentile = lz$y)
+  out <- md_compute_quantiles(
+    lwelfare = md_lorenz1$lorenzY,
+    lweight = md_lorenz1$lorenzW,
+    percentile = md_lorenz1$y)
   expect_equal(names(out), c("quantiles", "median"))
   expect_equal(length(out$quantiles), 10)
   expect_equal(length(out$median), 1)
@@ -14,18 +14,19 @@ test_that("md_compute_quantiles() output is formatted as expected", {
   # expect_equal(length(out$quantiles), 5)
   # out <- md_compute_quantiles(lorenz, n_quantile = 20)
 
-  expect_error(md_compute_quantiles(lwelfare   = lz$lorenzY,
-                                    lweight    = lz$lorenzW,
-                                    percentile = lz$y,
-                                    n_quantile = 200))
+  expect_error(md_compute_quantiles(
+    lwelfare   = md_lorenz1$lorenzY,
+    lweight    = md_lorenz1$lorenzW,
+    percentile = md_lorenz1$y,
+    n_quantile = 200))
 
 })
 
 test_that("md_compute_quantiles() computations are correct", {
-  out <- md_compute_quantiles(lwelfare   = lz$lorenzY,
-                              lweight    = lz$lorenzW,
-                              percentile = lz$y)
-
+  out <- md_compute_quantiles(
+    lwelfare   = md_lorenz1$lorenzY,
+    lweight    = md_lorenz1$lorenzW,
+    percentile = md_lorenz1$y)
   expect_equal(out$median, 228.666687012)
   expect_equal(out$quantiles, c(0.00847950735425,
                                 0.01795704602808,
@@ -37,4 +38,22 @@ test_that("md_compute_quantiles() computations are correct", {
                                 0.10750239876047,
                                 0.16352959364197,
                                 0.45410835789693))
+
+  out <- md_compute_quantiles(
+    lwelfare = md_lorenz2$lorenz_welfare,
+    lweight = md_lorenz2$lorenz_weight,
+    percentile = md_lorenz2$welfare)
+  expect_equal(out$median, 7.105014)
+  expect_equal(out$quantiles, c(0.00983246,
+                                0.02195307,
+                                0.03342455,
+                                0.04495307,
+                                0.05662774,
+                                0.07048758,
+                                0.08808485,
+                                0.11349456,
+                                0.15868695,
+                                0.40245516))
+
+
 })

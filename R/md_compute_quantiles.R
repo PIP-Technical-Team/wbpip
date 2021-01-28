@@ -14,6 +14,7 @@
 #' is desired. It can't be larger that the total number of percentiles in the
 #' Lorenz curve provided by the user.  default is 10.
 #' @param percentile numeric: Monetary value each percentile.
+#' @param tolerance numeric: Tolerance parameter for `lorenzw >= nextQ` check.
 #'
 #' @examples
 #' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
@@ -26,7 +27,8 @@
 md_compute_quantiles <- function(lwelfare,
                                  lweight,
                                  percentile,
-                                 n_quantile = 10) {
+                                 n_quantile = 10,
+                                 tolerance = 1e-06) {
 
 
   #--------- Consistency ---------
@@ -62,7 +64,7 @@ md_compute_quantiles <- function(lwelfare,
     lorenzw <- lweight[i]    # Cumulative share of population
     lorenzy <- lwelfare[i]   # Cumulative share of income / consumption
 
-    if (lorenzw > nextQ | assertthat::are_equal(lorenzw, nextQ, tolerance = 5e-05)) {
+    if (lorenzw > nextQ | assertthat::are_equal(lorenzw, nextQ, tolerance = tolerance)) {
       if (nextQ == 0.5) {
         median <- yi
       }
