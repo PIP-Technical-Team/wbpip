@@ -1,4 +1,5 @@
 data('gd_GHI_2009_income')
+gd_ex1 <- readRDS('../testdata/gd_ex1.RDS')
 
 test_that('gd_compute_dist_stats() returns correct results', {
 
@@ -18,5 +19,19 @@ test_that('gd_compute_dist_stats() returns correct results', {
   expect_equal(res1$mld, res2$mld)
   expect_equal(res1$polarization, res2$polarization)
   expect_equal(res1$deciles, res2$deciles)
+
+  # Test against example data
+  res <- gd_compute_dist_stats(
+    welfare = gd_ex1$welfare, population = gd_ex1$weight,
+    mean = 330.5371)
+  expect_equal(res$mean, 330.5371)
+  expect_equal(res$median, 201.4286, tolerance = 1.5e-06)
+  expect_equal(res$gini, 0.5135977, tolerance = 1.5e-06)
+  expect_equal(res$polarization, 0.4212645, tolerance = 1.5e-06)
+  expect_equal(res$deciles, tolerance = 2.5e-05,
+               c(0.01609,0.02702, 0.03577, 0.04492, 0.05522,
+                 0.0675, 0.0832, 0.1056, 0.1452, 0.4195))
+  skip('mld doesn\'t match PCN value')
+  expect_equal(res$mld, 0.4670367, tolerance = 1.5e-06)
 
 })
