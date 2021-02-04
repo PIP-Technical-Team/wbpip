@@ -300,8 +300,7 @@ retrieve_poverty <- function(lq,
     } else {
       watts <- NA
     }
-  } else
-  {
+  } else {
     poverty_line     <- lb[["poverty_line"]]
     headcount        <- lb[["headcount"]]
     poverty_gap      <- lb[["poverty_gap"]]
@@ -312,14 +311,13 @@ retrieve_poverty <- function(lq,
     gh               <- lb[["gh"]]
     gpg              <- lb[["gpg"]]
     gp               <- lb[["gp"]]
-
-    if (lb[["watts"]] >= 0) {
-      watts <- lb[["watts"]]
-    } else if (lq[["watts"]] >= 0) {
-      watts <- lq[["watts"]]
-    } else {
-      watts <- NA
-    }
+      if (lb[["watts"]] >= 0) {
+        watts <- lb[["watts"]]
+      } else if (lq[["watts"]] >= 0) {
+        watts <- lq[["watts"]]
+      } else {
+        watts <- NA
+      }
   }
   # fix abnormal values
   if (headcount < 0) {
