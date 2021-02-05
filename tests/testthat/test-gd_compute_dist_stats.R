@@ -1,5 +1,6 @@
 data('gd_GHI_2009_income')
 gd_ex1 <- readRDS('../testdata/gd_ex1.RDS')
+gd_ex3 <- readRDS('../testdata/gd_ex1.RDS')
 
 test_that('gd_compute_dist_stats() returns correct results', {
 
@@ -35,3 +36,12 @@ test_that('gd_compute_dist_stats() returns correct results', {
   expect_equal(res$mld, 0.4670367, tolerance = 1.5e-06)
 
 })
+
+# Implemented after fixing issue #120
+test_that('gd_compute_gini_lq returns correct results', {
+
+  res <- gd_compute_dist_stats(dt$welfare, dt$weight, mean = 1.180057)
+  expect_equal(res$gini, 0.61330745577995316)
+
+})
+
