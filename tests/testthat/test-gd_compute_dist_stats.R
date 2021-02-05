@@ -37,7 +37,7 @@ test_that('gd_compute_dist_stats() returns correct results', {
 
 })
 
-# Implemented after fixing issue #120
+# Implemented after fixing issue #120 (CAF 1992)
 test_that('gd_compute_gini_lq returns correct results', {
 
   res <- gd_compute_dist_stats(gd_ex3$welfare, gd_ex3$weight, mean = 1.180057)
