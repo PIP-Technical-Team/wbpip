@@ -582,7 +582,7 @@ gd_compute_fit_lb <- function(welfare,
 
   if (!is.na(headcount)) {
 
-    lasti  <- -1
+    lasti  <- 0
     sse  <- 0 # Sum of square error
     ssez <- 0 # Sum of square error up to poverty line threshold (see Datt paper)
 

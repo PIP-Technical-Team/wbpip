@@ -695,7 +695,7 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
-  lasti  <- -1
+  lasti  <- 0
   sse  <- 0 # Sum of square error
   ssez <- 0
 
