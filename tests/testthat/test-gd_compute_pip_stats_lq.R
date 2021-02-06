@@ -247,3 +247,23 @@ test_that("gd_compute_fit_lq works as expected", {
 
   expect_equal(out, benchmark)
 })
+
+test_that("gd_estimate_lq works as expected", {
+  mean <- 1.50524
+  povline <- 1.9
+  p0 <- 0.5
+
+  # Invalid fit
+  A <- 0.78554131924835879
+  B <- -1.9856022109519547
+  C <- -0.30597079435662672
+
+  expect_equal(gd_estimate_lq(mean = mean,
+                              povline = povline,
+                              p0 = p0,
+                              A = A,
+                              B = B,
+                              C = C),
+               empty_gd_compute_pip_stats_response)
+
+})
