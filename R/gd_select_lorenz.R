@@ -243,7 +243,7 @@ retrieve_distributional <- function(lq,
 
     }
   } else {
-    for (i in seq_along(deciles)) {deciles[i] <- NA}
+    deciles <- rep(NA, length(lq[["deciles"]]))
   }
 
   return(
