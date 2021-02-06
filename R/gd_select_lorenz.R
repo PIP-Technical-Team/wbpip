@@ -243,7 +243,17 @@ retrieve_distributional <- function(lq,
 
     }
   } else {
-    deciles <- rep(NA, length(lq[["deciles"]]))
+    z_min         <- NA
+    z_max         <- NA
+    gini          <- NA
+    median        <- NA
+    rmed          <- NA
+    rmhalf        <- NA
+    polarization  <- NA
+    ris           <- NA
+    mld           <- NA
+    deciles       <- rep(NA, length(lq[["deciles"]]))
+    sse           <- NA
   }
 
   return(
