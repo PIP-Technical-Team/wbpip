@@ -427,7 +427,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + snw
       if (gap > 0.05) {
-        return(-1)
+        return(NA)
       }
     } else {
       gap <- 0
@@ -443,7 +443,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
         return(watts)
       }
     }
-    return(-1) # Negative Watts values will be handled in gd_select_lorenz()
+    return(NA) # Negative Watts values will be handled in gd_select_lorenz()
   } else {
     return(watts)
   }

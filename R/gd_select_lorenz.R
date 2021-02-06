@@ -289,7 +289,21 @@ retrieve_poverty <- function(lq,
                              is_normal,
                              use_lq_for_pov) {
 
-  if (!is_normal) return(NA)
+  if (!is_normal) {
+    return(list(
+      poverty_line     = NA,
+      headcount        = NA,
+      poverty_gap      = NA,
+      poverty_severity = NA,
+      eh               = NA,
+      epg              = NA,
+      ep               = NA,
+      gh               = NA,
+      gpg              = NA,
+      gp               = NA,
+      watts            = NA)
+    )
+  }
   if (use_lq_for_pov)
   {
     poverty_line     <- lq[["poverty_line"]]
@@ -303,9 +317,9 @@ retrieve_poverty <- function(lq,
     gpg              <- lq[["gpg"]]
     gp               <- lq[["gp"]]
 
-    if (lq[["watts"]] >= 0) {
+    if (!is.na(lq[["watts"]])) {
       watts <- lq[["watts"]]
-    } else if (lb[["watts"]] >= 0) {
+    } else if (!is.na(lb[["watts"]])) {
       watts <- lb[["watts"]]
     } else {
       watts <- NA
@@ -321,9 +335,9 @@ retrieve_poverty <- function(lq,
     gh               <- lb[["gh"]]
     gpg              <- lb[["gpg"]]
     gp               <- lb[["gp"]]
-      if (lb[["watts"]] >= 0) {
+      if (!is.na(lb[["watts"]])) {
         watts <- lb[["watts"]]
-      } else if (lq[["watts"]] >= 0) {
+      } else if (!is.na(lq[["watts"]])) {
         watts <- lq[["watts"]]
       } else {
         watts <- NA
