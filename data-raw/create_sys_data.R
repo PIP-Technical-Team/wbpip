@@ -6,7 +6,7 @@ empty_gd_compute_pip_stats_response <- list(
   ris = NA,
   mld = NA,
   dcm = NA,
-  deciles = NA,
+  deciles = rep(NA, 10), # Potential issue here as I am hard coding deciles, when the function can theoretically return any quantiles
   headcount = NA,
   poverty_gap = NA,
   poverty_severity = NA,
