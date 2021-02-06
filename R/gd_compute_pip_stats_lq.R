@@ -444,6 +444,8 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
       }
     }
     return(-1) # Negative Watts values will be handled in gd_select_lorenz()
+  } else {
+    return(watts)
   }
 }
 
