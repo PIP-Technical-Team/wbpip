@@ -700,6 +700,14 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
+
+  if (is.na(headcount)) {
+    return(list(
+      sse  = NA,
+      ssez = NA
+    ))
+  }
+
   lasti  <- 0
   sse  <- 0 # Sum of square error
   ssez <- 0
