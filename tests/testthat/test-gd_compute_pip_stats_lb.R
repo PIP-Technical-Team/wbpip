@@ -315,3 +315,24 @@ test_that("DDLK works as expected", {
 
   expect_equal(out, benchmark)
 })
+
+test_that("check_curve_validity_lb works as expected", {
+
+  # Invalid fit
+  headcount <- 0.72895810546874995
+  A <- 1.5059569306828811
+  B <- 1.2068983362374488
+  C <- 0.60013901263412039
+
+  expected <- list(
+    is_valid  = FALSE,
+    is_normal = TRUE
+  )
+
+  expect_equal(check_curve_validity_lb(headcount = headcount,
+                              A = A,
+                              B = B,
+                              C = C),
+               expected)
+
+})

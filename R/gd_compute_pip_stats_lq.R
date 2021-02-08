@@ -427,7 +427,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + snw
       if (gap > 0.05) {
-        return(-1)
+        return(NA)
       }
     } else {
       gap <- 0
@@ -443,7 +443,9 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
         return(watts)
       }
     }
-    return(-1) # Negative Watts values will be handled in gd_select_lorenz()
+    return(NA) # Negative Watts values will be handled in gd_select_lorenz()
+  } else {
+    return(watts)
   }
 }
 
@@ -635,6 +637,9 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
   r <- (n^2) - (4 * m * e^2) # r is called K in paper
 
   validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+  if (validity$is_valid == FALSE & validity$is_normal == FALSE) {
+    return(empty_gd_compute_pip_stats_response)
+  }
 
   r <- sqrt(r)
   s1 <- (r - n) / (2 * m)
@@ -695,7 +700,15 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
-  lasti  <- -1
+
+  if (is.na(headcount)) {
+    return(list(
+      sse  = NA,
+      ssez = NA
+    ))
+  }
+
+  lasti  <- 0
   sse  <- 0 # Sum of square error
   ssez <- 0
 

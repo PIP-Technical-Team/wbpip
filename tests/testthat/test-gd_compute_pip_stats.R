@@ -21,3 +21,33 @@ test_that('gd_compute_pip_stats() returns correct results', {
   expect_equal(res$watts, 0.1287745, tolerance = 1.5e-06)
 
 })
+
+test_that('retrieve_distributional() returns correct results', {
+
+  lq <- list(
+    deciles = 1:10
+  )
+  lb <- "not_used"
+  is_valid <- FALSE
+  use_lq_for_dist <- "not_used"
+  expected <- list(
+    z_min         = NA,
+    z_max         = NA,
+    gini          = NA,
+    median        = NA,
+    # rmed          = NA
+    rmhalf        = NA,
+    polarization  = NA,
+    ris           = NA,
+    mld           = NA,
+    deciles       = rep(NA, length(lq[["deciles"]])),
+    sse           = NA
+  )
+
+  expect_equal(retrieve_distributional(lq = lq,
+                                       lb = lb,
+                                       is_valid = is_valid,
+                                       use_lq_for_dist = use_lq_for_dist),
+               expected)
+
+})

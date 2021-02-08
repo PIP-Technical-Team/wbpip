@@ -353,7 +353,7 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + snw
       if (gap > 0.05) {
-        return(-1)
+        return(NA)
       }
     } else {
       gap <- 0
@@ -369,7 +369,9 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
         return(watts)
       }
     }
-    return(-1) # Negative Watts values will be handled in gd_select_lorenz()
+    return(NA) # Negative Watts values will be handled in gd_select_lorenz()
+  } else {
+    return(watts)
   }
 }
 
@@ -582,7 +584,7 @@ gd_compute_fit_lb <- function(welfare,
 
   if (!is.na(headcount)) {
 
-    lasti  <- -1
+    lasti  <- 0
     sse  <- 0 # Sum of square error
     ssez <- 0 # Sum of square error up to poverty line threshold (see Datt paper)
 
