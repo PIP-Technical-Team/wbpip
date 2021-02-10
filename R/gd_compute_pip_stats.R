@@ -1,4 +1,4 @@
-#' Computes poverty statistics (grouped)
+#' Computes poverty and inequality statistics (grouped)
 #'
 #' Compute poverty statistics for grouped data by selecting the best functional
 #' fit for the Lorenz curve (either beta or quadratic).
@@ -51,7 +51,7 @@ gd_compute_pip_stats <- function(welfare,
   out <- gd_select_lorenz(lq = results_lq,
                           lb = results_lb)
 
-  # Retun only subset of variables
+  # Return only subset of variables
   out <- out[c("poverty_line",
                "mean",
                "median",
