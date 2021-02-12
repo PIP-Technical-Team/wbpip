@@ -5,6 +5,7 @@
 #'
 #' @inheritParams gd_compute_pip_stats
 #' @inheritParams gd_compute_dist_stats_lb
+#'
 #' @return list
 #' @keywords internal
 gd_compute_dist_stats <- function(welfare,
