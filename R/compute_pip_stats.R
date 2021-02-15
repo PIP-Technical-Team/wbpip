@@ -11,6 +11,8 @@
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param default_ppp numeric: Default purchasing power parity
 #' @param ppp numeric: PPP requested by user
+#' @param area character: Area (Urban or Rural)
+#' @param area_pop numeric: Total population per area.
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
 #'
@@ -23,6 +25,9 @@ compute_pip_stats <- function(welfare,
                               popshare = NULL,
                               default_ppp = 1,
                               ppp = NULL,
+                              area = NULL,
+                              area_pop = NULL,
+                              p0 = 0.5,
                               distribution_type = c("micro",
                                                     "group",
                                                     "aggregate",
@@ -50,13 +55,23 @@ compute_pip_stats <- function(welfare,
                                 requested_mean = requested_mean,
                                 popshare       = popshare,
                                 default_ppp    = default_ppp,
-                                ppp            = ppp)
+                                ppp            = ppp,
+                                p0             = p0)
 
     return(out)
 
   } else if (distribution_type == "aggregate") {
 
-    return(NA)
+    out <- ag_compute_pip_stats(welfare        = welfare,
+                                povline        = povline,
+                                population     = population,
+                                area           = area,
+                                area_pop       = area_pop,
+                                requested_mean = requested_mean,
+                                popshare       = popshare,
+                                default_ppp    = default_ppp,
+                                ppp            = ppp,
+                                p0             = p0)
 
   } else if (distribution_type == "imputed") {
 
