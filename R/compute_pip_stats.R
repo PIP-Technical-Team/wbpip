@@ -47,7 +47,7 @@ compute_pip_stats <- function(welfare,
 
     return(out)
 
-  } else if (distribution_type == "group") {
+  } else if (distribution_type %in% c("group", "aggregate")) {
 
     out <- gd_compute_pip_stats(welfare        = welfare,
                                 povline        = povline,
@@ -59,19 +59,6 @@ compute_pip_stats <- function(welfare,
                                 p0             = p0)
 
     return(out)
-
-  } else if (distribution_type == "aggregate") {
-
-    out <- ag_compute_pip_stats(welfare        = welfare,
-                                povline        = povline,
-                                population     = population,
-                                area           = area,
-                                area_pop       = area_pop,
-                                requested_mean = requested_mean,
-                                popshare       = popshare,
-                                default_ppp    = default_ppp,
-                                ppp            = ppp,
-                                p0             = p0)
 
   } else if (distribution_type == "imputed") {
 
