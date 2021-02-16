@@ -212,7 +212,8 @@ fg_create_params <- function(predicted_request_mean,
 #' @noRd
 fg_select_compute_pip_stats <- list(
  micro = function(...) md_compute_pip_stats(...),
- group = function(...) gd_compute_pip_stats(...)
+ group = function(...) gd_compute_pip_stats(...),
+ aggregate = function(...) gd_compute_pip_stats(...)
 )
 
 #' fg_adjust_poverty_stats
