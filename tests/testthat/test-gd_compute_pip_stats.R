@@ -4,7 +4,7 @@ test_that('gd_compute_pip_stats() returns correct results', {
 
   res <- gd_compute_pip_stats(
     gd_ex2$welfare, gd_ex2$weight,
-    requested_mean = 2.911786,, povline = 1.9)
+    requested_mean = 2.911786,povline = 1.9)
   expect_equal(res$mean, 2.911786)
   expect_equal(res$median, 2.29062, tolerance = 1.5e-06)
   expect_equal(res$gini, 0.3466288, tolerance = 1.5e-06)
