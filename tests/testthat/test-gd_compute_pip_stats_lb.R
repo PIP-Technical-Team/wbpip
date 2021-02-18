@@ -336,3 +336,40 @@ test_that("check_curve_validity_lb works as expected", {
                expected)
 
 })
+
+
+test_that("if PPP and default PPP are not null, requested_mean is computed as expected", {
+  gd_ex2 <- readRDS('../testdata/gd_ex2.RDS')
+
+  try_out <- gd_compute_pip_stats_lb(welfare = gd_ex2$welfare,
+                                     population = gd_ex2$weight,
+                                     povline = 1.9,
+                                     requested_mean = 2.911786,
+                                     ppp = 2, default_ppp = 3)
+
+  ex_req_mean <- 3/2*2.911786
+
+  expect_equal(try_out$mean, ex_req_mean)
+})
+
+
+test_that("if popshare is not null, povline is computed as expected", {
+  gd_ex2 <- readRDS('../testdata/gd_ex2.RDS')
+
+  try_out <- gd_compute_pip_stats_lb(welfare = gd_ex2$welfare,
+                                     population = gd_ex2$weight,
+                                     povline = 1.9,
+                                     requested_mean = 2.911786,
+                                     popshare = 0.3)
+
+  #just a heads up that I dont have an intuitive sense for A, B and C values so I
+  #cheated by running the function above in debug mode and just taking the A, B, C
+  #values there. I figured the most important thing is to test the if-statement
+  ex_povline <- derive_lb(0.3, 0.6562181, 0.9676324, 0.5300527)*2.911786
+
+
+  expect_equal(try_out$poverty_line, ex_povline, tolerance = 1e-7)
+
+})
+
+
