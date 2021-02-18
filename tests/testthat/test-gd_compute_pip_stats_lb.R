@@ -412,7 +412,7 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
   ##first, testing on the initial if statement to ensure x == 0 & B = 1 will return 1 - A
   try_beq1 <- derive_lb(x = 0, A = 0.6562181, B = 1, C = 0.5300527)
 
-  exp_val1 <- 1-0.6562181
+  exp_val1 <- 1 - 0.6562181
 
   expect_equal(try_beq1, exp_val1)
 
@@ -445,7 +445,7 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
   ##first, testing on the initial if statement to ensure x == 0 & B = 1 will return 1 - A
   try_beq1 <- derive_lb(x = 0, A = 0.6562181, B = 1, C = 0.5300527)
 
-  exp_val1 <- 1-0.6562181
+  exp_val1 <- 1 - 0.6562181
 
   expect_equal(try_beq1, exp_val1)
 
@@ -465,29 +465,3 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
   expect_equal(try_cover1, 1)
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
