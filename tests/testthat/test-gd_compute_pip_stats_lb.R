@@ -373,3 +373,56 @@ test_that("if popshare is not null, povline is computed as expected", {
 })
 
 
+
+test_that("in derive_lb() function, if x = 0 & B >= 0,
+          function returns expected values", {
+
+  ##first, testing on the initial if statement to ensure x == 0 & B = 1 will return 1 - A
+  try_beq1 <- derive_lb(x = 0, A = 0.6562181, B = 1, C = 0.5300527)
+
+  exp_val1 <- 1-0.6562181
+
+  expect_equal(try_beq1, exp_val1)
+
+  ##next, testing on the initial if statement to ensure x == 0 & B > 1 will return 1
+  try_bover1 <- derive_lb(x = 0, A = 0.6562181, B = 1.1, C = 0.5300527)
+
+  expect_equal(try_bover1, 1)
+
+
+  # #also testing that if x == 0 and C is greater than or equal to 1
+  # try_ceq1 <- derive_lb(x = 0, A = 0.6562181, B = 0.9676324, C = 1)
+  #
+  # expect_equal(try_ceq1, 1.6562181)
+  #
+  # try_cover1 <- derive_lb(x = 0, A = 0.6562181, B = 0.9676324, C = 1.1)
+  #
+  # expect_equal(try_cover1, 1)
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
