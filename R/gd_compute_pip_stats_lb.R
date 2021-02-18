@@ -122,7 +122,7 @@ derive_lb <- function(x, A, B, C) {
     if (B == 1) {return(1 - A)}
     if (B > 1) {return(1)}
     return(-Inf)
-  } else if (x == 0) {
+  } else if (x == 1) {
     if (C == 1) {return(1 + A)}
     if (C > 1) {return(1)}
     return(Inf)
