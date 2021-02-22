@@ -422,7 +422,6 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
   expect_equal(try_bover1, 1)
 
-
   #also testing that if x == 0 and C is greater than or equal to 1
   try_ceq1 <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 1)
 
