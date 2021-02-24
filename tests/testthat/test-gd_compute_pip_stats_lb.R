@@ -335,6 +335,38 @@ test_that("check_curve_validity_lb works as expected", {
                               C = C),
                expected)
 
+
+  ## test that if (derive_lb(w, A, B, C) < 0), is_valid is not TRUE
+  headcount <- 0.5
+  A <- 1
+  B <- 0.3
+  C <- 0.2
+
+  expected <- list(is_valid = FALSE,
+                   is_normal = TRUE)
+
+  expect_equal(check_curve_validity_lb(headcount = headcount,
+                                       A = A,
+                                       B = B,
+                                       C = C),
+               expected)
+
+
+  headcount <- NA
+  A <- 1
+  B <- 0.3
+  C <- 0.2
+
+  expected <- list(is_valid = FALSE,
+                   is_normal = FALSE)
+
+  expect_equal(check_curve_validity_lb(headcount = headcount,
+                                       A = A,
+                                       B = B,
+                                       C = C),
+               expected)
+
+
 })
 
 
@@ -399,9 +431,11 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
   expect_equal(try_cover1, 1)
 
+  try_inf <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 0.9)
+
+  expect_equal(try_inf, Inf)
+
 })
-
-
 
 
 
