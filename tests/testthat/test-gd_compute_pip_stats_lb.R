@@ -432,6 +432,10 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
   expect_equal(try_cover1, 1)
 
+  try_inf <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 0.9)
+
+  expect_equal(try_inf, Inf)
+
 })
 
 test_that("in derive_lb() function, if x = 0 & B >= 0,
