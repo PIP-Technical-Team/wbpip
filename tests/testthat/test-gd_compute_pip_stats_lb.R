@@ -424,13 +424,13 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
 
   #also testing that if x == 0 and C is greater than or equal to 1
-  # try_ceq1 <- derive_lb(x = 0, A = 0.6562181, B = 0.9676324, C = 1)
-  #
-  # expect_equal(try_ceq1, 1.6562181)
-  #
-  # try_cover1 <- derive_lb(x = 0, A = 0.6562181, B = 0.9676324, C = 1.1)
-  #
-  # expect_equal(try_cover1, 1)
+  try_ceq1 <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 1)
+
+  expect_equal(try_ceq1, 1.6562181)
+
+  try_cover1 <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 1.1)
+
+  expect_equal(try_cover1, 1)
 
 })
 
