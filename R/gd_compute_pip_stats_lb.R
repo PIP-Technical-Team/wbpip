@@ -254,7 +254,7 @@ gd_compute_mld_lb <- function(dd, A, B, C) {
   x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
-  if (x1 == 0) {
+  if (x1 <= 0) {
     gap <- 0.0005
   }
   else {
