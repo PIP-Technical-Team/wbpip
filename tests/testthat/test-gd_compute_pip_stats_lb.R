@@ -469,7 +469,6 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 })
 
 
-
 test_that("in derive_lb() function, if x = 0 & B >= 0,
           function returns expected values", {
 
