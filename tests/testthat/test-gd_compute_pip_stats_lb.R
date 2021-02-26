@@ -510,13 +510,19 @@ test_that("tests for the gd_compute_watts_lb", {
                                    B  = 0.9676324,
                                    C  = 1),
               NA)
-
-
-
 })
 
 
+test_that("gd_compute_headcount_lb will return NAs, headcount is negative or NA", {
 
+expect_equal(gd_compute_headcount_lb(mean = 0,
+                                     povline = 1.9,
+                                     A = 1,
+                                     B = 0,
+                                     C = 1),
+             NA)
+
+})
 
 
 
