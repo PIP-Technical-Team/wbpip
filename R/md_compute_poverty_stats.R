@@ -42,9 +42,9 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   watts              <- collapse::fmean(x = sensitive_distance, w = weight)
 
   return(list(
-    headcount = headcount,
-    poverty_gap = gap,
-    poverty_severity = severity,
-    watts = watt8
+    headcount        = fgt0,
+    poverty_gap      = fgt1,
+    poverty_severity = fgt2,
+    watts = watts
   ))
 }
