@@ -510,8 +510,6 @@ test_that("tests for the gd_compute_watts_lb", {
   exp_val1 <- 1 - 0.6562181
 
   expect_equal(try_beq1, exp_val1)
-})
-
 
   ##next, testing on the initial if statement to ensure x == 0 & B > 1 will return 1
   try_bover1 <- derive_lb(x = 0, A = 0.6562181, B = 1.1, C = 0.5300527)
