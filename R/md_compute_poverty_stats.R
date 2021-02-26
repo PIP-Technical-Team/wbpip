@@ -20,39 +20,26 @@
 #' @keywords internal
 md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
 
-  headcount <- 0
-  gap <- 0
-  severity <- 0
-  watt8 <- 0
+  alpha             <- c(0, 1, 2)
+  pov_status        <- data.table::fifelse(welfare < povline_lcu, 1, 0)
 
-  for (i in seq_along(welfare)) {
+  relative_distance <- (1 - (welfare / povline_lcu))
 
-    weight_i <- weight[i]
-    welfare_i <- welfare[i]
+  #--------- FGT measures ---------
 
-    if (welfare_i <= povline_lcu) {
+  for (a in seq_along(alpha)) {
 
-      headcount <- sum(headcount, weight_i)
-      gap_i <- 1 - welfare_i / povline_lcu
-      gap <- sum(gap, weight_i * gap_i)
-      severity <- sum(severity, weight_i * gap_i ^ 2)
-      if (welfare_i > 0) { # Is this check needed no negative welfare value should make it to the application
-        watt8 <- sum(watt8, weight_i * log(povline_lcu / welfare_i))
-      }
+    y <- paste0("fgt", alpha[a])
+    fgt <-  pov_status*relative_distance^alpha[a]
+    x <- collapse::fmean(x = fgt, w = weight)
+    assign(y, x)
 
-    }
   }
 
-  #compute the values for the return
-  sum_weight <- sum(weight)
+  #--------- Watts index ---------
 
-  headcount <- headcount / sum_weight
-  gap <- gap / sum_weight
-  severity <- severity / sum_weight
-  watt8 <- if (headcount > 0) {
-    watt8 <- watt8 / sum_weight
-  } else {
-      watt8 <- 0}
+  sensitive_distance <- log(povline_lcu / welfare)*pov_status
+  watts              <- collapse::fmean(x = sensitive_distance, w = weight)
 
   return(list(
     headcount = headcount,
