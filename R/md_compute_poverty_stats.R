@@ -23,24 +23,17 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   alpha             <- c(0, 1, 2)
   pov_status        <- (welfare < povline_lcu)
   relative_distance <- (1 - (welfare[pov_status] / povline_lcu))
+  non_pov           <- rep(0, collapse::fsum(!pov_status))
 
-  #--------- FGT measures ---------
+  fgt0 <- collapse::fmean(x = pov_status, w = weight)
 
-  for (a in seq_along(alpha)) {
+  fgt1 <- collapse::fmean(x = c(relative_distance, non_pov), w = weight)
 
-    y <- paste0("fgt", alpha[a])
-    fgt <-  c(relative_distance^alpha[a],
-              rep(0, collapse::fsum(!pov_status)))
-
-    x <- collapse::fmean(x = fgt, w = weight)
-    assign(y, x)
-
-  }
+  fgt2 <- collapse::fmean(x = c(relative_distance^2, non_pov), w = weight)
 
   #--------- Watts index ---------
 
-  sensitive_distance <- c(log(povline_lcu / welfare[pov_status]),
-                          rep(0, collapse::fsum(!pov_status)))
+  sensitive_distance <- c(log(povline_lcu / welfare[pov_status]), non_pov)
 
   watts              <- collapse::fmean(x = sensitive_distance, w = weight)
 
