@@ -525,15 +525,34 @@ expect_equal(gd_compute_headcount_lb(mean = 0,
 })
 
 
+test_that("BETAI returns expected values", {
+  expect_equal(BETAI(a = 0, b = 0, x = 0),
+               NaN)
+
+})
 
 
+test_that("GAMMLN returns NA when tmp <= 0", {
+  expect_equal(GAMMLN(xx = -100),
+               NA)
+
+  expect_equal(GAMMLN(xx = -4.4),
+               NA)
+})
 
 
+test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
+  x <- 0.9
+  mean <- 51.5660557757944
+  povline <- 57.791666666666664
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
 
+  expect_equal(rtSafe(x1 = x, x2 = 0.002, xacc = 1, mean = mean, povline = povline, A = A, B = B, C = C),
+               0.451)
 
-
-
-
+})
 
 
 
