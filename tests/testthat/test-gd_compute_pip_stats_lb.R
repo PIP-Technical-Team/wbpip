@@ -469,8 +469,40 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 })
 
 
-test_that("in derive_lb() function, if x = 0 & B >= 0,
-          function returns expected values", {
+test_that("tests for the gd_compute_watts_lb", {
+
+  ## when headcount is negative the function returns 0
+  expect_equal(gd_compute_watts_lb(headcount = -.1,
+                                   mean = 51.5660557757944,
+                                   povline = 1.90,
+                                   dd = 0.005,
+                                   A  = 0.57803721740313529,
+                                   B  = 0.94205090386544987,
+                                   C  = 0.52578600019473676),
+               0)
+
+  ## when headcount is NA function output is 0
+  expect_equal(gd_compute_watts_lb(headcount = NA,
+                                   mean = 51.5660557757944,
+                                   povline = 1.90,
+                                   dd = 0.005,
+                                   A  = 0.57803721740313529,
+                                   B  = 0.94205090386544987,
+                                   C  = 0.52578600019473676),
+               0)
+
+  ## test that x1 <= 0, gap <= snw/2 && that function returns NA if x1 and x2 are less than 0;
+  ## this is very difficult test
+  ## but these following lines should remove the red marks from the
+  ## output lines 344 and 372
+  expect_equal(gd_compute_watts_lb(headcount = 0.2,
+                                   mean = 51.5660557757944,
+                                   povline = 1.90,
+                                   dd = 0.005,
+                                   A  = 1,
+                                   B  = 0.9676324,
+                                   C  = 1),
+              NA)
 
   ##first, testing on the initial if statement to ensure x == 0 & B = 1 will return 1 - A
   try_beq1 <- derive_lb(x = 0, A = 0.6562181, B = 1, C = 0.5300527)
@@ -478,6 +510,8 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
   exp_val1 <- 1 - 0.6562181
 
   expect_equal(try_beq1, exp_val1)
+})
+
 
   ##next, testing on the initial if statement to ensure x == 0 & B > 1 will return 1
   try_bover1 <- derive_lb(x = 0, A = 0.6562181, B = 1.1, C = 0.5300527)
