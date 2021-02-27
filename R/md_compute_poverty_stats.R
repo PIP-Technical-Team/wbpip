@@ -43,7 +43,8 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
                                         w = weight[welfare > 0])
   #--------- Old Watts ---------
-  watts_old          <- sum(sensitive_distance*weight[welfare > 0 & pov_status]) / sum(weight)
+  watts_old          <- collapse::fsum(sensitive_distance*weight[welfare > 0 & pov_status]) /
+    collapse::fsum(weight)
 
   return(list(
     headcount        = fgt0,
