@@ -11,6 +11,7 @@ test_that('does function return 0 headcount when all welfare is above poverty li
     0
   )
 })
+
 test_that('does function return all as poor when all welfare values are below poverty line?'
           , {
   pop <- 1:100
@@ -20,6 +21,8 @@ test_that('does function return all as poor when all welfare values are below po
     1
   )
 })
+
+
 test_that('does poverty gap = 1 when welfare values are 0?'
           , {
 
