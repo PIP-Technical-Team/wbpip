@@ -40,17 +40,17 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   w_gt_zero          <- welfare[welfare > 0 & pov_status]
   sensitive_distance <- log(povline_lcu / w_gt_zero)
 
-  watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
-                                        w = weight[welfare > 0])
+  # watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
+  #                                       w = weight[welfare > 0])
   #--------- Old Watts ---------
-  watts_old          <- collapse::fsum(sensitive_distance*weight[welfare > 0 & pov_status]) /
+  watts          <- collapse::fsum(sensitive_distance*weight[welfare > 0 & pov_status]) /
     collapse::fsum(weight)
 
   return(list(
     headcount        = fgt0,
     poverty_gap      = fgt1,
     poverty_severity = fgt2,
-    watts            = watts,
-    watts_old        = watts_old
+    watts            = watts#,
+    # watts_old        = watts_old
   ))
 }
