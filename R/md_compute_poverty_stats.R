@@ -20,44 +20,37 @@
 #' @keywords internal
 md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
 
-  headcount <- 0
-  gap <- 0
-  severity <- 0
-  watt8 <- 0
+  o       <- order(welfare)
+  welfare <- welfare[o]
+  weight  <- weight[o]
 
-  for (i in seq_along(welfare)) {
+  alpha             <- c(0, 1, 2)
+  pov_status        <- (welfare < povline_lcu)
+  relative_distance <- (1 - (welfare[pov_status] / povline_lcu))
+  non_pov           <- rep(0, collapse::fsum(!pov_status))
 
-    weight_i <- weight[i]
-    welfare_i <- welfare[i]
+  fgt0 <- collapse::fmean(x = pov_status, w = weight)
 
-    if (welfare_i <= povline_lcu) {
+  fgt1 <- collapse::fmean(x = c(relative_distance, non_pov), w = weight)
 
-      headcount <- sum(headcount, weight_i)
-      gap_i <- 1 - welfare_i / povline_lcu
-      gap <- sum(gap, weight_i * gap_i)
-      severity <- sum(severity, weight_i * gap_i ^ 2)
-      if (welfare_i > 0) { # Is this check needed no negative welfare value should make it to the application
-        watt8 <- sum(watt8, weight_i * log(povline_lcu / welfare_i))
-      }
+  fgt2 <- collapse::fmean(x = c(relative_distance^2, non_pov), w = weight)
 
-    }
-  }
+  #--------- Watts index ---------
 
-  #compute the values for the return
-  sum_weight <- sum(weight)
+  w_gt_zero          <- welfare[welfare > 0 & pov_status]
+  sensitive_distance <- log(povline_lcu / w_gt_zero)
 
-  headcount <- headcount / sum_weight
-  gap <- gap / sum_weight
-  severity <- severity / sum_weight
-  watt8 <- if (headcount > 0) {
-    watt8 <- watt8 / sum_weight
-  } else {
-      watt8 <- 0}
+  # watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
+  #                                       w = weight[welfare > 0])
+  #--------- Old Watts ---------
+  watts          <- collapse::fsum(sensitive_distance*weight[welfare > 0 & pov_status]) /
+    collapse::fsum(weight)
 
   return(list(
-    headcount = headcount,
-    poverty_gap = gap,
-    poverty_severity = severity,
-    watts = watt8
+    headcount        = fgt0,
+    poverty_gap      = fgt1,
+    poverty_severity = fgt2,
+    watts            = watts#,
+    # watts_old        = watts_old
   ))
 }
