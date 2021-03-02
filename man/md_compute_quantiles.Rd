@@ -9,7 +9,7 @@ md_compute_quantiles(
   lweight,
   percentile,
   n_quantile = 10,
-  tolerance = 1e-06
+  tolerance = 0.000001
 )
 }
 \arguments{
