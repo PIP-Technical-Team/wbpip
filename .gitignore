@@ -1,4 +1,6 @@
 .Rproj.user
+.Renviron
+.Rprofile
 .Rhistory
 .RData
 inst/doc
