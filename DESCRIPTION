@@ -43,10 +43,11 @@ Depends:
 Imports: 
     dplyr,
     rlang,
-    purrr, 
+    purrr,
     data.table,
     assertthat,
     cli,
-    collapse
+    collapse,
+    compiler
 VignetteBuilder: knitr
 ByteCompile: true
