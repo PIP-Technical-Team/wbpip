@@ -452,7 +452,6 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
   exp_val1 <- 1-0.6562181
 
-
   expect_equal(try_beq1, exp_val1)
 
   ##next, testing on the initial if statement to ensure x == 0 & B > 1 will return 1
@@ -476,6 +475,7 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
 })
 
+
 test_that("in derive_lb() function, if x = 0 & B >= 0,
           function returns expected values", {
 
@@ -491,6 +491,7 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
 
   expect_equal(try_bover1, 1)
 
+
   #also testing that if x == 0 and C is greater than or equal to 1
   try_ceq1 <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 1)
 
@@ -503,7 +504,6 @@ test_that("in derive_lb() function, if x = 0 & B >= 0,
   try_inf <- derive_lb(x = 1, A = 0.6562181, B = 0.9676324, C = 0.9)
 
   expect_equal(try_inf, Inf)
-
 })
 
 
@@ -574,3 +574,39 @@ test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
                0.2165068, tol = 1e-7)
 
 })
+
+
+test_that("BETAI returns expected values", {
+  expect_equal(BETAI(a = 0, b = 0, x = 0),
+               NaN)
+
+})
+
+
+test_that("GAMMLN returns NA when tmp <= 0", {
+  expect_equal(GAMMLN(xx = -100),
+               NA)
+
+  expect_equal(GAMMLN(xx = -4.4),
+               NA)
+})
+
+
+test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
+  x <- 0.9
+  mean <- 51.5660557757944
+  povline <- 57.791666666666664
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  expect_equal(rtSafe(x1 = x, x2 = 0.002, xacc = 1, mean = mean, povline = povline, A = A, B = B, C = C),
+               0.451)
+
+})
+
+
+
+
+
+
