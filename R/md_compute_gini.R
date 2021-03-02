@@ -15,19 +15,21 @@
 #' @keywords internal
 md_compute_gini <- function(welfare, weight) {
 
-  N    <- collapse::fsum(weight)       # population size
-  # Y    <- sum(y*w)     # total welfare
+  # Compute weighted welfare
+  weighted_welfare <- welfare * weight
+  weighted_welfare_lag <- collapse::flag(weighted_welfare, fill = 0)
 
-  cw   <- cumsum(weight)    # Cumulative weights
-  # cy   <- cumsum(y*w)  # Cumulative welfare
+  # Compute area under the curve using
+  # Area of trapezoid = Base * Average height
+  v <- (cumsum(weighted_welfare_lag) + weighted_welfare / 2) * weight
+  auc <- collapse::fsum(v) # Area Under the Curve
 
-  # sn   <-  weight/N         # share of population
-  my   <- collapse::fmean(x = welfare, w = weight)
+  # Compute Area Under the Lorenz Curve
+  # Normalize auc so it is always between 0 and 0.5
+  auc <- auc / collapse::fsum(weight) / collapse::fsum(weighted_welfare)
 
-  i    <- (2*cw - weight + 1)/2
-  t2   <- welfare*(N - i + 1)
-  gini <- 1+(1/N) - (2/(my*N^2))* collapse::fsum(t2*weight)
-
+  # Compute Gini
+  gini <- 1 -  2 * auc
 
   return(gini)
 }
