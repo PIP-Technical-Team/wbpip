@@ -102,6 +102,19 @@ test_that("rtSafe returns expected results", {
 
 })
 
+test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
+  x <- 0.9
+  mean <- 51.5660557757944
+  povline <- 57.791666666666664
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  expect_equal(rtSafe(x1 = x, x2 = 0.002, xacc = 1, mean = mean, povline = povline, A = A, B = B, C = C),
+               0.451)
+
+})
+
 test_that("funcD returns expected results", {
   # Constants
   x <- 0.0001
@@ -161,6 +174,20 @@ test_that("GAMMLN returns expected results", {
   expect_equal(out, benchmarck)
 })
 
+test_that("GAMMLN returns NA when tmp <= 0", {
+  expect_equal(GAMMLN(xx = -100),
+               NA)
+
+  expect_equal(GAMMLN(xx = -4.4),
+               NA)
+})
+
+test_that("BETAI returns expected values", {
+  expect_equal(BETAI(a = 0, b = 0, x = 0),
+               NaN)
+
+})
+
 test_that("BETAICF returns expected results", {
   # Test1
   a <- 0.88410180773089975
@@ -204,6 +231,17 @@ test_that("gd_compute_headcount_lb returns expected results", {
                                  B = B,
                                  C = C)
   expect_equal(out, benchmarck, tolerance = 1e-06)
+
+})
+
+test_that("gd_compute_headcount_lb will return NAs, headcount is negative or NA", {
+
+  expect_equal(gd_compute_headcount_lb(mean = 0,
+                                       povline = 1.9,
+                                       A = 1,
+                                       B = 0,
+                                       C = 1),
+               NA)
 
 })
 
@@ -529,3 +567,10 @@ test_that("tests for the gd_compute_watts_lb", {
 
 })
 
+test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
+
+  ##not really a test but it should get the red mark away on coverage report to go away
+  expect_equal(gd_compute_mld_lb(0.0005, A = 1, B = 0.9676324, C = 1),
+               0.2165068, tol = 1e-7)
+
+})
