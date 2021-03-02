@@ -15,25 +15,12 @@
 md_compute_mld <- function(welfare, weight) {
 
   # Compute MLD
-  weighted_welfare     <- weight * welfare
-  sum_weighted_welfare <- sum(weighted_welfare)
-  sum_weights          <- sum(weight)
-  mean_welfare         <- sum_weighted_welfare / sum_weights
-  mld                  <- 0
-
-  for (i in seq_along(welfare)) {
-
-    if (welfare[i] > 0) {
-      # Apply Mean Log Deviation formula (MLD)
-      # MLD is also referred to as GE(0) or Theil's L
-      # See page 107 of https://openknowledge.worldbank.org/handle/10986/11985
-      mld <- mld + weight[i] / sum_weights * log(mean_welfare / welfare[i])
-    } else {
-      # Use welfare = 1 as a proxy (instead of welfare = 0)
-      # Otherwise mean_welfare / welfare is undefined
-      mld <- mld + weight[i] / sum_weights * log(mean_welfare)
-    }
-  }
-
+  mean_welfare         <- collapse::fmean(x = welfare,
+                                         w = weight)
+  welfare[welfare <= 0] <- 1 # this should be done before the mean
+  deviation             <- log(mean_welfare/welfare)
+  mld                   <- collapse::fmean(x = deviation,
+                                          w = weight)
   return(mld)
 }
+
