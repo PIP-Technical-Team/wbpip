@@ -1,6 +1,3 @@
-#' @importFrom dplyr lag
-NULL
-
 #' Gini coefficient
 #'
 #' Compute the Gini coefficient for microdata.
@@ -20,19 +17,20 @@ md_compute_gini <- function(welfare, weight) {
 
   # Compute weighted welfare
   weighted_welfare <- welfare * weight
-  weighted_welfare_lag <- dplyr::lag(weighted_welfare, default = 0)
+  weighted_welfare_lag <- collapse::flag(weighted_welfare, fill = 0)
 
   # Compute area under the curve using
   # Area of trapezoid = Base * Average height
   v <- (cumsum(weighted_welfare_lag) + weighted_welfare / 2) * weight
-  auc <- sum(v) # Area Under the Curve
+  auc <- collapse::fsum(v) # Area Under the Curve
 
   # Compute Area Under the Lorenz Curve
   # Normalize auc so it is always between 0 and 0.5
-  auc <- auc / sum(weight) / sum(weighted_welfare)
+  auc <- auc / collapse::fsum(weight) / collapse::fsum(weighted_welfare)
 
   # Compute Gini
   gini <- 1 -  2 * auc
+  g2 <- gini
 
   return(gini)
 }
