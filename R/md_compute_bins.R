@@ -5,14 +5,14 @@
 #' Compute percentiles (bins) accumulating by population rather than by welfare.
 #' It differs from the common way to calculate percentiles because the
 #' categories are defined by the ideal size of the quantile rather than by the
-#' cutpoints.
+#' cutpoints of the welfare aggregate.
 #'
-#' This is why the function is called `bins` rather than quantiles because it
-#' actually divides the population in equal bins sorted by the welfare aggregate
+#' This is why the function is called `bins` rather than quantiles. It
+#' divides the population in equal bins sorted by the welfare aggregate
 #' rather than calculate proper percentiles.
 #'
 #' This function however, yields less unequally sized categories when 1) the
-#' cutpoint value is frequent, 2) when using weights high variance or 3) when
+#' cutpoint value is frequent, 2) when using weights with high variance or 3) when
 #' the number of observations in the dataset is not a product of the number of
 #' quantiles. Keep in mind that it may not work properly on small datasets or if
 #' calculated for small groups. If the number of observations in the dataset or
@@ -41,7 +41,8 @@
 #'
 #' @return data.table
 #' @keywords internal
-md_compute_bins <- function(welfare, weight,
+md_compute_bins <- function(welfare,
+                            weight,
                             nbins  = 100,
                             na.rm  = FALSE,
                             output = "simple") {
@@ -51,7 +52,7 @@ md_compute_bins <- function(welfare, weight,
                                weight  = weight)
   data.table::setorder(dt, welfare)
 
-  total_pop <- dt[,sum(weight, na.rm = na.rm)]  # total population
+  total_pop <- dt[, collapse::fsum(x = weight, na.rm = na.rm)]  # total population
 
   #--------- Calculations ---------
 
@@ -73,7 +74,7 @@ md_compute_bins <- function(welfare, weight,
 
   if ("simple" %in% output) {
 
-    return(dt[, "bins"])
+    return(dt[["bins"]])
 
   } else if ("full" %in% output) {
 
@@ -81,7 +82,7 @@ md_compute_bins <- function(welfare, weight,
 
   } else {
 
-    return(dt[, ..output])
+    return(dt[[output]])
 
   }
 }

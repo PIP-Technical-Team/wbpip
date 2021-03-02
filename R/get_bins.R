@@ -40,7 +40,6 @@ get_bins <-  function(.data,
     # Organize argument to parse to md_clean_data
     args_in <- list(welfare = substitute(welfare),
                     weight  = substitute(weight),
-                    type    = type,
                     nbins   = nbins,
                     output  = output)
 
@@ -92,3 +91,6 @@ get_bins <-  function(.data,
   # return(gini)
   return(df_bins)
 }
+
+
+
