@@ -49,3 +49,4 @@ Imports:
     cli,
     collapse
 VignetteBuilder: knitr
+ByteCompile: true
