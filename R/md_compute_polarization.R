@@ -29,14 +29,14 @@ md_compute_polarization <- function(welfare, weight, gini,
                                     weighted_median) {
 
   # Calculate poverty stats (for headcount and poverty gap)
-  pov_stats <- md_compute_poverty_stats(
-    welfare = welfare, weight = weight,
-    povline_lcu = weighted_median)
+  pov_stats <- md_compute_poverty_stats(welfare = welfare,
+                                        weight = weight,
+                                        povline_lcu = weighted_median)
 
   # Calculate mean for the bottom 50 %
   mean_below50 <-
     weighted_median *
-    (1 - pov_stats$poverty_gap / pov_stats$headcount)
+    (1 - (pov_stats$poverty_gap / pov_stats$headcount))
 
   # Calculate distribution corrected mean
   dcm_mean <- (1 - gini) * weighted_mean
