@@ -22,7 +22,7 @@ get_gini(
 group, aggregate or imputed.}
 }
 \value{
-tibble
+data.table
 }
 \description{
 Compute the Gini coefficient.

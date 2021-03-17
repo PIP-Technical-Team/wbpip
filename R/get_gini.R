@@ -16,7 +16,7 @@ if (getRversion() >= '2.15.1')
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
 #'
-#' @return tibble
+#' @return data.table
 #' @export
 get_gini <- function(.data, welfare, weight,
                      distribution_type =
@@ -75,6 +75,6 @@ get_gini <- function(.data, welfare, weight,
   }
 
   # return(gini)
-  return(tibble::tibble(gini = gini))
+  return(data.table::data.table(gini = gini))
 }
 

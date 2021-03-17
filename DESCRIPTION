@@ -45,7 +45,6 @@ Imports:
     rlang,
     purrr, 
     data.table,
-    tibble,
     assertthat,
     cli,
     collapse
