@@ -29,6 +29,7 @@ prod_md_compute_pip_stats <- function(welfare,
   # if (is.null(requested_mean)) {requested_mean <- dist_stats[["mean"]]}
   # data_mean <- dist_stats[["mean"]]
   # data_mean <- svy_mean # To be implemented for interpolation
+  data_mean <- requested_mean
 
   # Adjust values to account for PPP or welfare mean change
   mean <- requested_mean * ppp / default_ppp
