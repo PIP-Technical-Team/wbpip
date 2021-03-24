@@ -45,7 +45,7 @@ prod_compute_pip_stats <- function(welfare,
 
   } else if (distribution_type == "group") {
 
-    out <- prod_gd_compute_pip_stats(welfare        = welfare,
+    out <- gd_compute_pip_stats(welfare        = welfare,
                                      povline        = povline,
                                      population     = population,
                                      requested_mean = requested_mean,
