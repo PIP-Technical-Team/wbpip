@@ -28,7 +28,9 @@ prod_md_compute_pip_stats <- function(welfare,
 
   # Take care of potentially undefined values
   if (is.null(ppp)) {ppp <- default_ppp}
-  if (is.null(requested_mean)) {requested_mean <- svy_mean_lcu}
+  if (is.null(requested_mean)) {
+    requested_mean <- svy_mean_lcu
+    }
 
   # Adjust values to account for PPP or welfare mean change
   mean <- requested_mean * ppp / default_ppp

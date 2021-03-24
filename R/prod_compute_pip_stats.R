@@ -9,6 +9,7 @@
 #' @param population numeric: A vector of population weights, optional, a vector
 #' of 1s if not specified.
 #' @param requested_mean numeric: Welfare mean in international dollars
+#' @param svy_mean_lcu numeric: Welfare mean in Local Currency Unit
 #' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param default_ppp numeric: Default purchasing power parity
@@ -21,6 +22,7 @@ prod_compute_pip_stats <- function(welfare,
                                    povline,
                                    population = NULL,
                                    requested_mean = NULL,
+                                   svy_mean_lcu = NULL,
                                    popshare = NULL,
                                    default_ppp = 1,
                                    ppp = NULL,
@@ -37,6 +39,7 @@ prod_compute_pip_stats <- function(welfare,
                                      povline        = povline,
                                      population     = population,
                                      requested_mean = requested_mean,
+                                     svy_mean_lcu   = svy_mean_lcu,
                                      popshare       = popshare,
                                      default_ppp    = default_ppp,
                                      ppp            = ppp)
