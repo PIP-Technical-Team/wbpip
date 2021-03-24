@@ -9,6 +9,7 @@
 #' @param population numeric: A vector of population weights, optional, a vector
 #' of 1s if not specified.
 #' @param requested_mean numeric: Welfare mean in international dollars
+#' @param svy_mean_lcu numeric: Welfare mean in Local Currency Unit
 #' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median).
 #' @param default_ppp numeric: Default purchasing power parity.
@@ -20,6 +21,7 @@ prod_md_compute_pip_stats <- function(welfare,
                                       povline,
                                       population = NULL,
                                       requested_mean = NULL,
+                                      svy_mean_lcu = NULL,
                                       popshare = NULL,
                                       default_ppp = 1,
                                       ppp = NULL) {
@@ -27,9 +29,6 @@ prod_md_compute_pip_stats <- function(welfare,
   # Take care of potentially undefined values
   if (is.null(ppp)) {ppp <- default_ppp}
   # if (is.null(requested_mean)) {requested_mean <- dist_stats[["mean"]]}
-  # data_mean <- dist_stats[["mean"]]
-  # data_mean <- svy_mean # To be implemented for interpolation
-  data_mean <- requested_mean
 
   # Adjust values to account for PPP or welfare mean change
   mean <- requested_mean * ppp / default_ppp
@@ -40,7 +39,7 @@ prod_md_compute_pip_stats <- function(welfare,
                                              weight  = population,
                                              popshare = popshare,
                                              requested_mean = mean,
-                                             data_mean = data_mean)
+                                             data_mean = svy_mean_lcu)
   # Compute poverty stats
   pov_stats <- md_compute_poverty_stats(welfare = welfare,
                                         povline_lcu = adjusted_povline[["povline_lcu"]],
