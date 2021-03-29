@@ -66,7 +66,7 @@ prod_fg_compute_pip_stats <- function(request_year,
   # If interpolating between two surveys then calculate
   # a weighted average for the request year
   if (n_surveys == 2) {
-    out <- fg_adjust_poverty_stats(dl[[1]], dl[[2]], survey_year, request_year)
+    out <- prod_fg_adjust_poverty_stats(dl[[1]], dl[[2]], survey_year, request_year)
     # Else returned the extrapolation for the request year as is
   } else {
     out <- dl[[1]]
@@ -143,3 +143,30 @@ prod_fg_create_params <- function(predicted_request_mean,
 
 }
 
+#' Calculate a weighted average for poverty statistics based on the difference
+#' between the two survey_years and the request year. This is used when the
+#' interpolation method is non-monotonic.
+#'
+#' Version used in production. Ignores distributional stats
+#'
+#' @param stats0 list: A list with poverty statistics.
+#' @param stats1 list: A list with poverty statistics.
+#' @param request_year integer: A value with the request year.
+#' @param survey_year numeric: A vector with one or two survey years.
+#' @return numeric
+#' @noRd
+prod_fg_adjust_poverty_stats <- function(stats0, stats1, survey_year, request_year) {
+
+  # Calculate a weighted average for the poverty stats by taking the
+  # difference between the two survey years and the request year
+  out <-
+    purrr::map2(
+      stats0, stats1,
+      .f = function(measure0, measure1, survey_year, request_year) {
+        ((survey_year[2] - request_year) * measure0 +
+           (request_year - survey_year[1]) * measure1) /
+          (survey_year[2] - survey_year[1])
+      }, survey_year, request_year)
+
+  return(out)
+}
