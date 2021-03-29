@@ -153,7 +153,7 @@ fg_compute_pip_stats <- function(request_year,
   return(out)
 }
 
-#' fg_compute_pip_stats
+#' fg_create_params
 #'
 #' Create parameters to be used in `fg_compute_pip_stats()`.
 #'
@@ -211,9 +211,9 @@ fg_create_params <- function(predicted_request_mean,
 #'
 #' @noRd
 fg_select_compute_pip_stats <- list(
- micro = function(...) prod_md_compute_pip_stats(...),
+ micro = function(...) md_compute_pip_stats(...),
  group = function(...) gd_compute_pip_stats(...),
- imputed = function(...) prod_md_compute_pip_stats(...)
+ imputed = function(...) md_compute_pip_stats(...)
 )
 
 #' fg_adjust_poverty_stats
