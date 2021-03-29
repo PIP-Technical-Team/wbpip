@@ -49,11 +49,12 @@ prod_gd_compute_pip_stats <- function(welfare,
 
 
   # Apply selection rules ---------------------------------------------------
-  out <- gd_select_lorenz(lq = results_lq,
-                          lb = results_lb)
+  out <- prod_gd_select_lorenz(lq = results_lq,
+                               lb = results_lb)
 
   # Retun only subset of variables
   out <- out[c("poverty_line",
+               "mean",
                "headcount",
                "poverty_gap",
                "poverty_severity",
