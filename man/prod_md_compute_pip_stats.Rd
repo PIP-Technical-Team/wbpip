@@ -11,6 +11,7 @@ prod_md_compute_pip_stats(
   povline,
   population = NULL,
   requested_mean = NULL,
+  svy_mean_lcu = NULL,
   popshare = NULL,
   default_ppp = 1,
   ppp = NULL
@@ -25,6 +26,8 @@ prod_md_compute_pip_stats(
 of 1s if not specified.}
 
 \item{requested_mean}{numeric: Welfare mean in international dollars}
+
+\item{svy_mean_lcu}{numeric: Welfare mean in Local Currency Unit}
 
 \item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median).}
