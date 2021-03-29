@@ -1,3 +1,8 @@
-# test_that("multiplication works", {
-#   expect_equal(2 * 2, 4)
-# })
+## testing that the get lorenz function creates expected outputs
+
+test_that("testing that the get_lorenz function is producing expected results", {
+
+
+
+
+})
