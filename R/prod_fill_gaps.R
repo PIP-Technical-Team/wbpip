@@ -54,7 +54,8 @@ prod_fg_compute_pip_stats <- function(request_year,
     data = data,
     poverty_line = poverty_line,
     default_ppp = default_ppp,
-    ppp = ppp
+    ppp = ppp,
+    type = type
   )
 
   # Calculate poverty stats
@@ -93,6 +94,7 @@ prod_fg_select_compute_pip_stats <- list(
 #' Create parameters to be used in `prod_fg_compute_pip_stats()`.
 #'
 #' @inheritParams prod_fg_compute_pip_stats
+#' @param type character: distribution type
 #' @return list
 #' @noRd
 prod_fg_create_params <- function(predicted_request_mean,
@@ -100,7 +102,8 @@ prod_fg_create_params <- function(predicted_request_mean,
                                   data,
                                   poverty_line,
                                   default_ppp,
-                                  ppp ) {
+                                  ppp,
+                                  type) {
 
   # If one survey
   if (length(predicted_request_mean) == 1) {
@@ -138,6 +141,16 @@ prod_fg_create_params <- function(predicted_request_mean,
       )
     )
   }
+
+  # remove unnecessary variables
+  params <- purrr::map2(params, type, function(x, y) {
+    if (y == "group") {
+      x["svy_mean_lcu"] <- NULL
+      return(x)
+    } else {
+      return(x)
+    }
+  })
 
   return(params)
 
