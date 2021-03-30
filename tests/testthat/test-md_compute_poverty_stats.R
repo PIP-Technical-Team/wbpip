@@ -60,3 +60,14 @@ test_that('does function produce results that match compute_poverty_stats in pov
   # expect_equal(res[["watts_old"]], 0.6899868, tolerance = 1e-6)
 
 })
+
+test_that('md_compute_poverty_stats does not fail when poverty == 0', {
+            res <- md_compute_poverty_stats(welfare = benchmark$welfare,
+                                            povline_lcu = min(benchmark$welfare) - 1,
+                                            weight = benchmark$weight)
+
+            expect_equal(res[["headcount"]], 0)
+            expect_equal(res[["poverty_gap"]], 0)
+            expect_equal(res[["poverty_severity"]], 0)
+            expect_equal(res[["watts"]], 0)
+          })
