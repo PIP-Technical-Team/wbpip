@@ -46,6 +46,11 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   watts          <- collapse::fsum(sensitive_distance*weight[welfare > 0 & pov_status]) /
     collapse::fsum(weight)
 
+  # Handle cases where Watts is numeric(0)
+  if (identical(watts, numeric(0))) {
+    watts <- 0
+  }
+
   return(list(
     headcount        = fgt0,
     poverty_gap      = fgt1,
