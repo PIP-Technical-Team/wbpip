@@ -13,6 +13,7 @@
 #' @param ppp numeric: PPP requested by user
 #' @param area character: Area (Urban or Rural)
 #' @param area_pop numeric: Total population per area.
+#' @param p0 numeric: TO be documented
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
 #'
