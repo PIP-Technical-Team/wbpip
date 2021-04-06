@@ -15,6 +15,7 @@ prod_compute_pip_stats(
   popshare = NULL,
   default_ppp = 1,
   ppp = NULL,
+  p0 = 0.5,
   distribution_type = c("micro", "group", "aggregate", "imputed")
 )
 }
@@ -36,6 +37,8 @@ quantile is desired. Default .5 (i.e., weighted median)}
 \item{default_ppp}{numeric: Default purchasing power parity}
 
 \item{ppp}{numeric: PPP requested by user}
+
+\item{p0}{numeric: TO be documented}
 
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}

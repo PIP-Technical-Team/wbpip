@@ -8,8 +8,6 @@ ag_compute_pip_stats(
   welfare,
   povline,
   population,
-  area,
-  area_pop,
   requested_mean,
   popshare = NULL,
   default_ppp = NULL,
@@ -24,10 +22,6 @@ proportion of the population (Lorenz Curve).}
 \item{povline}{numeric: Poverty line.}
 
 \item{population}{numeric: Cumulative proportion of population.}
-
-\item{area}{character: Area (Urban or Rural)}
-
-\item{area_pop}{numeric: Total population per area.}
 
 \item{requested_mean}{numeric: Welfare mean.}
 

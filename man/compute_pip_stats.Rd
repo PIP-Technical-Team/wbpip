@@ -12,8 +12,6 @@ compute_pip_stats(
   popshare = NULL,
   default_ppp = 1,
   ppp = NULL,
-  area = NULL,
-  area_pop = NULL,
   p0 = 0.5,
   distribution_type = c("micro", "group", "aggregate", "imputed")
 )
@@ -35,9 +33,7 @@ quantile is desired. Default .5 (i.e., weighted median)}
 
 \item{ppp}{numeric: PPP requested by user}
 
-\item{area}{character: Area (Urban or Rural)}
-
-\item{area_pop}{numeric: Total population per area.}
+\item{p0}{numeric: TO be documented}
 
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}
