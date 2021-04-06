@@ -3,15 +3,11 @@
 #' Compute poverty statistics for aggregated data distribution.
 #'
 #' @inheritParams gd_compute_pip_stats
-#' @param area character: Area (Urban or Rural)
-#' @param area_pop numeric: Total population per area.
 #' @return list
 #' @keywords internal
 ag_compute_pip_stats <- function(welfare,
                                  povline,
                                  population,
-                                 area,
-                                 area_pop,
                                  requested_mean,
                                  popshare = NULL,
                                  default_ppp = NULL,
