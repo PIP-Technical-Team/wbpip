@@ -11,8 +11,6 @@
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param default_ppp numeric: Default purchasing power parity
 #' @param ppp numeric: PPP requested by user
-#' @param area character: Area (Urban or Rural)
-#' @param area_pop numeric: Total population per area.
 #' @param p0 numeric: TO be documented
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
@@ -26,8 +24,6 @@ compute_pip_stats <- function(welfare,
                               popshare = NULL,
                               default_ppp = 1,
                               ppp = NULL,
-                              area = NULL,
-                              area_pop = NULL,
                               p0 = 0.5,
                               distribution_type = c("micro",
                                                     "group",
