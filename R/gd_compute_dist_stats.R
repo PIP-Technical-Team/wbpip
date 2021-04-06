@@ -102,7 +102,6 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
     mld = dist_stats$mld,
     dcm = dist_stats$dcm,
     deciles = dist_stats$deciles,
-    #is_normal = validity$is_normal,
     is_valid = validity$is_valid)
 
   return(out)
@@ -115,12 +114,12 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 #' @keywords internal
 gd_estimate_dist_stats_lb <- function(mean, p0, A, B, C) {
 
+  # Check validity
+  validity <- check_curve_validity_dist_lb(A, B, C)
+
   # Compute distributional measures
   dist_stats <-
     gd_compute_dist_stats_lb(mean, p0, A, B, C)
-
-  # Check validity
-  validity <- check_curve_validity_dist_lb(A, B, C)
 
   out <- list(
     gini = dist_stats$gini,
@@ -131,7 +130,6 @@ gd_estimate_dist_stats_lb <- function(mean, p0, A, B, C) {
     mld = dist_stats$mld,
     dcm = dist_stats$dcm,
     deciles = dist_stats$deciles,
-    is_normal = validity$is_normal,
     is_valid = validity$is_valid)
 
   return(out)
