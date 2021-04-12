@@ -18,6 +18,10 @@ the median consumption/income for SPL calculation}
 
 \item{cpi}{numeric: CPI values inputed by the user (set to 1 if welfare values year is the reference year)}
 }
+\value{
+numeric
+}
 \description{
 Compute the societal poverty line based on the median daily consumption in US dollars
 }
+\keyword{internal}
