@@ -15,16 +15,6 @@ st_create_synth_vector <- function(welfare,
                                   pop,
                                   p0 = 0.5) {
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Check parameters   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  if (!any(data_level %in% c("rural", "urban"))) {
-    msg     <- glue::glue("`data_level` should be either 'urban' or 'rural'.
-                          Not `{data_level}`")
-    rlang::abort(c(msg),class = "wbpip_error")
-
-  }
 
   # Apply Lorenz quadratic fit ----------------------------------------------
 
