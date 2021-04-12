@@ -145,7 +145,7 @@ prod_fg_create_params <- function(predicted_request_mean,
 
   # remove unnecessary variables
   params <- purrr::map2(params, type, function(x, y) {
-    if (y == "group") {
+    if (y %in% c("group", "aggregate")) {
       x["svy_mean_lcu"] <- NULL
       return(x)
     } else {
