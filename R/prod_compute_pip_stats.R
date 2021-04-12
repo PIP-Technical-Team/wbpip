@@ -35,7 +35,7 @@ prod_compute_pip_stats <- function(welfare,
 
   distribution_type <- match.arg(distribution_type)
 
-  if (distribution_type == "micro") {
+  if (distribution_type %in% c("micro", "imputed")) {
 
     out <- prod_md_compute_pip_stats(welfare        = welfare,
                                      povline        = povline,
@@ -61,12 +61,9 @@ prod_compute_pip_stats <- function(welfare,
 
     return(out)
 
-  } else if (distribution_type == "imputed") {
-
-    return(NA)
-
   } else {
 
     return(NA)
+
   }
 }
