@@ -86,6 +86,7 @@ prod_fg_compute_pip_stats <- function(request_year,
 prod_fg_select_compute_pip_stats <- list(
  micro = function(...) prod_md_compute_pip_stats(...),
  group = function(...) prod_gd_compute_pip_stats(...),
+ aggregate = function(...) prod_gd_compute_pip_stats(...),
  imputed = function(...) prod_md_compute_pip_stats(...)
 )
 
