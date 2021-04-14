@@ -5,14 +5,13 @@
 #'
 #' @inheritParams gd_compute_pip_stats
 #' @inheritParams gd_compute_dist_stats_lb
-#' @param pop numeric: a sinble number with the population at data_level
 #'
 #' @return list
 #' @keywords internal
-st_create_synth_vector <- function(welfare,
+sd_create_synth_vector <- function(welfare,
                                   population,
                                   mean,
-                                  pop,
+                                  pop = NULL,
                                   p0 = 0.5) {
 
 
@@ -91,11 +90,17 @@ st_create_synth_vector <- function(welfare,
     welfare_s  <- mean * derive_lb(F, A, B, C)
   }
 
+	# manage population
+	if (is.null(pop)) {
+	  weight  = 1
+	} else {
+	  weight  = pop/nobs
+	}
+
   df <- data.table::data.table(
     welfare = welfare_s,
-    weight  = pop/nobs
+    weight  = weight
   )
-
 
   return(df)
 }
