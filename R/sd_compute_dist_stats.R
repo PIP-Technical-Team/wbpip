@@ -5,14 +5,16 @@
 #'
 #' @inheritParams gd_compute_pip_stats
 #' @inheritParams gd_compute_dist_stats_lb
+#' @param nobs numeric: Number of observations to be used in synthetic vector
 #'
 #' @return list
 #' @keywords internal
 sd_create_synth_vector <- function(welfare,
-                                  population,
-                                  mean,
-                                  pop = NULL,
-                                  p0 = 0.5) {
+                                   population,
+                                   mean,
+                                   pop = NULL,
+                                   p0 = 0.5,
+                                   nobs = 1e5) {
 
 
   # Apply Lorenz quadratic fit ----------------------------------------------
@@ -21,7 +23,7 @@ sd_create_synth_vector <- function(welfare,
   prepped_data <- create_functional_form_lq(
     welfare = welfare, population = population)
 
-  ## STEP 2: Estimate regression coefficients using LQ parametrization------
+  ## STEP 2: Estimate regression coefficients using LQ parameterization------
   reg_results_lq <- regres(prepped_data, is_lq = TRUE)
   reg_coef_lq <- reg_results_lq$coef
 
@@ -38,7 +40,7 @@ sd_create_synth_vector <- function(welfare,
   prepped_data <- create_functional_form_lb(
     welfare = welfare, population = population)
 
-  ## STEP 2: Estimate regression coefficients using LB parametrization
+  ## STEP 2: Estimate regression coefficients using LB parameterization
   reg_results_lb <- regres(prepped_data, is_lq = FALSE)
   reg_coef_lb <- reg_results_lb$coef
 
@@ -56,12 +58,12 @@ sd_create_synth_vector <- function(welfare,
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## welfare --------
-
-  nobs  <- 1e5
-  first <- 1/(2*nobs)
-	last  <- 1-(1/(2*nobs))
-	n     <- c(1:nobs)
-	F     <- (n-1)/(nobs-1)*((last)-(first))+(first)
+  # Create equally spaced distribution points that will be used to compute
+  # the vector to welfare values
+  first <- 1 / (2 * nobs)
+  last  <- 1 - (1 / (2 * nobs))
+  n     <- c(1:nobs)
+  F     <- (n - 1) / (nobs - 1) * ((last) - (first)) + (first)
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -78,7 +80,7 @@ sd_create_synth_vector <- function(welfare,
     A = reg_coef_lq[1]
     B = reg_coef_lq[2]
     C = reg_coef_lq[3]
-
+    # Compute welfare values
     welfare_s  <- mean * derive_lq(F, A, B, C)
 
 
@@ -86,7 +88,7 @@ sd_create_synth_vector <- function(welfare,
     A = reg_coef_lb[1]
     B = reg_coef_lb[2]
     C = reg_coef_lb[3]
-
+    # Compute welfare values
     welfare_s  <- mean * derive_lb(F, A, B, C)
   }
 
