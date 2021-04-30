@@ -51,7 +51,8 @@ md_compute_bins <- function(welfare, weight,
                                weight  = weight)
   data.table::setorder(dt, welfare)
 
-  total_pop <- dt[,sum(weight, na.rm = na.rm)]  # total population
+  # total population
+  total_pop <- collapse::fsum(x = dt$weight, na.rm = na.rm)
 
   #--------- Calculations ---------
 
