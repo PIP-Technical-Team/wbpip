@@ -1,3 +1,9 @@
+#' calculate the median for group data
+#'
+#' @inheritParams gd_compute_dist_stats
+#'
+#' @return scalar
+#' @keywords internal
 gd_compute_median <- function(welfare,
                               population,
                               mean,
