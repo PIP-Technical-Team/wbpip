@@ -51,28 +51,19 @@ compute_median.pipmd <- function(dt, welfare, weight, level = NULL) {
                      .f = ~compute_median_md(dt, welfare, weight, level = .x))
 
   names(p50) <- pop_level
-}
 
-#' compute median for microdata
-#'
-#' @param x dataframe with microdata
-#' @inheritParams compute_median
-#' @return scalar
-#' @export
-compute_median_md <- function(dt, welfare, weight, level = NULL) {
+  if (data_level != "D1") { # Urban/rural or subnat level
 
-  if (!is.null(level)) {
-    df  <- dt[max_domain == level]
+    # national mean
+    p50_national <- compute_median_md(dt, welfare, weight)
+
+    p50 <- append(list(p50_national), p50)
+    names(p50) <- c("national", pop_level)
+
   }
 
-  wlf <- dt[[welfare]]
-  wgt <- dt[[weight]]
-
-  median <- collapse::fmedian(x = wlf,
-                              w = wgt)
-  return(median)
+  return(p50)
 }
-
 
 
 #' calculate the median for group data
@@ -89,7 +80,8 @@ compute_median.pipgd <- function(dt,
                               welfare,
                               weight,
                               mean,
-                              p0 = 0.5) {
+                              p0 = 0.5,
+                              pop = NULL) {
 
   # Get cache_id
   cache_id <- unique(dt$cache_id)
@@ -111,6 +103,42 @@ compute_median.pipgd <- function(dt,
 
   names(p50) <- pop_level
 
+  if (data_level != "D1") { # Urban/rural or subnat level
+
+    # create synthetic vector
+    wf <- purrr::map_df(.x = pop_level,
+                          .f = ~get_synth_vector(dt, pop, mean, level = .x))
+
+    # national mean
+    p50_national <- compute_median_md(dt, "welfare", "weight")
+
+    p50 <- append(list(p50_national), p50)
+    names(p50) <- c("national", pop_level)
+
+  }
+
+  return(p50)
+
+}
+
+#' compute median for microdata
+#'
+#' @param x dataframe with microdata
+#' @inheritParams compute_median
+#' @return scalar
+#' @export
+compute_median_md <- function(dt, welfare, weight, level = NULL) {
+
+  if (!is.null(level)) {
+    df  <- dt[max_domain == level]
+  }
+
+  wlf <- dt[[welfare]]
+  wgt <- dt[[weight]]
+
+  median <- collapse::fmedian(x = wlf,
+                              w = wgt)
+  return(median)
 }
 
 #' calculate the median for group data
