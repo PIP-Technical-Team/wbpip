@@ -10,7 +10,7 @@ sd_create_synth_vector(
   mean,
   pop = NULL,
   p0 = 0.5,
-  nobs = 1e+05
+  nobs = 100000
 )
 }
 \arguments{
