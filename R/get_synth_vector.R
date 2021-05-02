@@ -1,6 +1,6 @@
 #' get synthetic vector based on data level
 #'
-#' @inheritParams db_compute_dist_stats
+#' @inheritParams compute_median.pipgd
 #' @param level charcter: data level. itcould  be nations, urban, rural, or any
 #'   other subnational division
 #'

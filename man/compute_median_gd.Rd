@@ -7,6 +7,8 @@
 compute_median_gd(dt, welfare, weight, mean, p0 = 0.5, level = NULL)
 }
 \arguments{
+\item{dt}{data frame with either micro data, group data, or imputed data}
+
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 

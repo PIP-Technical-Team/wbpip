@@ -4,7 +4,7 @@
 \alias{compute_median.pipgd}
 \title{calculate the median for group data}
 \usage{
-\method{compute_median}{pipgd}(dt, welfare, weight, mean, p0 = 0.5)
+\method{compute_median}{pipgd}(dt, welfare, weight, mean, p0 = 0.5, pop = NULL)
 }
 \arguments{
 \item{dt}{dataframe with group data}
@@ -14,7 +14,8 @@ proportion of the population (Lorenz Curve).}
 
 \item{weight}{population weights vector}
 
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric. Named vector of welfare mean for each data level
+available in data frame \code{dt}}
 
 \item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
 

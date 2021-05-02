@@ -7,7 +7,7 @@
 compute_median(dt, ...)
 }
 \arguments{
-\item{x}{data frame with either micro data, group data, or imputed data}
+\item{dt}{data frame with either micro data, group data, or imputed data}
 
 \item{welfare}{welfare vector}
 

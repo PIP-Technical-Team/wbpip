@@ -7,6 +7,8 @@
 compute_median_md(dt, welfare, weight, level = NULL)
 }
 \arguments{
+\item{dt}{data frame with either micro data, group data, or imputed data}
+
 \item{welfare}{welfare vector}
 
 \item{weight}{population weights vector}

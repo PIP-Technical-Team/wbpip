@@ -1,6 +1,6 @@
 #' compute median for different methods
 #'
-#' @param x data frame with either micro data, group data, or imputed data
+#' @param dt data frame with either micro data, group data, or imputed data
 #' @param welfare welfare vector
 #' @param weight population weights vector
 #'
