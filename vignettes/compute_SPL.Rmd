@@ -1,0 +1,70 @@
+---
+title: "compute_SPL"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{compute_SPL}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(wbpip)
+
+cpi = pipload::pip_load_aux("cpi")
+ppp = pipload::pip_load_aux("ppp")
+gdm = pipload::pip_load_aux("gdm")
+pop = pipload::pip_load_aux("pop")
+
+
+pry <- pipload::pip_load_cache("PRY", year = 2019, tool = "PC")
+idn <- pipload::pip_load_cache("IDN", year = 2015, tool = "PC")
+chn <- pipload::pip_load_cache("CHN", year = 2015, tool = "PC")
+
+
+compute_spl(pry, 
+            welfare = "welfare", 
+            weight  = "weight",
+            cpi     = cpi, 
+            ppp     = ppp)
+
+
+compute_spl(idn, 
+            welfare = "welfare", 
+            weight  = "weight",
+            cpi     = cpi, 
+            ppp     = ppp)
+
+
+
+chn_ids <- chn[, 
+          lapply(.SD, unique), 
+          .SDcols = c("survey_id", "pop_data_level")]
+
+
+chn_info <- joyn::merge(x          = chn_ids, 
+                        y          = gdm, 
+                        by         = c("survey_id", "pop_data_level"), 
+                        match_type = "1:m", 
+                        keep       = "inner", 
+                        yvars      = "survey_mean_lcu", 
+                        reportvar = FALSE)
+
+chn_mean        <- chn_info[, survey_mean_lcu]
+names(chn_mean) <- chn_info[, pop_data_level]
+
+compute_spl(chn, 
+            welfare = "welfare", 
+            weight  = "weight", 
+            mean    = chn_mean, 
+            pop     = pop, 
+            cpi     = cpi,
+            ppp     = ppp)
+
+```
