@@ -19,7 +19,7 @@ compute_median.default <- function(dt, welfare, weight, ...) {
     dt <- as.data.table(dt)
   }
 
-  compute_median_pipmd(dt, welfare, weight)
+  compute_median_md(dt, welfare, weight)
 }
 
 #' compute median for microdata
@@ -32,33 +32,22 @@ compute_median.default <- function(dt, welfare, weight, ...) {
 #' @export
 compute_median.pipmd <- function(dt, welfare, weight, level = NULL) {
 
-  # Get cache_id
-  cache_id <- unique(dt$cache_id)
-
-  # identify procedure
-  source      <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
-  data_level  <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
-
-  # NOTE: we should change variable pop_data_level to something more general. We could
-  # use something similar to variable max_domain in the function db_filter_inventory
-
-  # Order by population data level
-  data.table::setorder(dt, pop_data_level)
-  pop_level <- unique(dt$pop_data_level)
+  # Get data info
+  dti <- get_dt_info(dt)
 
   # get estimates by level
-  p50  <- purrr::map(.x = pop_level,
+  p50  <- purrr::map(.x = dti$pop_level,
                      .f = ~compute_median_md(dt, welfare, weight, level = .x))
 
-  names(p50) <- pop_level
+  names(p50) <- dti$pop_level
 
-  if (data_level != "D1") { # Urban/rural or subnat level
+  if (dti$data_level != "D1") { # Urban/rural or subnat level
 
     # national mean
     p50_national <- compute_median_md(dt, welfare, weight)
 
     p50 <- append(list(p50_national), p50)
-    names(p50) <- c("national", pop_level)
+    names(p50) <- c("national", dti$pop_level)
 
   }
 
@@ -71,6 +60,8 @@ compute_median.pipmd <- function(dt, welfare, weight, level = NULL) {
 #' @param  dt dataframe with group data
 #' @param level character: data level to filter data. It assumes variable
 #'   `max_domain` in data set
+#' @param mean numeric. Named vector of welfare mean for each data level
+#'   available in data frame `dt`
 #' @inheritParams gd_compute_dist_stats
 #' @inheritParams compute_median
 #'
@@ -82,38 +73,41 @@ compute_median.pipgd <- function(dt,
                               mean,
                               p0 = 0.5,
                               pop = NULL) {
-
-  # Get cache_id
-  cache_id <- unique(dt$cache_id)
-
-  # identify procedure
-  source      <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
-  data_level  <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
-
-  # NOTE: we should variable pop_data_level to something more general. We could
-  # use something similar to vartiable max_domain in the function db_filter_inventory
-
-  # Order by population data level
-  data.table::setorder(dt, pop_data_level)
-  pop_level <- unique(dt$pop_data_level)
+  # Get data info
+  dti <- get_dt_info(dt)
 
   # get estimates by level
-  p50  <- purrr::map(.x = pop_level,
-                     .f = ~compute_median_gd(dt, mean, source, level = .x))
+  p50  <- purrr::map(.x = dti$pop_level,
+                     .f = ~compute_median_gd(dt,  welfare, weight, mean, level = .x))
 
-  names(p50) <- pop_level
+  names(p50) <- dti$pop_level
 
-  if (data_level != "D1") { # Urban/rural or subnat level
+  if (dti$data_level != "D1") { # Urban/rural or subnat level
+
+    if (is.null(pop)) {
+      msg     <- "Population data frame `pop` required when data level of
+      grouped data is different from national"
+
+      hint    <- "make sure you include population data frame using
+      `pipload::pip_load_aux('pop')`"
+
+      rlang::abort(c(
+                    msg,
+                    i = hint
+                    ),
+                    class = "wbpip_error"
+                    )
+    }
 
     # create synthetic vector
-    wf <- purrr::map_df(.x = pop_level,
+    wf <- purrr::map_df(.x = dti$pop_level,
                           .f = ~get_synth_vector(dt, pop, mean, level = .x))
 
     # national mean
-    p50_national <- compute_median_md(dt, "welfare", "weight")
+    p50_national <- compute_median_md(wf, "welfare", "weight")
 
     p50 <- append(list(p50_national), p50)
-    names(p50) <- c("national", pop_level)
+    names(p50) <- c("national", dti$pop_level)
 
   }
 
@@ -130,7 +124,7 @@ compute_median.pipgd <- function(dt,
 compute_median_md <- function(dt, welfare, weight, level = NULL) {
 
   if (!is.null(level)) {
-    df  <- dt[max_domain == level]
+    dt  <- dt[max_domain == level]
   }
 
   wlf <- dt[[welfare]]
@@ -157,7 +151,8 @@ compute_median_gd <- function(dt,
                               level = NULL) {
 
   if (!is.null(level)) {
-    df  <- dt[max_domain == level]
+    dt   <- dt[max_domain == level]
+    mean <- mean[level]
   }
 
   welfare    <- dt[[welfare]]
@@ -229,3 +224,38 @@ compute_median_gd <- function(dt,
 
   return(median)
 }
+
+
+#' @keywords internal
+get_dt_info <- function(dt) {
+
+
+  # Order by population data level
+  data.table::setorder(dt, pop_data_level)
+  cache_id <-  unique(dt$cache_id)
+
+  return(list(cache_id = cache_id,
+              # identify procedure
+              source      = gsub("(.*_)([A-Z]+$)", "\\2", cache_id),
+              data_level  = gsub("(.*_)(D[123])(.+$)", "\\2", cache_id),
+
+              # NOTE: we should change variable pop_data_level to something more general. We could
+              # use something similar to variable max_domain in the function db_filter_inventory
+              pop_level = unique(dt$pop_data_level)
+              ))
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
