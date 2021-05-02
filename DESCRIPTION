@@ -48,6 +48,8 @@ Imports:
     assertthat,
     cli,
     collapse,
-    compiler
+    compiler,
+    tidyr,
+    tibble
 VignetteBuilder: knitr
 ByteCompile: true

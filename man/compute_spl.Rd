@@ -4,14 +4,14 @@
 \alias{compute_spl}
 \title{Compute societal poverty lines}
 \usage{
-compute_spl(x, ...)
+compute_spl(dt, ...)
 }
 \arguments{
-\item{x}{data frame with either micro data, group data, or imputed data}
+\item{dt}{data frame with either micro data, group data, or imputed data}
 
-\item{welfare}{welfare vector}
+\item{welfare}{character: name of variable with welfare vector}
 
-\item{weight}{population weights vector}
+\item{weight}{character: name of variable with population (weight) vector}
 }
 \value{
 scalar with poverty line
