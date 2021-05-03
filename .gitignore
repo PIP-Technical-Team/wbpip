@@ -5,3 +5,5 @@
 .RData
 inst/doc
 TEMP/
+/doc/
+/Meta/
