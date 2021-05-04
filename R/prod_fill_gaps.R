@@ -55,6 +55,7 @@ prod_fg_compute_pip_stats <- function(request_year,
     svy_mean_lcu = svy_mean_lcu,
     data = data,
     poverty_line = poverty_line,
+    popshare = poshare,
     default_ppp = default_ppp,
     ppp = ppp,
     type = type
