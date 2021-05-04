@@ -19,6 +19,7 @@
 #' @param svy_mean_lcu numeric: A vector with one or two survey means.
 #' @param survey_year numeric: A vector with one or two survey years.
 #' @param poverty_line numeric: Daily poverty line in international dollars.
+#' @param popshare numeric: Share of the population living below the poverty line.
 #' @param default_ppp numeric: Default purchasing power parity.
 #' @param ppp numeric: PPP request by user.
 #' @param distribution_type character: A vector with the type of distribution,
@@ -36,7 +37,8 @@ prod_fg_compute_pip_stats <- function(request_year,
                                       default_ppp,
                                       ppp,
                                       distribution_type,
-                                      poverty_line) {
+                                      poverty_line,
+                                      popshare) {
 
   # Set type
   type <- distribution_type
