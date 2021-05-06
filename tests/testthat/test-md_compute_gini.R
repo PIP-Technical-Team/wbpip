@@ -36,7 +36,8 @@ test_that('md_compute_gini() computations are correct', {
   lapply(dl, function(x) {
     df <- md_clean_data(x$data,
                         welfare = "welfare",
-                        weight  = "weight")$data
+                        weight  = "weight",
+                        quiet = TRUE)$data
     res <- md_compute_gini(welfare = df$welfare, weight = df$weight)
     expect_equal(res, x$stats$gini)
   })

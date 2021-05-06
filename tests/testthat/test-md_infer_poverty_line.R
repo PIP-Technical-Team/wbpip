@@ -1,7 +1,8 @@
 data('md_ABC_2000_income')
 df <- md_clean_data(md_ABC_2000_income,
                     welfare = 'welfare',
-                    weight = 'weight')$data
+                    weight = 'weight',
+                    quiet = TRUE)$data
 
 
 test_that("md_infer_poverty_line() works for uniform distribution of welfare", {
