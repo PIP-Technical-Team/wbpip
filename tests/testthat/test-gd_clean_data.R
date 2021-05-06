@@ -1,4 +1,4 @@
-library(data.table)
+# library(data.table)
 # library(tibble)
 
 # Load example data
@@ -38,7 +38,8 @@ test_that('gd_clean_data() is working correctly', {
     gd_GHI_2009_income,
     welfare = 'welfare',
     population = 'weight',
-    gd_type = 5)
+    gd_type = 5,
+    quiet = TRUE)
   expect_identical(class(res), c('data.table', 'data.frame'))
 
   # Test against example dataset (type5)
@@ -46,7 +47,8 @@ test_that('gd_clean_data() is working correctly', {
     gd_GHI_2009_income,
     welfare = 'welfare',
     population = 'weight',
-    gd_type = 5)
+    gd_type = 5,
+    quiet = TRUE)
   expect_identical(class(res), c('data.table', 'data.frame'))
   expect_identical(names(res), names(gd_GHI_2009_income))
   expect_equal(res$weight, seq(0.1, 1, .1))
@@ -59,8 +61,11 @@ test_that('gd_clean_data() is working correctly', {
                5.914,10.369, 15.752, 22.148, 29.705, 38.748, 49.967, 64.962, 100)
   weight <- c(2, 4, 6,8, 10, 12, 14, 16, 18, 20, 30,	40,	50, 60,	70,	80,	90,	100)
   df <- data.frame(welfare = welfare, weight = weight)
-  out <- gd_clean_data(df, welfare = 'welfare',
-    population = 'weight', gd_type = 1)
+  out <- gd_clean_data(df,
+                       welfare = 'welfare',
+                       population = 'weight',
+                       gd_type = 1,
+                       quiet = TRUE)
   expect_equal(out$weight, c(seq(.02, .18, .02), seq(.2, 1, .1)))
   expect_equal(out$welfare,
                c(0.00305, 0.00732, 0.01226, 0.01770, 0.02360,
@@ -72,19 +77,24 @@ test_that('gd_clean_data() is working correctly', {
   welfare <- c(1.2, 2, 2.7, 3.6, 5, 6, 8.6, 11.4, 15.9, 43.7)
   weight <- rep(10, 10)
   df <- data.frame(welfare = welfare, weight = weight)
-  out <- gd_clean_data(df, welfare = 'welfare',
-     population = 'weight', gd_type = 2)
+  out <- gd_clean_data(df,
+                       welfare = 'welfare',
+                       population = 'weight',
+                       gd_type = 2,
+                       quiet = TRUE)
   expect_equal(out$weight, seq(.1, 1, .1))
   expect_equal(out$welfare,
                c(0.01198801, 0.03196803, 0.05894106, 0.09490509, 0.14485514,
-                 0.20479520, 0.29070929, 0.40459540, 0.56343656, 1.00000000))
+                 0.20479520, 0.29070929, 0.40459540, 0.56343656, 1.00000000),
+               tolerance = .5e-7)
 
   # Data type must be of 1, 2 or 5
   expect_error(gd_clean_data(
     gd_GHI_2009_income,
     welfare = 'welfare',
     population = 'weight',
-    gd_type = 3))
+    gd_type = 3,
+    quiet = TRUE))
 
   # Data can't contain NA's
   welfare <- c(gd_GHI_2009_income$welfare[1:9], NA)
@@ -94,7 +104,8 @@ test_that('gd_clean_data() is working correctly', {
     df,
     welfare = 'welfare',
     population = 'population',
-    gd_type = 5))
+    gd_type = 5,
+    quiet = TRUE))
 
   # Test that output messages are
   # suppressed with silent = TRUE
@@ -114,21 +125,24 @@ test_that('gd_clean_data() standardizes correctly for Datt 1998 example', {
   dt1 <- gd_clean_data(dt_datt,
                        welfare = 'L',
                        population = 'P',
-                       gd_type = 1)
+                       gd_type = 1,
+                       quiet = TRUE)
   dt1 <- dt1[, c('P', 'L')]
   names(dt1) <- cols
 
   dt2 <- gd_clean_data(dt_datt,
                        welfare = 'R',
                        population = 'W',
-                       gd_type = 2)
+                       gd_type = 2,
+                       quiet = TRUE)
   dt2 <- dt2[, c('W', 'R')]
   names(dt2) <- cols
 
   dt5 <- gd_clean_data(dt_datt,
                        welfare = 'X',
                        population = 'W',
-                       gd_type = 5)
+                       gd_type = 5,
+                       quiet = TRUE)
   dt5 <- dt5[, c('W', 'X')]
   names(dt5) <- cols
 
@@ -158,7 +172,8 @@ test_that('gd_standardize_type1() is working correctly', {
                c(0.00305, 0.00732, 0.01226, 0.01770, 0.02360,
                  0.02993, 0.03667, 0.04379, 0.05129, 0.05914,
                  0.10369, 0.15752, 0.22148, 0.29705, 0.38748,
-                 0.49967, 0.64962, 1.00000))
+                 0.49967, 0.64962, 1.00000),
+               tolerance = .5e-7)
 })
 
 test_that('gd_standardize_type2() is working correctly', {
@@ -170,7 +185,8 @@ test_that('gd_standardize_type2() is working correctly', {
   expect_equal(res$population, seq(.1, 1, .1))
   expect_equal(res$welfare,
                c(0.01198801, 0.03196803, 0.05894106, 0.09490509, 0.14485514,
-                 0.20479520, 0.29070929, 0.40459540, 0.56343656, 1.00000000))
+                 0.20479520, 0.29070929, 0.40459540, 0.56343656, 1.00000000),
+               tolerance = .5e-7)
 })
 
 test_that('standardize_type5() is working correctly', {
@@ -182,7 +198,8 @@ test_that('standardize_type5() is working correctly', {
   expect_equal(res$population, seq(.1, 1, .1))
   expect_equal(res$welfare,
                c(0.03190080, 0.08093525, 0.14057175, 0.21024233, 0.29023097,
-                 0.38299886, 0.49110186, 0.61832639, 0.77404392, 1.00000000))
+                 0.38299886, 0.49110186, 0.61832639, 0.77404392, 1.00000000),
+               tolerance = .5e-7)
 })
 
 

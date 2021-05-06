@@ -37,7 +37,8 @@ test_that("md_compute_quantiles() computations are correct", {
                                 0.07910940020320,
                                 0.10750239876047,
                                 0.16352959364197,
-                                0.45410835789693))
+                                0.45410835789693),
+               tolerance = .5e-7)
 
   out <- md_compute_quantiles(
     lwelfare = md_lorenz2$lorenz_welfare,
@@ -53,7 +54,8 @@ test_that("md_compute_quantiles() computations are correct", {
                                 0.08808485,
                                 0.11349456,
                                 0.15868695,
-                                0.40245516))
+                                0.40245516),
+               tolerance = .5e-7)
 
 
 })

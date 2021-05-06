@@ -7,15 +7,31 @@ data('gd_GHI_2009_income')
 
 # Clean datasets
 md_ABC_2000_income <-
-  md_clean_data(md_ABC_2000_income, welfare = 'welfare', weight = 'weight')$data
+  md_clean_data(md_ABC_2000_income,
+                welfare = 'welfare',
+                weight = 'weight',
+                quiet = TRUE)$data
 md_ABC_2010_income <-
-  md_clean_data(md_ABC_2010_income, welfare = 'welfare', weight = 'weight')$data
+  md_clean_data(md_ABC_2010_income,
+                welfare = 'welfare',
+                weight = 'weight',
+                quiet = TRUE)$data
 md_DEF_2000_consumption <-
-  md_clean_data(md_DEF_2000_consumption, welfare = 'welfare', weight = 'weight')$data
+  md_clean_data(md_DEF_2000_consumption,
+                welfare = 'welfare',
+                weight = 'weight',
+                quiet = TRUE)$data
 md_GHI_2000_income <-
-  md_clean_data(md_GHI_2000_income, welfare = 'welfare', weight = 'weight')$data
-gd_GHI_2009_income <- gd_clean_data(gd_GHI_2009_income, welfare = 'welfare',
-                                    population = 'weight', gd_type = 5)
+  md_clean_data(md_GHI_2000_income,
+                welfare = 'welfare',
+                weight = 'weight',
+                quiet = TRUE)$data
+gd_GHI_2009_income <-
+  gd_clean_data(gd_GHI_2009_income,
+                welfare = 'welfare',
+                population = 'weight',
+                gd_type = 5,
+                quiet = TRUE)
 
 # Output format (named list)
 test_that('fill_gaps() returns the correct output format', {
@@ -49,9 +65,9 @@ test_that('fill_gaps() extrapolates correctly for microdata', {
   expect_equal(res$mean, 6, tolerance = 1.5e-7)
   expect_equal(res$median, 4.726458, tolerance = 1.5e-7)
   expect_equal(res$headcount, 0.005424768, tolerance = 1.5e-7)
-  expect_equal(res$poverty_gap, 0.001034757, tolerance = 1.5e-7)
+  expect_equal(res$poverty_gap, 0.0010347565, tolerance = 1.5e-7)
   expect_equal(res$poverty_severity, 0.0002663465, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.001201002, tolorance = 1.5e-7)
+  expect_equal(res$watts, 0.001201002, tolerance = 1.5e-7)
   expect_equal(res$gini, 0.31865, tolerance = 1.5e-7)
   expect_equal(res$mld, 0.1661658, tolerance = 1.5e-7)
   # expect_equal(res$polarization, NA)
@@ -76,7 +92,7 @@ test_that('fill_gaps() extrapolates correctly for grouped data', {
   expect_equal(res$headcount, 0.12776, tolerance = 1.5e-7)
   expect_equal(res$poverty_gap, 0.02657251, tolerance = 1.5e-7)
   expect_equal(res$poverty_severity, 0.007863721, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.0318211, tolorance = 1.5e-7)
+  expect_equal(res$watts, 0.0318211, tolerance = 1.5e-7)
   expect_equal(res$gini, 0.4271266, tolerance = 1.5e-7)
   expect_equal(res$mld, 0.3057592, tolerance = 1.5e-7)
   expect_equal(res$polarization, 0.3790111, tolerance = 1.5e-7)
@@ -99,7 +115,7 @@ test_that('fill_gaps() interpolates correctly (monotonic) for microdata', {
   expect_equal(res$headcount, 0.0459062, tolerance = 1.5e-7)
   expect_equal(res$poverty_gap, 0.0161475, tolerance = 1.5e-7)
   expect_equal(res$poverty_severity, 0.008425631, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.02101141, tolorance = 1.5e-7)
+  expect_equal(res$watts, 0.02101141, tolerance = 1.5e-7)
   expect_identical(res$gini, NA)
   expect_identical(res$mld, NA)
   expect_identical(res$polarization, NA)
@@ -120,9 +136,9 @@ test_that('fill_gaps() interpolates correctly (monotonic) for micro vs grouped d
   expect_equal(res$mean, 6, tolerance = 1.5e-7)
   expect_identical(res$median, NA)
   expect_equal(res$headcount, 0.09451118, tolerance = 1.5e-7)
-  expect_equal(res$poverty_gap, 0.01874468, tolerance = 1.5e-7)
+  expect_equal(res$poverty_gap, 0.018744685, tolerance = 1.5e-7)
   expect_equal(res$poverty_severity, 0.005512714, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.0224453, tolorance = 1.5e-7)
+  expect_equal(res$watts, 0.022445304, tolerance = 1.5e-7)
   expect_identical(res$gini, NA)
   expect_identical(res$mld, NA)
   expect_identical(res$polarization, NA)
@@ -145,7 +161,7 @@ test_that('fill_gaps() interpolates correctly (non-monotonic) for microdata', {
   expect_equal(res$headcount, 0.03680496, tolerance = 1.5e-7)
   expect_equal(res$poverty_gap, 0.01232436, tolerance = 1.5e-7)
   expect_equal(res$poverty_severity, 0.006587024, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.01543411, tolorance = 1.5e-7)
+  expect_equal(res$watts, 0.01543411, tolerance = 1.5e-7)
   expect_identical(res$gini, NA)
   expect_identical(res$mld, NA)
   expect_identical(res$polarization, NA)
@@ -167,8 +183,8 @@ test_that('fill_gaps() interpolates correctly (non-monotonic) for micro vs group
   expect_identical(res$median, NA)
   expect_equal(res$headcount, 0.1480512, tolerance = 1.5e-7)
   expect_equal(res$poverty_gap, 0.03320061, tolerance = 1.5e-7)
-  expect_equal(res$poverty_severity, 0.01088438, tolerance = 1.5e-7)
-  expect_equal(res$watts, 0.04089535, tolorance = 1.5e-7)
+  expect_equal(res$poverty_severity, 0.010884384, tolerance = 1.5e-7)
+  expect_equal(res$watts, 0.04089535, tolerance = 1.5e-7)
   expect_identical(res$gini, NA)
   expect_identical(res$mld, NA)
   expect_identical(res$polarization, NA)
