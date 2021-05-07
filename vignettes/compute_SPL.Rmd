@@ -54,7 +54,8 @@ chn_info <- joyn::merge(x          = chn_ids,
                         match_type = "1:m", 
                         keep       = "inner", 
                         yvars      = "survey_mean_lcu", 
-                        reportvar = FALSE)
+                        reportvar  = FALSE, 
+                        verbose    = FALSE)
 
 chn_mean        <- chn_info[, survey_mean_lcu]
 names(chn_mean) <- chn_info[, pop_data_level]
