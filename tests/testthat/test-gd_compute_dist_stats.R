@@ -7,7 +7,10 @@ test_that('gd_compute_dist_stats() returns correct results', {
   # Test vs gd_compute_pip_stats()
   df <- gd_GHI_2009_income
   mean <- stats::weighted.mean(df$welfare, w = df$weight)
-  df <- gd_clean_data(df, welfare = 'welfare', population = 'weight', gd_type = 5)
+  df <- gd_clean_data(df, welfare = 'welfare',
+                      population = 'weight',
+                      gd_type = 5,
+                      quiet = TRUE)
   res1 <- gd_compute_pip_stats(
     welfare = df$welfare, population = df$weight,
     povline = 1.9 * 365/12, requested_mean = mean)
@@ -29,7 +32,7 @@ test_that('gd_compute_dist_stats() returns correct results', {
   expect_equal(res$median, 201.4286, tolerance = 1.5e-06)
   expect_equal(res$gini, 0.5135977, tolerance = 1.5e-06)
   expect_equal(res$polarization, 0.4212645, tolerance = 1.5e-06)
-  expect_equal(res$deciles, tolerance = 2.5e-05,
+  expect_equal(res$deciles, tolerance = 8e-05,
                c(0.01609,0.02702, 0.03577, 0.04492, 0.05522,
                  0.0675, 0.0832, 0.1056, 0.1452, 0.4195))
   skip('mld doesn\'t match PCN value')

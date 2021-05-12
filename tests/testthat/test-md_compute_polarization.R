@@ -9,7 +9,8 @@ test_that('md_compute_polarization() computations are correct', {
     # Clean data
     df <- md_clean_data(x$data,
                         welfare = "welfare",
-                        weight  = "weight")$data
+                        weight  = "weight",
+                        quiet = TRUE)$data
     # Order by decreasing welfare
     df <- df[order(df$welfare),]
     # Calculate Gini

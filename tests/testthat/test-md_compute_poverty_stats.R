@@ -2,7 +2,6 @@ benchmark <- readRDS('../testdata/synthetic-microdata.RDS')
 # benchmark <- readRDS('tests/testdata/synthetic-microdata.RDS')
 benchmark <- benchmark[[1]]$data
 
-context('md_compute_poverty_stats() matched expected results')
 test_that('does function return 0 headcount when all welfare is above poverty line?', {
 
   res <- md_compute_poverty_stats(welfare = 10:100, povline_lcu = 9, weight = 10:100)

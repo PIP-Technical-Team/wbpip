@@ -201,7 +201,7 @@ test_that("compute_poverty_stats_lq works as expected", {
   expect_equal(round(out$eh, 6), round(benchmark$eh, 6)) # Due to headcount difference
   expect_equal(round(out$epg, 7), round(benchmark$epg, 7)) # Due to headcount difference
   expect_equal(out$ep, benchmark$ep)
-  expect_equal(out$gh, benchmark$gh)
+  expect_equal(out$gh, benchmark$gh, tolerance = 1.1e-07)
   expect_equal(out$gpg, benchmark$gpg)
   expect_equal(out$gp, benchmark$gp)
   expect_equal(out$watt, benchmark$watt)
