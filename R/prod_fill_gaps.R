@@ -19,6 +19,7 @@
 #' @param svy_mean_lcu numeric: A vector with one or two survey means.
 #' @param survey_year numeric: A vector with one or two survey years.
 #' @param poverty_line numeric: Daily poverty line in international dollars.
+#' @param popshare numeric: Share of the population living below the poverty line.
 #' @param default_ppp numeric: Default purchasing power parity.
 #' @param ppp numeric: PPP request by user.
 #' @param distribution_type character: A vector with the type of distribution,
@@ -36,7 +37,8 @@ prod_fg_compute_pip_stats <- function(request_year,
                                       default_ppp,
                                       ppp,
                                       distribution_type,
-                                      poverty_line) {
+                                      poverty_line,
+                                      popshare) {
 
   # Set type
   type <- distribution_type
@@ -53,6 +55,7 @@ prod_fg_compute_pip_stats <- function(request_year,
     svy_mean_lcu = svy_mean_lcu,
     data = data,
     poverty_line = poverty_line,
+    popshare = popshare,
     default_ppp = default_ppp,
     ppp = ppp,
     type = type
@@ -102,6 +105,7 @@ prod_fg_create_params <- function(predicted_request_mean,
                                   svy_mean_lcu,
                                   data,
                                   poverty_line,
+                                  popshare,
                                   default_ppp,
                                   ppp,
                                   type) {
@@ -113,6 +117,7 @@ prod_fg_create_params <- function(predicted_request_mean,
         welfare        = data$df0$welfare,
         population     = data$df0$weight,
         povline        = poverty_line,
+        popshare       = popshare,
         default_ppp    = default_ppp[1],
         ppp            = ppp,
         requested_mean = predicted_request_mean[1],
@@ -123,20 +128,22 @@ prod_fg_create_params <- function(predicted_request_mean,
   } else {
     params <- list(
       params0 = list(
-        welfare = data$df0$welfare,
-        population = data$df0$weight,
-        povline = poverty_line,
-        default_ppp = default_ppp[1],
-        ppp = ppp,
+        welfare        = data$df0$welfare,
+        population     = data$df0$weight,
+        povline        = poverty_line,
+        popshare       = popshare,
+        default_ppp    = default_ppp[1],
+        ppp            = ppp,
         requested_mean = predicted_request_mean[1],
         svy_mean_lcu   = svy_mean_lcu[1]
       ),
       params1 =  list(
-        welfare = data$df1$welfare,
-        population = data$df1$weight,
-        povline = poverty_line,
-        default_ppp = default_ppp[2],
-        ppp = ppp,
+        welfare        = data$df1$welfare,
+        population     = data$df1$weight,
+        povline        = poverty_line,
+        popshare       = popshare,
+        default_ppp    = default_ppp[2],
+        ppp            = ppp,
         requested_mean = predicted_request_mean[2],
         svy_mean_lcu   = svy_mean_lcu[2]
       )
