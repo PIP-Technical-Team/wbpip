@@ -1,0 +1,48 @@
+## ---- include = FALSE---------------------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+## ----setup--------------------------------------------------------------------
+library(wbpip)
+
+## -----------------------------------------------------------------------------
+data("md_ABC_2000_income")
+
+# Basic cleaning operation (remove missings, negative values, etc.)
+df <- wbpip:::md_clean_data(md_ABC_2000_income, 
+                           welfare = "welfare", 
+                           weight  = "weight")
+df <- df$data
+# Turn welfare vector to monthly values
+# All computations assume monthly welfare values
+df$welfare <- df$welfare / 12
+
+## -----------------------------------------------------------------------------
+# Poverty line needs to be expressed in monthly international dollar values
+# The conversion from daily to monthly values needs to happen at a higher level
+# in the functions call stack for efficiency purposes
+poverty_line <- 1.9 * 365 / 12
+
+# default_ppp
+# This will need to be provided directly by a potential end-users
+# For production use: This value will be fed directly to the function depending 
+# on the requested country / year.
+ppp_value <- 58.16
+
+# requested mean
+# This is the survey mean in internationl dollars
+# The conversion from LCU to international dollars needs to happen at a higher 
+# level in the fucntion call stack for efficiency purposes.
+# This parameter is also used for interpolation computation to query the welfare
+# distribution using a different mean.
+welfare_mean <- 225
+
+out <- wbpip:::md_compute_pip_stats(welfare        = df$welfare,
+                                    population     = df$weight,
+                                    povline        = poverty_line,
+                                    default_ppp    = ppp_value,
+                                    requested_mean = welfare_mean)
+out
+
