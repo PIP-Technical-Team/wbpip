@@ -1,0 +1,15 @@
+pandoc: 2.11.4
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  basic_functions: basic_functions.html
+  compute_median_using_S3: compute_median_using_S3.html
+  compute_pip_stats: compute_pip_stats.html
+  compute_SPL: compute_SPL.html
+  interpolation: interpolation.html
+  microdata_workflow: microdata_workflow.html
+  review_gd_compute_pip_stats: review_gd_compute_pip_stats.html
+  review_lb_code: review_lb_code.html
+  review_lq_code: review_lq_code.html
+last_built: 2021-06-17T22:43Z
+
