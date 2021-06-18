@@ -24,7 +24,7 @@ compute_median.default <- function(dt, welfare, weight, ...) {
 
 #' compute median for microdata
 #'
-#' @param x dataframe with microdata
+#' @param dt dataframe with microdata
 #' @param level character: data level to filter data. It assumes variable
 #'   `max_domain` in data set
 #' @inheritParams compute_median
@@ -117,7 +117,7 @@ compute_median.pipgd <- function(dt,
 
 #' compute median for microdata
 #'
-#' @param x dataframe with microdata
+#' @param dt dataframe with microdata
 #' @inheritParams compute_median
 #' @return scalar
 #' @export
@@ -137,7 +137,7 @@ compute_median_md <- function(dt, welfare, weight, level = NULL) {
 
 #' calculate the median for group data
 #'
-#' @param  c dataframe with group data
+#' @param  dt dataframe with group data
 #' @inheritParams gd_compute_dist_stats
 #' @inheritParams compute_median
 #'
