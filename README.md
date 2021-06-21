@@ -16,25 +16,46 @@ approach of the World Bank.
 
 ## Installation
 
-You can install the released version of wbpip from
-[CRAN](https://CRAN.R-project.org) with:
+<span style="color:red">*Not available as of now (2021-06-21)*</span>
 
-``` r
-install.packages("wbpip")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("PIP-Technical-Team/wbpip")
-```
+<!-- You can install the released version of wbpip from [CRAN](https://CRAN.R-project.org) with: -->
+<!-- ``` r -->
+<!-- install.packages("wbpip") -->
+<!-- ``` -->
+<!-- And the development version from [GitHub](https://github.com/) with: -->
+<!-- ``` r -->
+<!-- # install.packages("devtools") -->
+<!-- devtools::install_github("PIP-Technical-Team/wbpip") -->
+<!-- ``` -->
 
 # Basic end-user workflows
 
-Basic workflows are based on single data files (micro- or grouped-data).
-The assumption for these workflows is that they can be satisfied by
-feeding a single micro- / grouped-data file to different functions.
+Basic workflows are based on single data files (micro, grouped, bin, or
+synthetic data). The assumption for these workflows is that they can be
+satisfied by feeding a data file to different functions.
+
+Functions in `{wbpip}` are divided in two main groups: computational
+functions and end-user functions. Computational functions are the
+internal functions of the package that do the calculations. End-user
+functions are wrappers of the computational functions that fit well in
+data science workflows such as the tidyverse.
+
+Most computational functions follow this convention: dd\_compute\_ss(),
+where **dd** stands for data type and **ss** stands from statistic to
+compute. Data type could **md** for microdata or **gd** from grouped
+data. Even though there are others type of data such as bin or synthetic
+data, the computational procedure is the same as of micro data. The
+statistic to compute is self-explanatory. It could be poverty, gini,
+mean log deviation (mld), among others. Other computational functions
+have the prefix `prod_`, which refers to production. These functions
+make use of lower-level computational functions to create production
+tables used in the Poverty and Inequality Platform.
+
+End-user functions are prefixed with `get_`. These functions are
+intended to be used as part of any data science workflow using pipes
+like the tidyverse. This is why, the first argument of these functions
+is the data frame with the data. For convenience, some functions return
+one single stat, whereas others return a compendium of related stats:
 
 ## Single stats
 
@@ -64,30 +85,3 @@ This is a basic example which shows you how to solve a common problem:
 library(wbpip)
 ## basic example code
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.

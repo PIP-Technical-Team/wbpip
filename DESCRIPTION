@@ -1,5 +1,5 @@
 Package: wbpip
-Title: What the Package Does (One Line, Title Case)
+Title: World Bank's socioeconomic measures methodology
 Version: 0.0.2.9000
 Authors@R: 
     c(person(given = "Tony",
@@ -25,7 +25,13 @@ Authors@R:
      person(given = "World Bank",
             role = "cph")
      )
-Description: What the package does (one paragraph).
+Description: The goal of wbpip is to twofold. First it contains the 
+    methodological formulations currently used by the World Bank to 
+    estimate and monitor global poverty and to calculate cross-country
+    and time comparable socioeconomic measures. Second, it provides a
+    suit of user-friendly functions that allows anybody to estimate 
+    poverty and inequality measures with their own data, using the 
+    methodological approach of the World Bank.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
