@@ -198,10 +198,12 @@ of each percentile (<code>percentile</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>lz</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'><a href='md_compute_lorenz.html'>md_compute_lorenz</a></span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_quantiles</span><span class='op'>(</span>lwelfare   <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>welfare</span>,
-                     lweight    <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_weight</span>,
-                     percentile <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_welfare</span>,
-                     n_quantile <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span>
+<span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_quantiles</span><span class='op'>(</span>
+  lwelfare <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>welfare</span>,
+  lweight <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_weight</span>,
+  percentile <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_welfare</span>,
+  n_quantile <span class='op'>=</span> <span class='fl'>10</span>
+<span class='op'>)</span>
 </div><div class='output co'>#&gt; $quantiles
 #&gt;  [1] 200 200 200 200 200 200 200 200 200 200
 #&gt; 

@@ -214,8 +214,10 @@ group is small, tabulate afterwards to check the results. you may use <code>tp &
 #&gt; 1997:  100
 #&gt; 1998:  100
 #&gt; 1999:  100
-#&gt; 2000:  100</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_bins</span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
- output <span class='op'>=</span> <span class='st'>'full'</span><span class='op'>)</span>
+#&gt; 2000:  100</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_bins</span><span class='op'>(</span>
+  welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
+  output <span class='op'>=</span> <span class='st'>"full"</span>
+<span class='op'>)</span>
 </div><div class='output co'>#&gt;       welfare weight cum_pop cum_prop_pop bins
 #&gt;    1:       1      1       1       0.0005    1
 #&gt;    2:       2      1       2       0.0010    1
@@ -227,8 +229,10 @@ group is small, tabulate afterwards to check the results. you may use <code>tp &
 #&gt; 1997:    1997      1    1997       0.9985  100
 #&gt; 1998:    1998      1    1998       0.9990  100
 #&gt; 1999:    1999      1    1999       0.9995  100
-#&gt; 2000:    2000      1    2000       1.0000  100</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_bins</span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
-  output <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'cum_pop'</span>, <span class='st'>'cum_prop_pop'</span><span class='op'>)</span><span class='op'>)</span>
+#&gt; 2000:    2000      1    2000       1.0000  100</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_bins</span><span class='op'>(</span>
+  welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
+  output <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"cum_pop"</span>, <span class='st'>"cum_prop_pop"</span><span class='op'>)</span>
+<span class='op'>)</span>
 </div><div class='output co'>#&gt;       cum_pop cum_prop_pop
 #&gt;    1:       1       0.0005
 #&gt;    2:       2       0.0010
@@ -240,8 +244,7 @@ group is small, tabulate afterwards to check the results. you may use <code>tp &
 #&gt; 1997:    1997       0.9985
 #&gt; 1998:    1998       0.9990
 #&gt; 1999:    1999       0.9995
-#&gt; 2000:    2000       1.0000</div><div class='input'>
-</div></pre>
+#&gt; 2000:    2000       1.0000</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

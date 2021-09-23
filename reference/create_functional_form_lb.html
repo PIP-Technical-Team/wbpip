@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="create_functional_form_lb — create_functional_form_lb" />
-<meta property="og:description" content="Prepare data for Lorenz beta regression." />
+<meta property="og:description" content="Prepare data for Lorenz beta regression.
+Prepare data for Lorenz beta regression." />
 
 
 
@@ -142,15 +143,18 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>create_functional_form_lb</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/gd_compute_pip_stats_lb.R'><code>R/gd_compute_pip_stats_lb.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/gd_compute_pip_stats_lb.R'><code>R/gd_compute_pip_stats_lb.R</code></a>, <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/gd_compute_pip_stats_lb2.R'><code>R/gd_compute_pip_stats_lb2.R</code></a></small>
     <div class="hidden name"><code>create_functional_form_lb.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Prepare data for Lorenz beta regression.</p>
+<p>Prepare data for Lorenz beta regression.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_functional_form_lb</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>population</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>create_functional_form_lb</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>population</span><span class='op'>)</span>
+
+<span class='fu'>create_functional_form_lb</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>population</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,14 +172,20 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>data.frame</p>
+<p>data.frame</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Prepares data for regression. The last observation of (p,l), which by
 construction has the value (1, 1), is excluded since the functional form for
 the Lorenz curve already forces it to pass through the point (1, 1).</p>
+<p>Prepares data for regression. The last observation of (p,l), which by
+construction has the value (1, 1), is excluded since the functional form for
+the Lorenz curve already forces it to pass through the point (1, 1).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Kakwani, N. 1980. "<a href='https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46'>On a Class of Poverty Measures</a>".
+<em>Econometrica 48</em> (2): 437-46.</p>
+<p>Kakwani, N. 1980. "<a href='https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46'>On a Class of Poverty Measures</a>".
 <em>Econometrica 48</em> (2): 437-46.</p>
 
   </div>
