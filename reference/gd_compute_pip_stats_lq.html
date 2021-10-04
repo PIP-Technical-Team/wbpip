@@ -158,7 +158,7 @@ form of the Lorenz qurve.</p>
   <span class='va'>population</span>,
   <span class='va'>requested_mean</span>,
   popshare <span class='op'>=</span> <span class='cn'>NULL</span>,
-  default_ppp <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>default_ppp</span>,
   ppp <span class='op'>=</span> <span class='cn'>NULL</span>,
   p0 <span class='op'>=</span> <span class='fl'>0.5</span>
 <span class='op'>)</span></pre>
@@ -223,7 +223,8 @@ Optional.</p></td>
   welfare <span class='op'>=</span> <span class='va'>L</span>,
   population <span class='op'>=</span> <span class='va'>P</span>,
   requested_mean <span class='op'>=</span> <span class='va'>mu</span>,
-  povline <span class='op'>=</span> <span class='va'>z</span>
+  povline <span class='op'>=</span> <span class='va'>z</span>,
+  default_ppp <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span>
 <span class='va'>res</span><span class='op'>$</span><span class='va'>headcount</span>
 </div><div class='output co'>#&gt; [1] 0.4506148</div><div class='input'>
@@ -231,7 +232,8 @@ Optional.</p></td>
   welfare <span class='op'>=</span> <span class='va'>L</span>,
   population <span class='op'>=</span> <span class='va'>P</span>,
   requested_mean <span class='op'>=</span> <span class='va'>mu</span>,
-  popshare <span class='op'>=</span> <span class='va'>res</span><span class='op'>$</span><span class='va'>headcount</span>
+  popshare <span class='op'>=</span> <span class='va'>res</span><span class='op'>$</span><span class='va'>headcount</span>,
+  default_ppp <span class='op'>=</span> <span class='fl'>1</span>
 <span class='op'>)</span>
 <span class='va'>res2</span><span class='op'>$</span><span class='va'>povline</span>
 </div><div class='output co'>#&gt; NULL</div></pre>
