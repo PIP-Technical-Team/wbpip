@@ -193,6 +193,25 @@ quantile is desired. Default .5 (i.e., weighted median).</p></td>
 
     <p>list</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='co'># Load and clean example data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"md_ABC_2000_income"</span><span class='op'>)</span>
+<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'><a href='md_clean_data.html'>md_clean_data</a></span><span class='op'>(</span>
+  <span class='va'>md_ABC_2000_income</span>,
+  welfare <span class='op'>=</span> <span class='st'>'welfare'</span>,
+  weight <span class='op'>=</span> <span class='st'>'weight'</span><span class='op'>)</span><span class='op'>$</span><span class='va'>data</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Data has been sorted by variable <span style='color: #0000BB;'>"welfare"</span></span></div><div class='input'>
+<span class='co'># Compute LCU poverty line</span>
+<span class='va'>res</span> <span class='op'>&lt;-</span>  <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_povline_lcu</span><span class='op'>(</span>
+  <span class='va'>df</span><span class='op'>$</span><span class='va'>welfare</span>, <span class='va'>df</span><span class='op'>$</span><span class='va'>weight</span>,
+  popshare <span class='op'>=</span> <span class='cn'>NULL</span>,
+  requested_mean <span class='op'>=</span> <span class='fl'>5000</span>,
+  data_mean <span class='op'>=</span> <span class='fl'>4000</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; List of 2
+#&gt;  $ povline_lcu: num [1:2000] 52.8 223.2 144 84 29.6 ...
+#&gt;  $ povline    : num [1:2000] 66 279 180 105 37 ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

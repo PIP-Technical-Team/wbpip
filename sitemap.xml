@@ -4,9 +4,6 @@
     <loc>https://pip-technical-team.github.io/wbpip/index.html</loc>
   </url>
   <url>
-    <loc>https://pip-technical-team.github.io/wbpip/reference/ag_compute_pip_stats.html</loc>
-  </url>
-  <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/check_curve_validity_dist_lb.html</loc>
   </url>
   <url>
@@ -184,16 +181,10 @@
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_gini.html</loc>
   </url>
   <url>
-    <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_gini_old.html</loc>
-  </url>
-  <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_lorenz.html</loc>
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_mld.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_mld_old.html</loc>
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_pip_stats.html</loc>
@@ -203,9 +194,6 @@
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_poverty_stats.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_poverty_stats_old.html</loc>
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/md_compute_povline_lcu.html</loc>
