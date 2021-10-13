@@ -121,6 +121,9 @@
     <loc>https://pip-technical-team.github.io/wbpip/reference/gd_estimate_dist_stats_lq.html</loc>
   </url>
   <url>
+    <loc>https://pip-technical-team.github.io/wbpip/reference/gd_estimate_distribution.html</loc>
+  </url>
+  <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/gd_estimate_lb.html</loc>
   </url>
   <url>
@@ -149,6 +152,15 @@
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/get_lorenz.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/reference/grouped_data_ex1.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/reference/grouped_data_ex2.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/reference/grouped_data_ex3.html</loc>
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/lorenz_alt.html</loc>

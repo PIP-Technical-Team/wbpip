@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • wbpip</title>
+<title>Estimate distribution (grouped data) — gd_estimate_distribution • wbpip</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Estimate distribution (grouped data) — gd_estimate_distribution" />
+<meta property="og:description" content="Estimate distribution (grouped data)" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -138,152 +139,113 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Estimate distribution (grouped data)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/gd_estimate_distribution.R'><code>R/gd_estimate_distribution.R</code></a></small>
+    <div class="hidden name"><code>gd_estimate_distribution.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Estimate distribution (grouped data)</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>gd_estimate_distribution</span><span class='op'>(</span>
+  <span class='va'>welfare</span>,
+  <span class='va'>population</span>,
+  <span class='va'>gd_type</span>,
+  <span class='va'>mean</span>,
+  <span class='va'>povline</span>,
+  popshare <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="compute_pip_stats.html">compute_pip_stats()</a></code> </p>
-        </td>
-        <td><p>Compute default PIP statistics (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="deflate_welfare_mean.html">deflate_welfare_mean()</a></code> </p>
-        </td>
-        <td><p>Deflate welfare mean</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fgini.html">fgini()</a></code> </p>
-        </td>
-        <td><p>Not compiled Gini</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fill_gaps.html">fill_gaps()</a></code> </p>
-        </td>
-        <td><p>Fill gaps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gd_GHI_2009_income.html">gd_GHI_2009_income</a></code> </p>
-        </td>
-        <td><p>GHI 2009 Income (group data)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gd_estimate_distribution.html">gd_estimate_distribution()</a></code> </p>
-        </td>
-        <td><p>Estimate distribution (grouped data)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_bins.html">get_bins()</a></code> </p>
-        </td>
-        <td><p>Bins</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_gini.html">get_gini()</a></code> </p>
-        </td>
-        <td><p>Gini coefficient</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_lorenz.html">get_lorenz()</a></code> </p>
-        </td>
-        <td><p>Lorenz curve</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grouped_data_ex1.html">grouped_data_ex1</a></code> </p>
-        </td>
-        <td><p>A dataset containing fake group data distribution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grouped_data_ex2.html">grouped_data_ex2</a></code> </p>
-        </td>
-        <td><p>A dataset containing fake group data distribution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grouped_data_ex3.html">grouped_data_ex3</a></code> </p>
-        </td>
-        <td><p>A dataset containing fake group data distribution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="md_ABC_2000_income.html">md_ABC_2000_income</a></code> </p>
-        </td>
-        <td><p>ABC 2000 Income (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="md_ABC_2010_income.html">md_ABC_2010_income</a></code> </p>
-        </td>
-        <td><p>ABC 2010 Income (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="md_DEF_2000_consumption.html">md_DEF_2000_consumption</a></code> </p>
-        </td>
-        <td><p>DEF 2000 Consumption (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="md_GHI_2000_consumption.html">md_GHI_2000_consumption</a></code> </p>
-        </td>
-        <td><p>GHI 2000 Consumption (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="md_GHI_2000_income.html">md_GHI_2000_income</a></code> </p>
-        </td>
-        <td><p>GHI 2000 Income (microdata)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="predict_request_year_mean.html">predict_request_year_mean()</a></code> </p>
-        </td>
-        <td><p>Predict request year mean</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prod_compute_pip_stats.html">prod_compute_pip_stats()</a></code> </p>
-        </td>
-        <td><p>Compute default PIP statistics (microdata)
-Version used in production. Does not re-compute all distributional stats.
-Distributional stats are pre-computed as they are not sensitive to the poverty line.</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>welfare</th>
+      <td><p>numeric: vector of welfare values</p></td>
+    </tr>
+    <tr>
+      <th>population</th>
+      <td><p>numeric: vector of weight values</p></td>
+    </tr>
+    <tr>
+      <th>gd_type</th>
+      <td><p>integer: Type of data distribution
+If <code>gd_type = 1</code> <code>population</code> must be the cumulative proportion of
+population and <code>welfare</code> must be the cumulative proportion of income held by
+that proportion of the population (Lorenz curve). If <code>gd_type = 2</code>,
+<code>population</code> must be the proportion of population and <code>welfare</code> must be the
+proportion of income. If <code>gd_type = 5</code>, then <code>population</code> must be the
+Percentage of the population in a given interval of incomes, whereas
+<code>welfare</code> must be the mean income of that interval.</p></td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td><p>numeric: Data mean</p></td>
+    </tr>
+    <tr>
+      <th>povline</th>
+      <td><p>numeric: Poverty line</p></td>
+    </tr>
+    <tr>
+      <th>popshare</th>
+      <td><p>numeric: Share of population living below the poverty line.
+Optional.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>data.frame</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>welfare</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>24.84</span>, <span class='fl'>35.8</span>, <span class='fl'>45.36</span>, <span class='fl'>55.1</span>, <span class='fl'>64.92</span>, <span class='fl'>77.08</span>, <span class='fl'>91.75</span>, <span class='fl'>110.64</span>, <span class='fl'>134.9</span>,
+<span class='fl'>167.76</span>, <span class='fl'>215.48</span>, <span class='fl'>261.66</span>, <span class='fl'>384.97</span><span class='op'>)</span>
+<span class='va'>population</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.92</span>, <span class='fl'>2.47</span>, <span class='fl'>5.11</span>, <span class='fl'>7.9</span>, <span class='fl'>9.69</span>, <span class='fl'>15.24</span>, <span class='fl'>13.64</span>, <span class='fl'>16.99</span>, <span class='fl'>10</span>, <span class='fl'>9.78</span>,
+<span class='fl'>3.96</span>, <span class='fl'>1.81</span>, <span class='fl'>2.49</span><span class='op'>)</span>
+
+<span class='fu'>gd_estimate_distribution</span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='va'>welfare</span>,
+population <span class='op'>=</span> <span class='va'>population</span>,
+gd_type <span class='op'>=</span> <span class='fl'>5</span>,
+mean <span class='op'>=</span> <span class='fl'>109.9</span>,
+povline <span class='op'>=</span> <span class='fl'>89</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $poverty_line
+#&gt; [1] 89
+#&gt; 
+#&gt; $mean
+#&gt; [1] 109.9
+#&gt; 
+#&gt; $median
+#&gt; [1] 94.32544
+#&gt; 
+#&gt; $headcount
+#&gt; [1] 0.450615
+#&gt; 
+#&gt; $poverty_gap
+#&gt; [1] 0.1247435
+#&gt; 
+#&gt; $poverty_severity
+#&gt; [1] 0.04751729
+#&gt; 
+#&gt; $watts
+#&gt; [1] 0.1647381
+#&gt; 
+#&gt; $gini
+#&gt; [1] 0.2890132
+#&gt; 
+#&gt; $mld
+#&gt; [1] 0.1376764
+#&gt; 
+#&gt; $polarization
+#&gt; [1] 0.2349451
+#&gt; 
+#&gt; $deciles
+#&gt;  [1] 0.03911907 0.05156047 0.06195715 0.07149438 0.08094991 0.09106730
+#&gt;  [7] 0.10288949 0.11849235 0.14404545 0.23842444
+#&gt; </div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
