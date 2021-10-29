@@ -73,7 +73,7 @@ functional fit for the Lorenz curve (either beta or quadratic)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.2.9004</span>
       </span>
     </div>
 
@@ -143,7 +143,7 @@ functional fit for the Lorenz curve (either beta or quadratic)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create synthetic vector based on Lorenz  parameters of group data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/sd_compute_dist_stats.R'><code>R/sd_compute_dist_stats.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/PIP-Technical-Team/wbpip/blob/master/R/sd_create_synth_vector.R'><code>R/sd_create_synth_vector.R</code></a></small>
     <div class="hidden name"><code>sd_create_synth_vector.Rd</code></div>
     </div>
 
@@ -158,7 +158,9 @@ functional fit for the Lorenz curve (either beta or quadratic).</p>
   <span class='va'>mean</span>,
   pop <span class='op'>=</span> <span class='cn'>NULL</span>,
   p0 <span class='op'>=</span> <span class='fl'>0.5</span>,
-  nobs <span class='op'>=</span> <span class='fl'>1e+05</span>
+  nobs <span class='op'>=</span> <span class='fl'>1e+05</span>,
+  selected_model <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"wbpip.verbose"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -185,6 +187,12 @@ proportion of the population (Lorenz Curve).</p></td>
       <th>nobs</th>
       <td><p>numeric: Number of observations to be used in synthetic vector</p></td>
     </tr>
+    <tr>
+      <th>selected_model</th>
+      <td><p>character or NULL: force to use one model, either
+quadratic (q) or Beta (b). If NULL (default), the methodological protocol
+will select the model. This argument is only useful for testing purposes.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -200,7 +208,7 @@ proportion of the population (Lorenz Curve).</p></td>
   pop <span class='op'>=</span> <span class='cn'>NULL</span>,
   p0 <span class='op'>=</span> <span class='fl'>0.5</span>,
   nobs <span class='op'>=</span> <span class='fl'>1e5</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>→ Parameters used in <span style='color: #00BB00;'>quadratic Lorenz</span> model</span></div><div class='output co'>#&gt; <span class='message'>A: 0.785475865482303</span></div><div class='output co'>#&gt; <span class='message'>B: -1.04085276877704</span></div><div class='output co'>#&gt; <span class='message'>C: 0.310933138643214</span></div><div class='output co'>#&gt; <span class='message'>mean: 8</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Classes ‘data.table’ and 'data.frame':	100000 obs. of  2 variables:
 #&gt;  $ welfare: num  2.36 2.36 2.36 2.36 2.36 ...
 #&gt;  $ weight : num  1 1 1 1 1 1 1 1 1 1 ...
