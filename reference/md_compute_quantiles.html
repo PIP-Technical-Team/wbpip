@@ -197,19 +197,20 @@ share of welfare (<code>lwelfare</code>), and a vector the corresponding monetar
 of each percentile (<code>percentile</code>).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>lz</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'><a href='md_compute_lorenz.html'>md_compute_lorenz</a></span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_quantiles</span><span class='op'>(</span>
-  lwelfare <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>welfare</span>,
-  lweight <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_weight</span>,
-  percentile <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_welfare</span>,
-  n_quantile <span class='op'>=</span> <span class='fl'>10</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; $quantiles
-#&gt;  [1] 200 200 200 200 200 200 200 200 200 200
-#&gt; 
-#&gt; $median
-#&gt; [1] 0.2501249
-#&gt; </div></pre>
+    <pre class="examples"><span class='r-in'><span class='va'>lz</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'><a href='md_compute_lorenz.html'>md_compute_lorenz</a></span><span class='op'>(</span>welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_compute_quantiles</span><span class='op'>(</span></span>
+<span class='r-in'>  lwelfare <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>welfare</span>,</span>
+<span class='r-in'>  lweight <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_weight</span>,</span>
+<span class='r-in'>  percentile <span class='op'>=</span> <span class='va'>lz</span><span class='op'>$</span><span class='va'>lorenz_welfare</span>,</span>
+<span class='r-in'>  n_quantile <span class='op'>=</span> <span class='fl'>10</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $quantiles</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  [1] 200 200 200 200 200 200 200 200 200 200</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $median</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.2501249</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

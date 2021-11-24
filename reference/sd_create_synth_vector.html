@@ -200,20 +200,26 @@ will select the model. This argument is only useful for testing purposes.</p></t
     <p>list</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Create synthetic dataset</span>
-<span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>sd_create_synth_vector</span><span class='op'>(</span>
-  welfare <span class='op'>=</span> <span class='va'>grouped_data_ex2</span><span class='op'>$</span><span class='va'>welfare</span>,
-  population <span class='op'>=</span> <span class='va'>grouped_data_ex2</span><span class='op'>$</span><span class='va'>weight</span>,
-  mean <span class='op'>=</span> <span class='fl'>8</span>,
-  pop <span class='op'>=</span> <span class='cn'>NULL</span>,
-  p0 <span class='op'>=</span> <span class='fl'>0.5</span>,
-  nobs <span class='op'>=</span> <span class='fl'>1e5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>→ Parameters used in <span style='color: #00BB00;'>quadratic Lorenz</span> model</span></div><div class='output co'>#&gt; <span class='message'>A: 0.785475865482303</span></div><div class='output co'>#&gt; <span class='message'>B: -1.04085276877704</span></div><div class='output co'>#&gt; <span class='message'>C: 0.310933138643214</span></div><div class='output co'>#&gt; <span class='message'>mean: 8</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Classes ‘data.table’ and 'data.frame':	100000 obs. of  2 variables:
-#&gt;  $ welfare: num  2.36 2.36 2.36 2.36 2.36 ...
-#&gt;  $ weight : num  1 1 1 1 1 1 1 1 1 1 ...
-#&gt;  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Create synthetic dataset</span></span>
+<span class='r-in'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>sd_create_synth_vector</span><span class='op'>(</span></span>
+<span class='r-in'>  welfare <span class='op'>=</span> <span class='va'>grouped_data_ex2</span><span class='op'>$</span><span class='va'>welfare</span>,</span>
+<span class='r-in'>  population <span class='op'>=</span> <span class='va'>grouped_data_ex2</span><span class='op'>$</span><span class='va'>weight</span>,</span>
+<span class='r-in'>  mean <span class='op'>=</span> <span class='fl'>8</span>,</span>
+<span class='r-in'>  pop <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span class='r-in'>  p0 <span class='op'>=</span> <span class='fl'>0.5</span>,</span>
+<span class='r-in'>  nobs <span class='op'>=</span> <span class='fl'>1e5</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> → Parameters used in <span style='color: #00BB00;'>quadratic Lorenz</span> model</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> A: 0.785475865482303</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> B: -1.04085276877704</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> C: 0.310933138643214</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> mean: 8</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Classes ‘data.table’ and 'data.frame':	100000 obs. of  2 variables:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ welfare: num  2.36 2.36 2.36 2.36 2.36 ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ weight : num  1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  - attr(*, ".internal.selfref")=&lt;externalptr&gt; </span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

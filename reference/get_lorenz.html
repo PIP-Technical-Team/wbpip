@@ -189,14 +189,16 @@ group, aggregate or imputed.</p></td>
     <p>data.frame</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"md_ABC_2000_income"</span><span class='op'>)</span>
-<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>md_ABC_2000_income</span>
-<span class='va'>lorenz</span> <span class='op'>&lt;-</span> <span class='fu'>get_lorenz</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>welfare</span>, <span class='va'>weight</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Data has been sorted by variable <span style='color: #0000BB;'>"welfare"</span></span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>lorenz</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 'data.frame':	100 obs. of  3 variables:
-#&gt;  $ welfare       : num  242223 302878 383965 415974 459221 ...
-#&gt;  $ lorenz_welfare: num  0.000445 0.001368 0.00228 0.003468 0.004808 ...
-#&gt;  $ lorenz_weight : num  0.0102 0.0211 0.0303 0.0406 0.051 ...</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"md_ABC_2000_income"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='va'>md_ABC_2000_income</span></span>
+<span class='r-in'><span class='va'>lorenz</span> <span class='op'>&lt;-</span> <span class='fu'>get_lorenz</span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>welfare</span>, <span class='va'>weight</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Data has been sorted by variable <span style='color: #0000BB;'>"welfare"</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>lorenz</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 'data.frame':	100 obs. of  3 variables:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ welfare       : num  242223 302878 383965 415974 459221 ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ lorenz_welfare: num  0.000445 0.001368 0.00228 0.003468 0.004808 ...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  $ lorenz_weight : num  0.0102 0.0211 0.0303 0.0406 0.051 ...</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

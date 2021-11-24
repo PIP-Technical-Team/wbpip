@@ -183,16 +183,19 @@ quantile is desired. Default .5 (i.e., weighted median).</p></td>
 population (in percentages).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 1000</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>,
-  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
-  popshare <span class='op'>=</span> <span class='fl'>.2</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 400</div><div class='input'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>,
-  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,
-  popshare <span class='op'>=</span> <span class='fl'>.6</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 1200</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>, weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1000</span>
+<span class='r-in'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>,</span>
+<span class='r-in'>  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,</span>
+<span class='r-in'>  popshare <span class='op'>=</span> <span class='fl'>.2</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 400</span>
+<span class='r-in'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>md_infer_poverty_line</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>,</span>
+<span class='r-in'>  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,</span>
+<span class='r-in'>  popshare <span class='op'>=</span> <span class='fl'>.6</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 1200</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

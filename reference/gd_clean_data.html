@@ -191,25 +191,27 @@ Percentage of the population in a given interval of incomes, whereas
 <code>welfare</code> must be the mean income of that interval.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Load example data</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"gd_GHI_2009_income"</span><span class='op'>)</span>
-
-<span class='co'># Standardize dataset</span>
-<span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>gd_clean_data</span><span class='op'>(</span>
-  <span class='va'>gd_GHI_2009_income</span>, welfare <span class='op'>=</span> <span class='st'>"welfare"</span>,
-  population <span class='op'>=</span> <span class='st'>"weight"</span>, gd_type <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> columns <span style='color: #0000BB;'>"welfare"</span> and <span style='color: #0000BB;'>"weight"</span> have been rescaled to range (0,1]</span></div><div class='output co'>#&gt;     country_code survey_year weight    welfare area
-#&gt;  1:          JKL        2009    0.1 0.02292242     
-#&gt;  2:          JKL        2009    0.2 0.05774930     
-#&gt;  3:          JKL        2009    0.3 0.10232770     
-#&gt;  4:          JKL        2009    0.4 0.15716421     
-#&gt;  5:          JKL        2009    0.5 0.22252476     
-#&gt;  6:          JKL        2009    0.6 0.29363491     
-#&gt;  7:          JKL        2009    0.7 0.38883260     
-#&gt;  8:          JKL        2009    0.8 0.50710468     
-#&gt;  9:          JKL        2009    0.9 0.66958790     
-#&gt; 10:          JKL        2009    1.0 1.00000000     </div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Load example data</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"gd_GHI_2009_income"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Standardize dataset</span></span>
+<span class='r-in'><span class='fu'>wbpip</span><span class='fu'>:::</span><span class='fu'>gd_clean_data</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='va'>gd_GHI_2009_income</span>, welfare <span class='op'>=</span> <span class='st'>"welfare"</span>,</span>
+<span class='r-in'>  population <span class='op'>=</span> <span class='st'>"weight"</span>, gd_type <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> columns <span style='color: #0000BB;'>"welfare"</span> and <span style='color: #0000BB;'>"weight"</span> have been rescaled to range (0,1]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     country_code survey_year weight    welfare area</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  1:          JKL        2009    0.1 0.02292242     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  2:          JKL        2009    0.2 0.05774930     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  3:          JKL        2009    0.3 0.10232770     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  4:          JKL        2009    0.4 0.15716421     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  5:          JKL        2009    0.5 0.22252476     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  6:          JKL        2009    0.6 0.29363491     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  7:          JKL        2009    0.7 0.38883260     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  8:          JKL        2009    0.8 0.50710468     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>  9:          JKL        2009    0.9 0.66958790     </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 10:          JKL        2009    1.0 1.00000000     </span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

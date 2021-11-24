@@ -204,34 +204,38 @@ World Bank, Washington, DC.</p>
     <div class='dont-index'><p><code><a href='deflate_welfare_mean.html'>deflate_welfare_mean()</a></code> <code><a href='fill_gaps.html'>fill_gaps()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Extrapolate a single survey</span>
-<span class='fu'>predict_request_year_mean</span><span class='op'>(</span>
-  survey_year <span class='op'>=</span> <span class='fl'>2005</span>,
-  survey_mean <span class='op'>=</span> <span class='fl'>2.0</span>,
-  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, req_value <span class='op'>=</span> <span class='fl'>1500</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 2.222222</div><div class='input'>
-<span class='co'># Interpolate two surveys (monotonic)</span>
-<span class='fu'>predict_request_year_mean</span><span class='op'>(</span>
-  survey_year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2005</span><span class='op'>)</span>,
-  survey_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.0</span>, <span class='fl'>3.0</span><span class='op'>)</span>,
-  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, value1 <span class='op'>=</span> <span class='fl'>1600</span>, req_value <span class='op'>=</span> <span class='fl'>1500</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 2.6 2.6</div><div class='input'>
-<span class='co'># Interpolate two surveys (non-monotonic)</span>
-<span class='fu'>predict_request_year_mean</span><span class='op'>(</span>
-  survey_year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2005</span><span class='op'>)</span>,
-  survey_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.0</span>, <span class='fl'>3.0</span><span class='op'>)</span>,
-  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, value1 <span class='op'>=</span> <span class='fl'>1500</span>, req_value <span class='op'>=</span> <span class='fl'>1600</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 2.37037 3.20000</div><div class='input'>
-<span class='co'># Extrapolate a single survey (w/ decimal year)</span>
-<span class='fu'>predict_request_year_mean</span><span class='op'>(</span>
-  survey_year <span class='op'>=</span> <span class='fl'>2000.3</span>,
-  survey_mean <span class='op'>=</span> <span class='fl'>2.0</span>,
-  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1350</span>, <span class='fl'>1400</span><span class='op'>)</span>, req_value <span class='op'>=</span> <span class='fl'>1600</span><span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 2.344322</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Extrapolate a single survey</span></span>
+<span class='r-in'><span class='fu'>predict_request_year_mean</span><span class='op'>(</span></span>
+<span class='r-in'>  survey_year <span class='op'>=</span> <span class='fl'>2005</span>,</span>
+<span class='r-in'>  survey_mean <span class='op'>=</span> <span class='fl'>2.0</span>,</span>
+<span class='r-in'>  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, req_value <span class='op'>=</span> <span class='fl'>1500</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2.222222</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Interpolate two surveys (monotonic)</span></span>
+<span class='r-in'><span class='fu'>predict_request_year_mean</span><span class='op'>(</span></span>
+<span class='r-in'>  survey_year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2005</span><span class='op'>)</span>,</span>
+<span class='r-in'>  survey_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.0</span>, <span class='fl'>3.0</span><span class='op'>)</span>,</span>
+<span class='r-in'>  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, value1 <span class='op'>=</span> <span class='fl'>1600</span>, req_value <span class='op'>=</span> <span class='fl'>1500</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2.6 2.6</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Interpolate two surveys (non-monotonic)</span></span>
+<span class='r-in'><span class='fu'>predict_request_year_mean</span><span class='op'>(</span></span>
+<span class='r-in'>  survey_year <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2000</span>, <span class='fl'>2005</span><span class='op'>)</span>,</span>
+<span class='r-in'>  survey_mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2.0</span>, <span class='fl'>3.0</span><span class='op'>)</span>,</span>
+<span class='r-in'>  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fl'>1350</span>, value1 <span class='op'>=</span> <span class='fl'>1500</span>, req_value <span class='op'>=</span> <span class='fl'>1600</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2.37037 3.20000</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Extrapolate a single survey (w/ decimal year)</span></span>
+<span class='r-in'><span class='fu'>predict_request_year_mean</span><span class='op'>(</span></span>
+<span class='r-in'>  survey_year <span class='op'>=</span> <span class='fl'>2000.3</span>,</span>
+<span class='r-in'>  survey_mean <span class='op'>=</span> <span class='fl'>2.0</span>,</span>
+<span class='r-in'>  proxy <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>value0 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1350</span>, <span class='fl'>1400</span><span class='op'>)</span>, req_value <span class='op'>=</span> <span class='fl'>1600</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 2.344322</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
