@@ -152,18 +152,22 @@ Mean Log Deviation (MLD)." />
 Mean Log Deviation (MLD).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>md_compute_mld</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>weight</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>md_compute_mld</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>weight</span>, mean <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>welfare</th>
-      <td><p>numeric: vector of welfare measures</p></td>
+      <td><p>numeric: A vector of income or consumption values.</p></td>
     </tr>
     <tr>
       <th>weight</th>
-      <td><p>numeric: vector of weights</p></td>
+      <td><p>numeric: A vector of weights.</p></td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td><p>numeric: A value with the (weighted) mean. Optional.</p></td>
     </tr>
     </table>
 

@@ -150,7 +150,7 @@
     <p>Compute the Wolfson polarization index for microdata.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>md_compute_polarization</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>weight</span>, <span class='va'>gini</span>, <span class='va'>weighted_mean</span>, <span class='va'>weighted_median</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>md_compute_polarization</span><span class='op'>(</span><span class='va'>welfare</span>, <span class='va'>weight</span>, <span class='va'>gini</span>, <span class='va'>mean</span>, <span class='va'>median</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,11 +168,11 @@
       <td><p>numeric: Gini. Output of <code><a href='md_compute_gini.html'>md_compute_gini()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>weighted_mean</th>
-      <td><p>numeric: Mean.</p></td>
+      <th>mean</th>
+      <td><p>numeric: A value with the (weighted) mean. Optional.</p></td>
     </tr>
     <tr>
-      <th>weighted_median</th>
+      <th>median</th>
       <td><p>numeric: Median. Output of <code><a href='md_compute_quantiles.html'>md_compute_quantiles()</a></code>.</p></td>
     </tr>
     </table>
@@ -192,8 +192,8 @@ World Bank, Washington, DC.</p>
 <span class='r-in'>  welfare <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>2000</span>,</span>
 <span class='r-in'>  weight <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2000</span><span class='op'>)</span>,</span>
 <span class='r-in'>  gini <span class='op'>=</span> <span class='fl'>0.4</span>,</span>
-<span class='r-in'>  weighted_mean <span class='op'>=</span> <span class='fl'>950</span>,</span>
-<span class='r-in'>  weighted_median <span class='op'>=</span> <span class='fl'>1000</span></span>
+<span class='r-in'>  mean <span class='op'>=</span> <span class='fl'>950</span>,</span>
+<span class='r-in'>  median <span class='op'>=</span> <span class='fl'>1000</span></span>
 <span class='r-in'><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.14</span>
 </pre>
