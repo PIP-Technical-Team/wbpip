@@ -160,7 +160,7 @@ functional fit for the Lorenz curve (either beta or quadratic).</p>
   p0 <span class='op'>=</span> <span class='fl'>0.5</span>,
   nobs <span class='op'>=</span> <span class='fl'>1e+05</span>,
   selected_model <span class='op'>=</span> <span class='cn'>NULL</span>,
-  verbose <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"wbpip.verbose"</span><span class='op'>)</span>
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -208,11 +208,6 @@ will select the model. This argument is only useful for testing purposes.</p></t
 <span class='r-in'>  pop <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
 <span class='r-in'>  p0 <span class='op'>=</span> <span class='fl'>0.5</span>,</span>
 <span class='r-in'>  nobs <span class='op'>=</span> <span class='fl'>1e5</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> → Parameters used in <span style='color: #00BB00;'>quadratic Lorenz</span> model</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> A: 0.785475865482303</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> B: -1.04085276877704</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> C: 0.310933138643214</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> mean: 8</span>
 <span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>res</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Classes ‘data.table’ and 'data.frame':	100000 obs. of  2 variables:</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span>  $ welfare: num  2.36 2.36 2.36 2.36 2.36 ...</span>
