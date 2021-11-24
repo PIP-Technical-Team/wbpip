@@ -14,52 +14,43 @@
 #' @return data.frame
 #' @keywords internal
 md_compute_lorenz <- function(welfare, weight, nbins = NULL) {
+
   nobs <- length(weight)
   if (is.null(nbins)) {
     # Define number of points on the Lorenz curve
     if (nobs > 1000) nbins <- 100 else nbins <- 20
   }
 
-  # Placeholder for Lorenz curve
-  welfare_col <- vector(mode = "numeric", length = nbins)
-  lorenz_welfare <- vector(mode = "numeric", length = nbins)
-  lorenz_weight <- vector(mode = "numeric", length = nbins)
-
-  # Compute Lorenz curve
-  weighted_welfare <- weight * welfare
-  sum_weighted_welfare <- sum(weighted_welfare)
-  sum_weights <- sum(weight)
-  welfare_step <- sum_weights / nbins
-  next_level <- welfare_step
-  cum_weight <- 0 # Placeholder for cumulative weight
-  cum_welfare <- 0 # Placeholder for cumulative welfare
+  # Set initial parameters
+  cum_weight <- cumsum(weight)
+  welfare_step <- sum(weight) / nbins
+  # METHODOLOGY QUESTION: Should this hard coded 0.9999 be changed?
+  # Not sure why it is here... Most likely to handle some edge case. I tested
+  # the code without it, and it worked fine...
+  levels <- welfare_step * 1:nbins * 0.999999999
+  points <- vector("integer", nbins)
   j <- 1
 
-
+  # Create points vector
   for (i in seq_len(nobs)) {
-    cum_weight <- cum_weight + weight[i] # Cumulative weight
-    cum_welfare <- cum_welfare + weighted_welfare[i] # Cumulative income
-
-    while ((cum_weight >= next_level) & (j <= nbins)) {
-      welfare_col[j] <- welfare[i]
-      lorenz_welfare[j] <- cum_welfare / sum_weighted_welfare # Normalize cum_welfare
-      lorenz_weight[j] <- cum_weight / sum_weights # Normalize cum_weight
-
+    while ((cum_weight[i] >= levels[j]) & (j <= nbins)) {
+      points[j] <- i
       j <- j + 1
-      # METHODOLOGY QUESTION: Should this hard coded 0.9999 be changed?
-      # Not sure why it is here... Most likely to handle some edge case. I tested
-      # the code without it, and it worked fine...
-      if (j <= nbins) {
-        next_level <- welfare_step * j * 0.999999999
-      }
     }
   }
 
-  lorenz <- data.frame(
-    welfare        = welfare_col,
-    lorenz_welfare = lorenz_welfare,
-    lorenz_weight  = lorenz_weight
-  )
+  # Create Lorenz curve vectors
+  lorenz_welfare <- cumsum(welfare * weight) / sum(welfare * weight)
+  lorenz_weight <- cumsum(weight) / sum(weight)
 
-  return(lorenz)
+  # Select points on the Lorenz curve
+  welfare <- welfare[points]
+  lorenz_welfare <- lorenz_welfare[points]
+  lorenz_weight <- lorenz_weight[points]
+
+  return(data.frame(welfare,
+                    lorenz_welfare,
+                    lorenz_weight))
+
 }
+
