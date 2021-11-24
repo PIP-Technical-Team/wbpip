@@ -157,6 +157,7 @@ distributional statistics.</p>
   <span class='va'>weight</span>,
   mean <span class='op'>=</span> <span class='cn'>NULL</span>,
   nbins <span class='op'>=</span> <span class='cn'>NULL</span>,
+  lorenz <span class='op'>=</span> <span class='cn'>NULL</span>,
   n_quantile <span class='op'>=</span> <span class='fl'>10</span>
 <span class='op'>)</span></pre>
 
@@ -177,7 +178,13 @@ distributional statistics.</p>
     </tr>
     <tr>
       <th>nbins</th>
-      <td><p>numeric: number of points on the Lorenz curve.</p></td>
+      <td><p>numeric: number of points on the Lorenz curve. Optional. Only
+used if <code>lorenz</code> is NULL</p></td>
+    </tr>
+    <tr>
+      <th>lorenz</th>
+      <td><p>data.frame: A table with points on the Lorenz curve. Output of
+<code><a href='md_compute_lorenz.html'>md_compute_lorenz()</a></code>. Optional.</p></td>
     </tr>
     <tr>
       <th>n_quantile</th>
