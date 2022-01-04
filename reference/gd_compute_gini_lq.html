@@ -87,11 +87,14 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>A</dt>
-<dd><p>numeric: First regression coefficient.</p></dd>
+<dd><p>numeric: Lorenz curve coefficient. Output of
+<code>regres_lq()$coef[1]</code>.</p></dd>
 <dt>B</dt>
-<dd><p>numeric: Second regression coefficient.</p></dd>
+<dd><p>numeric: Lorenz curve coefficient. Output of
+<code>regres_lq()$coef[2]</code>.</p></dd>
 <dt>C</dt>
-<dd><p>numeric: Third regression coefficient.</p></dd>
+<dd><p>numeric: Lorenz curve coefficient. Output of
+<code>regres_lq()$coef[3]</code>.</p></dd>
 <dt>e</dt>
 <dd><p>numeric: e = -(A + B + C + 1): condition for the curve to go through
 (1, 1).</p></dd>
@@ -99,9 +102,9 @@
 <dd><p>numeric: m = (B^2) - (4 * A). m &lt; 0: condition for the curve to be
 an ellipse (m is called alpha in paper).</p></dd>
 <dt>n</dt>
-<dd><p>numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper.</p></dd>
+<dd><p>numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper</p></dd>
 <dt>r</dt>
-<dd><p>numeric: r = (n^2) - (4 * m * e^2). r is called K in paper.</p></dd>
+<dd><p>r = (n^2) - (4 * m * e^2). r is called K in paper.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
