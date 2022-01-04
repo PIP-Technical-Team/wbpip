@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -82,7 +78,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/PIP-Technical-Team/wbpip/">
+  <a href="https://github.com/PIP-Technical-Team/wbpip/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -103,7 +99,7 @@
       <h1 data-toc-skip>compute_pip_stats</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/PIP-Technical-Team/wbpip/blob/master/vignettes/compute_pip_stats.Rmd"><code>vignettes/compute_pip_stats.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/PIP-Technical-Team/wbpip/blob/HEAD/vignettes/compute_pip_stats.Rmd" class="external-link"><code>vignettes/compute_pip_stats.Rmd</code></a></small>
       <div class="hidden name"><code>compute_pip_stats.Rmd</code></div>
 
     </div>
@@ -111,42 +107,42 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></code></pre></div>
-<div id="load-and-prep-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#load-and-prep-data" class="anchor"></a>Load and prep data</h1>
-<div id="user-supplied-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#user-supplied-data" class="anchor"></a>User supplied data</h2>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></code></pre></div>
+<div class="section level1">
+<h1 id="load-and-prep-data">Load and prep data<a class="anchor" aria-label="anchor" href="#load-and-prep-data"></a>
+</h1>
+<div class="section level2">
+<h2 id="user-supplied-data">User supplied data<a class="anchor" aria-label="anchor" href="#user-supplied-data"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">welfare_mean</span>    <span class="op">&lt;-</span> <span class="fl">51.56</span>
 <span class="va">ppp</span>             <span class="op">&lt;-</span> <span class="fl">58.16</span>
 <span class="va">daily_povline</span>   <span class="op">&lt;-</span> <span class="fl">1.9</span>
 <span class="va">monthly_povline</span> <span class="op">&lt;-</span> <span class="va">daily_povline</span> <span class="op">*</span> <span class="fl">365</span> <span class="op">/</span> <span class="fl">12</span></code></pre></div>
 </div>
-<div id="microdata" class="section level2">
-<h2 class="hasAnchor">
-<a href="#microdata" class="anchor"></a>Microdata</h2>
+<div class="section level2">
+<h2 id="microdata">Microdata<a class="anchor" aria-label="anchor" href="#microdata"></a>
+</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span>
 
 <span class="co"># Basic cleaning operation (remove missings, negative values, etc.)</span>
 <span class="va">micro</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="../reference/md_clean_data.html">md_clean_data</a></span><span class="op">(</span><span class="va">md_ABC_2000_income</span>, 
                               welfare <span class="op">=</span> <span class="st">"welfare"</span>, 
                               weight  <span class="op">=</span> <span class="st">"weight"</span><span class="op">)</span>
-<span class="co">#&gt; ℹ Data has been sorted by variable "welfare"</span>
+<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Data has been sorted by variable <span style="color: #0000BB;">"welfare"</span></span>
 <span class="va">micro</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">data</span>
 <span class="co"># Turn welfare vector to monthly values</span>
 <span class="co"># All computations assume monthly welfare values</span>
 <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">/</span> <span class="fl">12</span></code></pre></div>
 </div>
-<div id="grouped-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#grouped-data" class="anchor"></a>Grouped data</h2>
+<div class="section level2">
+<h2 id="grouped-data">Grouped data<a class="anchor" aria-label="anchor" href="#grouped-data"></a>
+</h2>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create grouped data (Type 1)</span>
 <span class="co"># http://iresearch.worldbank.org/povcalnet/PovCalculator.aspx</span>
-<span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.0005</span>,
+<span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0005</span>,
                 <span class="fl">0.0032</span>,
                 <span class="fl">0.014799999999999999</span>,
                 <span class="fl">0.0443</span>,
@@ -157,7 +153,7 @@
                 <span class="fl">0.7089</span>,
                 <span class="fl">1</span><span class="op">)</span>
 
-<span class="va">welfare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">5.824760527229386e-05</span>,
+<span class="va">welfare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.824760527229386e-05</span>,
              <span class="fl">0.000604029410841011</span>,
              <span class="fl">0.0037949334793616948</span>,
              <span class="fl">0.013988878652244477</span>,
@@ -169,12 +165,12 @@
              <span class="fl">1</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="compute-poverty-stats" class="section level1">
-<h1 class="hasAnchor">
-<a href="#compute-poverty-stats" class="anchor"></a>Compute poverty stats</h1>
-<div id="on-microdata" class="section level2">
-<h2 class="hasAnchor">
-<a href="#on-microdata" class="anchor"></a>On microdata</h2>
+<div class="section level1">
+<h1 id="compute-poverty-stats">Compute poverty stats<a class="anchor" aria-label="anchor" href="#compute-poverty-stats"></a>
+</h1>
+<div class="section level2">
+<h2 id="on-microdata">On microdata<a class="anchor" aria-label="anchor" href="#on-microdata"></a>
+</h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span>,
@@ -221,9 +217,9 @@
 <span class="co">#&gt;  [1] 0.01343078 0.02616405 0.03535142 0.04437412 0.05416520 0.06553887</span>
 <span class="co">#&gt;  [7] 0.08320632 0.10988798 0.15703608 0.41084518</span></code></pre></div>
 </div>
-<div id="on-grouped-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#on-grouped-data" class="anchor"></a>On grouped data</h2>
+<div class="section level2">
+<h2 id="on-grouped-data">On grouped data<a class="anchor" aria-label="anchor" href="#on-grouped-data"></a>
+</h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">welfare</span>,
@@ -284,11 +280,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Tony Fujs, Aleksander Eilertsen, R. Andrés Castañeda, Ifeanyi Nzegwu Edochie.</p>
+  <p></p>
+<p>Developed by Tony Fujs, Aleksander Eilertsen, R. Andrés Castañeda, Ifeanyi Nzegwu Edochie.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -296,6 +294,8 @@
 
   
 
+
+  
 
   </body>
 </html>

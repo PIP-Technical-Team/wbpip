@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -82,7 +78,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/PIP-Technical-Team/wbpip/">
+  <a href="https://github.com/PIP-Technical-Team/wbpip/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,13 +97,13 @@
   <div class="contents col-md-9">
 
 
-<div id="basic-end-user-workflows" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#basic-end-user-workflows" class="anchor"></a>Basic end-user workflows</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="basic-end-user-workflows">Basic end-user workflows<a class="anchor" aria-label="anchor" href="#basic-end-user-workflows"></a>
+</h1></div>
 <p>Basic workflows are based on single data files (micro- or grouped-data). The assumption for these workflows is that they can be satisfied by feeding a single micro- / grouped-data file to different functions.</p>
-<div id="single-stats" class="section level2">
-<h2 class="hasAnchor">
-<a href="#single-stats" class="anchor"></a>Single stats</h2>
+<div class="section level2">
+<h2 id="single-stats">Single stats<a class="anchor" aria-label="anchor" href="#single-stats"></a>
+</h2>
 <ul>
 <li>
 <code>get_poverty_rate(df, povline)</code> <code>compute_poverty_rate(welfare, weight, povline)</code>
@@ -125,9 +121,9 @@
 </ul>
 </div>
 </div>
-<div id="multiple-stats" class="section level1">
-<h1 class="hasAnchor">
-<a href="#multiple-stats" class="anchor"></a>Multiple stats</h1>
+<div class="section level1">
+<h1 id="multiple-stats">Multiple stats<a class="anchor" aria-label="anchor" href="#multiple-stats"></a>
+</h1>
 <ul>
 <li><code>get_distributional_stats()</code></li>
 <li><code>get_poverty_stats()</code></li>
@@ -138,50 +134,61 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/PIP-Technical-Team/wbpip/">https://​github.com/​PIP-Technical-Team/​wbpip/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/PIP-Technical-Team/wbpip/issues">https://​github.com/​PIP-Technical-Team/​wbpip/​issues</a>
-</li>
+<li><a href="https://github.com/PIP-Technical-Team/wbpip/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/PIP-Technical-Team/wbpip/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing wbpip</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Tony Fujs <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Aleksander Eilertsen <br><small class="roles"> Author </small>  </li>
 <li>R. Andrés Castañeda <br><small class="roles"> Author </small>  </li>
 <li>Ifeanyi Nzegwu Edochie <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions?workflow=R-CMD-check"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/test-coverage/badge.svg" alt="test-coverage"></a></li>
-<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/pkgdown/badge.svg" alt="pkgdown"></a></li>
+<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions?workflow=R-CMD-check" class="external-link"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions" class="external-link"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/test-coverage/badge.svg" alt="test-coverage"></a></li>
+<li><a href="https://github.com/PIP-Technical-Team/wbpip/actions" class="external-link"><img src="https://github.com/PIP-Technical-Team/wbpip/workflows/pkgdown/badge.svg" alt="pkgdown"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Tony Fujs, Aleksander Eilertsen, R. Andrés Castañeda, Ifeanyi Nzegwu Edochie.</p>
+  <p></p>
+<p>Developed by Tony Fujs, Aleksander Eilertsen, R. Andrés Castañeda, Ifeanyi Nzegwu Edochie.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -189,6 +196,8 @@
 
   
 
+
+  
 
   </body>
 </html>

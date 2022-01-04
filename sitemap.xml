@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://pip-technical-team.github.io/wbpip/404.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/basic_functions.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/compute_pip_stats.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/interpolation.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/microdata_workflow.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/review_gd_compute_pip_stats.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/review_lb_code.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/articles/review_lq_code.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/authors.html</loc>
+  </url>
+  <url>
     <loc>https://pip-technical-team.github.io/wbpip/index.html</loc>
+  </url>
+  <url>
+    <loc>https://pip-technical-team.github.io/wbpip/news/index.html</loc>
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/check_curve_validity_dist_lb.html</loc>
@@ -166,6 +205,9 @@
     <loc>https://pip-technical-team.github.io/wbpip/reference/grouped_data_ex3.html</loc>
   </url>
   <url>
+    <loc>https://pip-technical-team.github.io/wbpip/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/lorenz_alt.html</loc>
   </url>
   <url>
@@ -269,26 +311,5 @@
   </url>
   <url>
     <loc>https://pip-technical-team.github.io/wbpip/reference/value_at_lq.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/basic_functions.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/compute_pip_stats.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/interpolation.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/microdata_workflow.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/review_gd_compute_pip_stats.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/review_lb_code.html</loc>
-  </url>
-  <url>
-    <loc>https://pip-technical-team.github.io/wbpip/articles/review_lq_code.html</loc>
   </url>
 </urlset>
