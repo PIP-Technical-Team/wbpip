@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 2.0.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   basic_functions: basic_functions.html
@@ -9,7 +9,7 @@ articles:
   review_gd_compute_pip_stats: review_gd_compute_pip_stats.html
   review_lb_code: review_lb_code.html
   review_lq_code: review_lq_code.html
-last_built: 2022-01-04T17:11Z
+last_built: 2022-02-17T11:07Z
 urls:
   reference: https://pip-technical-team.github.io/wbpip/reference
   article: https://pip-technical-team.github.io/wbpip/articles

@@ -108,9 +108,9 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></code></pre></div>
-<div class="section level1">
-<h1 id="load-and-prep-data">Load and prep data<a class="anchor" aria-label="anchor" href="#load-and-prep-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="load-and-prep-data">Load and prep data<a class="anchor" aria-label="anchor" href="#load-and-prep-data"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span>
 
@@ -124,9 +124,9 @@
 <span class="co"># All computations assume monthly welfare values</span>
 <span class="va">df</span><span class="op">$</span><span class="va">welfare</span> <span class="op">&lt;-</span> <span class="va">df</span><span class="op">$</span><span class="va">welfare</span> <span class="op">/</span> <span class="fl">12</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="compute-pip-poverty-stats">Compute PIP poverty stats<a class="anchor" aria-label="anchor" href="#compute-pip-poverty-stats"></a>
-</h1>
+<div class="section level2">
+<h2 id="compute-pip-poverty-stats">Compute PIP poverty stats<a class="anchor" aria-label="anchor" href="#compute-pip-poverty-stats"></a>
+</h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Poverty line needs to be expressed in monthly international dollar values</span>
 <span class="co"># The conversion from daily to monthly values needs to happen at a higher level</span>
@@ -206,7 +206,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
