@@ -67,7 +67,7 @@ md_compute_quantiles <- function(lwelfare,
     lorenzy <- lwelfare[i] # Cumulative share of income / consumption
 
     if (lorenzw > nextQ | assertthat::are_equal(lorenzw, nextQ, tolerance = tolerance)) {
-      if (round(nextQ, 2) == 0.5) {
+      if (dplyr::near(nextQ, 0.5, 0.05)) {
         median <- yi
       }
       QY <- (nextQ - lastW) / (lorenzw - lastW) * (lorenzy - lastY) # interpolate the value of QY

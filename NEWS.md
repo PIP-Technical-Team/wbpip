@@ -10,6 +10,8 @@
 
 ## Bug fixes
 
+* [compute quantiles for `md_compute_quantiles` other than 10](https://github.com/PIP-Technical-Team/wbpip/issues/20)
+
 # wbpip 0.0.3
 
 Initial release used in the PIP soft-launch on February 9, 2022
