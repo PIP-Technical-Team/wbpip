@@ -28,11 +28,7 @@ gd_compute_poverty_stats <- function(welfare,
 
   # Apply Lorenz quadratic fit ----------------------------------------------
   # Adjust mean if different PPP value is provided
-  if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
-  } else {
-    ppp <- default_ppp
-  }
+  adjusted_values <- handle_missing_ppp(ppp, requested_mean, default_ppp)
   # STEP 1: Prep data to fit functional form
   prepped_data <- create_functional_form_lq(
     welfare = welfare,
@@ -45,7 +41,7 @@ gd_compute_poverty_stats <- function(welfare,
 
   # STEP 3: Calculate poverty stats
   results_lq <- gd_estimate_poverty_stats_lq(
-    mean = requested_mean,
+    mean = adjusted_values$requested_mean,
     povline = povline,
     A = reg_coef_lq[1],
     B = reg_coef_lq[2],
@@ -77,7 +73,7 @@ gd_compute_poverty_stats <- function(welfare,
 
   # STEP 3: Calculate distributional stats
   results_lb <- gd_estimate_poverty_stats_lb(
-    mean = requested_mean,
+    mean = adjusted_values$requested_mean,
     povline = povline,
     A = reg_coef_lb[1],
     B = reg_coef_lb[2],

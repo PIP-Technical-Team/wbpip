@@ -7,6 +7,7 @@
 * Remove `purrr` dependency
 * add test for `sd_create_synth_vector`
 * create a separate function (`weighted_average_poverty_stats`) for repetitive calculation in adjust poverty stats and add corresponding test case for it. 
+* [create a separate function to handle missing arguments](https://github.com/PIP-Technical-Team/wbpip/issues/186)
 
 ## Bug fixes
 
