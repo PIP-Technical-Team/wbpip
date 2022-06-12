@@ -57,3 +57,18 @@ test_that("retrieve_distributional() returns correct results", {
     expected
   )
 })
+
+
+test_that("handle_missing_ppp() returns correct results", {
+  res1 <- handle_missing_ppp(2.15, 10, 1.2)
+
+  expect_length(res1, 2)
+  expect_equal(res1$ppp, 2.15)
+  expect_equal(res1$requested_mean, 5.581395, tolerance = 0.001)
+
+  res2 <- handle_missing_ppp(NULL, 10, 1.2)
+
+  expect_length(res2, 2)
+  expect_equal(res2$ppp, 1.2)
+  expect_equal(res2$requested_mean, 10)
+})
