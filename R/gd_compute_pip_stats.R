@@ -84,3 +84,19 @@ gd_compute_pip_stats <- function(welfare,
 
   return(out)
 }
+
+
+#' Handle missing ppp values
+#'
+#' @inheritParams gd_compute_pip_stats
+#'
+#' @return A list of two numeric values (ppp and requested_mean)
+
+handle_missing_ppp <- function(ppp, requested_mean, default_ppp) {
+  if (!is.null(ppp)) {
+    requested_mean <- requested_mean * default_ppp / ppp
+  } else {
+    ppp <- default_ppp
+  }
+  return(list(ppp = ppp, requested_mean = requested_mean))
+}

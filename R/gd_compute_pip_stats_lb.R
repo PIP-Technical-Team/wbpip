@@ -24,11 +24,7 @@ gd_compute_pip_stats_lb <- function(welfare,
                                     p0 = 0.5) {
 
   # Adjust mean if different PPP value is provided
-  if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
-  } else {
-    ppp <- default_ppp
-  }
+  adjusted_values <- handle_missing_ppp(ppp, requested_mean, default_ppp)
   # STEP 1: Prep data to fit functional form
   prepped_data <- create_functional_form_lb(
     welfare = welfare,
@@ -48,19 +44,19 @@ gd_compute_pip_stats_lb <- function(welfare,
   # instead of a poverty line
 
   if (!is.null(popshare)) {
-    povline <- derive_lb(popshare, A, B, C) * requested_mean
+    povline <- derive_lb(popshare, A, B, C) * adjusted_values$requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lb(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lb(0.980, A, B, C) - 4
+  z_min <- adjusted_values$requested_mean * derive_lb(0.001, A, B, C) + 4
+  z_max <- adjusted_values$requested_mean * derive_lb(0.980, A, B, C) - 4
   z_min <- if (z_min < 0) 0L else z_min
 
-  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
-  names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
+  results1 <- list(mean = adjusted_values$requested_mean, poverty_line = povline,
+                   z_min = z_min, z_max = z_max, ppp = adjusted_values$ppp)
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lb(requested_mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lb(adjusted_values$requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)

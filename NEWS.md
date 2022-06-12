@@ -4,6 +4,8 @@
 
 ## Enhancements
 
+* [create a separate function to handle missing arguments](https://github.com/PIP-Technical-Team/wbpip/issues/186)
+
 ## Bug fixes
 
 # wbpip 0.0.3
