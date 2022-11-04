@@ -62,8 +62,9 @@ gd_compute_pip_stats <- function(welfare,
 
   # Apply selection rules ---------------------------------------------------
   out <- gd_select_lorenz(
-    lq = results_lq,
-    lb = results_lb
+    lq       = results_lq,
+    lb       = results_lb,
+    popshare = popshare
   )
 
   # Return only subset of variables
