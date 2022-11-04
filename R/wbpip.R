@@ -9,8 +9,6 @@
 #' @docType package
 #' @name wbpip
 #' @import data.table
-#' @importFrom cli cli_abort cli_warn cli_inform cli_alert cli_alert_danger
-#'   cli_alert_info cli_alert_success
 
 # Make sure data.table knows we know we're using it
 #' @noRd
