@@ -16,6 +16,10 @@ get_gini(
 
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric: A vector of population weights, optional, a vector of
+1s if not specified. If group data, it should be a vector of cumulative
+population from >0 to 1.}
+
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}
 }

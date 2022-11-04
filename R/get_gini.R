@@ -16,6 +16,9 @@ if (getRversion() >= "2.15.1") {
 #' @inheritParams compute_pip_stats
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
+#' @param weight numeric: A vector of population weights, optional, a vector of
+#'   1s if not specified. If group data, it should be a vector of cumulative
+#'   population from >0 to 1.
 #'
 #' @return data.table
 #' @export
