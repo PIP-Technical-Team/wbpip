@@ -4,7 +4,7 @@
 \alias{gd_select_lorenz}
 \title{Select best Lorenz fit}
 \usage{
-gd_select_lorenz(lq, lb)
+gd_select_lorenz(lq, lb, popshare = NULL)
 }
 \arguments{
 \item{lq}{list: Results from Lorenz Quadratic functional form. output of
@@ -12,6 +12,11 @@ gd_select_lorenz(lq, lb)
 
 \item{lb}{list: Results from Lorenz Beta functional form. output of
 \code{gd_compute_pip_stats_lb()}.}
+
+\item{popshare}{Numeric or NULL: IF null, selection of Lorenz for poverty
+stats will be based on the validity of the distribution at the value of the
+previously selected poverty line. If numeric, the Lorenz used will the same
+selected for distributional stats.}
 }
 \value{
 list

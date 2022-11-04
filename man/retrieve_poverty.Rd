@@ -4,7 +4,15 @@
 \alias{retrieve_poverty}
 \title{Algorithm to retrieve correct poverty statistics}
 \usage{
-retrieve_poverty(lq, lb, is_normal, use_lq_for_pov)
+retrieve_poverty(
+  lq,
+  lb,
+  is_normal,
+  use_lq_for_pov,
+  max_headcount = 0.9999999,
+  max_poverty_gap = 0.9999998,
+  max_poverty_severity = 0.9999997
+)
 }
 \arguments{
 \item{lq}{list: Results from Lorenz Quadratic functional form. output of

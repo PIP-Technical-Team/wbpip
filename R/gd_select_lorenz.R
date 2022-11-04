@@ -6,6 +6,10 @@
 #'   `gd_compute_pip_stats_lq()`.
 #' @param lb list: Results from Lorenz Beta functional form. output of
 #'   `gd_compute_pip_stats_lb()`.
+#' @param  popshare Numeric or NULL: IF null, selection of Lorenz for poverty
+#'   stats will be based on the validity of the distribution at the value of the
+#'   previously selected poverty line. If numeric, the Lorenz used will the same
+#'   selected for distributional stats.
 #'
 #' @return list
 #' @keywords internal
@@ -29,7 +33,7 @@
 #' # Select Lorenz
 #' res <- wbpip:::gd_select_lorenz(lq, lb)
 #'
-gd_select_lorenz <- function(lq, lb) {
+gd_select_lorenz <- function(lq, lb, popshare = NULL) {
 
   # Set default value
   datamean <- lq[["mean"]]
@@ -57,6 +61,10 @@ gd_select_lorenz <- function(lq, lb) {
   )
 
   # Retrieve poverty statistics
+  if (is.numeric(popshare)) {
+    use_lq_for_pov <- use_lq_for_dist
+  }
+
   pov <- retrieve_poverty(
     lq = lq,
     lb = lb,
