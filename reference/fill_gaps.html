@@ -18,7 +18,7 @@ available."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@ available."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,39 +83,54 @@ available.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fill_gaps</span><span class="op">(</span>
-  <span class="va">request_year</span>,
-  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">df0</span>, df1 <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,
-  <span class="va">predicted_request_mean</span>,
-  <span class="va">survey_year</span>,
-  <span class="va">default_ppp</span>,
-  ppp <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">distribution_type</span>,
-  poverty_line <span class="op">=</span> <span class="fl">1.9</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fill_gaps</span><span class="op">(</span></span>
+<span>  <span class="va">request_year</span>,</span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">df0</span>, df1 <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  <span class="va">predicted_request_mean</span>,</span>
+<span>  <span class="va">survey_year</span>,</span>
+<span>  <span class="va">default_ppp</span>,</span>
+<span>  ppp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">distribution_type</span>,</span>
+<span>  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>request_year</dt>
 <dd><p>integer: A value with the request year.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>list: A list with one or two data frames containing survey data.
 See details.</p></dd>
+
+
 <dt>predicted_request_mean</dt>
 <dd><p>numeric: A vector with one or two survey means.
 See details.</p></dd>
+
+
 <dt>survey_year</dt>
 <dd><p>numeric: A vector with one or two survey years.</p></dd>
+
+
 <dt>default_ppp</dt>
 <dd><p>numeric: Default purchasing power parity.</p></dd>
+
+
 <dt>ppp</dt>
 <dd><p>numeric: PPP request by user.</p></dd>
+
+
 <dt>distribution_type</dt>
 <dd><p>character: A vector with the type of distribution,
 must be either micro, group, aggregate or imputed.</p></dd>
+
+
 <dt>poverty_line</dt>
 <dd><p>numeric: Daily poverty line in international dollars.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -132,49 +147,49 @@ named <em>weight</em> if welfare values are to be weighted.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Load example data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2010_income"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">md_ABC_2010_income</span> <span class="op">&lt;-</span></span>
-<span class="r-in">  <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="md_clean_data.html">md_clean_data</a></span><span class="op">(</span><span class="va">md_ABC_2010_income</span>,</span>
-<span class="r-in">    welfare <span class="op">=</span> <span class="st">"welfare"</span>,</span>
-<span class="r-in">    weight <span class="op">=</span> <span class="st">"weight"</span></span>
-<span class="r-in">  <span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load example data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2010_income"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">md_ABC_2010_income</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="md_clean_data.html">md_clean_data</a></span><span class="op">(</span><span class="va">md_ABC_2010_income</span>,</span></span>
+<span class="r-in"><span>    welfare <span class="op">=</span> <span class="st">"welfare"</span>,</span></span>
+<span class="r-in"><span>    weight <span class="op">=</span> <span class="st">"weight"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span><span class="op">$</span><span class="va">data</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 30 NA values in variable <span style="color: #0000BB;">"welfare"</span> were dropped</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Data has been sorted by variable <span style="color: #0000BB;">"welfare"</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Extrapolation</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span>
-<span class="r-in">  request_year <span class="op">=</span> <span class="fl">2005</span>,</span>
-<span class="r-in">  survey_year <span class="op">=</span> <span class="fl">2000</span>,</span>
-<span class="r-in">  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">)</span>,</span>
-<span class="r-in">  predicted_request_mean <span class="op">=</span> <span class="fl">13</span>,</span>
-<span class="r-in">  default_ppp <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span>
-<span class="r-in">  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Interpolation (monotonic)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span>
-<span class="r-in">  request_year <span class="op">=</span> <span class="fl">2005</span>,</span>
-<span class="r-in">  survey_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span>,</span>
-<span class="r-in">  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span>, df1 <span class="op">=</span> <span class="va">md_ABC_2010_income</span><span class="op">)</span>,</span>
-<span class="r-in">  predicted_request_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">13</span><span class="op">)</span>,</span>
-<span class="r-in">  default_ppp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span class="r-in">  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span>
-<span class="r-in">  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Interpolation (non-monotonic)</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span>
-<span class="r-in">  request_year <span class="op">=</span> <span class="fl">2005</span>,</span>
-<span class="r-in">  survey_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span>,</span>
-<span class="r-in">  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span>, df1 <span class="op">=</span> <span class="va">md_ABC_2010_income</span><span class="op">)</span>,</span>
-<span class="r-in">  predicted_request_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">17</span><span class="op">)</span>,</span>
-<span class="r-in">  default_ppp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span class="r-in">  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span>
-<span class="r-in">  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extrapolation</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  request_year <span class="op">=</span> <span class="fl">2005</span>,</span></span>
+<span class="r-in"><span>  survey_year <span class="op">=</span> <span class="fl">2000</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  predicted_request_mean <span class="op">=</span> <span class="fl">13</span>,</span></span>
+<span class="r-in"><span>  default_ppp <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span></span>
+<span class="r-in"><span>  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Interpolation (monotonic)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  request_year <span class="op">=</span> <span class="fl">2005</span>,</span></span>
+<span class="r-in"><span>  survey_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span>, df1 <span class="op">=</span> <span class="va">md_ABC_2010_income</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  predicted_request_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">13</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  default_ppp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span></span>
+<span class="r-in"><span>  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Interpolation (non-monotonic)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">fill_gaps</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  request_year <span class="op">=</span> <span class="fl">2005</span>,</span></span>
+<span class="r-in"><span>  survey_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df0 <span class="op">=</span> <span class="va">md_ABC_2000_income</span>, df1 <span class="op">=</span> <span class="va">md_ABC_2010_income</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  predicted_request_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">17</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  default_ppp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  distribution_type <span class="op">=</span> <span class="st">"micro"</span>,</span></span>
+<span class="r-in"><span>  poverty_line <span class="op">=</span> <span class="fl">1.9</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -189,7 +204,7 @@ named <em>weight</em> if welfare values are to be weighted.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

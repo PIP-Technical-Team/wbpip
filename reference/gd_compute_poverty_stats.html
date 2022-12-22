@@ -18,7 +18,7 @@ fit for the Lorenz curve (either beta or quadratic)."><!-- mathjax --><script sr
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@ fit for the Lorenz curve (either beta or quadratic)."><!-- mathjax --><script sr
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,16 +83,16 @@ fit for the Lorenz curve (either beta or quadratic).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gd_compute_poverty_stats</span><span class="op">(</span>
-  <span class="va">welfare</span>,
-  <span class="va">povline</span>,
-  <span class="va">population</span>,
-  <span class="va">requested_mean</span>,
-  popshare <span class="op">=</span> <span class="cn">NULL</span>,
-  default_ppp <span class="op">=</span> <span class="cn">NULL</span>,
-  ppp <span class="op">=</span> <span class="cn">NULL</span>,
-  p0 <span class="op">=</span> <span class="fl">0.5</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gd_compute_poverty_stats</span><span class="op">(</span></span>
+<span>  <span class="va">welfare</span>,</span>
+<span>  <span class="va">povline</span>,</span>
+<span>  <span class="va">population</span>,</span>
+<span>  <span class="va">requested_mean</span>,</span>
+<span>  popshare <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  default_ppp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ppp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -100,36 +100,53 @@ fit for the Lorenz curve (either beta or quadratic).</p>
     <dl><dt>welfare</dt>
 <dd><p>numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).</p></dd>
+
+
 <dt>povline</dt>
 <dd><p>numeric: Poverty line.</p></dd>
+
+
 <dt>population</dt>
 <dd><p>numeric: Cumulative proportion of population.</p></dd>
+
+
 <dt>requested_mean</dt>
 <dd><p>numeric: Welfare mean.</p></dd>
+
+
 <dt>popshare</dt>
 <dd><p>numeric: Share of population living below the poverty line.
 Optional.</p></dd>
+
+
 <dt>default_ppp</dt>
 <dd><p>numeric: Default purchasing power parity.</p></dd>
+
+
 <dt>ppp</dt>
 <dd><p>numeric: PPP request by user.</p></dd>
+
+
 <dt>p0</dt>
 <dd><p>numeric: <strong>TO BE DOCUMENTED</strong>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>list</p>
+    
+
+<p>list</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Compute poverty stats</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_poverty_stats</span><span class="op">(</span></span>
-<span class="r-in"> welfare <span class="op">=</span> <span class="va">grouped_data_ex2</span><span class="op">$</span><span class="va">welfare</span>,</span>
-<span class="r-in"> population <span class="op">=</span> <span class="va">grouped_data_ex2</span><span class="op">$</span><span class="va">weight</span>,</span>
-<span class="r-in"> povline <span class="op">=</span> <span class="fl">1.9</span> <span class="op">*</span> <span class="fl">365</span> <span class="op">/</span> <span class="fl">12</span>,</span>
-<span class="r-in"> requested_mean <span class="op">=</span> <span class="fl">50</span>,</span>
-<span class="r-in"> default_ppp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Compute poverty stats</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_poverty_stats</span><span class="op">(</span></span></span>
+<span class="r-in"><span> welfare <span class="op">=</span> <span class="va">grouped_data_ex2</span><span class="op">$</span><span class="va">welfare</span>,</span></span>
+<span class="r-in"><span> population <span class="op">=</span> <span class="va">grouped_data_ex2</span><span class="op">$</span><span class="va">weight</span>,</span></span>
+<span class="r-in"><span> povline <span class="op">=</span> <span class="fl">1.9</span> <span class="op">*</span> <span class="fl">365</span> <span class="op">/</span> <span class="fl">12</span>,</span></span>
+<span class="r-in"><span> requested_mean <span class="op">=</span> <span class="fl">50</span>,</span></span>
+<span class="r-in"><span> default_ppp <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -144,7 +161,7 @@ Optional.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

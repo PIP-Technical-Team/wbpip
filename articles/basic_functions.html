@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -107,7 +107,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="review-basic-functions">Review basic functions<a class="anchor" aria-label="anchor" href="#review-basic-functions"></a>
 </h2>
@@ -117,11 +117,11 @@
 <code>md_compute_gini()</code><a class="anchor" aria-label="anchor" href="#md_compute_gini"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span>
-
-<span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="../reference/md_compute_gini.html">md_compute_gini</a></span><span class="op">(</span>welfare <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">$</span><span class="va">welfare</span>, 
-                weight <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.05516411</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="../reference/md_compute_gini.html">md_compute_gini</a></span><span class="op">(</span>welfare <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">$</span><span class="va">welfare</span>, </span>
+<span>                weight <span class="op">=</span> <span class="va">md_ABC_2000_income</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.05516411</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -143,7 +143,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

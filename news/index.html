@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -76,30 +76,37 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.0.4" id="wbpip-004">wbpip 0.0.4<a class="anchor" aria-label="anchor" href="#wbpip-004"></a></h2>
+<div class="section level3"><h3 id="new-features-0-0-4">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-4"></a></h3></div>
+<div class="section level3">
+<h3 id="enhancements-0-0-4">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-0-4"></a></h3>
+<ul><li>Make local file path more robust in test-suite</li>
+<li>Fix non-monotonicity bugs for grouped distributions</li>
+<li>Remove <code>purrr</code> dependency</li>
+<li>add test for <code>sd_create_synth_vector</code>
+</li>
+<li>create a separate function (<code>weighted_average_poverty_stats</code>) for repetitive calculation in adjust poverty stats and add corresponding test case for it.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-0-4">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-4"></a></h3>
+<ul><li>Fix duplicated values being returned for group data when poverty line when no Lorenz fit was successful</li></ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.3" id="wbpip-003">wbpip 0.0.3<a class="anchor" aria-label="anchor" href="#wbpip-003"></a></h2>
 <p>Initial release used in the PIP soft-launch on February 9, 2022</p>
-<div class="section level3">
-<h3 id="new-features-0-0-3">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-3"></a></h3>
-</div>
-<div class="section level3">
-<h3 id="enhancements-0-0-3">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-0-3"></a></h3>
-</div>
+<div class="section level3"><h3 id="new-features-0-0-3">New features<a class="anchor" aria-label="anchor" href="#new-features-0-0-3"></a></h3></div>
+<div class="section level3"><h3 id="enhancements-0-0-3">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-0-3"></a></h3></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-0-3">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-3"></a></h3>
 <ul><li>Fix the selection of Lorenz curve for distributional statistics by adding ad-hoc function to compute correct SSE</li>
 <li>Change creation of synth vectors</li>
 </ul></div>
 </div>
-    <div class="section level2">
-<h2 class="page-header" data-toc-text="0.0.2" id="wbpip-002">wbpip 0.0.2<a class="anchor" aria-label="anchor" href="#wbpip-002"></a></h2>
-</div>
-    <div class="section level2">
-<h2 class="page-header" data-toc-text="0.0.1" id="wbpip-001">wbpip 0.0.1<a class="anchor" aria-label="anchor" href="#wbpip-001"></a></h2>
-</div>
+    <div class="section level2"><h2 class="page-header" data-toc-text="0.0.2" id="wbpip-002">wbpip 0.0.2<a class="anchor" aria-label="anchor" href="#wbpip-002"></a></h2></div>
+    <div class="section level2"><h2 class="page-header" data-toc-text="0.0.1" id="wbpip-001">wbpip 0.0.1<a class="anchor" aria-label="anchor" href="#wbpip-001"></a></h2></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.0.0.9000" id="wbpip-0009000">wbpip 0.0.0.9000<a class="anchor" aria-label="anchor" href="#wbpip-0009000"></a></h2>
-<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
-</ul></div>
+<ul><li>Added a <code>NEWS.md</code> file to track changes to the package.</li></ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -114,7 +121,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

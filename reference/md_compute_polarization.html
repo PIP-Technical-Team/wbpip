@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -81,23 +81,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">md_compute_polarization</span><span class="op">(</span><span class="va">welfare</span>, <span class="va">weight</span>, <span class="va">gini</span>, <span class="va">mean</span>, <span class="va">median</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">md_compute_polarization</span><span class="op">(</span><span class="va">welfare</span>, <span class="va">weight</span>, <span class="va">gini</span>, <span class="va">mean</span>, <span class="va">median</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>welfare</dt>
 <dd><p>numeric: A vector of income or consumption values</p></dd>
+
+
 <dt>gini</dt>
 <dd><p>numeric: Gini. Output of <code><a href="md_compute_gini.html">md_compute_gini()</a></code>.</p></dd>
+
+
 <dt>mean</dt>
 <dd><p>numeric: A value with the mean. Optional.</p></dd>
+
+
 <dt>median</dt>
 <dd><p>numeric: Median. Output of <code><a href="md_compute_quantiles.html">md_compute_quantiles()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>numeric</p>
+    
+
+<p>numeric</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -109,13 +118,13 @@ World Bank, Washington, DC.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">md_compute_polarization</span><span class="op">(</span></span>
-<span class="r-in">  welfare <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2000</span>,</span>
-<span class="r-in">  weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2000</span><span class="op">)</span>,</span>
-<span class="r-in">  gini <span class="op">=</span> <span class="fl">0.4</span>,</span>
-<span class="r-in">  mean <span class="op">=</span> <span class="fl">950</span>,</span>
-<span class="r-in">  median <span class="op">=</span> <span class="fl">1000</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">md_compute_polarization</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  welfare <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2000</span>,</span></span>
+<span class="r-in"><span>  weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2000</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  gini <span class="op">=</span> <span class="fl">0.4</span>,</span></span>
+<span class="r-in"><span>  mean <span class="op">=</span> <span class="fl">950</span>,</span></span>
+<span class="r-in"><span>  median <span class="op">=</span> <span class="fl">1000</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.14</span>
 </code></pre></div>
     </div>
@@ -131,7 +140,7 @@ World Bank, Washington, DC.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

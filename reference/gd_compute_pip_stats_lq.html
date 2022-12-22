@@ -18,7 +18,7 @@ form of the Lorenz qurve."><!-- mathjax --><script src="https://cdnjs.cloudflare
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -27,7 +27,7 @@ form of the Lorenz qurve."><!-- mathjax --><script src="https://cdnjs.cloudflare
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -83,16 +83,16 @@ form of the Lorenz qurve.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span>
-  <span class="va">welfare</span>,
-  <span class="va">povline</span>,
-  <span class="va">population</span>,
-  <span class="va">requested_mean</span>,
-  popshare <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">default_ppp</span>,
-  ppp <span class="op">=</span> <span class="cn">NULL</span>,
-  p0 <span class="op">=</span> <span class="fl">0.5</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span></span>
+<span>  <span class="va">welfare</span>,</span>
+<span>  <span class="va">povline</span>,</span>
+<span>  <span class="va">population</span>,</span>
+<span>  <span class="va">requested_mean</span>,</span>
+<span>  popshare <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">default_ppp</span>,</span>
+<span>  ppp <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  p0 <span class="op">=</span> <span class="fl">0.5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -100,59 +100,76 @@ form of the Lorenz qurve.</p>
     <dl><dt>welfare</dt>
 <dd><p>numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).</p></dd>
+
+
 <dt>povline</dt>
 <dd><p>numeric: Poverty line.</p></dd>
+
+
 <dt>population</dt>
 <dd><p>numeric: Cumulative proportion of population.</p></dd>
+
+
 <dt>requested_mean</dt>
 <dd><p>numeric: Welfare mean.</p></dd>
+
+
 <dt>popshare</dt>
 <dd><p>numeric: Share of population living below the poverty line.
 Optional.</p></dd>
+
+
 <dt>default_ppp</dt>
 <dd><p>numeric: Default purchasing power parity.</p></dd>
+
+
 <dt>ppp</dt>
 <dd><p>numeric: PPP request by user.</p></dd>
+
+
 <dt>p0</dt>
 <dd><p>numeric: <strong>TO BE DOCUMENTED</strong>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>list</p>
+    
+
+<p>list</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Set initial parameters</span></span>
-<span class="r-in"><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fl">0.00208</span>, <span class="fl">0.01013</span>, <span class="fl">0.03122</span>, <span class="fl">0.07083</span>, <span class="fl">0.12808</span>, <span class="fl">0.23498</span>, <span class="fl">0.34887</span>,</span>
-<span class="r-in">  <span class="fl">0.51994</span>, <span class="fl">0.6427</span>, <span class="fl">0.79201</span>, <span class="fl">0.86966</span>, <span class="fl">0.91277</span>, <span class="fl">1</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">P</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fl">0.0092</span>, <span class="fl">0.0339</span>, <span class="fl">0.085</span>, <span class="fl">0.164</span>, <span class="fl">0.2609</span>, <span class="fl">0.4133</span>, <span class="fl">0.5497</span>, <span class="fl">0.7196</span>,</span>
-<span class="r-in">  <span class="fl">0.8196</span>, <span class="fl">0.9174</span>, <span class="fl">0.957</span>, <span class="fl">0.9751</span>, <span class="fl">1</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">109.9</span> <span class="co"># mean</span></span>
-<span class="r-in"><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">89</span> <span class="co"># poverty line</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span></span>
-<span class="r-in">  welfare <span class="op">=</span> <span class="va">L</span>,</span>
-<span class="r-in">  population <span class="op">=</span> <span class="va">P</span>,</span>
-<span class="r-in">  requested_mean <span class="op">=</span> <span class="va">mu</span>,</span>
-<span class="r-in">  povline <span class="op">=</span> <span class="va">z</span>,</span>
-<span class="r-in">  default_ppp <span class="op">=</span> <span class="fl">1</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">res</span><span class="op">$</span><span class="va">headcount</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Set initial parameters</span></span></span>
+<span class="r-in"><span><span class="va">L</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fl">0.00208</span>, <span class="fl">0.01013</span>, <span class="fl">0.03122</span>, <span class="fl">0.07083</span>, <span class="fl">0.12808</span>, <span class="fl">0.23498</span>, <span class="fl">0.34887</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">0.51994</span>, <span class="fl">0.6427</span>, <span class="fl">0.79201</span>, <span class="fl">0.86966</span>, <span class="fl">0.91277</span>, <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">P</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fl">0.0092</span>, <span class="fl">0.0339</span>, <span class="fl">0.085</span>, <span class="fl">0.164</span>, <span class="fl">0.2609</span>, <span class="fl">0.4133</span>, <span class="fl">0.5497</span>, <span class="fl">0.7196</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">0.8196</span>, <span class="fl">0.9174</span>, <span class="fl">0.957</span>, <span class="fl">0.9751</span>, <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fl">109.9</span> <span class="co"># mean</span></span></span>
+<span class="r-in"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">89</span> <span class="co"># poverty line</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  welfare <span class="op">=</span> <span class="va">L</span>,</span></span>
+<span class="r-in"><span>  population <span class="op">=</span> <span class="va">P</span>,</span></span>
+<span class="r-in"><span>  requested_mean <span class="op">=</span> <span class="va">mu</span>,</span></span>
+<span class="r-in"><span>  povline <span class="op">=</span> <span class="va">z</span>,</span></span>
+<span class="r-in"><span>  default_ppp <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span><span class="op">$</span><span class="va">headcount</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4506148</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span></span>
-<span class="r-in">  welfare <span class="op">=</span> <span class="va">L</span>,</span>
-<span class="r-in">  population <span class="op">=</span> <span class="va">P</span>,</span>
-<span class="r-in">  requested_mean <span class="op">=</span> <span class="va">mu</span>,</span>
-<span class="r-in">  popshare <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">headcount</span>,</span>
-<span class="r-in">  default_ppp <span class="op">=</span> <span class="fl">1</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">res2</span><span class="op">$</span><span class="va">povline</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">res2</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_compute_pip_stats_lq</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  welfare <span class="op">=</span> <span class="va">L</span>,</span></span>
+<span class="r-in"><span>  population <span class="op">=</span> <span class="va">P</span>,</span></span>
+<span class="r-in"><span>  requested_mean <span class="op">=</span> <span class="va">mu</span>,</span></span>
+<span class="r-in"><span>  popshare <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">headcount</span>,</span></span>
+<span class="r-in"><span>  default_ppp <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res2</span><span class="op">$</span><span class="va">povline</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 </code></pre></div>
     </div>
@@ -168,7 +185,7 @@ Optional.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

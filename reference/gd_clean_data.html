@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -81,25 +81,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gd_clean_data</span><span class="op">(</span><span class="va">dt</span>, <span class="va">welfare</span>, <span class="va">population</span>, <span class="va">gd_type</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gd_clean_data</span><span class="op">(</span><span class="va">dt</span>, <span class="va">welfare</span>, <span class="va">population</span>, <span class="va">gd_type</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dt</dt>
 <dd><p>data.frame: A table with survey data.</p></dd>
+
+
 <dt>welfare</dt>
 <dd><p>character: Name of welfare column.</p></dd>
+
+
 <dt>population</dt>
 <dd><p>character: Name of population column.</p></dd>
+
+
 <dt>gd_type</dt>
 <dd><p>numeric: Type of data. See details.</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>logical: If TRUE output messages are suppressed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>data.table</p>
+    
+
+<p>data.table</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -114,13 +125,13 @@ Percentage of the population in a given interval of incomes, whereas
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Load example data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"gd_GHI_2009_income"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Standardize dataset</span></span>
-<span class="r-in"><span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_clean_data</span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">gd_GHI_2009_income</span>, welfare <span class="op">=</span> <span class="st">"welfare"</span>,</span>
-<span class="r-in">  population <span class="op">=</span> <span class="st">"weight"</span>, gd_type <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Load example data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"gd_GHI_2009_income"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Standardize dataset</span></span></span>
+<span class="r-in"><span><span class="fu">wbpip</span><span class="fu">:::</span><span class="fu">gd_clean_data</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">gd_GHI_2009_income</span>, welfare <span class="op">=</span> <span class="st">"welfare"</span>,</span></span>
+<span class="r-in"><span>  population <span class="op">=</span> <span class="st">"weight"</span>, gd_type <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> columns <span style="color: #0000BB;">"welfare"</span> and <span style="color: #0000BB;">"weight"</span> have been rescaled to range (0,1]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     country_code survey_year weight    welfare area</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1:          JKL        2009    0.1 0.02292242     </span>
@@ -133,7 +144,7 @@ Percentage of the population in a given interval of incomes, whereas
 <span class="r-out co"><span class="r-pr">#&gt;</span>  8:          JKL        2009    0.8 0.50710468     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  9:          JKL        2009    0.9 0.66958790     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10:          JKL        2009    1.0 1.00000000     </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -148,7 +159,7 @@ Percentage of the population in a given interval of incomes, whereas
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

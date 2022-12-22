@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -107,7 +107,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pip-technical-team.github.io/wbpip">wbpip</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="load-and-prep-data">Load and prep data<a class="anchor" aria-label="anchor" href="#load-and-prep-data"></a>
 </h2>
@@ -115,54 +115,54 @@
 <h3 id="user-supplied-data">User supplied data<a class="anchor" aria-label="anchor" href="#user-supplied-data"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">welfare_mean</span>    <span class="op">&lt;-</span> <span class="fl">51.56</span>
-<span class="va">ppp</span>             <span class="op">&lt;-</span> <span class="fl">58.16</span>
-<span class="va">daily_povline</span>   <span class="op">&lt;-</span> <span class="fl">1.9</span>
-<span class="va">monthly_povline</span> <span class="op">&lt;-</span> <span class="va">daily_povline</span> <span class="op">*</span> <span class="fl">365</span> <span class="op">/</span> <span class="fl">12</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">welfare_mean</span>    <span class="op">&lt;-</span> <span class="fl">51.56</span></span>
+<span><span class="va">ppp</span>             <span class="op">&lt;-</span> <span class="fl">58.16</span></span>
+<span><span class="va">daily_povline</span>   <span class="op">&lt;-</span> <span class="fl">1.9</span></span>
+<span><span class="va">monthly_povline</span> <span class="op">&lt;-</span> <span class="va">daily_povline</span> <span class="op">*</span> <span class="fl">365</span> <span class="op">/</span> <span class="fl">12</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="microdata">Microdata<a class="anchor" aria-label="anchor" href="#microdata"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span>
-
-<span class="co"># Basic cleaning operation (remove missings, negative values, etc.)</span>
-<span class="va">micro</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="../reference/md_clean_data.html">md_clean_data</a></span><span class="op">(</span><span class="va">md_ABC_2000_income</span>, 
-                              welfare <span class="op">=</span> <span class="st">"welfare"</span>, 
-                              weight  <span class="op">=</span> <span class="st">"weight"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Data has been sorted by variable <span style="color: #0000BB;">"welfare"</span></span>
-<span class="va">micro</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">data</span>
-<span class="co"># Turn welfare vector to monthly values</span>
-<span class="co"># All computations assume monthly welfare values</span>
-<span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">/</span> <span class="fl">12</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Basic cleaning operation (remove missings, negative values, etc.)</span></span>
+<span><span class="va">micro</span> <span class="op">&lt;-</span> <span class="fu">wbpip</span><span class="fu">:::</span><span class="fu"><a href="../reference/md_clean_data.html">md_clean_data</a></span><span class="op">(</span><span class="va">md_ABC_2000_income</span>, </span>
+<span>                              welfare <span class="op">=</span> <span class="st">"welfare"</span>, </span>
+<span>                              weight  <span class="op">=</span> <span class="st">"weight"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Data has been sorted by variable <span style="color: #0000BB;">"welfare"</span></span></span>
+<span><span class="va">micro</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="co"># Turn welfare vector to monthly values</span></span>
+<span><span class="co"># All computations assume monthly welfare values</span></span>
+<span><span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">&lt;-</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span> <span class="op">/</span> <span class="fl">12</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="grouped-data">Grouped data<a class="anchor" aria-label="anchor" href="#grouped-data"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create grouped data (Type 1)</span>
-<span class="co"># http://iresearch.worldbank.org/povcalnet/PovCalculator.aspx</span>
-<span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0005</span>,
-                <span class="fl">0.0032</span>,
-                <span class="fl">0.014799999999999999</span>,
-                <span class="fl">0.0443</span>,
-                <span class="fl">0.0991</span>,
-                <span class="fl">0.257</span>,
-                <span class="fl">0.4385</span>,
-                <span class="fl">0.5938</span>,
-                <span class="fl">0.7089</span>,
-                <span class="fl">1</span><span class="op">)</span>
-
-<span class="va">welfare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.824760527229386e-05</span>,
-             <span class="fl">0.000604029410841011</span>,
-             <span class="fl">0.0037949334793616948</span>,
-             <span class="fl">0.013988878652244477</span>,
-             <span class="fl">0.036992164583098786</span>,
-             <span class="fl">0.12140708906131342</span>,
-             <span class="fl">0.24531391873082081</span>,
-             <span class="fl">0.37446670169288321</span>,
-             <span class="fl">0.48753116241194566</span>,
-             <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create grouped data (Type 1)</span></span>
+<span><span class="co"># http://iresearch.worldbank.org/povcalnet/PovCalculator.aspx</span></span>
+<span><span class="va">population</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0005</span>,</span>
+<span>                <span class="fl">0.0032</span>,</span>
+<span>                <span class="fl">0.014799999999999999</span>,</span>
+<span>                <span class="fl">0.0443</span>,</span>
+<span>                <span class="fl">0.0991</span>,</span>
+<span>                <span class="fl">0.257</span>,</span>
+<span>                <span class="fl">0.4385</span>,</span>
+<span>                <span class="fl">0.5938</span>,</span>
+<span>                <span class="fl">0.7089</span>,</span>
+<span>                <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">welfare</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.824760527229386e-05</span>,</span>
+<span>             <span class="fl">0.000604029410841011</span>,</span>
+<span>             <span class="fl">0.0037949334793616948</span>,</span>
+<span>             <span class="fl">0.013988878652244477</span>,</span>
+<span>             <span class="fl">0.036992164583098786</span>,</span>
+<span>             <span class="fl">0.12140708906131342</span>,</span>
+<span>             <span class="fl">0.24531391873082081</span>,</span>
+<span>             <span class="fl">0.37446670169288321</span>,</span>
+<span>             <span class="fl">0.48753116241194566</span>,</span>
+<span>             <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -172,99 +172,99 @@
 <h3 id="on-microdata">On microdata<a class="anchor" aria-label="anchor" href="#on-microdata"></a>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span>,
-                         povline           <span class="op">=</span> <span class="va">monthly_povline</span>,
-                         population        <span class="op">=</span> <span class="va">micro</span><span class="op">$</span><span class="va">weight</span>,
-                         requested_mean    <span class="op">=</span> <span class="va">welfare_mean</span>,
-                         popshare          <span class="op">=</span> <span class="cn">NULL</span>,
-                         default_ppp       <span class="op">=</span> <span class="va">ppp</span>,
-                         ppp               <span class="op">=</span> <span class="cn">NULL</span>,
-                         distribution_type <span class="op">=</span> <span class="st">"micro"</span><span class="op">)</span>
-
-<span class="va">out</span>
-<span class="co">#&gt; $poverty_line</span>
-<span class="co">#&gt; [1] 57.79167</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $mean</span>
-<span class="co">#&gt; [1] 51.56</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $median</span>
-<span class="co">#&gt; [1] 30.4554</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $headcount</span>
-<span class="co">#&gt; [1] 0.7500095</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $poverty_gap</span>
-<span class="co">#&gt; [1] 0.4167835</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $poverty_severity</span>
-<span class="co">#&gt; [1] 0.2715343</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $watts</span>
-<span class="co">#&gt; [1] 0.7365017</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $gini</span>
-<span class="co">#&gt; [1] 0.5147999</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $mld</span>
-<span class="co">#&gt; [1] 0.473487</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $polarization</span>
-<span class="co">#&gt; [1] 0.469777</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $deciles</span>
-<span class="co">#&gt;  [1] 0.01343078 0.02616405 0.03535142 0.04437412 0.05416520 0.06553887</span>
-<span class="co">#&gt;  [7] 0.08320632 0.10988798 0.15703608 0.41084518</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">micro</span><span class="op">$</span><span class="va">welfare</span>,</span>
+<span>                         povline           <span class="op">=</span> <span class="va">monthly_povline</span>,</span>
+<span>                         population        <span class="op">=</span> <span class="va">micro</span><span class="op">$</span><span class="va">weight</span>,</span>
+<span>                         requested_mean    <span class="op">=</span> <span class="va">welfare_mean</span>,</span>
+<span>                         popshare          <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                         default_ppp       <span class="op">=</span> <span class="va">ppp</span>,</span>
+<span>                         ppp               <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                         distribution_type <span class="op">=</span> <span class="st">"micro"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">out</span></span>
+<span><span class="co">#&gt; $poverty_line</span></span>
+<span><span class="co">#&gt; [1] 57.79167</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $mean</span></span>
+<span><span class="co">#&gt; [1] 51.56</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $median</span></span>
+<span><span class="co">#&gt; [1] 30.4554</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $headcount</span></span>
+<span><span class="co">#&gt; [1] 0.7500095</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $poverty_gap</span></span>
+<span><span class="co">#&gt; [1] 0.4167835</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $poverty_severity</span></span>
+<span><span class="co">#&gt; [1] 0.2715343</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $watts</span></span>
+<span><span class="co">#&gt; [1] 0.7365017</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $gini</span></span>
+<span><span class="co">#&gt; [1] 0.5147999</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $mld</span></span>
+<span><span class="co">#&gt; [1] 0.473487</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $polarization</span></span>
+<span><span class="co">#&gt; [1] 0.469777</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $deciles</span></span>
+<span><span class="co">#&gt;  [1] 0.01343078 0.02616405 0.03535142 0.04437412 0.05416520 0.06553887</span></span>
+<span><span class="co">#&gt;  [7] 0.08320632 0.10988798 0.15703608 0.41084518</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="on-grouped-data">On grouped data<a class="anchor" aria-label="anchor" href="#on-grouped-data"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">welfare</span>,
-                         povline           <span class="op">=</span> <span class="va">monthly_povline</span>,
-                         population        <span class="op">=</span> <span class="va">population</span>,
-                         requested_mean    <span class="op">=</span> <span class="va">welfare_mean</span>,
-                         popshare          <span class="op">=</span> <span class="cn">NULL</span>,
-                         default_ppp       <span class="op">=</span> <span class="va">ppp</span>,
-                         ppp               <span class="op">=</span> <span class="cn">NULL</span>,
-                         distribution_type <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span>
-
-<span class="va">out</span>
-<span class="co">#&gt; $poverty_line</span>
-<span class="co">#&gt; [1] 57.79167</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $mean</span>
-<span class="co">#&gt; [1] 51.56</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $median</span>
-<span class="co">#&gt; [1] 42.24282</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $headcount</span>
-<span class="co">#&gt; [1] 0.7184622</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $poverty_gap</span>
-<span class="co">#&gt; [1] 0.2714275</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $poverty_severity</span>
-<span class="co">#&gt; [1] 0.1293701</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $watts</span>
-<span class="co">#&gt; [1] 0.3788881</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $gini</span>
-<span class="co">#&gt; [1] 0.3212646</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $mld</span>
-<span class="co">#&gt; [1] 0.1897891</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $polarization</span>
-<span class="co">#&gt; [1] 0.2206622</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $deciles</span>
-<span class="co">#&gt;  [1] 0.03745935 0.05010249 0.06009842 0.06896129 0.07754930 0.08659087</span>
-<span class="co">#&gt;  [7] 0.09703444 0.11071236 0.13305853 0.27843295</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pip_stats.html">compute_pip_stats</a></span><span class="op">(</span>welfare           <span class="op">=</span> <span class="va">welfare</span>,</span>
+<span>                         povline           <span class="op">=</span> <span class="va">monthly_povline</span>,</span>
+<span>                         population        <span class="op">=</span> <span class="va">population</span>,</span>
+<span>                         requested_mean    <span class="op">=</span> <span class="va">welfare_mean</span>,</span>
+<span>                         popshare          <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                         default_ppp       <span class="op">=</span> <span class="va">ppp</span>,</span>
+<span>                         ppp               <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                         distribution_type <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">out</span></span>
+<span><span class="co">#&gt; $poverty_line</span></span>
+<span><span class="co">#&gt; [1] 57.79167</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $mean</span></span>
+<span><span class="co">#&gt; [1] 51.56</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $median</span></span>
+<span><span class="co">#&gt; [1] 42.24282</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $headcount</span></span>
+<span><span class="co">#&gt; [1] 0.7184622</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $poverty_gap</span></span>
+<span><span class="co">#&gt; [1] 0.2714275</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $poverty_severity</span></span>
+<span><span class="co">#&gt; [1] 0.1293701</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $watts</span></span>
+<span><span class="co">#&gt; [1] 0.3788881</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $gini</span></span>
+<span><span class="co">#&gt; [1] 0.3212646</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $mld</span></span>
+<span><span class="co">#&gt; [1] 0.1897891</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $polarization</span></span>
+<span><span class="co">#&gt; [1] 0.2206622</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $deciles</span></span>
+<span><span class="co">#&gt;  [1] 0.03745935 0.05010249 0.06009842 0.06896129 0.07754930 0.08659087</span></span>
+<span><span class="co">#&gt;  [7] 0.09703444 0.11071236 0.13305853 0.27843295</span></span></code></pre></div>
 </div>
 </div>
   </div>
@@ -286,7 +286,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -81,41 +81,52 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_lorenz</span><span class="op">(</span>
-  <span class="va">.data</span>,
-  <span class="va">welfare</span>,
-  <span class="va">weight</span>,
-  distribution_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"micro"</span>, <span class="st">"group"</span>, <span class="st">"aggregate"</span>, <span class="st">"imputed"</span><span class="op">)</span>,
-  nbins <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_lorenz</span><span class="op">(</span></span>
+<span>  <span class="va">.data</span>,</span>
+<span>  <span class="va">welfare</span>,</span>
+<span>  <span class="va">weight</span>,</span>
+<span>  distribution_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"micro"</span>, <span class="st">"group"</span>, <span class="st">"aggregate"</span>, <span class="st">"imputed"</span><span class="op">)</span>,</span>
+<span>  nbins <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.data</dt>
 <dd><p>Household survey data frame with at least a welfare variable.</p></dd>
+
+
 <dt>welfare</dt>
 <dd><p>numeric: A vector of income or consumption values.</p></dd>
+
+
 <dt>weight</dt>
 <dd><p>numeric: A vector of weights.</p></dd>
+
+
 <dt>distribution_type</dt>
 <dd><p>character: Type of distribution, either micro,
 group, aggregate or imputed.</p></dd>
+
+
 <dt>nbins</dt>
 <dd><p>numeric: number of points on the Lorenz curve.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>data.frame</p>
+    
+
+<p>data.frame</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">md_ABC_2000_income</span></span>
-<span class="r-in"><span class="va">lorenz</span> <span class="op">&lt;-</span> <span class="fu">get_lorenz</span><span class="op">(</span><span class="va">df</span>, <span class="va">welfare</span>, <span class="va">weight</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"md_ABC_2000_income"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">md_ABC_2000_income</span></span></span>
+<span class="r-in"><span><span class="va">lorenz</span> <span class="op">&lt;-</span> <span class="fu">get_lorenz</span><span class="op">(</span><span class="va">df</span>, <span class="va">welfare</span>, <span class="va">weight</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Data has been sorted by variable <span style="color: #0000BB;">"welfare"</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">lorenz</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">lorenz</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	100 obs. of  3 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ welfare       : num  242223 302878 383965 415974 459221 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ lorenz_welfare: num  0.000445 0.001368 0.00228 0.003468 0.004808 ...</span>
@@ -134,7 +145,7 @@ group, aggregate or imputed.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
