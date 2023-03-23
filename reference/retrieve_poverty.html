@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wbpip</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
       </span>
     </div>
 
@@ -81,7 +81,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">retrieve_poverty</span><span class="op">(</span><span class="va">lq</span>, <span class="va">lb</span>, <span class="va">is_normal</span>, <span class="va">use_lq_for_pov</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">retrieve_poverty</span><span class="op">(</span></span>
+<span>  <span class="va">lq</span>,</span>
+<span>  <span class="va">lb</span>,</span>
+<span>  <span class="va">is_normal</span>,</span>
+<span>  <span class="va">use_lq_for_pov</span>,</span>
+<span>  max_headcount <span class="op">=</span> <span class="fl">0.9999999</span>,</span>
+<span>  max_poverty_gap <span class="op">=</span> <span class="fl">0.9999998</span>,</span>
+<span>  max_poverty_severity <span class="op">=</span> <span class="fl">0.9999997</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
