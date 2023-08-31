@@ -12,6 +12,8 @@
 #' @param n_quantile numeric: Number of quantiles for which share of total
 #'   income is desired. It can't be larger that the total number of percentiles
 #'   in the Lorenz curve provided by the user. Default is 10.
+#' @param ppp_year numeric PPP year - 2017 (default) or 2011
+#'
 #' @examples
 #' wbpip:::md_compute_dist_stats(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
@@ -20,7 +22,10 @@ md_compute_dist_stats <- function(welfare, weight,
                                   mean = NULL,
                                   nbins = NULL,
                                   lorenz = NULL,
-                                  n_quantile = 10) {
+                                  n_quantile = 10,
+                                  ppp_year = c(2017, 2011)) {
+  ppp_year <- match.arg(ppp_year)
+
   if (is.null(mean)) {
     mean <- collapse::fmean(x = welfare, w = weight)
   }
@@ -54,12 +59,20 @@ md_compute_dist_stats <- function(welfare, weight,
     median = median
   )
 
+  spl  <- md_compute_spl(
+    welfare = welfare,
+    weight = weight,
+    weighted_median_welfare = median,
+    ppp_year = ppp_year
+  )
+
   return(list(
     mean = mean,
     median = median,
     gini = gini,
     polarization = polarization,
     mld = mld,
-    quantiles = quantiles[["quantiles"]]
+    quantiles = quantiles[["quantiles"]],
+    spl = spl
   ))
 }
