@@ -44,7 +44,10 @@ gd_compute_pip_stats_lq <- function(welfare,
                                     popshare = NULL,
                                     default_ppp,
                                     ppp = NULL,
+                                    ppp_year = c(2017, 2011),
                                     p0 = 0.5) {
+  # Input checks
+  ppp_year <- match.arg(ppp_year)
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
@@ -81,8 +84,16 @@ gd_compute_pip_stats_lq <- function(welfare,
   results1 <- list(requested_mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
-  # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
+  # STEP 3: Estimate poverty and distribution measures based on identified parameters
+  results2 <- gd_estimate_lq(
+    mean = requested_mean,
+    povline = povline,
+    p0 = p0,
+    A = A,
+    B = B,
+    C = C,
+    ppp_year = ppp_year
+  )
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -377,6 +388,72 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
   return(vec)
 }
 
+#' Compute societal poverty line for group data from Lorenz quadratic fit
+#'
+#' @inherit gd_compute_quantile_lq
+#' @param median numeric median welfare
+#' @param ppp_year numeric PPP year
+#'
+#' @return
+#' @export
+#'
+#' @examples
+gd_compute_spl_lq <- function(
+    A = NULL,
+    B = NULL,
+    C = NULL,
+    median = NULL,
+    ppp_year = c(2017, 2011)
+){
+
+  # Input Checks
+  ppp_year <- match.arg(ppp_year)
+  stopifnot(                                         # stop if not
+    any(                                             #   either...
+      c(
+        all(!is.null(A), !is.null(B), !is.null(C)),  #   cannot estimate lq
+        !is.null(median)                             #   median not supplied
+      )
+    )
+  )
+
+  # if no median supplied, use 5th decile
+  if(is.null(median)){
+    median <- gd_compute_quantile_lq(
+      A = A,
+      B = B,
+      C = C,
+      n_quantile = 10
+    )[5]
+  }
+
+  threshold_rate <-  0.5
+
+  if (ppp_year == 2011) {
+    constant  <- 1
+    min_level <- 1.9
+  } else if (ppp_year == 2017) {
+    constant  <- 1.15
+    min_level <- 2.15
+  }
+
+  # Calculate SPL according to threshold rate
+  spl <- constant + threshold_rate*median
+
+  # Set minimum level if needed
+  spl[spl < min_level] <- min_level
+
+  return(spl)
+
+
+
+
+}
+
+
+
+
+
 #'  Computes Watts Index from Quadratic Lorenz fit
 #'
 #' `gd_compute_watts_lq()` computes Watts Index from Quadratic Lorenz fit
@@ -465,7 +542,12 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c(2017, 2011)) {
+
+  # Input arguments
+  ppp_year <- match.arg(ppp_year)
+
+  # get distribution stats
   gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
   median <- mean * derive_lq(0.5, A, B, C)
   rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
@@ -474,6 +556,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
   ris <- value_at_lq(0.5, A, B, C)
   mld <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
+  spl <- gd_compute_spl_lq(median = median, ppp_year = ppp_year)
 
   return(list(
     gini         = gini,
@@ -483,7 +566,8 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
     polarization = pol,
     ris          = ris,
     mld          = mld,
-    deciles      = deciles
+    deciles      = deciles,
+    spl          = spl
   ))
 }
 
@@ -588,7 +672,10 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @inheritParams gd_compute_fit_lq
 #' @return list
 #' @keywords internal
-gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
+gd_estimate_lq <- function(mean, povline, p0, A, B, C, ppp_year = c(2017, 2011)) {
+
+  # Input check
+  ppp_year <- match.arg(ppp_year)
 
   # Compute key numbers from Lorenz quadratic form
   # Theorem 3 from original Lorenz quadratic paper
@@ -608,36 +695,60 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lq(
+    mean     = mean,
+    p0       = p0,
+    A        = A,
+    B        = B,
+    C        = C,
+    e        = e,
+    m        = m,
+    n        = n,
+    r        = r,
+    ppp_year = ppp_year
+  )
 
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lq(
+    mean    = mean,
+    povline = povline,
+    A       = A,
+    B       = B,
+    C       = C,
+    e       = e,
+    m       = m,
+    n       = n,
+    r       = r,
+    s1      = s1,
+    s2      = s2
+  )
 
   out <- list(
-    gini = dist_stats$gini,
-    median = dist_stats$median,
-    rmhalf = dist_stats$rmhalf,
-    polarization = dist_stats$polarization,
-    ris = dist_stats$ris,
-    mld = dist_stats$mld,
-    dcm = dist_stats$dcm,
-    deciles = dist_stats$deciles,
-    headcount = pov_stats$headcount,
-    poverty_gap = pov_stats$pg,
+    gini             = dist_stats$gini,
+    median           = dist_stats$median,
+    rmhalf           = dist_stats$rmhalf,
+    polarization     = dist_stats$polarization,
+    ris              = dist_stats$ris,
+    mld              = dist_stats$mld,
+    dcm              = dist_stats$dcm,
+    deciles          = dist_stats$deciles,
+    spl              = dist_stats$spl,
+    headcount        = pov_stats$headcount,
+    poverty_gap      = pov_stats$pg,
     poverty_severity = pov_stats$p2,
-    eh = pov_stats$eh,
-    epg = pov_stats$epg,
-    ep = pov_stats$ep,
-    gh = pov_stats$gh,
-    gpg = pov_stats$gpg,
-    gp = pov_stats$gp,
-    watts = pov_stats$watts,
-    dl = pov_stats$dl,
-    ddl = pov_stats$ddl,
-    is_normal = validity$is_normal,
-    is_valid = validity$is_valid
+    eh               = pov_stats$eh,
+    epg              = pov_stats$epg,
+    ep               = pov_stats$ep,
+    gh               = pov_stats$gh,
+    gpg              = pov_stats$gpg,
+    gp               = pov_stats$gp,
+    watts            = pov_stats$watts,
+    dl               = pov_stats$dl,
+    ddl              = pov_stats$ddl,
+    is_normal        = validity$is_normal,
+    is_valid         = validity$is_valid
   )
 
   return(out)

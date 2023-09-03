@@ -11,12 +11,16 @@ md_compute_pip_stats <- function(welfare,
                                  requested_mean = NULL,
                                  popshare = NULL,
                                  default_ppp = 1,
-                                 ppp = NULL) {
+                                 ppp = NULL,
+                                 ppp_year = c(2017, 2011)) {
+
+  ppp_year <- match.arg(ppp_year)
 
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(
     welfare = welfare,
-    weight = population
+    weight = population,
+    ppp_year = ppp_year
   )
 
   # Take care of potentially undefined values
@@ -59,6 +63,7 @@ md_compute_pip_stats <- function(welfare,
     gini             = dist_stats[["gini"]],
     mld              = dist_stats[["mld"]],
     polarization     = dist_stats[["polarization"]],
-    deciles          = dist_stats[["quantiles"]]
+    deciles          = dist_stats[["quantiles"]],
+    spl              = dist_stats[["spl"]]
   ))
 }

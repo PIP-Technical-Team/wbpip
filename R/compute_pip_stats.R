@@ -12,6 +12,7 @@
 #' @param default_ppp numeric: Default purchasing power parity
 #' @param ppp numeric: PPP requested by user
 #' @param p0 numeric: TO be documented
+#' @param ppp_year numeric PPP year - 2017 (default) or 2011
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
 #'
@@ -25,13 +26,16 @@ compute_pip_stats <- function(welfare,
                               default_ppp = 1,
                               ppp = NULL,
                               p0 = 0.5,
+                              ppp_year = c(2017, 2011),
                               distribution_type = c(
                                 "micro",
                                 "group",
                                 "aggregate",
                                 "imputed"
                               )) {
+  # Input checks
   distribution_type <- match.arg(distribution_type)
+  ppp_year <- match.arg(ppp_year)
 
   if (distribution_type == "micro") {
     out <- md_compute_pip_stats(
@@ -40,6 +44,7 @@ compute_pip_stats <- function(welfare,
       population = population,
       requested_mean = requested_mean,
       popshare = popshare,
+      ppp_year = ppp_year,
       default_ppp = default_ppp,
       ppp = ppp
     )
@@ -52,6 +57,7 @@ compute_pip_stats <- function(welfare,
       population = population,
       requested_mean = requested_mean,
       popshare = popshare,
+      ppp_year = ppp_year,
       default_ppp = default_ppp,
       ppp = ppp,
       p0 = p0

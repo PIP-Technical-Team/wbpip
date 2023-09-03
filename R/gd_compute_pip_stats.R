@@ -13,6 +13,7 @@
 #' @param default_ppp numeric: Default purchasing power parity.
 #' @param ppp numeric: PPP request by user.
 #' @param p0 numeric: **TO BE DOCUMENTED**.
+#' @param ppp_year numeric PPP year - 2017 (default) or 2011
 #'
 #' @return list
 #' @keywords internal
@@ -32,8 +33,11 @@ gd_compute_pip_stats <- function(welfare,
                                  popshare = NULL,
                                  default_ppp = 1,
                                  ppp = NULL,
-                                 p0 = 0.5) {
+                                 p0 = 0.5,
+                                 ppp_year = c(2017, 2011)) {
 
+  # Input checks
+  ppp_year <- match.arg(ppp_year)
 
   # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(
@@ -44,7 +48,8 @@ gd_compute_pip_stats <- function(welfare,
     popshare = popshare,
     default_ppp = default_ppp,
     ppp = ppp,
-    p0 = p0
+    p0 = p0,
+    ppp_year = ppp_year
   )
 
   # Apply Lorenz beta fit ----------------------------------------------
@@ -56,7 +61,8 @@ gd_compute_pip_stats <- function(welfare,
     popshare = popshare,
     default_ppp = default_ppp,
     ppp = ppp,
-    p0 = p0
+    p0 = p0,
+    ppp_year = ppp_year
   )
 
 
@@ -78,7 +84,8 @@ gd_compute_pip_stats <- function(welfare,
     "gini",
     "mld",
     "polarization",
-    "deciles"
+    "deciles",
+    "spl"
   )]
 
 
