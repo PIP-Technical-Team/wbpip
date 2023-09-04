@@ -122,7 +122,7 @@ gd_compute_pip_stats_lq <- function(welfare,
 #' curves](https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338)".
 #' *Journal of Econometrics 40* (2): 327-338.
 #'
-#' @return data.frame
+#' @return list: a) a numeric vector 'y', b) data frame with three columns x1, x2, x3
 #' @keywords internal
 create_functional_form_lq <- function(welfare,
                                       population) {
