@@ -24,6 +24,7 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   weight_pov <- weight[pov_status]
   weight_total <- sum(weight)
 
+  #--------- FGT Measures ---------
   fgt0 <- sum(weight_pov) / weight_total
   fgt1 <- sum(relative_distance * weight_pov) / weight_total
   fgt2 <- sum(relative_distance^2 * weight_pov) / weight_total
@@ -45,6 +46,10 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
     watts <- 0
   }
 
+  #--------- Prosperity Gap ---------
+  pg <- md_compute_prosperity_gap()
+
+  #--------- Return ---------
   return(list(
     headcount        = fgt0,
     poverty_gap      = fgt1,
