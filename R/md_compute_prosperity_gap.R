@@ -8,14 +8,18 @@
 #'
 #' @examples
 md_compute_prosperity_gap <- function(
-    welfare, weight, povline_lcu
+    welfare, weight, povline_lcu, cons_floor = c(0.5)
 ){
+
+  # Bottom censor using consumption floor
+  if(!is.null(cons_floor)){
+
+    welfare[welfare < cons_floor] <- cons_floor
+
+  }
 
   # Find for each individual
   pg_ind <- povline_lcu/welfare
-
-  # Censor
-  pg_ind[pg_ind < 1] <- 1
 
   # weighted average
   pg <- weighted.mean(x = pg_ind, w = weight)
@@ -25,3 +29,5 @@ md_compute_prosperity_gap <- function(
 
 
 }
+
+
