@@ -385,6 +385,57 @@ gd_compute_spl_lb <- function(
 
 }
 
+#' Prosperity Gap with Lorenz Beta
+#'
+#' Use the beta parameterization of the Lorenz curve to calculate the prosperity gap on group data
+#'
+#' @inheritParams gd_compute_pip_stats
+#' @inheritParams gd_compute_dist_stats_lb
+#' @inheritParams sd_create_synth_vector
+#' @inheritParams md_compute_prosperity_gap
+#'
+#' @return
+#' @export
+#'
+#' @examples
+gd_compute_prosperity_gap_lb <- function(
+    welfare,
+    population,
+    mean,
+    pop            = NULL,
+    p0             = 0.5,
+    nobs           = 1e5,
+    cons_floor     = c(0.5),
+    verbose        = FALSE
+){
+
+  # Create synthetic micro data ----
+  welfare_data <- sd_create_synth_vector(
+    welfare        = welfare,
+    population     = population,
+    mean           = mean,
+    pop            = pop,
+    p0             = p0,
+    nobs           = nobs,
+    selected_model = "b",
+    cons_floor     = cons_floor,
+    verbose        = verbose
+  )
+
+  # Treat synthetic data as microdata ----
+  pg <- md_compute_prosperity_gap(
+    welfare     = welfare_data$welfare,
+    weight      = welfare_data$weight,
+    povline_lcu = povline_lcu,
+    cons_floor  = cons_floor
+  )
+
+  # Return ----
+  return(pg)
+
+
+}
+
 
 #'  Computes Watts Index from beta Lorenz fit
 #'

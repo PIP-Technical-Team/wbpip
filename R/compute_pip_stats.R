@@ -12,7 +12,8 @@
 #' @param default_ppp numeric: Default purchasing power parity
 #' @param ppp numeric: PPP requested by user
 #' @param p0 numeric: TO be documented
-#' @param ppp_year numeric PPP year - 2017 (default) or 2011
+#' @param ppp_year numeric: PPP year - 2017 (default) or 2011
+#' @param cons_floor numeric: gives the consumption floor. Default is $0.5 per day, if NULL then no floor.
 #' @param distribution_type character: Type of distribution, either micro,
 #'   group, aggregate or imputed.
 #'
@@ -27,6 +28,7 @@ compute_pip_stats <- function(welfare,
                               ppp = NULL,
                               p0 = 0.5,
                               ppp_year = c(2017, 2011),
+                              cons_floor = c(0.5),
                               distribution_type = c(
                                 "micro",
                                 "group",
@@ -35,32 +37,34 @@ compute_pip_stats <- function(welfare,
                               )) {
   # Input checks
   distribution_type <- match.arg(distribution_type)
-  ppp_year <- match.arg(ppp_year)
+  ppp_year          <- match.arg(ppp_year)
+  censor_type       <- match.arg(censor_type)
 
   if (distribution_type == "micro") {
     out <- md_compute_pip_stats(
-      welfare = welfare,
-      povline = povline,
-      population = population,
+      welfare        = welfare,
+      povline        = povline,
+      population     = population,
       requested_mean = requested_mean,
-      popshare = popshare,
-      ppp_year = ppp_year,
-      default_ppp = default_ppp,
-      ppp = ppp
+      popshare       = popshare,
+      ppp_year       = ppp_year,
+      default_ppp    = default_ppp,
+      ppp            = ppp,
+      cons_floor     = cons_floor
     )
 
     return(out)
   } else if (distribution_type %in% c("group", "aggregate")) {
     out <- gd_compute_pip_stats(
-      welfare = welfare,
-      povline = povline,
-      population = population,
-      requested_mean = requested_mean,
-      popshare = popshare,
-      ppp_year = ppp_year,
-      default_ppp = default_ppp,
-      ppp = ppp,
-      p0 = p0
+      welfare         = welfare,
+      povline         = povline,
+      population      = population,
+      requested_mean  = requested_mean,
+      popshare        = popshare,
+      ppp_year        = ppp_year,
+      default_ppp     = default_ppp,
+      ppp             = ppp,
+      p0              = p0
     )
 
     return(out)

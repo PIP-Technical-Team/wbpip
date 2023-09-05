@@ -390,7 +390,7 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 
 #' Compute societal poverty line for group data from Lorenz quadratic fit
 #'
-#' @inherit gd_compute_quantile_lq
+#' @inheritParams gd_compute_quantile_lq
 #' @param median numeric median welfare
 #' @param ppp_year numeric PPP year
 #'
@@ -449,8 +449,6 @@ gd_compute_spl_lq <- function(
 
 
 }
-
-
 
 
 
