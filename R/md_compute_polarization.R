@@ -22,14 +22,19 @@
 #' )
 #' @return numeric
 #' @keywords internal
-md_compute_polarization <- function(welfare, weight, gini,
-                                    mean, median) {
+md_compute_polarization <- function(welfare,
+                                    weight,
+                                    gini,
+                                    mean,
+                                    median,
+                                    cons_floor = 0.5) {
 
   # Calculate poverty stats (for headcount and poverty gap)
   pov_stats <- md_compute_poverty_stats(
-    welfare = welfare,
-    weight = weight,
-    povline_lcu = median
+    welfare     = welfare,
+    weight      = weight,
+    povline_lcu = median,
+    cons_floor  = cons_floor
   )
 
   # Calculate mean for the bottom 50 %

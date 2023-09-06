@@ -18,13 +18,15 @@
 #' wbpip:::md_compute_dist_stats(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
 #' @keywords internal
-md_compute_dist_stats <- function(welfare, weight,
+md_compute_dist_stats <- function(welfare,
+                                  weight,
                                   mean = NULL,
                                   nbins = NULL,
                                   lorenz = NULL,
                                   n_quantile = 10,
-                                  ppp_year = c(2017, 2011)) {
-  ppp_year <- match.arg(ppp_year)
+                                  ppp_year = 2017) {
+  # Input Checks
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   if (is.null(mean)) {
     mean <- collapse::fmean(x = welfare, w = weight)
@@ -54,12 +56,14 @@ md_compute_dist_stats <- function(welfare, weight,
   )
 
   polarization <- md_compute_polarization(
-    welfare = welfare, weight = weight,
-    gini = gini, mean = mean,
+    welfare = welfare,
+    weight = weight,
+    gini = gini,
+    mean = mean,
     median = median
   )
 
-  spl  <- md_compute_spl(
+  spl <- md_compute_spl(
     welfare = welfare,
     weight = weight,
     weighted_median_welfare = median,

@@ -15,10 +15,10 @@ md_compute_spl <- function(
     welfare = NULL,
     weight = NULL,
     weighted_median_welfare = NULL,
-    ppp_year = c(2017, 2011)
+    ppp_year = 2017
 ){
   # Input Checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
   stopifnot(                                       # stop if not
     any(                                           #   either...
       c(
@@ -49,7 +49,7 @@ md_compute_spl <- function(
   }
 
   # Calculate SPL according to threshold rate
-  spl <- constant + threshold_rate*weighted_median_ppp
+  spl <- constant + threshold_rate*weighted_median_welfare
 
   # Set minimum level if needed
   spl[spl < min_level] <- min_level

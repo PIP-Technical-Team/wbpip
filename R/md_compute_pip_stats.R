@@ -12,9 +12,9 @@ md_compute_pip_stats <- function(welfare,
                                  popshare = NULL,
                                  default_ppp = 1,
                                  ppp = NULL,
-                                 ppp_year = c(2017, 2011)) {
+                                 ppp_year = 2017) {
 
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(

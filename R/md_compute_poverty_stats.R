@@ -17,7 +17,7 @@
 #' )
 #' @return list
 #' @keywords internal
-md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
+md_compute_poverty_stats <- function(welfare, weight, povline_lcu, cons_floor = 0.5) {
 
   pov_status <- (welfare < povline_lcu)
   relative_distance <- (1 - (welfare[pov_status] / povline_lcu))
@@ -47,14 +47,20 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
   }
 
   #--------- Prosperity Gap ---------
-  pg <- md_compute_prosperity_gap()
+  pg <- md_compute_prosperity_gap(
+    welfare     = welfare,
+    weight      = weight,
+    povline_lcu = povline_lcu,
+    cons_floor  = cons_floor
+  )
 
   #--------- Return ---------
   return(list(
     headcount        = fgt0,
     poverty_gap      = fgt1,
     poverty_severity = fgt2,
-    watts            = watts # ,
+    watts            = watts,
+    prosperity_gap   = pg
     # watts_old        = watts_old
   ))
 }
