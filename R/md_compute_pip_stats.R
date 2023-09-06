@@ -12,7 +12,8 @@ md_compute_pip_stats <- function(welfare,
                                  popshare = NULL,
                                  default_ppp = 1,
                                  ppp = NULL,
-                                 ppp_year = 2017) {
+                                 ppp_year = 2017,
+                                 cons_floor = 0.5) {
 
   stopifnot(ppp_year %in% c(2017, 2011))
 
@@ -47,9 +48,10 @@ md_compute_pip_stats <- function(welfare,
   )
   # Compute poverty stats
   pov_stats <- md_compute_poverty_stats(
-    welfare = welfare,
+    welfare     = welfare,
     povline_lcu = adjusted_povline[["povline_lcu"]],
-    weight = population
+    weight      = population,
+    cons_floor  = cons_floor
   )
 
   return(list(

@@ -27,7 +27,7 @@ compute_pip_stats <- function(welfare,
                               default_ppp = 1,
                               ppp = NULL,
                               p0 = 0.5,
-                              ppp_year = c(2017, 2011),
+                              ppp_year = 2017,
                               cons_floor = c(0.5),
                               distribution_type = c(
                                 "micro",
@@ -37,7 +37,6 @@ compute_pip_stats <- function(welfare,
                               )) {
   # Input checks
   distribution_type <- match.arg(distribution_type)
-  censor_type       <- match.arg(censor_type)
   stopifnot(ppp_year %in% c(2017, 2011))
 
   if (distribution_type == "micro") {
