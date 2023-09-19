@@ -44,10 +44,10 @@ gd_compute_pip_stats_lq <- function(welfare,
                                     popshare = NULL,
                                     default_ppp,
                                     ppp = NULL,
-                                    ppp_year = c(2017, 2011),
+                                    ppp_year = c(2017),
                                     p0 = 0.5) {
   # Input checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
@@ -403,11 +403,11 @@ gd_compute_spl_lq <- function(
     B = NULL,
     C = NULL,
     median = NULL,
-    ppp_year = c(2017, 2011)
+    ppp_year = c(2017)
 ){
 
   # Input Checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
   stopifnot(                                         # stop if not
     any(                                             #   either...
       c(
@@ -540,10 +540,10 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c(2017, 2011)) {
+gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c(2017)) {
 
   # Input arguments
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # get distribution stats
   gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
@@ -670,10 +670,10 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @inheritParams gd_compute_fit_lq
 #' @return list
 #' @keywords internal
-gd_estimate_lq <- function(mean, povline, p0, A, B, C, ppp_year = c(2017, 2011)) {
+gd_estimate_lq <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
 
   # Input check
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Compute key numbers from Lorenz quadratic form
   # Theorem 3 from original Lorenz quadratic paper
@@ -803,3 +803,4 @@ gd_compute_fit_lq <- function(welfare,
 
   return(out)
 }
+

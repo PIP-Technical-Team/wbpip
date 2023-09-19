@@ -5,7 +5,7 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
   B <- 0.94205090386544987
   C <- 0.52578600019473676
 
-  benchmark <- list(
+  benchmark2011 <- list(
     gini = 0.31236656171451094,
     median = 42.594731176686537,
     rmhalf = 30.014095665785614,
@@ -24,30 +24,67 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
       0.11835493348127901,
       0.14500186589082675,
       0.25597820429173357
-    )
+    ),
+    spl = max(1.9, 1 + 0.5*42.594731176686537)
   )
-  out <- gd_compute_dist_stats_lb(
+
+  benchmark2017 <- list(
+    gini = 0.31236656171451094,
+    median = 42.594731176686537,
+    rmhalf = 30.014095665785614,
+    dcm = 35.458544231930809,
+    polarization = 0.2556375,
+    ris = 0.29102570687473944,
+    mld = 0.16334243665267192,
+    deciles = c(
+      0.0375048593336125,
+      0.0496360493447891,
+      0.058713139008492066,
+      0.067752312054008029,
+      0.077419347133837746,
+      0.0883101840173634,
+      0.10132910544405782,
+      0.11835493348127901,
+      0.14500186589082675,
+      0.25597820429173357
+    ),
+    spl = max(2.15, 1.15 + 0.5*42.594731176686537)
+  )
+
+  out2011 <- gd_compute_dist_stats_lb(
     mean = mean,
     p0 = p0,
     A = A,
     B = B,
-    C = C
+    C = C,
+    ppp_year = 2011
+  )
+  out2017 <- gd_compute_dist_stats_lb(
+    mean = mean,
+    p0 = p0,
+    A = A,
+    B = B,
+    C = C,
+    ppp_year = 2017
   )
 
-  expect_equal(names(out), c(
+  expect_equal(names(out2011), c(
     "gini", "median", "rmhalf", "dcm", "polarization",
-    "ris", "mld", "deciles"
+    "ris", "mld", "deciles", "spl"
   ))
-  expect_equal(length(out), length(benchmark))
-  expect_equal(out$gini, benchmark$gini, tolerance = 3e-06) # 1e-06
-  expect_equal(out$median, benchmark$median)
-  expect_equal(out$rmhalf, benchmark$rmhalf)
-  expect_equal(out$dcm, benchmark$dcm, tolerance = 1e-05) # Fails due to difference in gini
-  expect_equal(out$polarization, benchmark$polarization, tolerance = 3e-07) # 1e-07
-  expect_equal(out$ris, benchmark$ris)
-  expect_equal(out$mld, benchmark$mld)
-  expect_equal(out$deciles, benchmark$deciles)
+  expect_equal(length(out2011), length(benchmark2011))
+  expect_equal(out2011$gini, benchmark2011$gini, tolerance = 3e-06) # 1e-06
+  expect_equal(out2011$median, benchmark2011$median)
+  expect_equal(out2011$rmhalf, benchmark2011$rmhalf)
+  expect_equal(out2011$dcm, benchmark2011$dcm, tolerance = 1e-05) # Fails due to difference in gini
+  expect_equal(out2011$polarization, benchmark2011$polarization, tolerance = 3e-07) # 1e-07
+  expect_equal(out2011$ris, benchmark2011$ris)
+  expect_equal(out2011$mld, benchmark2011$mld)
+  expect_equal(out2011$deciles, benchmark2011$deciles)
+  expect_equal(out2011$spl, benchmark2011$spl)
+  expect_equal(out2017$spl, benchmark2017$spl)
 })
+
 
 test_that("gd_compute_gini_lb returns expected results", {
   benchmarck <- 0.31236656171451094

@@ -34,10 +34,10 @@ gd_compute_pip_stats <- function(welfare,
                                  default_ppp = 1,
                                  ppp = NULL,
                                  p0 = 0.5,
-                                 ppp_year = c(2017, 2011)) {
+                                 ppp_year = c(2017)) {
 
   # Input checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(
@@ -91,3 +91,4 @@ gd_compute_pip_stats <- function(welfare,
 
   return(out)
 }
+

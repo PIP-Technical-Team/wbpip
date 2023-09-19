@@ -22,10 +22,10 @@ gd_compute_pip_stats_lb <- function(welfare,
                                     default_ppp,
                                     ppp = NULL,
                                     p0 = 0.5,
-                                    ppp_year = c(2017, 2011)) {
+                                    ppp_year = c(2017)) {
 
   # input checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
@@ -340,12 +340,12 @@ gd_compute_spl_lb <- function(
   B = NULL,
   C = NULL,
   median = NULL,
-  ppp_year = c(2017, 2011)
+  ppp_year = c(2017)
 ){
 
 
   # Input Checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
   stopifnot(                                         # stop if not
     any(                                             #   either...
       c(
@@ -508,10 +508,10 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, ppp_year = c(2017, 2011)) {
+gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, ppp_year = c(2017)) {
 
   # Input checks
-  ppp_year <- match.arg(ppp_year)
+  stopifnot(ppp_year %in% c(2017, 2011))
 
   # Dist stats
   gini <- gd_compute_gini_lb(A, B, C)
@@ -644,7 +644,7 @@ gd_compute_poverty_stats_lb <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_estimate_lb <- function(mean, povline, p0, A, B, C, ppp_year = c(2017, 2011)) {
+gd_estimate_lb <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
 
   # Compute distributional measures
   dist_stats <- gd_compute_dist_stats_lb(
