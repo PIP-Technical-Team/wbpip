@@ -34,10 +34,10 @@ gd_compute_pip_stats <- function(welfare,
                                  default_ppp = 1,
                                  ppp = NULL,
                                  p0 = 0.5,
-                                 ppp_year = c(2017)) {
+                                 ppp_year = getOption("wbpip.available_ppp_years")) {
 
   # Input checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+  ppp_year <- match.arg(ppp_year)
 
   # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(
