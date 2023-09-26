@@ -12,7 +12,7 @@ create_functional_form_lq(welfare, population)
 \item{population}{numeric: Population vector from empirical Lorenz curve.}
 }
 \value{
-data.frame
+list: a) a numeric vector 'y', b) data frame with three columns x1, x2, x3
 }
 \description{
 Prepares data for regression of L(1-L) on (P^2-L), L(P-1) and (P-L). The last

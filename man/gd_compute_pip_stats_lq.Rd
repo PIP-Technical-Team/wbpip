@@ -12,7 +12,8 @@ gd_compute_pip_stats_lq(
   popshare = NULL,
   default_ppp,
   ppp = NULL,
-  p0 = 0.5
+  p0 = 0.5,
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ Optional.}
 \item{ppp}{numeric: PPP request by user.}
 
 \item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
+
+\item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }
 \value{
 list

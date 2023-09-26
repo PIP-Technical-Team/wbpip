@@ -37,32 +37,37 @@ gd_compute_pip_stats <- function(welfare,
                                  ppp_year = getOption("wbpip.available_ppp_years")) {
 
   # Input checks
-  ppp_year <- match.arg(ppp_year)
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
 
   # Apply Lorenz quadratic fit ----------------------------------------------
   results_lq <- gd_compute_pip_stats_lq(
-    welfare = welfare,
-    population = population,
+    welfare        = welfare,
+    population     = population,
     requested_mean = requested_mean,
-    povline = povline,
-    popshare = popshare,
-    default_ppp = default_ppp,
-    ppp = ppp,
-    p0 = p0,
-    ppp_year = ppp_year
+    povline        = povline,
+    popshare       = popshare,
+    default_ppp    = default_ppp,
+    ppp            = ppp,
+    p0             = p0,
+    ppp_year       = ppp_year
   )
 
   # Apply Lorenz beta fit ----------------------------------------------
   results_lb <- gd_compute_pip_stats_lb(
-    welfare = welfare,
-    population = population,
+    welfare        = welfare,
+    population     = population,
     requested_mean = requested_mean,
-    povline = povline,
-    popshare = popshare,
-    default_ppp = default_ppp,
-    ppp = ppp,
-    p0 = p0,
-    ppp_year = ppp_year
+    povline        = povline,
+    popshare       = popshare,
+    default_ppp    = default_ppp,
+    ppp            = ppp,
+    p0             = p0,
+    ppp_year       = ppp_year
   )
 
 

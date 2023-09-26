@@ -4,12 +4,14 @@
 \alias{md_compute_poverty_stats}
 \title{Compute Poverty Statistics}
 \usage{
-md_compute_poverty_stats(welfare, weight, povline_lcu)
+md_compute_poverty_stats(welfare, weight, povline_lcu, cons_floor = 0.5)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
 \item{povline_lcu}{numeric: Poverty line in Local Currency Unit (LCU).}
+
+\item{cons_floor}{numeric: gives the consumption floor. Default is $0.5 per day, if NULL then no floor.}
 }
 \value{
 list

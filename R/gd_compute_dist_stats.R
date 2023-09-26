@@ -15,11 +15,19 @@
 #'  population = grouped_data_ex2$weight,
 #'  mean = 50)
 #'
-gd_compute_dist_stats <- function(welfare,
-                                  population,
-                                  mean,
-                                  p0 = 0.5) {
+gd_compute_dist_stats <-
+  function(welfare,
+           population,
+           mean,
+           p0 = 0.5,
+           ppp_year = getOption("wbpip.available_ppp_years")) {
 
+    # Input checks
+    ppp_year <- ppp_year[1L]
+    if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+      cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+    }
 
   # Apply Lorenz quadratic fit ----------------------------------------------
 
@@ -42,11 +50,12 @@ gd_compute_dist_stats <- function(welfare,
                                                     C = C)
 
   # STEP 3: Calculate distributional stats
-  results_lq <- gd_estimate_dist_stats_lq(mean = mean,
-                                          p0 = p0,
-                                          A = A,
-                                          B = B,
-                                          C = C)
+  results_lq <- gd_estimate_dist_stats_lq(mean     = mean,
+                                          p0       = p0,
+                                          A        = A,
+                                          B        = B,
+                                          C        = C,
+                                          ppp_year = ppp_year)
 
   results_lq <- append(results_lq, reg_results_lq)
 
@@ -71,11 +80,12 @@ gd_compute_dist_stats <- function(welfare,
                                                     C = C)
 
   # STEP 3: Calculate distributional stats
-  results_lb <- gd_estimate_dist_stats_lb(mean = mean,
-                                          p0 = p0,
-                                          A = A,
-                                          B = B,
-                                          C = C)
+  results_lb <- gd_estimate_dist_stats_lb(mean     = mean,
+                                          p0       = p0,
+                                          A        = A,
+                                          B        = B,
+                                          C        = C,
+                                          ppp_year = ppp_year)
 
   results_lb <- append(results_lb, reg_results_lb)
 
@@ -105,7 +115,7 @@ gd_compute_dist_stats <- function(welfare,
 #' @inheritParams gd_estimate_lq
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
+gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, ppp_year) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
 
@@ -124,19 +134,22 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <-
+    gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r, ppp_year)
 
   out <- list(
-    mean = mean,
-    gini = dist_stats$gini,
-    median = dist_stats$median,
-    rmhalf = dist_stats$rmhalf,
+    mean         = mean,
+    gini         = dist_stats$gini,
+    median       = dist_stats$median,
+    rmhalf       = dist_stats$rmhalf,
     polarization = dist_stats$polarization,
-    ris = dist_stats$ris,
-    mld = dist_stats$mld,
-    dcm = dist_stats$dcm,
-    deciles = dist_stats$deciles,
-    is_valid = validity$is_valid
+    ris          = dist_stats$ris,
+    mld          = dist_stats$mld,
+    dcm          = dist_stats$dcm,
+    deciles      = dist_stats$deciles,
+    spl          = dist_stats$spl,
+    spr          = dist_stats$spr,
+    is_valid     = validity$is_valid
   )
 
   return(out)
@@ -146,25 +159,27 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 #' @inheritParams gd_estimate_lb
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lb <- function(mean, p0, A, B, C) {
+gd_estimate_dist_stats_lb <- function(mean, p0, A, B, C, ppp_year) {
 
   # Check validity
   validity <- check_curve_validity_dist_lb(A, B, C)
 
   # Compute distributional measures
   dist_stats <-
-    gd_compute_dist_stats_lb(mean, p0, A, B, C)
+    gd_compute_dist_stats_lb(mean, p0, A, B, C, ppp_year)
 
   out <- list(
-    gini = dist_stats$gini,
-    median = dist_stats$median,
-    rmhalf = dist_stats$rmhalf,
+    gini         = dist_stats$gini,
+    median       = dist_stats$median,
+    rmhalf       = dist_stats$rmhalf,
     polarization = dist_stats$polarization,
-    ris = dist_stats$ris,
-    mld = dist_stats$mld,
-    dcm = dist_stats$dcm,
-    deciles = dist_stats$deciles,
-    is_valid = validity$is_valid
+    ris          = dist_stats$ris,
+    mld          = dist_stats$mld,
+    dcm          = dist_stats$dcm,
+    deciles      = dist_stats$deciles,
+    spl          = dist_stats$spl,
+    spr          = dist_stats$spr,
+    is_valid     = validity$is_valid
   )
 
   return(out)
@@ -195,19 +210,7 @@ gd_select_lorenz_dist <- function(lq, lb) {
       use_lq_for_dist = use_lq_for_dist
     )
 
-  return(list(
-    mean             = datamean,
-    z_min            = dist[["z_min"]],
-    z_max            = dist[["z_max"]],
-    gini             = dist[["gini"]],
-    median           = dist[["median"]],
-    rmhalf           = dist[["rmhalf"]],
-    polarization     = dist[["polarization"]],
-    ris              = dist[["ris"]],
-    mld              = dist[["mld"]],
-    deciles          = dist[["deciles"]],
-    sse              = dist[["sse"]]
-  ))
+  return(c(list(mean = datamean), dist))
 }
 
 

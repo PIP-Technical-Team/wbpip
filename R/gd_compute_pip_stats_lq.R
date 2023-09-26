@@ -44,10 +44,16 @@ gd_compute_pip_stats_lq <- function(welfare,
                                     popshare = NULL,
                                     default_ppp,
                                     ppp = NULL,
-                                    ppp_year = c(2017),
-                                    p0 = 0.5) {
+                                    p0 = 0.5,
+                                    ppp_year = getOption("wbpip.available_ppp_years")) {
+
   # Input checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
@@ -542,12 +548,26 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c(2017)) {
+gd_compute_dist_stats_lq <-
+  function(mean,
+           p0,
+           A,
+           B,
+           C,
+           e,
+           m,
+           n,
+           r,
+           ppp_year = getOption("wbpip.available_ppp_years")) {
 
-  # Input arguments
-  stopifnot(ppp_year %in% c(2017, 2011))
+  # Input checks
+    ppp_year <- ppp_year[1L]
+    if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+      cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+    }
 
-  # get distribution stats
+  # get distribution stats  -----
   gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
   median  <- mean * derive_lq(0.5, A, B, C)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
@@ -556,7 +576,16 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c
   ris     <- value_at_lq(0.5, A, B, C)
   mld     <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
+
+  # Societal Poverty ------------
+
+  ## SPL (line) ------------
   spl     <- gd_compute_spl_lq(median = median, ppp_year = ppp_year)
+
+  ## SPR (headcount or rate ) ----------
+  bu  <- B + (2 * spl / mean)
+  spr <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
+  if (spr < 0) spr <- 0L
 
   return(list(
     gini         = gini,
@@ -567,7 +596,8 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c
     ris          = ris,
     mld          = mld,
     deciles      = deciles,
-    spl          = spl
+    spl          = spl,
+    spr          = spr
   ))
 }
 
@@ -670,12 +700,24 @@ gd_compute_poverty_stats_lq <- function(mean,
 #' @param povline numeric: Poverty line.
 #' @param p0 numeric: **TO BE DOCUMENTED**.
 #' @inheritParams gd_compute_fit_lq
+#' @inheritParams gd_compute_pip_stats
 #' @return list
 #' @keywords internal
-gd_estimate_lq <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
+gd_estimate_lq <-
+  function(mean,
+           povline,
+           p0,
+           A,
+           B,
+           C,
+           ppp_year = getOption("wbpip.available_ppp_years")) {
 
-  # Input check
-  stopifnot(ppp_year %in% c(2017, 2011))
+    # Input checks
+    ppp_year <- ppp_year[1L]
+    if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+      cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+    }
 
   # Compute key numbers from Lorenz quadratic form
   # Theorem 3 from original Lorenz quadratic paper
@@ -735,6 +777,7 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
     dcm              = dist_stats$dcm,
     deciles          = dist_stats$deciles,
     spl              = dist_stats$spl,
+    spr              = dist_stats$spr,
     headcount        = pov_stats$headcount,
     poverty_gap      = pov_stats$pg,
     poverty_severity = pov_stats$p2,

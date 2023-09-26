@@ -4,7 +4,7 @@
 \alias{gd_estimate_dist_stats_lb}
 \title{Estimates distributional stats from beta Lorenz fit}
 \usage{
-gd_estimate_dist_stats_lb(mean, p0, A, B, C)
+gd_estimate_dist_stats_lb(mean, p0, A, B, C, ppp_year)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
@@ -19,6 +19,8 @@ gd_estimate_dist_stats_lb(mean, p0, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres()$coef[3]}.}
+
+\item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }
 \value{
 list

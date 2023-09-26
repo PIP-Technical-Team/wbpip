@@ -65,12 +65,12 @@ gd_compute_pip_stats_lb <- function(welfare,
 
   # STEP 3: Estimate poverty and inequality measures based on identified parameters
   results2 <- gd_estimate_lb(
-    mean = requested_mean,
-    povline = povline,
-    p0 = p0,
-    A = A,
-    B = B,
-    C = C,
+    mean     = requested_mean,
+    povline  = povline,
+    p0       = p0,
+    A        = A,
+    B        = B,
+    C        = C,
     ppp_year = ppp_year
   )
 
@@ -508,21 +508,47 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, ppp_year = c(2017)) {
+gd_compute_dist_stats_lb <-
+  function(mean,
+           p0,
+           A,
+           B,
+           C,
+           ppp_year = getOption("wbpip.available_ppp_years")) {
 
-  # Input checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+    # Input checks
+    ppp_year <- ppp_year[1L]
+    if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+      cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+    }
 
-  # Dist stats
-  gini <- gd_compute_gini_lb(A, B, C)
-  median <- mean * derive_lb(0.5, A, B, C)
-  rmhalf <- value_at_lb(p0, A, B, C) * mean / p0 # What is this??
-  dcm <- (1 - gini) * mean
-  pol <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
-  ris <- value_at_lb(0.5, A, B, C)
-  mld <- gd_compute_mld_lb(0.01, A, B, C)
+  # Dist stats ----
+  gini    <- gd_compute_gini_lb(A, B, C)
+  median  <- mean * derive_lb(0.5, A, B, C)
+  rmhalf  <- value_at_lb(p0, A, B, C) * mean / p0 # What is this??
+  dcm     <- (1 - gini) * mean
+  pol     <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
+  ris     <- value_at_lb(0.5, A, B, C)
+  mld     <- gd_compute_mld_lb(0.01, A, B, C)
   deciles <- gd_compute_quantile_lb(A, B, C)
-  spl <- gd_compute_spl_lb(median = median, ppp_year = ppp_year)
+
+  # Societal Poverty -----
+
+  ## Line -------
+  spl     <- gd_compute_spl_lb(median = median, ppp_year = ppp_year)
+
+  ## rate ---------
+  spr <- gd_compute_headcount_lb(
+    mean    = mean,
+    povline = spl,
+    A       = A,
+    B       = B,
+    C       = C
+  )
+
+
+  # Return --------
 
   return(list(
     gini         = gini,
@@ -533,7 +559,8 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C, ppp_year = c(2017)) {
     ris          = ris,
     mld          = mld,
     deciles      = deciles,
-    spl          = spl
+    spl          = spl,
+    spr          = spr
   ))
 }
 
@@ -641,10 +668,24 @@ gd_compute_poverty_stats_lb <- function(mean,
 #' @param povline numeric: Poverty line.
 #' @param p0 numeric: **TO BE DOCUMENTED**.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_pip_stats
 #'
 #' @return list
 #' @keywords internal
-gd_estimate_lb <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
+gd_estimate_lb <- function(mean,
+                           povline,
+                           p0,
+                           A,
+                           B,
+                           C,
+                           ppp_year = getOption("wbpip.available_ppp_years")) {
+
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
 
   # Compute distributional measures
   dist_stats <- gd_compute_dist_stats_lb(
@@ -678,6 +719,7 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C, ppp_year = c(2017)) {
     dcm               = dist_stats$dcm,
     deciles           = dist_stats$deciles,
     spl               = dist_stats$spl,
+    spr               = dist_stats$spr,
     headcount         = pov_stats$headcount,
     poverty_gap       = pov_stats$pg,
     poverty_severity  = pov_stats$p2,

@@ -10,7 +10,8 @@ md_compute_dist_stats(
   mean = NULL,
   nbins = NULL,
   lorenz = NULL,
-  n_quantile = 10
+  n_quantile = 10,
+  ppp_year = 2017
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ used if \code{lorenz} is NULL}
 \item{n_quantile}{numeric: Number of quantiles for which share of total
 income is desired. It can't be larger that the total number of percentiles
 in the Lorenz curve provided by the user. Default is 10.}
+
+\item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }
 \value{
 data.frame

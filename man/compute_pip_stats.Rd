@@ -13,6 +13,8 @@ compute_pip_stats(
   default_ppp = 1,
   ppp = NULL,
   p0 = 0.5,
+  ppp_year = 2017,
+  cons_floor = c(0.5),
   distribution_type = c("micro", "group", "aggregate", "imputed")
 )
 }
@@ -34,6 +36,10 @@ quantile is desired. Default .5 (i.e., weighted median)}
 \item{ppp}{numeric: PPP requested by user}
 
 \item{p0}{numeric: TO be documented}
+
+\item{ppp_year}{numeric: PPP year - 2017 (default) or 2011}
+
+\item{cons_floor}{numeric: gives the consumption floor. Default is $0.5 per day, if NULL then no floor.}
 
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}

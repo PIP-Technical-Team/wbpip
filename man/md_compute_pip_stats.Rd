@@ -11,7 +11,9 @@ md_compute_pip_stats(
   requested_mean = NULL,
   popshare = NULL,
   default_ppp = 1,
-  ppp = NULL
+  ppp = NULL,
+  ppp_year = 2017,
+  cons_floor = 0.5
 )
 }
 \arguments{
@@ -30,6 +32,10 @@ quantile is desired. Default .5 (i.e., weighted median)}
 \item{default_ppp}{numeric: Default purchasing power parity}
 
 \item{ppp}{numeric: PPP requested by user}
+
+\item{ppp_year}{numeric: PPP year - 2017 (default) or 2011}
+
+\item{cons_floor}{numeric: gives the consumption floor. Default is $0.5 per day, if NULL then no floor.}
 }
 \value{
 list

@@ -4,7 +4,7 @@
 \alias{md_compute_polarization}
 \title{Wolfson polarization index}
 \usage{
-md_compute_polarization(welfare, weight, gini, mean, median)
+md_compute_polarization(welfare, weight, gini, mean, median, cons_floor = 0.5)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}

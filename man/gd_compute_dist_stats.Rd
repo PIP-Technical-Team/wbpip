@@ -4,7 +4,13 @@
 \alias{gd_compute_dist_stats}
 \title{Computes distributional statistics (grouped)}
 \usage{
-gd_compute_dist_stats(welfare, population, mean, p0 = 0.5)
+gd_compute_dist_stats(
+  welfare,
+  population,
+  mean,
+  p0 = 0.5,
+  ppp_year = getOption("wbpip.available_ppp_years")
+)
 }
 \arguments{
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
@@ -15,6 +21,8 @@ proportion of the population (Lorenz Curve).}
 \item{mean}{numeric: Welfare mean.}
 
 \item{p0}{numeric: \strong{TO BE DOCUMENTED}.}
+
+\item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }
 \value{
 list

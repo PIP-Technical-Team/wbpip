@@ -4,7 +4,14 @@
 \alias{gd_compute_dist_stats_lb}
 \title{Computes distributional stats from Lorenz beta fit}
 \usage{
-gd_compute_dist_stats_lb(mean, p0, A, B, C)
+gd_compute_dist_stats_lb(
+  mean,
+  p0,
+  A,
+  B,
+  C,
+  ppp_year = getOption("wbpip.available_ppp_years")
+)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
@@ -19,6 +26,8 @@ gd_compute_dist_stats_lb(mean, p0, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres()$coef[3]}.}
+
+\item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }
 \value{
 list
