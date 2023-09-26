@@ -19,25 +19,23 @@
 #' @keywords internal
 md_compute_poverty_stats <- function(welfare, weight, povline_lcu, cons_floor = 0.5) {
 
-  pov_status <- (welfare < povline_lcu)
-  relative_distance <- (1 - (welfare[pov_status] / povline_lcu))
-  weight_pov <- weight[pov_status]
-  weight_total <- sum(weight)
 
   #--------- FGT Measures ---------
-  fgt0 <- sum(weight_pov) / weight_total
-  fgt1 <- sum(relative_distance * weight_pov) / weight_total
-  fgt2 <- sum(relative_distance^2 * weight_pov) / weight_total
+  fgt0 <- md_compute_fgt(welfare, weight, povline_lcu, 0)
+  fgt1 <- md_compute_fgt(welfare, weight, povline_lcu, 1)
+  fgt2 <- md_compute_fgt(welfare, weight, povline_lcu, 2)
 
   #--------- Watts index ---------
-  keep <- welfare > 0 & pov_status
-  w_gt_zero <- welfare[keep]
+  pov_status         <- (welfare < povline_lcu)
+  keep               <- welfare > 0 & pov_status
+  w_gt_zero          <- welfare[keep]
   sensitive_distance <- log(povline_lcu / w_gt_zero)
 
   # watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
   #                                       w = weight[welfare > 0])
   #--------- Old Watts ---------
 
+  weight_total <- sum(weight)
   watts <- sum(sensitive_distance * weight[keep]) /
     weight_total
 
@@ -47,20 +45,45 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu, cons_floor = 
   }
 
   #--------- Prosperity Gap ---------
-  pg <- md_compute_prosperity_gap(
-    welfare     = welfare,
-    weight      = weight,
-    povline_lcu = povline_lcu,
-    cons_floor  = cons_floor
-  )
+  # pg <- md_compute_prosperity_gap(
+  #   welfare     = welfare,
+  #   weight      = weight,
+  #   povline_lcu = povline_lcu,
+  #   cons_floor  = cons_floor
+  # )
 
   #--------- Return ---------
   return(list(
     headcount        = fgt0,
     poverty_gap      = fgt1,
     poverty_severity = fgt2,
-    watts            = watts,
-    prosperity_gap   = pg
+    watts            = watts #,
+    # prosperity_gap   = pg
     # watts_old        = watts_old
   ))
+}
+
+
+#' Estimate FGT measures from microdata
+#'
+#' @inheritParams compute_pip_stats
+#' @param pl numeric: poverty line
+#' @param alpha  numeric: either 0, 1 or 2.
+#'
+#' @return numeric vector of length 1
+#' @export
+#'
+#' @examples
+#' md_compute_fgt(
+#'   welfare = 1:2000,
+#'   weight = rep(1, 2000),
+#'   povline_lcu = 10,
+#'   alpha = 0
+#' )
+md_compute_fgt <- function(welfare, weight, pl, alpha = 0) {
+
+  pov_status <- (welfare < pl) * (1 - (welfare / pl)) ^ alpha
+
+  collapse::fmean(pov_status, w = weight)
+
 }

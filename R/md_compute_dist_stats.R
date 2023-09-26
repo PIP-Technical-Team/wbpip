@@ -40,43 +40,52 @@ md_compute_dist_stats <- function(welfare,
   }
 
   quantiles <- md_compute_quantiles(
-    lwelfare = lorenz[["lorenz_welfare"]],
-    lweight = lorenz[["lorenz_weight"]],
-    percentile = lorenz[["welfare"]]
+    lwelfare    = lorenz[["lorenz_welfare"]],
+    lweight     = lorenz[["lorenz_weight"]],
+    percentile  = lorenz[["welfare"]]
   )
   median <- quantiles[["median"]]
 
   gini <- md_compute_gini(
-    welfare = welfare, weight = weight
+    welfare = welfare,
+    weight  = weight
   )
 
   mld <- md_compute_mld(
-    welfare = welfare, weight = weight,
-    mean = mean
+    welfare = welfare,
+    weight  = weight,
+    mean    = mean
   )
 
   polarization <- md_compute_polarization(
     welfare = welfare,
-    weight = weight,
-    gini = gini,
-    mean = mean,
-    median = median
+    weight  = weight,
+    gini    = gini,
+    mean    = mean,
+    median  = median
   )
 
   spl <- md_compute_spl(
-    welfare = welfare,
-    weight = weight,
+    welfare                 = welfare,
+    weight                  = weight,
     weighted_median_welfare = median,
-    ppp_year = ppp_year
+    ppp_year                = ppp_year
+  )
+
+  spr <- md_compute_fgt(
+    welfare = welfare,
+    weight  = weight,
+    pl      = spl
   )
 
   return(list(
-    mean = mean,
-    median = median,
-    gini = gini,
+    mean         = mean,
+    median       = median,
+    gini         = gini,
     polarization = polarization,
-    mld = mld,
-    quantiles = quantiles[["quantiles"]],
-    spl = spl
+    mld          = mld,
+    quantiles    = quantiles[["quantiles"]],
+    spl          = spl,
+    spr          = spr
   ))
 }

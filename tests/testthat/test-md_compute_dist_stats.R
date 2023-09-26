@@ -15,7 +15,7 @@ test_that("md_compute_dist_stats() returns correct results", {
   )
   expect_equal(
     names(res),
-    c("mean", "median", "gini", "polarization", "mld", "quantiles")
+    c("mean", "median", "gini", "polarization", "mld", "quantiles", "spl", "spr")
   )
   expect_equal(res$mean, 3436146, tolerance = 1.5e-07)
   expect_equal(res$median, 2029658.5, tolerance = 1.5e-07)

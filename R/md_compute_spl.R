@@ -49,7 +49,7 @@ md_compute_spl <- function(
   }
 
   # Calculate SPL according to threshold rate
-  spl <- constant + threshold_rate*weighted_median_ppp
+  spl <- constant + threshold_rate*weighted_median_welfare
 
   # Set minimum level if needed
   spl[spl < min_level] <- min_level
