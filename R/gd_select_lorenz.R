@@ -215,86 +215,59 @@ retrieve_distributional <- function(lq,
                                     lb,
                                     is_valid,
                                     use_lq_for_dist) {
+
   if (is_valid) {
-    if (use_lq_for_dist) {
-      sse <- lq[["sse"]]
-      z_min <- lq[["z_min"]]
-      z_max <- lq[["z_max"]]
-      gini <- lq[["gini"]]
-      median <- lq[["median"]]
-      polarization <- lq[["polarization"]]
-      # rmed          <- lq[["rmed # Returns NULL: Figure out what the issue is!!
-      rmhalf <- lq[["rmhalf"]]
-      ris <- lq[["ris"]]
-
-      deciles <- lq[["deciles"]]
-
-      if (!is.nan(lq[["mld"]])) {
-        if (lq[["mld"]] >= 0) {
-          mld <- lq[["mld"]]
-        }
-      } else if (!is.nan(lb[["mld"]])) {
-        if (lb[["mld"]] >= 0) {
-          mld <- lb[["mld"]]
-        }
+    ln <-
+      if (use_lq_for_dist) {
+        c("lq", "lb")
       } else {
-        mld <- NA_real_
+        c("lb", "lq")
       }
-    } else {
-      sse <- lb[["sse"]]
-      z_min <- lb[["z_min"]]
-      z_max <- lb[["z_max"]]
-      gini <- lb[["gini"]]
-      median <- lb[["median"]]
-      # rmed   <- lb[["rmed"]] # Returns NULL: Figure out what the issue is!!
-      rmhalf <- lb[["rmhalf"]]
-      ris <- lb[["ris"]]
 
-      deciles <- lb[["deciles"]]
-      polarization <- lb[["polarization"]]
+    l <- get(ln[1]) # to use
+    o <- get(ln[2]) # alternative
 
-      if (!is.nan(lb[["mld"]])) {
-        if (lb[["mld"]] >= 0) {
-          mld <- lb[["mld"]]
-        }
-      } else if (!is.nan(lq[["mld"]])) {
-        if (lq[["mld"]] >= 0) {
-          mld <- lq[["mld"]]
-        }
-      } else {
-        mld <- NA_real_
-      }
+    # make sure mld works fine
+    x <- "mld"
+    l[[x]] <- replace_x(x, l, o)
+
+  } else {
+    l <- sapply(names(l),
+                \(.) {
+                  rep(NA_real_, length(l[[.]]))
+                },
+                simplify = FALSE,
+                USE.NAMES = TRUE
+                )
+  }
+  return(l)
+
+}
+
+
+#' Make sure that value of x in l is valid. Otherwise use the value in o
+#'
+#' @param x characer: name of value in l and o
+#' @param l list: list to use
+#' @param o list: alternative list
+#'
+#' @return value
+#' @keywords internal
+replace_x <- function(x, l, o) {
+  if (!is.nan(l[[x]])) {
+    if (l[[x]] >= 0) {
+      xn <- l[[x]]
+    }
+  } else if (!is.nan(o[[x]])) {
+    if (o[[x]] >= 0) {
+      xn <- o[[x]]
     }
   } else {
-    z_min <- NA_real_
-    z_max <- NA_real_
-    gini <- NA_real_
-    median <- NA_real_
-    rmed <- NA_real_
-    rmhalf <- NA_real_
-    polarization <- NA_real_
-    ris <- NA_real_
-    mld <- NA_real_
-    deciles <- rep(NA_real_, length(lq[["deciles"]]))
-    sse <- NA_real_
+    xn <- NA_real_
   }
-
-  return(
-    list(
-      z_min            = z_min,
-      z_max            = z_max,
-      gini             = gini,
-      median           = median,
-      # rmed           = rmed,
-      rmhalf           = rmhalf,
-      polarization     = polarization,
-      ris              = ris,
-      mld              = mld,
-      deciles          = deciles,
-      sse              = sse
-    )
-  )
+  xn
 }
+
 
 #' Algorithm to retrieve correct poverty statistics
 #'
