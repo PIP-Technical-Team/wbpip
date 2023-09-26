@@ -103,7 +103,9 @@ gd_compute_dist_stats <-
     "gini",
     "mld",
     "polarization",
-    "deciles"
+    "deciles",
+    "spl",
+    "spr"
   )]
 
   return(out)
