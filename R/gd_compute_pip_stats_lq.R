@@ -419,12 +419,14 @@ gd_compute_spl_lq <- function(
 
   # if no median supplied, use 5th decile
   if(is.null(median)){
-    median <- gd_compute_quantile_lq(
-      A = A,
-      B = B,
-      C = C,
-      n_quantile = 10
-    )[5]
+    # median <- gd_compute_quantile_lq(
+    #   A = A,
+    #   B = B,
+    #   C = C,
+    #   n_quantile = 10
+    # )[5]
+
+    median <- value_at_lq(.5, A, B, C)
   }
 
   threshold_rate <-  0.5
@@ -546,15 +548,15 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r, ppp_year = c
   stopifnot(ppp_year %in% c(2017, 2011))
 
   # get distribution stats
-  gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
-  median <- mean * derive_lq(0.5, A, B, C)
-  rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
-  dcm <- (1 - gini) * mean
-  pol <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
-  ris <- value_at_lq(0.5, A, B, C)
-  mld <- gd_compute_mld_lq(0.01, A, B, C)
+  gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
+  median  <- mean * derive_lq(0.5, A, B, C)
+  rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
+  dcm     <- (1 - gini) * mean
+  pol     <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
+  ris     <- value_at_lq(0.5, A, B, C)
+  mld     <- gd_compute_mld_lq(0.01, A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
-  spl <- gd_compute_spl_lq(median = median, ppp_year = ppp_year)
+  spl     <- gd_compute_spl_lq(median = median, ppp_year = ppp_year)
 
   return(list(
     gini         = gini,
