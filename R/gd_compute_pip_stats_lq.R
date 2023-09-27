@@ -218,19 +218,22 @@ derive_lq <- function(x, A, B, C) {
 #'
 #' @return list
 #' @keywords internal
-check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
+check_curve_validity_lq <- function(A, B, C) {
+
+  kv <- gd_key_values_lq(A, B, C)
+
   is_normal <- FALSE
   is_valid <- FALSE
 
   # r needs to be > 0 because need to extract sq root
-  if (r < 0) {
+  if (kv$r2 < 0) {
     return(list(
       is_normal = is_normal,
       is_valid = is_valid
     ))
   }
 
-  if (e > 0 || C < 0) {
+  if (kv$e > 0 || C < 0) {
     return(list(
       is_normal = is_normal,
       is_valid = is_valid
@@ -239,12 +242,12 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
   # Failure conditions for checking theoretically valid Lorenz curve
   # Found in section 4 of Datt computational tools paper
-  cn1 <- n^2
-  cn3 <- cn1 / (4 * e^2)
+  cn1 <- kv$n^2
+  cn3 <- cn1 / (4 * kv$e^2)
 
-  if (!((m < 0) |
-    ((m > 0) & (m < cn3) & (n >= 0)) |
-    ((m > 0) & (m < -n / 2) & (m < cn3)))) {
+  if (!((kv$m < 0) |
+    ((kv$m > 0) & (kv$m < cn3) & (kv$n >= 0)) |
+    ((kv$m > 0) & (kv$m < -kv$n / 2) & (kv$m < cn3)))) {
     return(list(
       is_normal = is_normal,
       is_valid = is_valid
@@ -554,10 +557,6 @@ gd_compute_dist_stats_lq <-
            A,
            B,
            C,
-           e,
-           m,
-           n,
-           r,
            ppp_year = getOption("wbpip.available_ppp_years")) {
 
   # Input checks
@@ -567,8 +566,10 @@ gd_compute_dist_stats_lq <-
                      {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
     }
 
+    kv <- gd_key_values_lq(A, B, C)
+
   # get distribution stats  -----
-  gini    <- gd_compute_gini_lq(A, B, C, e, m, n, r)
+  gini    <- gd_compute_gini_lq(A, B, C, kv$e, kv$m, kv$n, kv$r)
   median  <- mean * derive_lq(0.5, A, B, C)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
@@ -584,7 +585,7 @@ gd_compute_dist_stats_lq <-
 
   ## SPR (headcount or rate ) ----------
   bu  <- B + (2 * spl / mean)
-  spr <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
+  spr <- -(kv$n + ((kv$r * bu) / sqrt(bu^2 - kv$m))) / (2 * kv$m)
   if (spr < 0) spr <- 0L
 
   return(list(
@@ -614,13 +615,14 @@ gd_compute_poverty_stats_lq <- function(mean,
                                         povline,
                                         A,
                                         B,
-                                        C,
-                                        e,
-                                        m,
-                                        n,
-                                        r,
-                                        s1,
-                                        s2) {
+                                        C) {
+
+  # Get Key values ----------
+  kv <- gd_key_values_lq(A, B, C)
+  for (i in seq_along(kv)) {
+    assign(names(kv)[i], kv[[i]])
+  }
+
   # Compute headcount
   bu <- B + (2 * povline / mean)
   u <- mean / povline
@@ -719,21 +721,10 @@ gd_estimate_lq <-
                      {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
     }
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
-
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+  validity <- check_curve_validity_lq(A, B, C)
   if (validity$is_valid == FALSE & validity$is_normal == FALSE) {
     return(empty_gd_compute_pip_stats_response)
   }
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
 
   # Compute distributional measures -----------------------------------------
 
@@ -743,10 +734,6 @@ gd_estimate_lq <-
     A        = A,
     B        = B,
     C        = C,
-    e        = e,
-    m        = m,
-    n        = n,
-    r        = r,
     ppp_year = ppp_year
   )
 
@@ -758,14 +745,7 @@ gd_estimate_lq <-
     povline = povline,
     A       = A,
     B       = B,
-    C       = C,
-    e       = e,
-    m       = m,
-    n       = n,
-    r       = r,
-    s1      = s1,
-    s2      = s2
-  )
+    C       = C)
 
   out <- list(
     gini             = dist_stats$gini,

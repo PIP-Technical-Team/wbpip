@@ -93,10 +93,10 @@ test_that("gd_compute_dist_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
+  # e <- -0.498670067692931
+  # m <- -1.0970760862948583
+  # n <- 0.851623285340541
+  # r <- 1.3477796260474386
   benchmark <- list(
     gini = 0.32126464221602591,
     median = 42.247782467994874,
@@ -124,12 +124,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     p0 = p0,
     A = A,
     B = B,
-    C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r
-  )
+    C = C)
 
   expect_equal(names(out), c(
     "gini", "median", "rmhalf", "dcm", "polarization",
@@ -173,12 +168,12 @@ test_that("compute_poverty_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
-  s1 <- -0.22612667749534146
-  s2 <- 1.002393060455814
+  # e <- -0.498670067692931
+  # m <- -1.0970760862948583
+  # n <- 0.851623285340541
+  # r <- 1.3477796260474386
+  # s1 <- -0.22612667749534146
+  # s2 <- 1.002393060455814
 
   benchmark <- list(
     headcount = 0.76005810499191284,
@@ -200,14 +195,7 @@ test_that("compute_poverty_stats_lq works as expected", {
     povline = povline,
     A = A,
     B = B,
-    C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r,
-    s1 = s1,
-    s2 = s2
-  )
+    C = C)
 
   expect_equal(length(out), length(benchmark))
   expect_equal(names(out), c(

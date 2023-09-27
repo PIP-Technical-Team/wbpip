@@ -121,23 +121,12 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, ppp_year) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
-
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
+  validity <- check_curve_validity_lq(A, B, C)
 
   # Compute distributional measures -----------------------------------------
 
   dist_stats <-
-    gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r, ppp_year)
+    gd_compute_dist_stats_lq(mean, p0, A, B, C,ppp_year)
 
   out <- list(
     mean         = mean,
@@ -156,6 +145,33 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, ppp_year) {
 
   return(out)
 }
+
+
+gd_key_values_lq <- function(A, B, C) {
+  # Compute key numbers from Lorenz quadratic form
+  # Theorem 3 from original Lorenz quadratic paper
+  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
+  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
+  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
+  r2 <- (n^2) - (4 * m * e^2) # r is called K in paper
+
+  r <- sqrt(r2)
+  s1 <- (r - n) / (2 * m)
+  s2 <- -(r + n) / (2 * m)
+
+  return(list(
+    e  = e,
+    m  = m,
+    n  = n,
+    r2 = r2,
+    r  = r,
+    s1 = s1,
+    s2 = s2
+  ))
+
+
+}
+
 
 #' Estimates distributional stats from beta Lorenz fit
 #' @inheritParams gd_estimate_lb
