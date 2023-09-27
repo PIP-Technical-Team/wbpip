@@ -53,31 +53,28 @@ sd_create_synth_vector <- function(welfare,
   reg_coef_lq <- reg_results_lq$coef
 
   ## STEP 3: Calculate distributional stats
-  results_lq <- gd_estimate_dist_stats_lq(
-    mean = mean, p0 = p0, A = reg_coef_lq[1],
-    B = reg_coef_lq[2], C = reg_coef_lq[3]
-  )
+  validity_lq <- check_curve_validity_lq(A = reg_coef_lq[1],
+                                      B = reg_coef_lq[2],
+                                      C = reg_coef_lq[3])
 
-  results_lq <- append(results_lq, reg_results_lq)
+  results_lq <- append(validity_lq, reg_results_lq)
 
   # Apply Lorenz beta fit ---------------------------------------------------
 
   ## STEP 1: Prep data to fit functional form --------------
-  prepped_data <- create_functional_form_lb(
-    welfare = welfare, population = population
-  )
+  prepped_data <- create_functional_form_lb(welfare = welfare,
+                                            population = population)
 
   ## STEP 2: Estimate regression coefficients using LB parameterization
   reg_results_lb <- regres(prepped_data, is_lq = FALSE)
   reg_coef_lb <- reg_results_lb$coef
 
   ## STEP 3: Calculate distributional stats ---------------
-  results_lb <- gd_estimate_dist_stats_lb(
-    mean = mean, p0 = p0, A = reg_coef_lb[1],
-    B = reg_coef_lb[2], C = reg_coef_lb[3]
-  )
+  validity_lb <- check_curve_validity_dist_lb(A = reg_coef_lb[1],
+                                              B = reg_coef_lb[2],
+                                              C = reg_coef_lb[3])
 
-  results_lb <- append(results_lb, reg_results_lb)
+  results_lb <- append(validity_lb, reg_results_lb)
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
