@@ -116,7 +116,9 @@ test_that("gd_compute_dist_stats_lq works as expected", {
       0.11071235633968635,
       0.13305852826044706,
       0.2784329516843369
-    )
+    ),
+    spl = 22.2738912339974,
+    spr = 0.0902929375643129
   )
 
   out <- gd_compute_dist_stats_lq(
@@ -128,7 +130,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
 
   expect_equal(names(out), c(
     "gini", "median", "rmhalf", "dcm", "polarization",
-    "ris", "mld", "deciles"
+    "ris", "mld", "deciles", "spl", "spr"
   ))
   expect_equal(length(out), length(benchmark))
   expect_equal(out$gini, benchmark$gini)
@@ -275,6 +277,15 @@ test_that("gd_estimate_lq works as expected", {
   B <- -1.9856022109519547
   C <- -0.30597079435662672
 
+  expect_warning(gd_estimate_lq(
+    mean = mean,
+    povline = povline,
+    p0 = p0,
+    A = A,
+    B = B,
+    C = C
+  ))
+
   expect_equal(
     gd_estimate_lq(
       mean = mean,
@@ -283,9 +294,11 @@ test_that("gd_estimate_lq works as expected", {
       A = A,
       B = B,
       C = C
-    ),
+    ) |>
+      suppressWarnings(),
     empty_gd_compute_pip_stats_response
   )
+
 })
 
 test_that("gd_compute_watts_lq() gives correct results", {
