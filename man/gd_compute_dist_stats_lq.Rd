@@ -10,10 +10,6 @@ gd_compute_dist_stats_lq(
   A,
   B,
   C,
-  e,
-  m,
-  n,
-  r,
   ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
@@ -30,16 +26,6 @@ gd_compute_dist_stats_lq(
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
-
-\item{e}{numeric: e = -(A + B + C + 1): condition for the curve to go through
-(1, 1).}
-
-\item{m}{numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-an ellipse (m is called alpha in paper).}
-
-\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
-
-\item{r}{r = (n^2) - (4 * m * e^2). r is called K in paper.}
 
 \item{ppp_year}{numeric PPP year - 2017 (default) or 2011}
 }

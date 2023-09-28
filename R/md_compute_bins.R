@@ -45,7 +45,7 @@
 #' @return data.table
 #' @keywords internal
 md_compute_bins <- function(welfare, weight,
-                            nbins = 100,
+                            nbins = if (length(welfare) > 1000) 100 else 20,
                             na.rm = FALSE,
                             output = "simple") {
 

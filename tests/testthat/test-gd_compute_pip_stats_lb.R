@@ -70,7 +70,7 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
 
   expect_equal(names(out2011), c(
     "gini", "median", "rmhalf", "dcm", "polarization",
-    "ris", "mld", "deciles", "spl"
+    "ris", "mld", "deciles", "spl", "spr"
   ))
   expect_equal(length(out2011), length(benchmark2011))
   expect_equal(out2011$gini, benchmark2011$gini, tolerance = 3e-06) # 1e-06

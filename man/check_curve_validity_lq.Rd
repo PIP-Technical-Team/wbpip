@@ -4,7 +4,7 @@
 \alias{check_curve_validity_lq}
 \title{Check validity of Lorenz Quadratic fit}
 \usage{
-check_curve_validity_lq(A, B, C, e, m, n, r)
+check_curve_validity_lq(A, B, C)
 }
 \arguments{
 \item{A}{numeric: Lorenz curve coefficient. Output of

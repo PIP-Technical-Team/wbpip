@@ -277,14 +277,6 @@ test_that("gd_estimate_lq works as expected", {
   B <- -1.9856022109519547
   C <- -0.30597079435662672
 
-  expect_warning(gd_estimate_lq(
-    mean = mean,
-    povline = povline,
-    p0 = p0,
-    A = A,
-    B = B,
-    C = C
-  ))
 
   expect_equal(
     gd_estimate_lq(
@@ -294,8 +286,7 @@ test_that("gd_estimate_lq works as expected", {
       A = A,
       B = B,
       C = C
-    ) |>
-      suppressWarnings(),
+    ),
     empty_gd_compute_pip_stats_response
   )
 

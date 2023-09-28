@@ -23,13 +23,9 @@ if (getRversion() >= "2.15.1") {
 #' @return data.table
 #' @keywords internal
 lorenz_alt <- function(welfare, weight,
-                       nbins = NULL,
+                       nbins = if (length(welfare) > 1000) 100 else 20,
                        na.rm = FALSE) {
-  nobs <- length(weight)
 
-  if (is.null(nbins)) {
-    nbins <- ifelse(nobs > 1000, 100, 20) # Define number of points on the Lorenz curve
-  }
 
   #--------- Create data.table for fast calculations ---------
   dt <- data.table::data.table(

@@ -93,14 +93,14 @@ fill_gaps <- function(request_year,
 
   # Calculate poverty stats
   out <- fg_compute_pip_stats(
-    request_year = request_year,
-    data = data,
+    request_year           = request_year,
+    data                   = data,
     predicted_request_mean = predicted_request_mean,
-    survey_year = survey_year,
-    default_ppp = default_ppp,
-    ppp = ppp,
-    distribution_type = distribution_type,
-    poverty_line = poverty_line
+    survey_year            = survey_year,
+    default_ppp            = default_ppp,
+    ppp                    = ppp,
+    distribution_type      = distribution_type,
+    poverty_line           = poverty_line
   )
 
   return(out)

@@ -65,7 +65,7 @@ test_that("fill_gaps() returns the correct output format", {
     c(
       "poverty_line", "mean", "median", "headcount",
       "poverty_gap", "poverty_severity", "watts",
-      "gini", "mld", "polarization", "deciles"
+      "gini", "mld", "polarization", "deciles", "spl"
     )
   )
 })

@@ -18,7 +18,7 @@ get_lorenz <- function(.data,
                        welfare,
                        weight,
                        distribution_type = c("micro", "group", "aggregate", "imputed"),
-                       nbins = NULL) {
+                       nbins = if (length(welfare) > 1000) 100 else 20) {
 
   # Match arg
   distribution_type <- match.arg(distribution_type)

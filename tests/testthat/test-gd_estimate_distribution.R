@@ -1,5 +1,19 @@
-output_names <- c("poverty_line", "mean", "median", "headcount", "poverty_gap",
-                  "poverty_severity", "watts", "gini", "mld", "polarization", "deciles" )
+output_names <-
+  c(
+    "poverty_line",
+    "mean",
+    "median",
+    "headcount",
+    "poverty_gap",
+    "poverty_severity",
+    "watts",
+    "gini",
+    "mld",
+    "polarization",
+    "deciles",
+    "spl",
+    "spr"
+  )
 
 test_that("gd_estimate_distribution is working for all distribution types", {
   # Type 5

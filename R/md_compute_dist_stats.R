@@ -4,11 +4,10 @@
 #' distributional statistics.
 #'
 #' @inheritParams compute_pip_stats
+#' @inheritParams md_compute_lorenz
 #' @param mean numeric: A value with the mean. Optional.
 #' @param lorenz data.frame: A table with points on the Lorenz curve. Output of
 #'   `md_compute_lorenz()`. Optional.
-#' @param nbins numeric: number of points on the Lorenz curve. Optional. Only
-#'   used if `lorenz` is NULL
 #' @param n_quantile numeric: Number of quantiles for which share of total
 #'   income is desired. It can't be larger that the total number of percentiles
 #'   in the Lorenz curve provided by the user. Default is 10.
@@ -21,7 +20,7 @@
 md_compute_dist_stats <- function(welfare,
                                   weight,
                                   mean = NULL,
-                                  nbins = NULL,
+                                  nbins = if (length(welfare) > 1000) 100 else 20,
                                   lorenz = NULL,
                                   n_quantile = 10,
                                   ppp_year = 2017) {

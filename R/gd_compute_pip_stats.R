@@ -90,7 +90,8 @@ gd_compute_pip_stats <- function(welfare,
     "mld",
     "polarization",
     "deciles",
-    "spl"
+    "spl",
+    "spr"
   )]
 
 

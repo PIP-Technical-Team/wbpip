@@ -89,7 +89,9 @@ gd_select_lorenz <- function(lq, lb) {
     gpg              = pov[["gpg"]],
     gp               = pov[["gp"]],
     watts            = pov[["watts"]],
-    sse              = dist[["sse"]]
+    sse              = dist[["sse"]],
+    spl              = dist[["spl"]],
+    spr              = dist[["spr"]]
   ))
 }
 
@@ -232,9 +234,9 @@ retrieve_distributional <- function(lq,
     l[[x]] <- replace_x(x, l, o)
 
   } else {
-    l <- sapply(names(l),
+    l <- sapply(names(lq),
                 \(.) {
-                  rep(NA_real_, length(l[[.]]))
+                  rep(NA_real_, length(lq[[.]]))
                 },
                 simplify = FALSE,
                 USE.NAMES = TRUE
