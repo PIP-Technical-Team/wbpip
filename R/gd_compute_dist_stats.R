@@ -155,7 +155,12 @@ gd_key_values_lq <- function(A, B, C) {
   n <- (2 * B * e) - (4 * C) # n is called Beta in paper
   r2 <- (n^2) - (4 * m * e^2) # r is called K in paper
 
-  r <- sqrt(r2)
+  if (r2 < 0 ) {
+    r <- NA
+  } else {
+    r <- sqrt(r2)
+  }
+
   s1 <- (r - n) / (2 * m)
   s2 <- -(r + n) / (2 * m)
 
