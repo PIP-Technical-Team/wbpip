@@ -3,6 +3,8 @@
 export(compute_pip_stats)
 export(deflate_welfare_mean)
 export(fill_gaps)
+export(gd_compute_headcount_lq)
+export(gd_compute_pov_gap_lq)
 export(gd_compute_prosperity_gap_lb)
 export(gd_compute_spl_lb)
 export(gd_compute_spl_lq)
