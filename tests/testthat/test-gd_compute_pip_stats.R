@@ -30,7 +30,16 @@ test_that("gd_compute_pip_stats() returns correct results", {
 
 test_that("retrieve_distributional() returns correct results", {
   lq <- list(
-    deciles = 1:10
+    z_min         = 123,
+    z_max         = 123,
+    gini          = 123,
+    median        = 123,
+    rmhalf        = 123,
+    polarization  = 123,
+    ris           = 123,
+    mld           = 123,
+    deciles = 1:10,
+    sse           = 123
   )
   lb <- "not_used"
   is_valid <- FALSE
@@ -56,8 +65,48 @@ test_that("retrieve_distributional() returns correct results", {
       is_valid = is_valid,
       use_lq_for_dist = use_lq_for_dist
     ),
-    expected
+    expected,
+    label = "Not returning NAs when lq is invalid"
   )
+
+
+  lq <- list(
+    deciles = 1:10
+  )
+  lb <- "not_used"
+  is_valid <- FALSE
+  use_lq_for_dist <- "not_used"
+
+  expected2 <- list(
+    deciles       = rep(NA_real_, length(lq[["deciles"]]))
+  )
+
+  expect_equal(
+    retrieve_distributional(
+      lq = lq,
+      lb = lb,
+      is_valid = is_valid,
+      use_lq_for_dist = use_lq_for_dist
+    ),
+    expected2,
+    label = "It is not returning the same object as NAs"
+  )
+
+  expect_equal(
+    retrieve_distributional(
+      lq = lq,
+      lb = lb,
+      is_valid = is_valid,
+      use_lq_for_dist = use_lq_for_dist
+    ) |>
+      length(),
+    1,
+    label = "It is not returning the same number of objects"
+  )
+
+
+
+
 })
 
 

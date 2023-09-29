@@ -25,7 +25,8 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
       0.14500186589082675,
       0.25597820429173357
     ),
-    spl = max(1.9, 1 + 0.5*42.594731176686537)
+    spl = max(1.9, 1 + 0.5*42.594731176686537),
+    spr = 0.085776220703125
   )
 
   benchmark2017 <- list(
@@ -48,7 +49,8 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
       0.14500186589082675,
       0.25597820429173357
     ),
-    spl = max(2.15, 1.15 + 0.5*42.594731176686537)
+    spl = max(2.15, 1.15 + 0.5*42.594731176686537),
+    spr = 0.08846123046875
   )
 
   out2011 <- gd_compute_dist_stats_lb(
@@ -82,7 +84,9 @@ test_that("gd_compute_dist_stats_lb returns expected results", {
   expect_equal(out2011$mld, benchmark2011$mld)
   expect_equal(out2011$deciles, benchmark2011$deciles)
   expect_equal(out2011$spl, benchmark2011$spl)
+  expect_equal(out2011$spr, benchmark2011$spr)
   expect_equal(out2017$spl, benchmark2017$spl)
+  expect_equal(out2017$spr, benchmark2017$spr)
 })
 
 

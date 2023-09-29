@@ -77,7 +77,7 @@ md_compute_poverty_stats <- function(welfare, weight, povline_lcu, cons_floor = 
 #' md_compute_fgt(
 #'   welfare = 1:2000,
 #'   weight = rep(1, 2000),
-#'   povline_lcu = 10,
+#'   pl = 10,
 #'   alpha = 0
 #' )
 md_compute_fgt <- function(welfare, weight, pl, alpha = 0) {

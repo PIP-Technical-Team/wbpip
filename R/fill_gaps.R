@@ -79,11 +79,11 @@ if (getRversion() >= "2.15.1") {
 #' )
 #' @export
 fill_gaps <- function(request_year,
-                      data = list(df0, df1 = NULL),
+                      data         = list(df0, df1 = NULL),
                       predicted_request_mean,
                       survey_year,
                       default_ppp,
-                      ppp = NULL,
+                      ppp          = NULL,
                       distribution_type,
                       poverty_line = 1.9) {
 
@@ -135,10 +135,10 @@ fg_compute_pip_stats <- function(request_year,
   # Create list of parameters
   params <- fg_create_params(
     predicted_request_mean = predicted_request_mean,
-    data = data,
-    poverty_line = poverty_line,
-    default_ppp = default_ppp,
-    ppp = ppp
+    data                   = data,
+    poverty_line           = poverty_line,
+    default_ppp            = default_ppp,
+    ppp                    = ppp
   )
 
   # Calculate poverty stats

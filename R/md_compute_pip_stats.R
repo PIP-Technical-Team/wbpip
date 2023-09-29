@@ -19,8 +19,8 @@ md_compute_pip_stats <- function(welfare,
 
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(
-    welfare = welfare,
-    weight = population,
+    welfare  = welfare,
+    weight   = population,
     ppp_year = ppp_year
   )
 
@@ -66,6 +66,7 @@ md_compute_pip_stats <- function(welfare,
     mld              = dist_stats[["mld"]],
     polarization     = dist_stats[["polarization"]],
     deciles          = dist_stats[["quantiles"]],
-    spl              = dist_stats[["spl"]]
+    spl              = dist_stats[["spl"]],
+    spr              = dist_stats[["spr"]]
   ))
 }

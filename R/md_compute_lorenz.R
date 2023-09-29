@@ -11,19 +11,22 @@
 #' @param nbins numeric: number of points on the Lorenz curve. if `NULL` the
 #'   returning  Lorenz curve would be the  length of the original welfare vector
 #'   minus the number of `NAs` of different observations in  `welfare` and
-#'   `weight` plus 1 to account for the (0,0) intercept. Default is `100` for
-#'   `length(welfare) > 1000` and `20` otherwise.
+#'   `weight`. Default is `100` for `length(welfare) > 1000` and `20` otherwise.
 #' @param type numeric: integer. Quantile types 5-9. See [quantile]. The default
 #'   method is type 7.
+#' @param force_nbins logical; Force the creation of exact nbins even there is
+#'   no actual data that falls in the corresponding interval. This implies that
+#'   some observations will be repeated.
 #'
 #' @examples
-#' wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
 #' @export
 md_compute_lorenz <- function(welfare,
                               weight = rep(1, length(welfare)),
                               nbins = if (length(welfare) > 1000) 100 else 20,
-                              type  = 7L) {
+                              type  = 7L,
+                              force_nbins = TRUE) {
 
 
   # deal with NAs -----
@@ -53,24 +56,51 @@ md_compute_lorenz <- function(welfare,
   p <- collapse::fcumsum(weight)/collapse::fsum(weight)
   L <- collapse::fcumsum(weighted_welfare)/collapse::fsum(weighted_welfare)
 
-  # Intercept ----
-  p       <- c(0,p)
-  L       <- c(0,L)
-  welfare <- c(0, welfare)
+
 
   # get quantiles  ----
   if (!is.null(nbins)) {
-    probs   <- seq(1/nbins,1, 1/nbins)
+    # probs   <- seq(0,1, 1/nbins)
 
-    welfare <- collapse::.quantile(welfare,
-                                   probs = probs,
-                                   type = type)
-    L       <- collapse::.quantile(L,
-                                  probs = probs,
-                                  type = type)
-    p       <- collapse::.quantile(p,
-                                   probs = probs,
-                                   type = type)
+    bins_groups <- 1:nbins
+    probs       <- round(bins_groups/nbins, 10)
+    bins_groups <- c(0, bins_groups) # zero
+
+
+    # getting indexes
+    fi      <- findInterval(p, probs)
+    uniq_fi <- collapse::funique(fi)
+
+    # in case there are empty bins.
+    msind <- NULL
+    if (!collapse::all_obj_equal(uniq_fi, bins_groups)) {
+
+      if (force_nbins) {
+        msbin <- bins_groups[!bins_groups %in% uniq_fi]
+        msfi  <- findInterval(fi, msbin)
+        msind <-  which(diff(msfi) >= 1)
+      }
+
+    }
+
+    # Add
+    di   <- diff(c(0, fi))
+    ind  <- which(di >= 1)
+    ind  <- rep(ind, di[ind])
+
+    # ind <-
+    #   (diff(fi) >= 1) |>
+    #   which()   |>
+    #   c(msind) |>
+    #   sort() + 1
+
+
+
+
+
+    p       <- p[ind]
+    L       <- L[ind]
+    welfare <- welfare[ind]
   }
 
   # return ----------
@@ -83,3 +113,73 @@ md_compute_lorenz <- function(welfare,
   return(lorenz)
 
 }
+
+
+
+
+
+#' Lorenz curve
+#'
+#' Compute the Lorenz curve for microdata.
+#'
+#' Given a vector of weights and welfare, this functions computes the
+#' Lorenz curve.
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights.
+#' @param nbins numeric: number of points on the Lorenz curve.
+#'
+#' @examples
+#' md_compute_lorenz_old(welfare = 1:2000, weight = rep(1, 2000))
+#' @return data.frame
+md_compute_lorenz_old <- function(welfare, weight, nbins = NULL) {
+  nobs <- length(weight)
+  if (is.null(nbins)) {
+    # Define number of points on the Lorenz curve
+    if (nobs > 1000) nbins <- 100 else nbins <- 20
+  }
+
+  # Placeholder for Lorenz curve
+  welfare_col <- vector(mode = "numeric", length = nbins)
+  lorenz_welfare <- vector(mode = "numeric", length = nbins)
+  lorenz_weight <- vector(mode = "numeric", length = nbins)
+
+  # Compute Lorenz curve
+  weighted_welfare <- weight * welfare
+  sum_weighted_welfare <- sum(weighted_welfare)
+  sum_weights <- sum(weight)
+  welfare_step <- sum_weights / nbins
+  next_level <- welfare_step
+  cum_weight <- 0 # Placeholder for cumulative weight
+  cum_welfare <- 0 # Placeholder for cumulative welfare
+  j <- 1
+
+
+  for (i in seq_len(nobs)) {
+    cum_weight <- cum_weight + weight[i] # Cumulative weight
+    cum_welfare <- cum_welfare + weighted_welfare[i] # Cumulative income
+
+    while ((cum_weight >= next_level) & (j <= nbins)) {
+      welfare_col[j] <- welfare[i]
+      lorenz_welfare[j] <- cum_welfare / sum_weighted_welfare # Normalize cum_welfare
+      lorenz_weight[j] <- cum_weight / sum_weights # Normalize cum_weight
+
+      j <- j + 1
+      # METHODOLOGY QUESTION: Should this hard coded 0.9999 be changed?
+      # Not sure why it is here... Most likely to handle some edge case. I tested
+      # the code without it, and it worked fine...
+      if (j <= nbins) {
+        next_level <- welfare_step * j * 0.999999999
+      }
+    }
+  }
+
+  lorenz <- data.frame(
+    welfare        = welfare_col,
+    lorenz_welfare = lorenz_welfare,
+    lorenz_weight  = lorenz_weight
+  )
+
+  return(lorenz)
+}
+
