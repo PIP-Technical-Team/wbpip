@@ -102,7 +102,10 @@ gd_compute_pip_stats_lq <- function(welfare,
   )
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare,
+                                   population,
+                                   results2$headcount,
+                                   A, B, C)
 
   res <- c(results1, results2, results_fit, reg_results)
 
@@ -277,11 +280,17 @@ check_curve_validity_lq <- function(A, B, C) {
 #'
 #' @return numeric
 #' @keywords internal
-gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+gd_compute_gini_lq <- function(A, B, C) {
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
   # P.isNormal <- TRUE
+
+  kv <- gd_key_values_lq(A, B, C)
+  for (i in seq_along(kv)) {
+    assign(names(kv)[i], kv[[i]])
+  }
+
 
   e1 <- abs(A + C - 1)
   e2 <- 1 + (B / 2) + e
@@ -296,8 +305,14 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 
     # Formula from Datt paper
     # CHECK that code matches formulas in paper
-    gini <- e2 + (tmp3 / (4 * m)) * e1 - (n * abs(e) / (4 * m)) - ((r^2) / (8 * sqrt(m)^3)) *
-      log(abs(((tmp3 + (2 * sqrt(m) * e1))) / (n + (2 * sqrt(m) * abs(e)))))
+    gini <- e2 + (tmp3 / (4 * m)) * e1 -
+      (n * abs(e) / (4 * m)) -
+      ((r^2) / (8 * sqrt(m)^3)) *
+      log(abs((tmp3 + (2 * sqrt(m) * e1)) /
+                (n + (2 * sqrt(m) * abs(e)))
+              )
+          )
+
     # P.gi <- (e/2) - tmp1 - (tmp2 * log(abs(tmpnum/tmpden)) / sqrt(m))
   } else {
     tmp4 <- ((2 * m) + n) / r
@@ -573,7 +588,7 @@ gd_compute_dist_stats_lq <-
     kv <- gd_key_values_lq(A, B, C)
 
   # get distribution stats  -----
-  gini    <- gd_compute_gini_lq(A, B, C, kv$e, kv$m, kv$n, kv$r)
+  gini    <- gd_compute_gini_lq(A, B, C)
   median  <- mean * derive_lq(0.5, A, B, C)
   rmhalf  <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm     <- (1 - gini) * mean
