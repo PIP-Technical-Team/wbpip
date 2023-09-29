@@ -33,15 +33,15 @@ regres <- function(data, is_lq = TRUE) {
   res <- stats::.lm.fit(y = y, x = X)
 
   # Calculate stats
-  ymean <- sum(y) / n
-  sst <- sum((y - ymean)^2) # sum of square total
-  coef <- res$coefficients # regression coefs
+  ymean     <- fsum(y) / n
+  sst       <- fsum((y - ymean)^2) # sum of square total
+  coef      <- res$coefficients # regression coefs
   residuals <- res$residuals # residulas
-  sse <- sum(residuals^2) # sum of square error
-  r2 <- 1 - sse / sst # R-square (This is the R2 formula for models with an intercept)
-  mse <- sse / (n - k) # Mean squared error
-  s2 <- as.vector((residuals %*% residuals) / (n - k))
-  se <- sqrt(s2 * (diag(MASS::ginv(t(X) %*% X)))) # Standard error
+  sse       <- fsum(residuals^2) # sum of square error
+  r2        <- 1 - sse / sst # R-square (This is the R2 formula for models with an intercept)
+  mse       <- sse / (n - k) # Mean squared error
+  s2        <- as.vector((residuals %*% residuals) / (n - k))
+  se        <- sqrt(s2 * (diag(MASS::ginv(t(X) %*% X)))) # Standard error
 
   # REVIEW:
   # Why exp() if isLQ == FALSE?
