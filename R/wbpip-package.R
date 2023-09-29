@@ -1,3 +1,6 @@
+#' @keywords internal
+"_PACKAGE"
+
 #' wbpip: Official methodological Stats of PIP
 #'
 #' wbpip is the main methodological engine of the PIP API
@@ -31,4 +34,7 @@ if (getRversion() >= "2.15.1") {
   )
 }
 
+## usethis namespace: start
+#' @importFrom lifecycle deprecated
+## usethis namespace: end
 NULL

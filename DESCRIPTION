@@ -49,7 +49,8 @@ Imports:
     assertthat,
     cli,
     collapse,
-    MASS
+    MASS,
+    lifecycle
 VignetteBuilder: knitr
 ByteCompile: true
 Config/testthat/edition: 3
