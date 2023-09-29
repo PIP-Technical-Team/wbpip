@@ -9,7 +9,7 @@ gd_compute_spl_lq(
   B = NULL,
   C = NULL,
   median = NULL,
-  ppp_year = c(2017)
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{

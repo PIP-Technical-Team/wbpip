@@ -11,7 +11,7 @@ md_compute_dist_stats(
   nbins = if (length(welfare) > 1000) 100 else 20,
   lorenz = NULL,
   n_quantile = 10,
-  ppp_year = 2017
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{

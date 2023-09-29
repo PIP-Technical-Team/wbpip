@@ -8,7 +8,7 @@ md_compute_spl(
   welfare = NULL,
   weight = NULL,
   weighted_median_welfare = NULL,
-  ppp_year = c(2017, 2011)
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{

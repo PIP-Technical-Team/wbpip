@@ -13,7 +13,7 @@ gd_compute_pip_stats_lb(
   default_ppp,
   ppp = NULL,
   p0 = 0.5,
-  ppp_year = c(2017)
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{

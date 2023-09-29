@@ -12,8 +12,8 @@ md_compute_pip_stats(
   popshare = NULL,
   default_ppp = 1,
   ppp = NULL,
-  ppp_year = 2017,
-  cons_floor = 0.5
+  cons_floor = 0.5,
+  ppp_year = getOption("wbpip.available_ppp_years")
 )
 }
 \arguments{
@@ -33,9 +33,9 @@ quantile is desired. Default .5 (i.e., weighted median)}
 
 \item{ppp}{numeric: PPP requested by user}
 
-\item{ppp_year}{numeric: PPP year - 2017 (default) or 2011}
-
 \item{cons_floor}{numeric: gives the consumption floor. Default is $0.5 per day, if NULL then no floor.}
+
+\item{ppp_year}{numeric: PPP year - 2017 (default) or 2011}
 }
 \value{
 list
