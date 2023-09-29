@@ -2,7 +2,7 @@
 % Please edit documentation in R/md_compute_lorenz.R
 \name{md_compute_lorenz_old}
 \alias{md_compute_lorenz_old}
-\title{Lorenz curve}
+\title{Lorenz curve (old methodoly)}
 \usage{
 md_compute_lorenz_old(welfare, weight, nbins = NULL)
 }
@@ -17,12 +17,20 @@ md_compute_lorenz_old(welfare, weight, nbins = NULL)
 data.frame
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This functions has been deprecated because it was inefficient. The original
+name of the function was \code{\link[=md_compute_lorenz]{md_compute_lorenz()}} but it has been changed to
+\code{md_compute_lorenz_old()} because the new version requires the original name
+for compatibility with other PIP products. This function is available only
+for replicability  and testing purposes.
+
 Compute the Lorenz curve for microdata.
-}
-\details{
-Given a vector of weights and welfare, this functions computes the
-Lorenz curve.
+
+Given a vector of weights and welfare, this functions computes the Lorenz
+curve.
 }
 \examples{
-md_compute_lorenz_old(welfare = 1:2000, weight = rep(1, 2000))
+wbpip:::md_compute_lorenz_old(welfare = 1:2000, weight = rep(1, 2000))
 }
+\keyword{internal}

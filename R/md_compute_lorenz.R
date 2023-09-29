@@ -106,21 +106,37 @@ md_compute_lorenz <- function(welfare,
 # to end up with nbins.
 
 
-#' Lorenz curve
+#' Lorenz curve (old methodoly)
+#'
+#' @description `r lifecycle::badge("deprecated")`
+#'
+#' This functions has been deprecated because it was inefficient. The original
+#' name of the function was [md_compute_lorenz()] but it has been changed to
+#' `md_compute_lorenz_old()` because the new version requires the original name
+#' for compatibility with other PIP products. This function is available only
+#' for replicability  and testing purposes.
 #'
 #' Compute the Lorenz curve for microdata.
 #'
-#' Given a vector of weights and welfare, this functions computes the
-#' Lorenz curve.
+#' Given a vector of weights and welfare, this functions computes the Lorenz
+#' curve.
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights.
 #' @param nbins numeric: number of points on the Lorenz curve.
 #'
 #' @examples
-#' md_compute_lorenz_old(welfare = 1:2000, weight = rep(1, 2000))
+#' wbpip:::md_compute_lorenz_old(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
+#' @keywords internal
 md_compute_lorenz_old <- function(welfare, weight, nbins = NULL) {
+  lifecycle::deprecate_warn(
+    "0.1.0.9001",
+    "md_compute_lorenz_old()",
+    "md_compute_lorenz()",
+    details = "This function was inefficient."
+  )
+
   nobs <- length(weight)
   if (is.null(nbins)) {
     # Define number of points on the Lorenz curve
