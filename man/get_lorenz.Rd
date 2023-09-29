@@ -9,7 +9,7 @@ get_lorenz(
   welfare,
   weight,
   distribution_type = c("micro", "group", "aggregate", "imputed"),
-  nbins = NULL
+  nbins = if (length(welfare) > 1000) 100 else 20
 )
 }
 \arguments{
@@ -26,8 +26,7 @@ group, aggregate or imputed.}
 \item{nbins}{numeric: number of points on the Lorenz curve. if \code{NULL} the
 returning  Lorenz curve would be the  length of the original welfare vector
 minus the number of \code{NAs} of different observations in  \code{welfare} and
-\code{weight} plus 1 to account for the (0,0) intercept. Default is \code{100} for
-\code{length(welfare) > 1000} and \code{20} otherwise.}
+\code{weight}. Default is \code{100} for \code{length(welfare) > 1000} and \code{20} otherwise.}
 }
 \value{
 data.frame

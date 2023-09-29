@@ -12,8 +12,6 @@
 #'   returning  Lorenz curve would be the  length of the original welfare vector
 #'   minus the number of `NAs` of different observations in  `welfare` and
 #'   `weight`. Default is `100` for `length(welfare) > 1000` and `20` otherwise.
-#' @param type numeric: integer. Quantile types 5-9. See [quantile]. The default
-#'   method is type 7.
 #' @param force_nbins logical; Force the creation of exact nbins even there is
 #'   no actual data that falls in the corresponding interval. This implies that
 #'   some observations will be repeated.
@@ -25,7 +23,6 @@
 md_compute_lorenz <- function(welfare,
                               weight = rep(1, length(welfare)),
                               nbins = if (length(welfare) > 1000) 100 else 20,
-                              type  = 7L,
                               force_nbins = TRUE) {
 
 
@@ -58,7 +55,7 @@ md_compute_lorenz <- function(welfare,
 
 
 
-  # get quantiles  ----
+  # get nbins  ----
   if (!is.null(nbins)) {
     # probs   <- seq(0,1, 1/nbins)
 
@@ -66,38 +63,21 @@ md_compute_lorenz <- function(welfare,
     probs       <- round(bins_groups/nbins, 10)
     bins_groups <- c(0, bins_groups) # zero
 
-
     # getting indexes
     fi      <- findInterval(p, probs)
-    uniq_fi <- collapse::funique(fi)
+    di      <- diff(c(0, fi)) # [1] See notes.
+    rp      <- which(di >= 1) # [2] See notes.
 
     # in case there are empty bins.
-    msind <- NULL
-    if (!collapse::all_obj_equal(uniq_fi, bins_groups)) {
-
-      if (force_nbins) {
-        msbin <- bins_groups[!bins_groups %in% uniq_fi]
-        msfi  <- findInterval(fi, msbin)
-        msind <-  which(diff(msfi) >= 1)
-      }
-
+    uniq_fi <- collapse::funique(fi)
+    if (!collapse::all_obj_equal(uniq_fi, bins_groups) &
+        force_nbins ) {
+      ind  <- rep(rp, di[rp]) # [3] See notes.
+    } else {
+      ind <- rp
     }
 
-    # Add
-    di   <- diff(c(0, fi))
-    ind  <- which(di >= 1)
-    ind  <- rep(ind, di[ind])
-
-    # ind <-
-    #   (diff(fi) >= 1) |>
-    #   which()   |>
-    #   c(msind) |>
-    #   sort() + 1
-
-
-
-
-
+    # extract the values from the original vectors.
     p       <- p[ind]
     L       <- L[ind]
     welfare <- welfare[ind]
@@ -114,8 +94,16 @@ md_compute_lorenz <- function(welfare,
 
 }
 
-
-
+# Notes on the code above
+# [1] find differences in intervals. If all intervals are found, differences
+# should 1s. If one or more subsequent intervals are not found, the
+# difference will be higher than 1. I add the zero(0) to account in case the
+# first interval is not found.
+# [2] Find which observations account for the change of interval. Since we added
+# a zero in the previous step, there is no need to sum 1.
+# [3] Repeat index according to the difference. e.g., If no interval is found,
+# the difference will 2 and those the index should be counted twice in order
+# to end up with nbins.
 
 
 #' Lorenz curve

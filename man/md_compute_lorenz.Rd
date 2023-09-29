@@ -8,7 +8,7 @@ md_compute_lorenz(
   welfare,
   weight = rep(1, length(welfare)),
   nbins = if (length(welfare) > 1000) 100 else 20,
-  type = 7L
+  force_nbins = TRUE
 )
 }
 \arguments{
@@ -20,11 +20,11 @@ md_compute_lorenz(
 \item{nbins}{numeric: number of points on the Lorenz curve. if \code{NULL} the
 returning  Lorenz curve would be the  length of the original welfare vector
 minus the number of \code{NAs} of different observations in  \code{welfare} and
-\code{weight} plus 1 to account for the (0,0) intercept. Default is \code{100} for
-\code{length(welfare) > 1000} and \code{20} otherwise.}
+\code{weight}. Default is \code{100} for \code{length(welfare) > 1000} and \code{20} otherwise.}
 
-\item{type}{numeric: integer. Quantile types 5-9. See \link{quantile}. The default
-method is type 7.}
+\item{force_nbins}{logical; Force the creation of exact nbins even there is
+no actual data that falls in the corresponding interval. This implies that
+some observations will be repeated.}
 }
 \value{
 data.frame
@@ -37,5 +37,5 @@ Given a vector of weights and welfare, this functions computes the Lorenz
 curve.
 }
 \examples{
-wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
 }

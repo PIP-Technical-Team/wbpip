@@ -139,20 +139,20 @@ gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
     C = C)
 
   out <- list(
-    headcount = pov_stats$headcount,
-    poverty_gap = pov_stats$pg,
+    headcount        = pov_stats$headcount,
+    poverty_gap      = pov_stats$pg,
     poverty_severity = pov_stats$p2,
-    eh = pov_stats$eh,
-    epg = pov_stats$epg,
-    ep = pov_stats$ep,
-    gh = pov_stats$gh,
-    gpg = pov_stats$gpg,
-    gp = pov_stats$gp,
-    watts = pov_stats$watts,
-    dl = pov_stats$dl,
-    ddl = pov_stats$ddl,
-    is_normal = validity$is_normal,
-    is_valid = validity$is_valid
+    eh               = pov_stats$eh,
+    epg              = pov_stats$epg,
+    ep               = pov_stats$ep,
+    gh               = pov_stats$gh,
+    gpg              = pov_stats$gpg,
+    gp               = pov_stats$gp,
+    watts            = pov_stats$watts,
+    dl               = pov_stats$dl,
+    ddl              = pov_stats$ddl,
+    is_normal        = validity$is_normal,
+    is_valid         = validity$is_valid
   )
 
   return(out)
@@ -167,31 +167,31 @@ gd_estimate_poverty_stats_lb <- function(mean, povline, A, B, C) {
   # Compute distributional measures
   pov_stats <-
     gd_compute_poverty_stats_lb(
-      mean = mean,
+      mean    = mean,
       povline = povline,
-      A = A,
-      B = B,
-      C = C
+      A       = A,
+      B       = B,
+      C       = C
     )
 
   # Check validity
   validity <- check_curve_validity_lb(headcount = pov_stats$headcount, A, B, C)
 
   out <- list(
-    headcount = pov_stats$headcount,
-    poverty_gap = pov_stats$pg,
+    headcount        = pov_stats$headcount,
+    poverty_gap      = pov_stats$pg,
     poverty_severity = pov_stats$p2,
-    eh = pov_stats$eh,
-    epg = pov_stats$epg,
-    ep = pov_stats$ep,
-    gh = pov_stats$gh,
-    gpg = pov_stats$gpg,
-    gp = pov_stats$gp,
-    watts = pov_stats$watts,
-    dl = pov_stats$dl,
-    ddl = pov_stats$ddl,
-    is_normal = validity$is_normal,
-    is_valid = validity$is_valid
+    eh               = pov_stats$eh,
+    epg              = pov_stats$epg,
+    ep               = pov_stats$ep,
+    gh               = pov_stats$gh,
+    gpg              = pov_stats$gpg,
+    gp               = pov_stats$gp,
+    watts            = pov_stats$watts,
+    dl               = pov_stats$dl,
+    ddl              = pov_stats$ddl,
+    is_normal        = validity$is_normal,
+    is_valid         = validity$is_valid
   )
 
   return(out)

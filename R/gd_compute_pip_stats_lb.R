@@ -22,10 +22,15 @@ gd_compute_pip_stats_lb <- function(welfare,
                                     default_ppp,
                                     ppp = NULL,
                                     p0 = 0.5,
-                                    ppp_year = c(2017)) {
+                                    ppp_year = getOption("wbpip.available_ppp_years")) {
 
-  # input checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
@@ -340,12 +345,15 @@ gd_compute_spl_lb <- function(
   B = NULL,
   C = NULL,
   median = NULL,
-  ppp_year = c(2017)
-){
+  ppp_year = getOption("wbpip.available_ppp_years")) {
 
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
 
-  # Input Checks
-  stopifnot(ppp_year %in% c(2017, 2011))
   stopifnot(                                         # stop if not
     any(                                             #   either...
       c(

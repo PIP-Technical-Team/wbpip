@@ -4,7 +4,13 @@
 \alias{md_compute_bins}
 \title{Compute bins}
 \usage{
-md_compute_bins(welfare, weight, nbins = 100, na.rm = FALSE, output = "simple")
+md_compute_bins(
+  welfare,
+  weight,
+  nbins = if (length(welfare) > 1000) 100 else 20,
+  na.rm = FALSE,
+  output = "simple"
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}

@@ -15,10 +15,15 @@ md_compute_spl <- function(
     welfare = NULL,
     weight = NULL,
     weighted_median_welfare = NULL,
-    ppp_year = c(2017, 2011)
-){
-  # Input Checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+    ppp_year = getOption("wbpip.available_ppp_years")) {
+
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
   stopifnot(                                       # stop if not
     any(                                           #   either...
       c(

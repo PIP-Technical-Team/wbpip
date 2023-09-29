@@ -23,9 +23,15 @@ md_compute_dist_stats <- function(welfare,
                                   nbins = if (length(welfare) > 1000) 100 else 20,
                                   lorenz = NULL,
                                   n_quantile = 10,
-                                  ppp_year = 2017) {
-  # Input Checks
-  stopifnot(ppp_year %in% c(2017, 2011))
+                                  ppp_year = getOption("wbpip.available_ppp_years")) {
+
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
 
   if (is.null(mean)) {
     mean <- collapse::fmean(x = welfare, w = weight)

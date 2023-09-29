@@ -8,7 +8,7 @@ md_compute_dist_stats(
   welfare,
   weight,
   mean = NULL,
-  nbins = NULL,
+  nbins = if (length(welfare) > 1000) 100 else 20,
   lorenz = NULL,
   n_quantile = 10,
   ppp_year = 2017
@@ -17,10 +17,15 @@ md_compute_dist_stats(
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,
+\code{rep(1, length(welfare))}.}
+
 \item{mean}{numeric: A value with the mean. Optional.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve. Optional. Only
-used if \code{lorenz} is NULL}
+\item{nbins}{numeric: number of points on the Lorenz curve. if \code{NULL} the
+returning  Lorenz curve would be the  length of the original welfare vector
+minus the number of \code{NAs} of different observations in  \code{welfare} and
+\code{weight}. Default is \code{100} for \code{length(welfare) > 1000} and \code{20} otherwise.}
 
 \item{lorenz}{data.frame: A table with points on the Lorenz curve. Output of
 \code{md_compute_lorenz()}. Optional.}

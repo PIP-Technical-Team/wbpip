@@ -4,7 +4,12 @@
 \alias{lorenz_alt}
 \title{lorenz_alt}
 \usage{
-lorenz_alt(welfare, weight, nbins = NULL, na.rm = FALSE)
+lorenz_alt(
+  welfare,
+  weight,
+  nbins = if (length(welfare) > 1000) 100 else 20,
+  na.rm = FALSE
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}

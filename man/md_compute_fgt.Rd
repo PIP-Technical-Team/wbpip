@@ -23,7 +23,7 @@ Estimate FGT measures from microdata
 md_compute_fgt(
   welfare = 1:2000,
   weight = rep(1, 2000),
-  povline_lcu = 10,
+  pl = 10,
   alpha = 0
 )
 }

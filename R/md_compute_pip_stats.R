@@ -12,10 +12,16 @@ md_compute_pip_stats <- function(welfare,
                                  popshare = NULL,
                                  default_ppp = 1,
                                  ppp = NULL,
-                                 ppp_year = 2017,
-                                 cons_floor = 0.5) {
+                                 cons_floor = 0.5,
+                                 ppp_year = getOption("wbpip.available_ppp_years")) {
 
-  stopifnot(ppp_year %in% c(2017, 2011))
+  # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
 
   # Compute distributional statistics
   dist_stats <- md_compute_dist_stats(

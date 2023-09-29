@@ -27,17 +27,23 @@ compute_pip_stats <- function(welfare,
                               default_ppp = 1,
                               ppp = NULL,
                               p0 = 0.5,
-                              ppp_year = 2017,
                               cons_floor = c(0.5),
                               distribution_type = c(
                                 "micro",
                                 "group",
                                 "aggregate",
-                                "imputed"
-                              )) {
+                                "imputed"),
+                              ppp_year = getOption("wbpip.available_ppp_years")) {
+
   # Input checks
+  ppp_year <- ppp_year[1L]
+  if (!(ppp_year %in% getOption("wbpip.available_ppp_years"))) {
+    cli::cli_abort("{.var ppp_year} must be
+                     {.or {.val {getOption(\"wbpip.available_ppp_years\")}}}")
+  }
+
+
   distribution_type <- match.arg(distribution_type)
-  stopifnot(ppp_year %in% c(2017, 2011))
 
   if (distribution_type == "micro") {
     out <- md_compute_pip_stats(
