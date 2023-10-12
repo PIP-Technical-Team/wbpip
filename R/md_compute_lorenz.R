@@ -60,13 +60,14 @@ md_compute_lorenz <- function(welfare,
     # probs   <- seq(0,1, 1/nbins)
 
     bins_groups <- 1:nbins
-    probs       <- round(bins_groups/nbins, 10)
+    probs       <- bins_groups/nbins
     bins_groups <- c(0, bins_groups) # zero
 
     # getting indexes
-    fi      <- findInterval(p, probs)
-    di      <- diff(c(0, fi)) # [1] See notes.
-    rp      <- which(di >= 1) # [2] See notes.
+    rounding <- 10
+    fi       <- findInterval(round(p, rounding), round(probs, rounding))
+    di       <- diff(c(0, fi)) # [1] See notes.
+    rp       <- which(di >= 1) # [2] See notes.
 
     # in case there are empty bins.
     uniq_fi <- collapse::funique(fi)
@@ -96,7 +97,7 @@ md_compute_lorenz <- function(welfare,
 
 # Notes on the code above
 # [1] find differences in intervals. If all intervals are found, differences
-# should 1s. If one or more subsequent intervals are not found, the
+# should be 1s. If one or more subsequent intervals are not found, the
 # difference will be higher than 1. I add the zero(0) to account in case the
 # first interval is not found.
 # [2] Find which observations account for the change of interval. Since we added
