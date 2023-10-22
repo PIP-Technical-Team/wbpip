@@ -580,6 +580,37 @@ gd_compute_poverty_stats_lq <- function(mean,
   )
 }
 
+#' Compute headcount from Lorenz Quadratic fit
+#'
+#' @param mean numeric: Welfare mean.
+#' @param povline numeric: Poverty line.
+#' @param B numeric: Second regression coefficient.
+#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+#' an ellipse (m is called alpha in paper).
+#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper.
+#' @param r numeric:r = (n^2) - (4 * m * e^2). r is called K in paper.
+#'
+#' @return numeric
+#' @keywords internal
+gd_compute_headcount_lq <- function(mean,
+                                    povline,
+                                    B,
+                                    m,
+                                    n,
+                                    r) {
+  # Compute headcount
+  bu <- B + (2 * povline / mean)
+  u <- mean / povline
+  headcount <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
+
+  if (headcount < 0) {
+    headcount <- 0L
+  }
+
+  return(headcount)
+}
+
+
 #' Estimates poverty and inequality stats from Quadratic Lorenz fit
 #'
 #' @param mean numeric: Welfare mean.
