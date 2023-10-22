@@ -30,6 +30,8 @@
 * Fix duplicated values being returned for group data when poverty line when no
 Lorenz fit was successful
 
+* [compute quantiles for `md_compute_quantiles` other than 10](https://github.com/PIP-Technical-Team/wbpip/issues/20)
+
 # wbpip 0.0.3
 
 Initial release used in the PIP soft-launch on February 9, 2022

@@ -10,10 +10,19 @@ test_that("md_compute_quantiles() output is formatted as expected", {
   expect_equal(names(out), c("quantiles", "median"))
   expect_equal(length(out$quantiles), 10)
   expect_equal(length(out$median), 1)
-  # FIX: Only work for deciles currently
-  # out <- md_compute_quantiles(lorenz, n_quantile = 5)
-  # expect_equal(length(out$quantiles), 5)
-  # out <- md_compute_quantiles(lorenz, n_quantile = 20)
+
+  out <- md_compute_quantiles(md_lorenz2$lorenz_welfare,
+                              md_lorenz2$lorenz_weight,
+                              md_lorenz2$welfare,
+                              n_quantile = 15)
+  expect_equal(length(out$quantiles), 15)
+
+  out <- md_compute_quantiles(lwelfare = md_lorenz1$lorenzY,
+                              lweight = md_lorenz1$lorenzW,
+                              percentile = md_lorenz1$y, n_quantile = 20)
+  expect_equal(length(out$quantiles), 20)
+  expect_equal(length(out$median), 1)
+
 
   expect_error(md_compute_quantiles(
     lwelfare   = md_lorenz1$lorenzY,
