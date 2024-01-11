@@ -102,7 +102,7 @@ gd_select_lorenz <- function(lq, lb) {
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 
 use_lq_for_poverty <- function(lq,
                                lb) {
@@ -164,7 +164,7 @@ use_lq_for_poverty <- function(lq,
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 use_lq_for_distributional <- function(lq,
                                       lb) {
   # X = Yes

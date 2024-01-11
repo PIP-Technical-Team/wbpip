@@ -17,7 +17,7 @@
 #' @param quiet logical: If TRUE output messages are suppressed.
 #'
 #' @return data.table
-#' @keywords internal
+#' @export
 #' @examples
 #' # Load example data
 #' data("gd_GHI_2009_income")

@@ -31,4 +31,3 @@ Paper 50. World Bank, Washington, DC.
 Kakwani, N. 1980. "\href{https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46}{On a Class of Poverty Measures}".
 \emph{Econometrica 48} (2): 437-46.
 }
-\keyword{internal}

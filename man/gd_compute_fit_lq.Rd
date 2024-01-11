@@ -28,4 +28,3 @@ list
 \description{
 Measures the fit of the model to the data.
 }
-\keyword{internal}

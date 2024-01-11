@@ -24,4 +24,3 @@ list
 gd_lq_key_values
 Get key values in Table 2 of Datt (1998) paper
 }
-\keyword{internal}

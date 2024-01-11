@@ -112,7 +112,7 @@ gd_compute_pip_stats_lq <- function(welfare,
 #' *Journal of Econometrics 40* (2): 327-338.
 #'
 #' @return data.frame
-#' @keywords internal
+#' @export
 create_functional_form_lq <- function(welfare,
                                       population) {
   # CHECK inputs
@@ -198,7 +198,7 @@ derive_lq <- function(x, A, B, C) {
 #' *Journal of Econometrics 40* (2): 327-338.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
   is_normal <- FALSE
   is_valid <- FALSE
@@ -665,7 +665,7 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 #'   `regres_lq()$coef[3]`.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 gd_compute_fit_lq <- function(welfare,
                               population,
                               headcount,
@@ -709,7 +709,7 @@ gd_compute_fit_lq <- function(welfare,
 #' @inheritParams gd_compute_poverty_stats_lq
 #'
 #' @return poverty headcount
-#' @keywords internal
+#' @export
 gd_compute_headcount_lq <- function(mean,
                                     povline,
                                     B,

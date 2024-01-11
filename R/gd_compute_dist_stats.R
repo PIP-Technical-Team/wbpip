@@ -153,7 +153,7 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 #' Get key values in Table 2 of Datt (1998) paper
 #' @inheritParams gd_estimate_lq
 #' @return list
-#' @keywords internal
+#' @export
 gd_lq_key_values <- function(A, B, C) {
 
   # Theorem 3 from original Lorenz quadratic paper

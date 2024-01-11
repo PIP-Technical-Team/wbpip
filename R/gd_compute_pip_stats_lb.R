@@ -87,7 +87,7 @@ gd_compute_pip_stats_lb <- function(welfare,
 #' *Econometrica 48* (2): 437-46.
 #'
 #' @return data.frame
-#' @keywords internal
+#' @export
 create_functional_form_lb <- function(welfare, population) {
   # CHECK inputs
   # assertthat::assert_that(is.numeric(population))
@@ -166,7 +166,7 @@ derive_lb <- function(x, A, B, C) {
 #'    *Econometrica 48* (2): 437-46.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 check_curve_validity_lb <- function(headcount, A, B, C) {
   is_valid <- TRUE
 
@@ -556,7 +556,7 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
 #'   `regres()$coef[3]`.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 gd_compute_fit_lb <- function(welfare,
                               population,
                               headcount,
@@ -613,7 +613,7 @@ DDLK <- function(h, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
   # Compute headcount
   headcount <- rtSafe(0.0001, 0.9999, 1e-4,

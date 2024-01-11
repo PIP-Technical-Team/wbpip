@@ -27,4 +27,3 @@ poverty headcount
 \description{
 Compute poverty for Quadratic Lorenz
 }
-\keyword{internal}
