@@ -281,8 +281,7 @@ test_that("gd_compute_headcount_lb will return NAs, headcount is negative or NA"
 
 test_that("gd_compute_pov_severity_lb returns expected results", {
   # Constants
-  mean <- 51.5660557757944
-  povline <- 57.791666666666664
+  u <- 0.892274937721028
   headcount <- 0.71833938360214233
   pg <- 0.27137498479545558
   A <- 0.57803721740313529
@@ -291,8 +290,7 @@ test_that("gd_compute_pov_severity_lb returns expected results", {
   benchmarck <- 0.12933674851941607
 
   out <- gd_compute_pov_severity_lb(
-    mean = mean,
-    povline = povline,
+    u = u,
     headcount = headcount,
     pov_gap = pg,
     A = A,
@@ -699,13 +697,12 @@ test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
 test_that("gd_compute_pov_gap_lb works when headcount is NA", {
 
   # constants
-  mean <- 51.5660557757944
-  povline <- 57.791666666666664
+  u <- 0.892274937721028
   A <- 0.57803721740313529
   B <- 0.94205090386544987
   C <- 0.52578600019473676
 
-  res <- gd_compute_pov_gap_lb(mean = mean, povline = povline, A = A, B = B, C = C,
+  res <- gd_compute_pov_gap_lb(u = u, A = A, B = B, C = C,
                                headcount = NA)
   expect_true(is.na(res))
 
@@ -714,17 +711,16 @@ test_that("gd_compute_pov_gap_lb works when headcount is NA", {
 test_that("gd_compute_pov_severity_lb works when headcount or pov_gap is NA", {
 
   # constants
-  mean <- 51.5660557757944
-  povline <- 57.791666666666664
+  u <- 0.892274937721028
   A <- 0.57803721740313529
   B <- 0.94205090386544987
   C <- 0.52578600019473676
 
-  res <- gd_compute_pov_severity_lb(mean = mean, povline = povline, A = A, B = B, C = C,
+  res <- gd_compute_pov_severity_lb(u = u, A = A, B = B, C = C,
                                     headcount = NA, pov_gap = NA)
   expect_true(is.na(res))
 
-  res <- gd_compute_pov_severity_lb(mean = mean, povline = povline, A = A, B = B, C = C,
+  res <- gd_compute_pov_severity_lb(u = u, A = A, B = B, C = C,
                                     headcount = 1, pov_gap = NA)
   expect_true(is.na(res))
 
