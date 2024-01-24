@@ -8,7 +8,7 @@ prod_gd_compute_pip_stats_lb(
   welfare,
   povline,
   population,
-  requested_mean,
+  mean,
   popshare = NULL,
   default_ppp,
   ppp = NULL,
@@ -19,11 +19,11 @@ prod_gd_compute_pip_stats_lb(
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line. (default 1)}
 
 \item{population}{numeric: Cumulative proportion of population.}
 
-\item{requested_mean}{numeric: Welfare mean.}
+\item{mean}{numeric: Welfare mean. (default 1)}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional.}

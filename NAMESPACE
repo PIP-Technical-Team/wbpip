@@ -3,6 +3,7 @@
 export(compute_pip_stats)
 export(deflate_welfare_mean)
 export(fill_gaps)
+export(gd_compute_pip_stats)
 export(gd_estimate_distribution)
 export(get_9010_ratio)
 export(get_average_shortfall)

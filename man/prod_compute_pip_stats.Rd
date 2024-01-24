@@ -8,7 +8,7 @@ prod_compute_pip_stats(
   welfare,
   povline,
   population = NULL,
-  requested_mean = NULL,
+  mean = NULL,
   svy_mean_lcu = NULL,
   svy_median_lcu,
   svy_median_ppp,
@@ -27,7 +27,7 @@ prod_compute_pip_stats(
 \item{population}{numeric: A vector of population weights, optional, a vector
 of 1s if not specified.}
 
-\item{requested_mean}{numeric: Welfare mean in international dollars}
+\item{mean}{numeric: Welfare mean in international dollars (default 1)}
 
 \item{svy_mean_lcu}{numeric: Welfare mean in Local Currency Unit}
 

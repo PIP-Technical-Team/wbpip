@@ -33,7 +33,7 @@ welfare <- c(
 lq <- gd_compute_pip_stats_lq(
   welfare = welfare,
   population = population,
-  requested_mean = welfare_mean,
+  mean = welfare_mean,
   povline = monthly_povline,
   default_ppp = ppp
 )
@@ -41,7 +41,7 @@ lq <- gd_compute_pip_stats_lq(
 lb <- gd_compute_pip_stats_lb(
   welfare = welfare,
   population = population,
-  requested_mean = welfare_mean,
+  mean = welfare_mean,
   povline = monthly_povline,
   default_ppp = ppp
 )

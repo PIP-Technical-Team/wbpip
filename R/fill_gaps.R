@@ -181,7 +181,7 @@ fg_create_params <- function(predicted_request_mean,
         povline = poverty_line,
         default_ppp = default_ppp[1],
         ppp = ppp,
-        requested_mean = predicted_request_mean[1]
+        mean = predicted_request_mean[1]
       )
     )
     # If two surveys (micro or grouped)
@@ -193,7 +193,7 @@ fg_create_params <- function(predicted_request_mean,
         povline = poverty_line,
         default_ppp = default_ppp[1],
         ppp = ppp,
-        requested_mean = predicted_request_mean[1]
+        mean = predicted_request_mean[1]
       ),
       params1 = list(
         welfare = data$df1$welfare,
@@ -201,7 +201,7 @@ fg_create_params <- function(predicted_request_mean,
         povline = poverty_line,
         default_ppp = default_ppp[2],
         ppp = ppp,
-        requested_mean = predicted_request_mean[2]
+        mean = predicted_request_mean[2]
       )
     )
   }

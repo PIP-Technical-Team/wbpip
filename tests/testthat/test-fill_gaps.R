@@ -238,7 +238,7 @@ test_that("fg_create_params() is working correctly", {
     names(out$params0),
     c(
       "welfare", "population", "povline",
-      "default_ppp", "ppp", "requested_mean"
+      "default_ppp", "ppp", "mean"
     )
   )
   expect_identical(out$params0$welfare, md_DEF_2000_consumption$welfare)
@@ -246,7 +246,7 @@ test_that("fg_create_params() is working correctly", {
   expect_identical(out$params0$povline, 1.9)
   expect_identical(out$params0$default_ppp, 1)
   expect_true(is.null(out$params0$ppp))
-  expect_identical(out$params0$requested_mean, 6)
+  expect_identical(out$params0$mean, 6)
 
   # Two surveys
   out <- fg_create_params(
@@ -261,14 +261,14 @@ test_that("fg_create_params() is working correctly", {
     names(out$params0),
     c(
       "welfare", "population", "povline",
-      "default_ppp", "ppp", "requested_mean"
+      "default_ppp", "ppp", "mean"
     )
   )
   expect_identical(
     names(out$params1),
     c(
       "welfare", "population", "povline",
-      "default_ppp", "ppp", "requested_mean"
+      "default_ppp", "ppp", "mean"
     )
   )
   expect_identical(out$params0$welfare, md_GHI_2000_consumption$welfare)
@@ -276,13 +276,13 @@ test_that("fg_create_params() is working correctly", {
   expect_identical(out$params0$povline, 1.9)
   expect_identical(out$params0$default_ppp, 1)
   expect_true(is.null(out$params0$ppp))
-  expect_identical(out$params0$requested_mean, 4)
+  expect_identical(out$params0$mean, 4)
   expect_identical(out$params1$welfare, gd_GHI_2009_income$welfare)
   expect_identical(out$params1$population, gd_GHI_2009_income$weight)
   expect_identical(out$params1$povline, 1.9)
   expect_identical(out$params1$default_ppp, 1)
   expect_true(is.null(out$params1$ppp))
-  expect_identical(out$params1$requested_mean, 6)
+  expect_identical(out$params1$mean, 6)
 })
 
 # check_inputs_fill_gaps()

@@ -11,7 +11,7 @@
 prod_gd_compute_pip_stats <- function(welfare,
                                       povline,
                                       population,
-                                      requested_mean,
+                                      mean,
                                       svy_median_lcu,
                                       svy_median_ppp,
                                       popshare = NULL,
@@ -21,7 +21,7 @@ prod_gd_compute_pip_stats <- function(welfare,
 
   # Adjust mean and median if different PPP value is provided
   if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
+    mean <- mean * default_ppp / ppp
     median <- svy_median_lcu * default_ppp / ppp
   } else {
     ppp <- default_ppp
@@ -32,7 +32,7 @@ prod_gd_compute_pip_stats <- function(welfare,
   results_lq <- prod_gd_compute_pip_stats_lq(
     welfare = welfare,
     population = population,
-    requested_mean = requested_mean,
+    mean = mean,
     povline = povline,
     popshare = popshare,
     default_ppp = default_ppp,
@@ -44,7 +44,7 @@ prod_gd_compute_pip_stats <- function(welfare,
   results_lb <- prod_gd_compute_pip_stats_lb(
     welfare = welfare,
     population = population,
-    requested_mean = requested_mean,
+    mean = mean,
     povline = povline,
     popshare = popshare,
     default_ppp = default_ppp,

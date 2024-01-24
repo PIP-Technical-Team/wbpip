@@ -5,7 +5,7 @@ gd_ex2 <- readRDS(test_path("testdata", "gd_ex2.RDS"))
 test_that("gd_compute_pip_stats() returns correct results", {
   res <- gd_compute_pip_stats(
     gd_ex2$welfare, gd_ex2$weight,
-    requested_mean = 2.911786, povline = 1.9,
+    mean = 2.911786, povline = 1.9,
     default_ppp = 1
   )
   expect_equal(res$mean, 2.911786)
@@ -74,7 +74,7 @@ test_that("there is no non-monotonicity issues", {
     welfare = welfare,
     povline = 24.35,
     population = population,
-    requested_mean = 3.036399
+    mean = 3.036399
   )
   hc_inferior <- res$headcount
 
@@ -82,7 +82,7 @@ test_that("there is no non-monotonicity issues", {
     welfare = welfare,
     povline = 30,
     population = population,
-    requested_mean = 3.036399
+    mean = 3.036399
   )
   hc_superior <- res$headcount
 

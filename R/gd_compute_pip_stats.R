@@ -5,9 +5,9 @@
 #'
 #' @param welfare numeric: Cumulative proportion of welfare held by that
 #' proportion of the population (Lorenz Curve).
-#' @param povline numeric: Poverty line.
+#' @param povline numeric: Poverty line. (default 1)
 #' @param population numeric: Cumulative proportion of population.
-#' @param requested_mean numeric: Welfare mean.
+#' @param mean numeric: Welfare mean. (default 1)
 #' @param popshare numeric: Share of population living below the poverty line.
 #' Optional.
 #' @param default_ppp numeric: Default purchasing power parity.
@@ -15,20 +15,20 @@
 #' @param p0 numeric: **TO BE DOCUMENTED**.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 #' @examples
 #' # Compute PIP stats
-#' res <- wbpip:::gd_compute_pip_stats(
+#' res <- wbpip::gd_compute_pip_stats(
 #'          grouped_data_ex2$welfare,
 #'          grouped_data_ex2$weight,
-#'          requested_mean = 2.911786,
+#'          mean = 2.911786,
 #'          povline = 1.9,
 #'          default_ppp = 1)
 #'
 gd_compute_pip_stats <- function(welfare,
-                                 povline,
+                                 povline = 1,
                                  population,
-                                 requested_mean,
+                                 mean = 1,
                                  popshare = NULL,
                                  default_ppp = 1,
                                  ppp = NULL,
@@ -39,7 +39,7 @@ gd_compute_pip_stats <- function(welfare,
   results_lq <- gd_compute_pip_stats_lq(
     welfare = welfare,
     population = population,
-    requested_mean = requested_mean,
+    mean = mean,
     povline = povline,
     popshare = popshare,
     default_ppp = default_ppp,
@@ -51,7 +51,7 @@ gd_compute_pip_stats <- function(welfare,
   results_lb <- gd_compute_pip_stats_lb(
     welfare = welfare,
     population = population,
-    requested_mean = requested_mean,
+    mean = mean,
     povline = povline,
     popshare = popshare,
     default_ppp = default_ppp,

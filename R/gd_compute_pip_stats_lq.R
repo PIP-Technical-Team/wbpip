@@ -21,7 +21,7 @@
 #' res <- wbpip:::gd_compute_pip_stats_lq(
 #'   welfare = L,
 #'   population = P,
-#'   requested_mean = mu,
+#'   mean = mu,
 #'   povline = z,
 #'   default_ppp = 1
 #' )
@@ -30,7 +30,7 @@
 #' res2 <- wbpip:::gd_compute_pip_stats_lq(
 #'   welfare = L,
 #'   population = P,
-#'   requested_mean = mu,
+#'   mean = mu,
 #'   popshare = res$headcount,
 #'   default_ppp = 1
 #' )
@@ -38,9 +38,9 @@
 #' @return list
 #' @keywords internal
 gd_compute_pip_stats_lq <- function(welfare,
-                                    povline,
+                                    povline = 1,
                                     population,
-                                    requested_mean,
+                                    mean = 1,
                                     popshare = NULL,
                                     default_ppp,
                                     ppp = NULL,
@@ -48,7 +48,7 @@ gd_compute_pip_stats_lq <- function(welfare,
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
+    mean <- mean * default_ppp / ppp
   } else {
     ppp <- default_ppp
   }
@@ -70,19 +70,19 @@ gd_compute_pip_stats_lq <- function(welfare,
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * requested_mean
+    povline <- derive_lq(popshare, A, B, C) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- mean * derive_lq(0.001, A, B, C) + 4
+  z_max <- mean * derive_lq(0.980, A, B, C) - 4
   z_min <- if (z_min < 0) 0L else z_min
 
-  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)

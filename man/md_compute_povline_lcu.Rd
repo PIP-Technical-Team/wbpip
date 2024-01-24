@@ -4,14 +4,7 @@
 \alias{md_compute_povline_lcu}
 \title{Compute poverty line in Local Currency Unit (LCU)}
 \usage{
-md_compute_povline_lcu(
-  welfare,
-  povline,
-  weight,
-  popshare,
-  requested_mean,
-  data_mean
-)
+md_compute_povline_lcu(welfare, povline, weight, popshare, mean, data_mean)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
@@ -21,7 +14,7 @@ md_compute_povline_lcu(
 \item{popshare}{numeric: Share of population for which the corresponding
 quantile is desired. Default .5 (i.e., weighted median)}
 
-\item{requested_mean}{numeric: Welfare mean in international dollars}
+\item{mean}{numeric: Welfare mean in international dollars (default 1)}
 
 \item{data_mean}{numeric: Data mean.}
 }
@@ -44,7 +37,7 @@ df <- wbpip:::md_clean_data(
 res <-  wbpip:::md_compute_povline_lcu(
   df$welfare, df$weight,
   popshare = NULL,
-  requested_mean = 5000,
+  mean = 5000,
   data_mean = 4000)
 str(res)
 }

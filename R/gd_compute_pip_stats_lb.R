@@ -10,14 +10,14 @@
 #' lb <- wbpip:::gd_compute_pip_stats_lb(
 #'   welfare = grouped_data_ex2$welfare,
 #'   population = grouped_data_ex2$weight,
-#'   requested_mean = 50,
+#'   mean = 50,
 #'   povline = 1.9,
 #'   default_ppp = 1)
 #'
 gd_compute_pip_stats_lb <- function(welfare,
-                                    povline,
+                                    povline = 1,
                                     population,
-                                    requested_mean,
+                                    mean = 1,
                                     popshare = NULL,
                                     default_ppp,
                                     ppp = NULL,
@@ -25,7 +25,7 @@ gd_compute_pip_stats_lb <- function(welfare,
 
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
+    mean <- mean * default_ppp / ppp
   } else {
     ppp <- default_ppp
   }
@@ -48,19 +48,19 @@ gd_compute_pip_stats_lb <- function(welfare,
   # instead of a poverty line
 
   if (!is.null(popshare)) {
-    povline <- derive_lb(popshare, A, B, C) * requested_mean
+    povline <- derive_lb(popshare, A, B, C) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lb(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lb(0.980, A, B, C) - 4
+  z_min <- mean * derive_lb(0.001, A, B, C) + 4
+  z_max <- mean * derive_lb(0.980, A, B, C) - 4
   z_min <- if (z_min < 0) 0L else z_min
 
-  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lb(requested_mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lb(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)

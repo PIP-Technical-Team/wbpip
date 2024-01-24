@@ -57,7 +57,7 @@ out <- wbpip:::md_compute_pip_stats(welfare        = df$welfare,
                                     population     = df$weight,
                                     povline        = poverty_line,
                                     default_ppp    = ppp_value,
-                                    requested_mean = welfare_mean)
+                                    mean = welfare_mean)
 out
 ```
 

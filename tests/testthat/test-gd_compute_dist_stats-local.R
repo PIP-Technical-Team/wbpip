@@ -67,7 +67,7 @@ test_that("gd_compute_dist_stats() returns correct results for production data",
   )
   res1 <- gd_compute_pip_stats(
     welfare = df$welfare, population = df$weight,
-    povline = 1.9, requested_mean = mean
+    povline = 1.9, mean = mean
   )
   res2 <- gd_compute_dist_stats(
     welfare = df$welfare, population = df$weight,

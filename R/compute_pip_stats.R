@@ -6,7 +6,7 @@
 #' @param povline numeric: Poverty line in international dollars
 #' @param population numeric: A vector of population weights, optional, a vector
 #' of 1s if not specified.
-#' @param requested_mean numeric: Welfare mean in international dollars
+#' @param mean numeric: Welfare mean in international dollars (default 1)
 #' @param popshare numeric: Share of population for which the corresponding
 #' quantile is desired. Default .5 (i.e., weighted median)
 #' @param default_ppp numeric: Default purchasing power parity
@@ -20,7 +20,7 @@
 compute_pip_stats <- function(welfare,
                               povline,
                               population = NULL,
-                              requested_mean = NULL,
+                              mean = 1,
                               popshare = NULL,
                               default_ppp = 1,
                               ppp = NULL,
@@ -38,7 +38,7 @@ compute_pip_stats <- function(welfare,
       welfare = welfare,
       povline = povline,
       population = population,
-      requested_mean = requested_mean,
+      mean = mean,
       popshare = popshare,
       default_ppp = default_ppp,
       ppp = ppp
@@ -50,7 +50,7 @@ compute_pip_stats <- function(welfare,
       welfare = welfare,
       povline = povline,
       population = population,
-      requested_mean = requested_mean,
+      mean = mean,
       popshare = popshare,
       default_ppp = default_ppp,
       ppp = ppp,

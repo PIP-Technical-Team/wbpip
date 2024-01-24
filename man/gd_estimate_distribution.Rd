@@ -30,7 +30,7 @@ Percentage of the population in a given interval of incomes, whereas
 
 \item{mean}{numeric: Data mean}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line. (default 1)}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional.}
