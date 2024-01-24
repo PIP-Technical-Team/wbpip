@@ -340,17 +340,17 @@ test_that("value_at_lq works when x is a vector", {
     1.00000000000000000000
   )
 
-  # Old values
+  # # Old values
   # A <- 0.795981535745657
   # B <- -1.4445933880119242
   # C <- 0.14728191995919815
-
-  # Conditions of parameters in the corrected version of the paper
-  # m<0
-  # A+B+C+1>0
-  # C>=0
-  # A+C-1>=0  A+C>=1 Not satisfied by previous values
-
+  #
+  # # Conditions of parameters in the corrected version of the paper
+  # # m<0
+  # # A+B+C+1>0
+  # # C>=0
+  # # A+C-1>=0  A+C>=1 (Not satisfied by old values)
+  #
   # # We need `temp' to be negative --> (m * x^2) + (n * x) + (e^2) < 0
   # # if we assume x=1 and A+C=1
   # # we can choose A = 0.6 and C = 0.4
@@ -370,7 +370,7 @@ test_that("value_at_lq works when x is a vector", {
   # cond <- (m * x^2) + (n * x) + (e^2) < 0
   # cond  # Last values will be TRUE
 
-  # # The values are calculated using previous unvectorized function
+  # # The benchmark is calculated using old unvectorized function
   # benchmark <- as.matrix(0,length(x))
   # for(i in 1:length(x)){
   #   benchmark[i]<-old_value_at_lq(x[i],A,B,C)
