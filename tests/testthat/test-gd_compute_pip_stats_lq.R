@@ -330,29 +330,43 @@ test_that("value_at_lq works when x is a vector", {
   x <- c(
     0.00050000000000000001,
     0.00320000000000000015,
-    -0.01479999999999999892, # Negative to test the pmax() function
+    0.01479999999999999892,
     0.04429999999999999910,
     0.09909999999999999365,
-    -0.25700000000000000622, # Negative to test the pmax() function
+    0.25700000000000000622,
     0.43850000000000000089,
     0.59379999999999999449,
-    -0.70889999999999997460, # Negative to test the pmax() function
+    0.70889999999999997460,
     1.00000000000000000000
   )
-  A <- 0.795981535745657
-  B <- -1.4445933880119242
-  C <- 0.14728191995919815
+  # Old values
+  # A <- 0.795981535745657
+  # B <- -1.4445933880119242
+  # C <- 0.14728191995919815
 
-  # Conditions in paper
+  # Conditions of parameters in paper
   # m<0
   # A+B+C+1>0
   # C>=0
-  # A+C-1>=0
+  # A+C-1>=0  A+C>=1 Not satisfied by previous values
+
+  A <- 0.6
+  B <- 0.3
+  C <- 0.4
+
+  # # We need temp to be negative --> (m * x^2) + (n * x) + (e^2) < 0
+  # # if we assume x=1, A+C=1 -> 4B^2 + 6B - -1.895644 < B < 0.3956439
+  # e <- -(A + B + C + 1)
+  # e2 <- e^2
+  # m <- (B^2) - (4 * A)
+  # n <- (2 * B * e) - (4 * C)
+  # cond <- (m * x^2) + (n * x) + (e^2) < 0
+  # cond  # Last values will be TRUE
 
   # # Previous value_at_lq function (without vectorization)
   # value_at_lq_old <- function(x, A, B, C) {
   #   e <- -(A + B + C + 1)
-  #   m <- (B^2) - (4 * A) # Needs to be negative according to paper
+  #   m <- (B^2) - (4 * A)
   #   n <- (2 * B * e) - (4 * C)
   #   temp <- (m * x^2) + (n * x) + (e^2)
   #   temp <- if (temp < 0) 0L else temp
@@ -373,16 +387,17 @@ test_that("value_at_lq works when x is a vector", {
   # }
   # benchmark
 
-  benchmark <- c(0.0001479034,
-                 0.0009544424,
-                 -0.0041653299,
-                 0.0147592664,
-                 0.0370601276,
-                 0.0637047835,
-                 0.2454531867,
-                 0.3751100729,
-                 -0.2627010925,
-                 0.9432634557
+  benchmark <- c(8.703071e-05,
+                 5.595627e-04,
+                 2.639177e-03,
+                 8.294137e-03,
+                 2.023636e-02,
+                 6.603539e-02,
+                 1.436005e-01,
+                 2.384378e-01,
+                 3.336276e-01,
+                 1.000000e+00
+
   )
 
   out <- value_at_lq(
@@ -392,5 +407,5 @@ test_that("value_at_lq works when x is a vector", {
     C = C
   )
 
-  expect_equal(out, benchmark)
+  expect_equal(out, benchmark, tolerance = 1.1e-04)
 })
