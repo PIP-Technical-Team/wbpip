@@ -303,6 +303,12 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #' @return numeric
 #' @keywords internal
 value_at_lq <- function(x, A, B, C) {
+
+  # Check for NA, Inf and negative values in x
+  check_NA_Inf_values(x)
+  check_neg_values(x)
+
+  # Calculations
   e <- -(A + B + C + 1)
   m <- (B^2) - (4 * A)
   n <- (2 * B * e) - (4 * C)

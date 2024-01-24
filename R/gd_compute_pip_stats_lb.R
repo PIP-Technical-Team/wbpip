@@ -243,6 +243,11 @@ gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
 #' @return numeric
 #' @keywords internal
 value_at_lb <- function(x, A, B, C) {
+
+  # Check for NA, Inf and negative values in x
+  check_NA_Inf_values(x)
+  check_neg_values(x)
+
   out <- x - (A * (x^B) * ((1 - x)^C))
 
   return(out)
