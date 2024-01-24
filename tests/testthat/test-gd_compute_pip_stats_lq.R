@@ -330,26 +330,36 @@ test_that("value_at_lq works when x is a vector", {
   x <- c(
     0.00050000000000000001,
     0.00320000000000000015,
-    0.01479999999999999892,
+    -0.01479999999999999892, # Negative to test the pmax() function
     0.04429999999999999910,
     0.09909999999999999365,
-    0.25700000000000000622,
+    -0.25700000000000000622, # Negative to test the pmax() function
     0.43850000000000000089,
     0.59379999999999999449,
-    0.70889999999999997460,
+    -0.70889999999999997460, # Negative to test the pmax() function
     1.00000000000000000000
   )
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
 
+  # Conditions in paper
+  # m<0
+  # A+B+C+1>0
+  # C>=0
+  # A+C-1>=0
+
   # # Previous value_at_lq function (without vectorization)
   # value_at_lq_old <- function(x, A, B, C) {
   #   e <- -(A + B + C + 1)
-  #   m <- (B^2) - (4 * A)
+  #   m <- (B^2) - (4 * A) # Needs to be negative according to paper
   #   n <- (2 * B * e) - (4 * C)
   #   temp <- (m * x^2) + (n * x) + (e^2)
   #   temp <- if (temp < 0) 0L else temp
+  #
+  #   # for(i in 1:length(temp)){
+  #   #   temp[i] <- if (temp[i] < 0) 0L else temp[i]
+  #   # }
   #
   #   # Solving the equation of the Lorenz curve
   #   estle <- -0.5 * ((B * x) + e + sqrt(temp))
@@ -365,13 +375,13 @@ test_that("value_at_lq works when x is a vector", {
 
   benchmark <- c(0.0001479034,
                  0.0009544424,
-                 0.0045668300,
+                 -0.0041653299,
                  0.0147592664,
                  0.0370601276,
-                 0.1206890354,
+                 0.0637047835,
                  0.2454531867,
                  0.3751100729,
-                 0.4870247398,
+                 -0.2627010925,
                  0.9432634557
   )
 
