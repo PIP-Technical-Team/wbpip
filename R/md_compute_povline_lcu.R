@@ -20,14 +20,14 @@
 #' res <-  wbpip:::md_compute_povline_lcu(
 #'   df$welfare, df$weight,
 #'   popshare = NULL,
-#'   requested_mean = 5000,
+#'   mean = 5000,
 #'   data_mean = 4000)
 #' str(res)
 md_compute_povline_lcu <- function(welfare,
                                    povline,
                                    weight,
                                    popshare,
-                                   requested_mean,
+                                   mean,
                                    data_mean) {
   if (!is.null(popshare)) {
     # Infer poverty line from share of population living in poverty
@@ -37,10 +37,10 @@ md_compute_povline_lcu <- function(welfare,
       popshare = popshare
     )
 
-    povline <- pl_lcu * requested_mean / data_mean
+    povline <- pl_lcu * mean / data_mean
   } else {
     # Convert user defined international poverty line in Local Currency Units
-    pl_lcu <- povline * data_mean / requested_mean
+    pl_lcu <- povline * data_mean / mean
   }
 
   return(list(

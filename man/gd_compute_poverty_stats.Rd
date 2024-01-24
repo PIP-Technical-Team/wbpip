@@ -8,7 +8,7 @@ gd_compute_poverty_stats(
   welfare,
   povline,
   population,
-  requested_mean,
+  mean,
   popshare = NULL,
   default_ppp = NULL,
   ppp = NULL,
@@ -19,11 +19,11 @@ gd_compute_poverty_stats(
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line. (default 1)}
 
 \item{population}{numeric: Cumulative proportion of population.}
 
-\item{requested_mean}{numeric: Welfare mean.}
+\item{mean}{numeric: Welfare mean. (default 1)}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional.}
@@ -47,7 +47,7 @@ res <- wbpip:::gd_compute_poverty_stats(
  welfare = grouped_data_ex2$welfare,
  population = grouped_data_ex2$weight,
  povline = 1.9 * 365 / 12,
- requested_mean = 50,
+ mean = 50,
  default_ppp = 1)
 }
 \keyword{internal}

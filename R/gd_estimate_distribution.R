@@ -69,7 +69,7 @@ gd_estimate_distribution <- function(welfare,
   out <- gd_compute_pip_stats(welfare = res$welfare,
                               population = res$population,
                               povline = povline,
-                              requested_mean = mean,
+                              mean = mean,
                               popshare = popshare)
 
   # STEP 3: Return results

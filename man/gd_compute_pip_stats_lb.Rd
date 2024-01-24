@@ -6,9 +6,9 @@
 \usage{
 gd_compute_pip_stats_lb(
   welfare,
-  povline,
+  povline = 1,
   population,
-  requested_mean,
+  mean = 1,
   popshare = NULL,
   default_ppp,
   ppp = NULL,
@@ -19,11 +19,11 @@ gd_compute_pip_stats_lb(
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line. (default 1)}
 
 \item{population}{numeric: Cumulative proportion of population.}
 
-\item{requested_mean}{numeric: Welfare mean.}
+\item{mean}{numeric: Welfare mean. (default 1)}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional.}
@@ -55,8 +55,8 @@ the Lorenz qurve.
 \keyword{grouped_data_ex2$welfare,}
 \keyword{internal}
 \keyword{lb}
+\keyword{mean}
 \keyword{population}
 \keyword{povline}
-\keyword{requested_mean}
 \keyword{wbpip:::gd_compute_pip_stats_lb(}
 \keyword{welfare}

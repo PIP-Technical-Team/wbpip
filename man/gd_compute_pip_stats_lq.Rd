@@ -6,9 +6,9 @@
 \usage{
 gd_compute_pip_stats_lq(
   welfare,
-  povline,
+  povline = 1,
   population,
-  requested_mean,
+  mean = 1,
   popshare = NULL,
   default_ppp,
   ppp = NULL,
@@ -19,11 +19,11 @@ gd_compute_pip_stats_lq(
 \item{welfare}{numeric: Cumulative proportion of welfare held by that
 proportion of the population (Lorenz Curve).}
 
-\item{povline}{numeric: Poverty line.}
+\item{povline}{numeric: Poverty line. (default 1)}
 
 \item{population}{numeric: Cumulative proportion of population.}
 
-\item{requested_mean}{numeric: Welfare mean.}
+\item{mean}{numeric: Welfare mean. (default 1)}
 
 \item{popshare}{numeric: Share of population living below the poverty line.
 Optional.}
@@ -57,7 +57,7 @@ z <- 89 # poverty line
 res <- wbpip:::gd_compute_pip_stats_lq(
   welfare = L,
   population = P,
-  requested_mean = mu,
+  mean = mu,
   povline = z,
   default_ppp = 1
 )
@@ -66,7 +66,7 @@ res$headcount
 res2 <- wbpip:::gd_compute_pip_stats_lq(
   welfare = L,
   population = P,
-  requested_mean = mu,
+  mean = mu,
   popshare = res$headcount,
   default_ppp = 1
 )

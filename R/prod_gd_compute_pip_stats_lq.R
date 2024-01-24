@@ -22,7 +22,7 @@
 #' res <- wbpip:::prod_gd_compute_pip_stats_lq(
 #'   welfare = L,
 #'   population = P,
-#'   requested_mean = mu,
+#'   mean = mu,
 #'   povline = z
 #' )
 #' res$headcount
@@ -30,7 +30,7 @@
 #' res2 <- wbpip:::prod_gd_compute_pip_stats_lq(
 #'   welfare = L,
 #'   population = P,
-#'   requested_mean = mu,
+#'   mean = mu,
 #'   popshare = res$headcount
 #' )
 #' res2$povline
@@ -39,7 +39,7 @@
 prod_gd_compute_pip_stats_lq <- function(welfare,
                                          povline,
                                          population,
-                                         requested_mean,
+                                         mean,
                                          popshare = NULL,
                                          default_ppp = NULL,
                                          ppp = NULL,
@@ -63,19 +63,19 @@ prod_gd_compute_pip_stats_lq <- function(welfare,
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * requested_mean
+    povline <- derive_lq(popshare, A, B, C) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- mean * derive_lq(0.001, A, B, C) + 4
+  z_max <- mean * derive_lq(0.980, A, B, C) - 4
   z_min <- if (z_min < 0) 0 else z_min
 
-  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- prod_gd_estimate_lq(requested_mean, povline, p0, A, B, C)
+  results2 <- prod_gd_estimate_lq(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)

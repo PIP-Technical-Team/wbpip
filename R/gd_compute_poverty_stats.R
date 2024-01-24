@@ -14,12 +14,12 @@
 #'  welfare = grouped_data_ex2$welfare,
 #'  population = grouped_data_ex2$weight,
 #'  povline = 1.9 * 365 / 12,
-#'  requested_mean = 50,
+#'  mean = 50,
 #'  default_ppp = 1)
 gd_compute_poverty_stats <- function(welfare,
                                      povline,
                                      population,
-                                     requested_mean,
+                                     mean,
                                      popshare = NULL,
                                      default_ppp = NULL,
                                      ppp = NULL,
@@ -29,7 +29,7 @@ gd_compute_poverty_stats <- function(welfare,
   # Apply Lorenz quadratic fit ----------------------------------------------
   # Adjust mean if different PPP value is provided
   if (!is.null(ppp)) {
-    requested_mean <- requested_mean * default_ppp / ppp
+    mean <- mean * default_ppp / ppp
   } else {
     ppp <- default_ppp
   }
@@ -45,7 +45,7 @@ gd_compute_poverty_stats <- function(welfare,
 
   # STEP 3: Calculate poverty stats
   results_lq <- gd_estimate_poverty_stats_lq(
-    mean = requested_mean,
+    mean = mean,
     povline = povline,
     A = reg_coef_lq[1],
     B = reg_coef_lq[2],
@@ -77,7 +77,7 @@ gd_compute_poverty_stats <- function(welfare,
 
   # STEP 3: Calculate distributional stats
   results_lb <- gd_estimate_poverty_stats_lb(
-    mean = requested_mean,
+    mean = mean,
     povline = povline,
     A = reg_coef_lb[1],
     B = reg_coef_lb[2],

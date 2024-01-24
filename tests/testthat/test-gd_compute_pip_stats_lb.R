@@ -484,14 +484,14 @@ test_that("check_curve_validity_lb works as expected", {
 })
 
 
-test_that("if PPP and default PPP are not null, requested_mean is computed as expected", {
+test_that("if PPP and default PPP are not null, mean is computed as expected", {
   gd_ex2 <- readRDS(test_path("testdata", "gd_ex2.RDS"))
 
   try_out <- gd_compute_pip_stats_lb(
     welfare = gd_ex2$welfare,
     population = gd_ex2$weight,
     povline = 1.9,
-    requested_mean = 2.911786,
+    mean = 2.911786,
     ppp = 2, default_ppp = 3
   )
 
@@ -507,7 +507,7 @@ test_that("if popshare is not null, povline is computed as expected", {
     welfare = gd_ex2$welfare,
     population = gd_ex2$weight,
     povline = 1.9,
-    requested_mean = 2.911786,
+    mean = 2.911786,
     popshare = 0.3,
     default_ppp = 1
   )

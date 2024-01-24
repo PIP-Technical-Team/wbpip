@@ -12,7 +12,7 @@
 prod_md_compute_pip_stats <- function(welfare,
                                       povline,
                                       population = NULL,
-                                      requested_mean = NULL,
+                                      mean = NULL,
                                       svy_mean_lcu = NULL,
                                       svy_median_lcu,
                                       svy_median_ppp,
@@ -21,16 +21,16 @@ prod_md_compute_pip_stats <- function(welfare,
                                       ppp = NULL) {
 
   # Take care of potentially undefined values
-  if (is.null(requested_mean)) {
-    requested_mean <- svy_mean_lcu
+  if (is.null(mean)) {
+    mean <- svy_mean_lcu
   }
 
   # Adjust mean and median if different PPP value is provided
   if (!is.null(ppp)) {
-    mean <- requested_mean * default_ppp / ppp
+    mean <- mean * default_ppp / ppp
     median <- svy_median_lcu * default_ppp / ppp
   } else {
-    mean <- requested_mean
+    mean <- mean
     median <- svy_median_ppp
   }
 
@@ -40,7 +40,7 @@ prod_md_compute_pip_stats <- function(welfare,
     povline = povline,
     weight = population,
     popshare = popshare,
-    requested_mean = mean,
+    mean = mean,
     data_mean = svy_mean_lcu
   )
   # Compute poverty stats

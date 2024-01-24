@@ -14,7 +14,7 @@ test_that("gd_compute_dist_stats() returns correct results", {
   )
   res1 <- gd_compute_pip_stats(
     welfare = df$welfare, population = df$weight,
-    povline = 1.9 * 365 / 12, requested_mean = 50,
+    povline = 1.9 * 365 / 12, mean = 50,
     default_ppp = 1
   )
   res2 <- gd_compute_dist_stats(

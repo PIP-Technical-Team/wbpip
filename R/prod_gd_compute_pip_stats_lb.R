@@ -11,7 +11,7 @@
 prod_gd_compute_pip_stats_lb <- function(welfare,
                                          povline,
                                          population,
-                                         requested_mean,
+                                         mean,
                                          popshare = NULL,
                                          default_ppp,
                                          ppp = NULL,
@@ -36,19 +36,19 @@ prod_gd_compute_pip_stats_lb <- function(welfare,
   # intead of a poverty line
 
   if (!is.null(popshare)) {
-    povline <- derive_lb(popshare, A, B, C) * requested_mean
+    povline <- derive_lb(popshare, A, B, C) * mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lb(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lb(0.980, A, B, C) - 4
+  z_min <- mean * derive_lb(0.001, A, B, C) + 4
+  z_max <- mean * derive_lb(0.980, A, B, C) - 4
   z_min <- if (z_min < 0) 0 else z_min
 
-  results1 <- list(requested_mean, povline, z_min, z_max, ppp)
+  results1 <- list(mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- prod_gd_estimate_lb(requested_mean, povline, p0, A, B, C)
+  results2 <- prod_gd_estimate_lb(mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lb(welfare, population, results2$headcount, A, B, C)
