@@ -339,23 +339,30 @@ test_that("value_at_lq works when x is a vector", {
     0.70889999999999997460,
     1.00000000000000000000
   )
+
   # Old values
   # A <- 0.795981535745657
   # B <- -1.4445933880119242
   # C <- 0.14728191995919815
 
-  # Conditions of parameters in paper
+  # Conditions of parameters in the corrected version of the paper
   # m<0
   # A+B+C+1>0
   # C>=0
   # A+C-1>=0  A+C>=1 Not satisfied by previous values
 
+  # # We need `temp' to be negative --> (m * x^2) + (n * x) + (e^2) < 0
+  # # if we assume x=1 and A+C=1
+  # # we can choose A = 0.6 and C = 0.4
+  # # also a B that satisfies:
+  # # (4B^2 + 6B - 3 < 0) -> (-1.89 < B < 0.39)
+
+  # # New values
   A <- 0.6
   B <- 0.3
   C <- 0.4
 
-  # # We need temp to be negative --> (m * x^2) + (n * x) + (e^2) < 0
-  # # if we assume x=1, A+C=1 -> 4B^2 + 6B - -1.895644 < B < 0.3956439
+  # # Test that temp is negative in the last value:
   # e <- -(A + B + C + 1)
   # e2 <- e^2
   # m <- (B^2) - (4 * A)
@@ -363,27 +370,10 @@ test_that("value_at_lq works when x is a vector", {
   # cond <- (m * x^2) + (n * x) + (e^2) < 0
   # cond  # Last values will be TRUE
 
-  # # Previous value_at_lq function (without vectorization)
-  # value_at_lq_old <- function(x, A, B, C) {
-  #   e <- -(A + B + C + 1)
-  #   m <- (B^2) - (4 * A)
-  #   n <- (2 * B * e) - (4 * C)
-  #   temp <- (m * x^2) + (n * x) + (e^2)
-  #   temp <- if (temp < 0) 0L else temp
-  #
-  #   # for(i in 1:length(temp)){
-  #   #   temp[i] <- if (temp[i] < 0) 0L else temp[i]
-  #   # }
-  #
-  #   # Solving the equation of the Lorenz curve
-  #   estle <- -0.5 * ((B * x) + e + sqrt(temp))
-  #
-  #   return(estle)
-  # }
-  #
+  # # The values are calculated using previous unvectorized function
   # benchmark <- as.matrix(0,length(x))
   # for(i in 1:length(x)){
-  #   benchmark[i]<-value_at_lq_old(x[i],A,B,C)
+  #   benchmark[i]<-old_value_at_lq(x[i],A,B,C)
   # }
   # benchmark
 
@@ -407,5 +397,7 @@ test_that("value_at_lq works when x is a vector", {
     C = C
   )
 
-  expect_equal(out, benchmark, tolerance = 1.1e-04)
+  expect_equal(out,
+               benchmark,
+               tolerance = 1.1e-04)
 })
