@@ -312,7 +312,8 @@ value_at_lq <- function(x, A, B, C) {
   e <- -(A + B + C + 1)
   m <- (B^2) - (4 * A)
   n <- (2 * B * e) - (4 * C)
-  temp <- pmax((m * x^2) + (n * x) + (e^2),0)
+  temp <- (m * x^2) + (n * x) + (e^2)
+  temp[temp < 0] <- 0
 
   # Solving the equation of the Lorenz curve
   estle <- -0.5 * ((B * x) + e + sqrt(temp))
