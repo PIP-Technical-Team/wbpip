@@ -420,7 +420,7 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #'
 #' @return numeric
 #' @export
-gd_compute_watts_lq <- function(headcount, mu, povline, dd, A, B, C) {
+gd_compute_watts_lq <- function(headcount, mu, povline, dd = 0.01, A, B, C) {
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }

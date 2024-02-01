@@ -324,7 +324,7 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @export
 #'
-gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
 
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
