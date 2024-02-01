@@ -347,12 +347,11 @@ old_value_at_lq <- function(x, A, B, C) {
 #' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
 #' Quadratic fit
 #'
-#' @param dd numeric: **TO BE DOCUMENTED**.
 #' @inheritParams gd_estimate_lq
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lq <- function(dd, A, B, C) {
+gd_compute_mld_lq <- function(A, B, C) {
   x1 <- derive_lq(0.0005, A, B, C)
   gap <- 0L
   mld <- 0L
@@ -520,7 +519,7 @@ gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
   dcm <- (1 - gini) * mean
   pol <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
   ris <- value_at_lq(0.5, A, B, C)
-  mld <- gd_compute_mld_lq(0.01, A, B, C)
+  mld <- gd_compute_mld_lq(A, B, C)
   deciles <- gd_compute_quantile_lq(A, B, C)
 
   return(list(

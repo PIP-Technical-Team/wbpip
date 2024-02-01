@@ -655,7 +655,7 @@ test_that("tests for the gd_compute_watts_lb", {
 test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
 
   ## not really a test but it should get the red mark away on coverage report to go away
-  expect_equal(gd_compute_mld_lb(0.0005, A = 1, B = 0.9676324, C = 1),
+  expect_equal(gd_compute_mld_lb(A = 1, B = 0.9676324, C = 1),
     0.2165068,
     tolerance = 1e-7
   )

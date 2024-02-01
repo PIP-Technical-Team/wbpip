@@ -249,14 +249,13 @@ value_at_lb <- function(x, A, B, C) {
 #' `gd_compute_mld_lb()` computes the Mean Log deviation (MLD) from a Lorenz
 #' beta fit.
 #'
-#' @param dd numeric: **TO BE DOCUMENTED**.
 #' @param A numeric: Lorenz curve coefficient.
 #' @param B numeric: Lorenz curve coefficient.
 #' @param C numeric: Lorenz curve coefficient.
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lb <- function(dd, A, B, C) {
+gd_compute_mld_lb <- function(A, B, C) {
   x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
@@ -386,7 +385,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
   dcm <- (1 - gini) * mean
   pol <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
   ris <- value_at_lb(0.5, A, B, C)
-  mld <- gd_compute_mld_lb(0.01, A, B, C)
+  mld <- gd_compute_mld_lb(A, B, C)
   deciles <- gd_compute_quantile_lb(A, B, C)
 
   return(list(
