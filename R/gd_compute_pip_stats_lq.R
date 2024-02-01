@@ -404,23 +404,43 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
   return(vec)
 }
 
-#'  Computes Watts Index from Quadratic Lorenz fit
+
+#' Computes Watts Index from Quadratic Lorenz fit
 #'
-#' `gd_compute_watts_lq()` computes Watts Index from Quadratic Lorenz fit
-#' The first distribution-sensitive poverty measure was proposed in 1968 by Watts
-#' It is defined as the mean across the population of the proportionate poverty
+#' `gd_compute_watts_lq()` computes Watts Index from Quadratic Lorenz fit The
+#' first distribution-sensitive poverty measure was proposed in 1968 by Watts It
+#' is defined as the mean across the population of the proportionate poverty
 #' gaps, as measured by the log of the ratio of the poverty line to income,
 #' where the mean is formed over the whole population, counting the nonpoor as
 #' having a zero poverty gap.
 #'
 #' @inheritParams gd_compute_fit_lq
-#' @param mu numeric: **TO BE DOCUMENTED**.
+#' @param mu `r lifecycle::badge("deprecated")` `mu` is no longer supported. Use
+#'   instead `mean`
+#' @param  meean numeric: mean of group data distribution
 #' @param dd numeric: **TO BE DOCUMENTED**.
 #' @inheritParams gd_estimate_lq
 #'
 #' @return numeric
 #' @export
-gd_compute_watts_lq <- function(headcount, mu, povline, dd = 0.01, A, B, C) {
+gd_compute_watts_lq <- function(headcount,
+                                mu = lifecycle::deprecated(),
+                                mean = NULL,
+                                povline, dd = 0.01, A, B, C) {
+
+
+  if (lifecycle::is_present(mu)) {
+    lifecycle::deprecate_warn("0.1.0.9012",
+                              "gd_compute_watts_lq(mu)",
+                              "gd_compute_watts_lq(mean)")
+    mean <- mu
+  }
+
+  stopifnot(exprs = {
+    is.numeric(mean)
+    length(mean) == 1
+  })
+
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -450,8 +470,8 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd = 0.01, A, B, C) {
   }
   watts <- sum((log(x1[!check]) + log(x2[!check])) * snw * 0.5) + watts
 
-  if ((mu != 0) && (watts != 0)) {
-    x1 <- povline / mu
+  if ((mean != 0) && (watts != 0)) {
+    x1 <- povline / mean
     if (x1 > 0) {
       watts <- log(x1) * headcount - watts
       if (watts > 0) {
@@ -463,6 +483,7 @@ gd_compute_watts_lq <- function(headcount, mu, povline, dd = 0.01, A, B, C) {
     return(watts)
   }
 }
+
 
 #' Computes polarization index from parametric Lorenz fit
 #'
@@ -638,7 +659,13 @@ gd_compute_poverty_stats_lq <- function(
     # ____________________________________________________________________________
     # Compute Watts
     # ____________________________________________________________________________
-    watts <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watts <- gd_compute_watts_lq(headcount = headcount,
+                                 mean = mean,
+                                 povline = povline,
+                                 dd = 0.01,
+                                 A = A,
+                                 B = B,
+                                 C = C)
   }
 
   return(

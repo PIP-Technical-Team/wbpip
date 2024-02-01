@@ -444,7 +444,7 @@ test_that("gd_compute_watts_lq() gives correct results", {
 
   res <- gd_compute_watts_lq(
     headcount = 0.4,
-    mu = 20,
+    mean = 20,
     povline = 1.9,
     dd = 0.005,
     A = 0.2,
@@ -455,7 +455,7 @@ test_that("gd_compute_watts_lq() gives correct results", {
 
   res <- gd_compute_watts_lq(
     headcount = 0.513180957,
-    mu = 78.962,
+    mean = 78.962,
     povline = 57.79166667,
     dd = 0.005,
     A = 0.7688156902,

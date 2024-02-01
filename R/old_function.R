@@ -70,7 +70,13 @@ old_gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    watts <- gd_compute_watts_lq(headcount, mean, povline, 0.01, A, B, C)
+    watts <- gd_compute_watts_lq(headcount = headcount,
+                                 mean = mean,
+                                 povline = povline,
+                                 dd = 0.01,
+                                 A = A,
+                                 B = B,
+                                 C = C)
   }
 
   return(
