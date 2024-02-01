@@ -564,3 +564,179 @@ test_that("gd_compute_pov_severity_lq works as expected", {
                benchmark)
 
 })
+
+mean      <- 51.5660557757944
+povline   <- 57.791666666666664
+A         <- 0.795981535745657
+B         <- -1.4445933880119242
+C         <- 0.14728191995919815
+e         <- -0.498670067692931
+m         <- -1.0970760862948583
+n         <- 0.851623285340541
+r         <- 1.3477796260474386
+s1        <- -0.22612667749534146
+s2        <- 1.002393060455814
+headcount <- 0.76005810499191284
+pov_gap   <- 0.27617606019159308
+
+test_that("gd_compute_headcount works as expected", {
+
+  # expected headcount ----
+  benchmark <- 0.76005810499191284
+
+  # headcount function ----
+  out <- gd_compute_headcount_lq(
+    mean    = mean,
+    povline = povline,
+    B       = B,
+    m       = m,
+    n       = n,
+    r       = r
+  )
+
+  expect_equal(round(out, 7),
+               round(benchmark, 7))
+
+})
+
+
+test_that("gd_compute_pov_gap_lq works as expected", {
+
+  # expected pov gap
+  benchmark <- 0.27617606019159308
+
+  # output
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_gap_lq works as expected when headcount negative", {
+
+  headcount_neg <- -0.76005810499191284
+  benchmark     <- 0
+
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount_neg,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_severity_lq works as expected", {
+
+  benchmark <- 0.12832887439632906
+
+  out <- gd_compute_pov_severity_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    e         = e,
+    m         = m,
+    n         = n,
+    r         = r,
+    s1        = s1,
+    s2        = s2
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("value_at_lq works when x is a vector", {
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+
+  # # Old values
+  # A <- 0.795981535745657
+  # B <- -1.4445933880119242
+  # C <- 0.14728191995919815
+  #
+  # # Conditions of parameters in the corrected version of the paper
+  # # m<0
+  # # A+B+C+1>0
+  # # C>=0
+  # # A+C-1>=0  A+C>=1 (Not satisfied by old values)
+  #
+  # # We need `temp' to be negative --> (m * x^2) + (n * x) + (e^2) < 0
+  # # if we assume x=1 and A+C=1
+  # # we can choose A = 0.6 and C = 0.4
+  # # also a B that satisfies:
+  # # (4B^2 + 6B - 3 < 0) -> (-1.89 < B < 0.39)
+
+  # # New values
+  A <- 0.6
+  B <- 0.3
+  C <- 0.4
+
+  # # Test that temp is negative in the last value:
+  # e <- -(A + B + C + 1)
+  # e2 <- e^2
+  # m <- (B^2) - (4 * A)
+  # n <- (2 * B * e) - (4 * C)
+  # cond <- (m * x^2) + (n * x) + (e^2) < 0
+  # cond  # Last values will be TRUE
+
+  # # The benchmark is calculated using old unvectorized function
+  # benchmark <- as.matrix(0,length(x))
+  # for(i in 1:length(x)){
+  #   benchmark[i]<-old_value_at_lq(x[i],A,B,C)
+  # }
+  # benchmark
+
+  benchmark <- c(8.703071e-05,
+                 5.595627e-04,
+                 2.639177e-03,
+                 8.294137e-03,
+                 2.023636e-02,
+                 6.603539e-02,
+                 1.436005e-01,
+                 2.384378e-01,
+                 3.336276e-01,
+                 1.000000e+00
+
+  )
+
+  out <- value_at_lq(
+    x = x,
+    A = A,
+    B = B,
+    C = C
+  )
+
+  expect_equal(out,
+               benchmark,
+               tolerance = 1.1e-04)
+})
+

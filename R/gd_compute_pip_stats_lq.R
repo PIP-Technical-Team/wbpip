@@ -301,6 +301,35 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #' @return numeric
 #' @export
 value_at_lq <- function(x, A, B, C) {
+
+  # Check for NA, Inf and negative values in x
+  check_NA_Inf_values(x)
+  check_neg_values(x)
+
+  # Calculations
+  e <- -(A + B + C + 1)
+  m <- (B^2) - (4 * A)
+  n <- (2 * B * e) - (4 * C)
+  temp <- (m * x^2) + (n * x) + (e^2)
+  temp[temp < 0] <- 0
+
+  # Solving the equation of the Lorenz curve
+  estle <- -0.5 * ((B * x) + e + sqrt(temp))
+
+  return(estle)
+}
+
+#' Solves for quadratic Lorenz curves (without vectorization)
+#'
+#' `old_value_at_lq()`solves for quadratic Lorenz curves with c = 1
+#' General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
+#'
+#' @param x numeric: Point on curve.
+#' @inheritParams gd_estimate_lq
+#'
+#' @return numeric
+#' @keywords internal
+old_value_at_lq <- function(x, A, B, C) {
   e <- -(A + B + C + 1)
   m <- (B^2) - (4 * A)
   n <- (2 * B * e) - (4 * C)

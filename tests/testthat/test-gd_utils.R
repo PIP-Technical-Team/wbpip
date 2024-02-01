@@ -44,4 +44,3 @@ test_that("regres() works", {
   expect_equal(res$se, c(0.01977925582, 0.01143990603, 0.01143990603))
 
 })
-
