@@ -4,7 +4,7 @@
 \alias{gd_compute_watts_lq}
 \title{Computes Watts Index from Quadratic Lorenz fit}
 \usage{
-gd_compute_watts_lq(headcount, mu, povline, dd, A, B, C)
+gd_compute_watts_lq(headcount, mu, povline, dd = 0.01, A, B, C)
 }
 \arguments{
 \item{headcount}{numeric: Headcount index.}
