@@ -116,14 +116,14 @@ create_functional_form_lb <- function(welfare, population) {
 
 #' Returns the first derivative of the beta Lorenz
 #'
-#' `derive_lb()` returns the first derivative of a beta Lorenz curve.
+#' `old_derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
 #' @param x numeric: Point on curve.
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
 #' @keywords internal
-derive_lb <- function(x, A, B, C) {
+old_derive_lb <- function(x, A, B, C) {
   if (x == 0) {
     if (B == 1) {
       return(1 - A)
@@ -145,6 +145,40 @@ derive_lb <- function(x, A, B, C) {
   # Formula for first derivative of GQ Lorenz Curve
   val <- 1 - ((A * x^B) * ((1 - x)^C) * ((B / x) -( C / (1 - x)) ) )
 
+  return(val)
+}
+
+#' Returns the first derivative of the beta Lorenz- Vectorized
+#'
+#' `derive_lb()` returns the first derivative of a beta Lorenz curve.
+#'
+#' @param x numeric: Point on curve. Allow for vectors.
+#' @inheritParams gd_compute_fit_lb
+#'
+#' @return numeric
+#' @keywords internal
+derive_lb <- function(x, A, B, C) {
+  val <- vector("numeric", length(x))
+  val[x == 0] <- -Inf
+  val[x == 1] <- Inf
+
+  if (B == 1) {
+      val[x == 0] <- 1 - A
+    }
+    if (B > 1) {
+      val[x == 0] <- 1
+    }
+    if (C == 1) {
+      val[x == 1] <- 1 + A
+    }
+    if (C > 1) {
+      val[x == 1] <- 1
+    } else {
+
+      # Formula for first derivative of GQ Lorenz Curve
+      new_x <- x[!(x %in% c(0,1))]
+      val[!(x %in% c(0,1))] <- 1 - ((A * new_x^B) * ((1 - new_x)^C) * ((B / new_x) -( C / (1 - new_x)) ) )
+    }
   return(val)
 }
 
