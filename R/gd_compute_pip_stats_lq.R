@@ -525,7 +525,7 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_compute_dist_stats_lq <- function(mean, p0, A, B, C) {
   gini <- gd_compute_gini_lq(A, B, C)
   median <- mean * derive_lq(0.5, A, B, C)
   rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
@@ -853,7 +853,7 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C)
 
 
   # Compute poverty stats ---------------------------------------------------

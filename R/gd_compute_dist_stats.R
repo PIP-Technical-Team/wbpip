@@ -126,11 +126,7 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
                                          p0,
                                          A,
                                          B,
-                                         C,
-                                         kv$e,
-                                         kv$m,
-                                         kv$n,
-                                         kv$r)
+                                         C)
 
   out <- list(
     mean = mean,
