@@ -243,7 +243,7 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
 #' Compute gini index from Lorenz Quadratic fit
 #'
-#' `gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
+#' `old_gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
 #'
 #' @inheritParams gd_estimate_lq
 #' @inheritParams check_curve_validity_lq
@@ -254,8 +254,8 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 #' Discussion Paper 50. World Bank, Washington, DC.
 #'
 #' @return numeric
-#' @export
-gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+#' @keywords internal
+old_gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
@@ -290,6 +290,68 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
   return(gini)
 }
 
+#' Compute gini index from Lorenz Quadratic fit
+#'
+#' `gd_compute_gini_lq()` computes the gini index from a Lorenz Quadratic fit
+#'
+#' @inheritParams gd_estimate_lq
+#' @inheritParams check_curve_validity_lq
+#'
+#' @references
+#' Datt, G. 1998. "[Computational Tools For Poverty Measurement And
+#' Analysis](https://www.ifpri.org/cdmref/p15738coll2/id/125673)". FCND
+#' Discussion Paper 50. World Bank, Washington, DC.
+#'
+#' @return numeric
+#' @export
+gd_compute_gini_lq <- function(A, B, C, key_values = NULL) {
+
+  val <- gd_lq_key_values(A,B,C)
+
+  if (is.null(key_values) == TRUE){
+    e <- val$e
+    m <- val$m
+    n <- val$n
+    r <- val$r
+  } else{
+    e <- key_values[1]
+    m <- key_values[2]
+    n <- key_values[3]
+    r <- key_values[4]
+  }
+
+  # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
+  # P.isValid <- (A + C) >= 0.9
+  # P.isNormal <- TRUE
+
+  e1 <- abs(A + C - 1)
+  e2 <- 1 + (B / 2) + e
+
+  tmp1 <- n * (B + 2) / (4 * m)
+  tmp2 <- (r^2) / (8 * m)
+  tmp3 <- (2 * m) + n
+
+  if (m > 0) {
+    # tmpnum <- tmp3 + 2 * sqrt(m) * abs(e)
+    # tmpden <- n - 2 * abs(e) * sqrt(m)
+
+    # Formula from Datt paper
+    # CHECK that code matches formulas in paper
+    gini <- e2 + (tmp3 / (4 * m)) * e1 - (n * abs(e) / (4 * m)) - ((r^2) / (8 * sqrt(m)^3)) *
+      log(abs(((tmp3 + (2 * sqrt(m) * e1))) / (n + (2 * sqrt(m) * abs(e)))))
+    # P.gi <- (e/2) - tmp1 - (tmp2 * log(abs(tmpnum/tmpden)) / sqrt(m))
+  } else {
+    tmp4 <- ((2 * m) + n) / r
+    tmp4 <- if (tmp4 < -1) -1 else tmp4
+    tmp4 <- if (tmp4 > 1) 1 else tmp4
+
+    # Formula does not match with paper
+    gini <- e2 + (tmp3 / (4 * m)) * e1 - (n * abs(e) / (4 * m)) + (tmp2 * (asin(tmp4) - asin(n / r)) / sqrt(-m))
+    # P.gi <- (e/2) - tmp1 + ((tmp2 * (asin(tmp4) - asin(n/r))) / sqrt(-m))
+  }
+
+  return(gini)
+}
 #' Solves for quadratic Lorenz curves
 #'
 #' `value_at_lq()`solves for quadratic Lorenz curves with c = 1
