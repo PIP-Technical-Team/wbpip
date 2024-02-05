@@ -557,3 +557,13 @@ test_that("gd_compute_pov_severity_lq works as expected", {
                benchmark)
 
 })
+
+test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
+
+  benchmark <- old_gd_compute_gini_lq(A,B,C,e,m,n,r)
+
+  out <- gd_compute_gini_lq(A,B,C)
+
+  expect_equal(out,
+               benchmark)
+})
