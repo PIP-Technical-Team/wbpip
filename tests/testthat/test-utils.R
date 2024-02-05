@@ -1,6 +1,20 @@
-# test_that("get_decimal_year_value works", {
-#
-# })
+test_that("get_decimal_year_value works", {
+  res <- get_decimal_year_value(
+        year= c(2003.67),
+        value = c(1682.1, 1791.262)) #Values used from test-predict_request_year_mean.R
+
+  out <- 1755.2385
+
+  expect_equal(res,out,tolerance = 1e-3 )
+})
+
+test_that("get_weights is working", {
+  res <- get_weights(
+    year= c(2003.67)) #Value used from test-predict_request_year_mean.R
+  out <- c(0.3299999999999,0.6700000000000)
+
+  expect_equal(res,out)
+})
 
 test_that("check NA_Inf function works when NA values",{
   x <- c(
