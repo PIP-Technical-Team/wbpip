@@ -526,7 +526,7 @@ gd_compute_polarization_lq <- function(mean,
 #' @return list
 #' @keywords internal
 gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
-  gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
+  gini <- gd_compute_gini_lq(A, B, C)
   median <- mean * derive_lq(0.5, A, B, C)
   rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm <- (1 - gini) * mean
