@@ -402,6 +402,39 @@ test_that("value_at_lq works when x is a vector", {
                tolerance = 1.1e-04)
 })
 
+test_that("derive_lq works as old_derive_lq",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  # # New values (With these values tmp=0 and val is Inf when x==1)
+  # A <- 0.6
+  # B <- 0.3
+  # C <- 0.4
+
+  benchmark <- vector("numeric",length(x))
+  for (i in 1:length(x)){
+    benchmark[i] <- old_derive_lq(x[i],A,B,C)
+  }
+
+  res <- derive_lq(x,A,B,C)
+
+  expect_equal(res,benchmark)
+
+})
+
 test_that("derive_lq can handle vectors",{
   x <- c(
     0.00050000000000000001,
@@ -439,4 +472,24 @@ test_that("derive_lq can handle vectors",{
 
 })
 
+test_that("derive_lq shows error message when NA values",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    NA,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    NA,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  expect_error(derive_lq(x,A,B,C))
+
+})
 

@@ -193,6 +193,11 @@ old_derive_lq <- function(x, A, B, C) {
 #' @return numeric
 #' @keywords internal
 derive_lq <- function(x, A, B, C) {
+
+  if (anyNA(x) == TRUE){
+    cli::cli_abort("`x' must be a numeric or integer vector")
+  }
+
   e <- -(A + B + C + 1)
   alpha <- (B^2) - (4 * A)
   beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
