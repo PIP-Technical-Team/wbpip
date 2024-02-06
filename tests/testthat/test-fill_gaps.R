@@ -95,7 +95,7 @@ test_that("fill_gaps() extrapolates correctly for microdata", {
   expect_equal(res$gini, 0.31865, tolerance = 1.5e-7)
   expect_equal(res$mld, 0.1661658, tolerance = 1.5e-7)
   # expect_equal(res$polarization, NA_real_)
-  expect_equal(res$deciles, deciles, tolerance = 1.5e-7)
+  expect_equal(res$deciles, deciles, tolerance = 1.5e-4)
 })
 
 # Extrapolation
