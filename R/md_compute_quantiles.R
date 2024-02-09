@@ -84,7 +84,7 @@ old_md_compute_quantiles <- function(lwelfare,
   return(list(quantiles = quantiles, median = median))
 }
 
-#' Compute quantiles
+#' Compute quantiles share
 #'
 #' Compute quantiles for microdata.
 #'
@@ -94,115 +94,84 @@ old_md_compute_quantiles <- function(lwelfare,
 #' share of welfare (`lwelfare`), and a vector the corresponding monetary value
 #' of each percentile (`percentile`).
 #'
-#' @param lwelfare numeric: cumulative share of welfare.
-#' @param lweight  numeric: cumulative share of population.
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantile numeric: Number of quantiles for which share of total income
 #' is desired. It can't be larger that the total number of percentiles in the
 #' Lorenz curve provided by the user.  default is 10.
-#' @param percentile numeric: Monetary value each percentile.
-#' @param tolerance numeric: Tolerance parameter for `lorenzw >= nextQ` check.
 #'
 #' @examples
-#' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
-#' wbpip:::md_compute_quantiles(
-#'   lwelfare = lz$lorenz_welfare,
-#'   lweight = lz$lorenz_weight,
-#'   percentile = lz$welfare,
-#'   n_quantile = 10
-#' )
+#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#'
 #' @return list
 #' @keywords internal
-md_compute_quantiles <- function(lwelfare,
-                                 lweight,
-                                 percentile,
-                                 n_quantile = 10,
-                                 tolerance = 1e-06) {
-
-
-  #--------- Consistency ---------
-
-  n_lorenz <- length(lwelfare)
-  assertthat::assert_that(n_quantile < n_lorenz,
-                          msg = "The number of requested quantiles is superior to the number of points on the Lorenz curve"
-  )
-
-
-  #--------- Make sure data is sorted properly ---------
-  # I assume the three vectors are of the same length
-
-  or <- order(percentile)
-  lwelfare <- lwelfare[or]
-  lweight <- lweight[or]
-  percentile <- percentile[or]
-
-  #--------- Initial parameters ---------
-  # lastW = lastY = lastQ <- 0
-  lastW <- 0
-  lastY <- 0
-  lastQ <- 0
-  nextQ <- 1 / n_quantile
-  quantiles <- rep_len(0, n_quantile)
-  j <- 1
-  step <- 1 / n_quantile
-
-  #--------- Calculations ---------
-
-  for (i in seq_len(n_lorenz)) {
-    yi <- percentile[i] # Percentile of income
-    lorenzw <- lweight[i] # Cumulative share of population
-    lorenzy <- lwelfare[i] # Cumulative share of income / consumption
-
-    if (lorenzw > nextQ | assertthat::are_equal(lorenzw, nextQ, tolerance = tolerance)) {
-      if (nextQ == 0.5) {
-        median <- yi
-      }
-      QY <- (nextQ - lastW) / (lorenzw - lastW) * (lorenzy - lastY) # interpolate the value of QY
-      quantiles[j] <- sum(lastY, QY) - lastQ # All values are cumulative. lastQ needs to be removed to avoid double counting.
-      lastQ <- sum(lastQ, quantiles[j])
-      j <- sum(j, 1)
-      nextQ <- sum(nextQ, step)
-    }
-
-    lastW <- lorenzw
-    lastY <- lorenzy
-  }
-
-  return(list(quantiles = quantiles, median = median))
-}
-
-md_compute_bindata <- function(welfare,
+md_compute_quantiles_share <- function(welfare,
                                weight ,
-                               nbins = 10){
+                               n_quantile = 10){
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Clean data   ---------
+  # Compute Lorenz   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (anyNA(welfare)) {
-    ina      <- !is.na(welfare)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
+
+  # lz <- md_compute_lorenz(welfare, weight)
+  # lwelfare = lz$lorenz_welfare
+  # lweight = lz$lorenz_weight
+  # welfare = lz$welfare
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Compute share   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  qnt <- md_compute_quantiles2(welfare, weight, n_quantile)
+
+  cum_share <- vector("numeric",n_quantile)
+
+  for (i in seq_len(n_quantile)){
+    qnt_i <- qnt[["quantiles"]][i]
+    cum_share[i] <- fsum(welfare[welfare<=qnt_i],
+                           w = weight[welfare<=qnt_i]) / fsum(welfare, w = weight)
   }
 
-  if (anyNA(weight)) {
-    ina      <- !is.na(weight)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
-  }
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Compute cumulative distributions   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  bins_groups <- 1:nbins
-  probs       <- bins_groups/nbins
-
-  # I can add lorenz here if necessary
-
-  quantiles <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
-  median <- collapse::fmedian(welfare)
-  share_quant <- diff(c(0,as.numeric(quantiles)))
+  share_quant <- diff(c(0,cum_share))
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(list(quantiles = share_quant, median = median))
+  return(share_quant = share_quant)
+
+}
+
+
+#' Compute quantiles for microdata
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#' @param n_quantiles numeric: Number of quantiles for which share of total income
+#' is desired. It can't be larger that the total number of percentiles in the
+#' Lorenz curve provided by the user.  default is 10.
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' @keywords internal
+md_compute_quantiles2 <- function(welfare,
+                                 weight,
+                                 n_quantiles = 10) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  bins_groups <- 1:n_quantiles
+  probs       <- bins_groups/n_quantiles
+  quantiles <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
+  median <- collapse::fmedian(welfare, w = weight)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  return(list(quantiles = quantiles,
+              median = median))
 
 }
