@@ -32,12 +32,17 @@ md_compute_dist_stats <- function(welfare, weight,
     )
   }
 
-  quantiles <- md_compute_quantiles(
-    lwelfare = lorenz[["lorenz_welfare"]],
-    lweight = lorenz[["lorenz_weight"]],
-    percentile = lorenz[["welfare"]]
+  share_quant <- md_compute_quantiles_share(
+    welfare = welfare,
+    weight = weight,
+    n_quantile = n_quantile
   )
-  median <- quantiles[["median"]]
+
+  qnt_md <- md_compute_quantiles(welfare = welfare,
+                                 weight = weight,
+                                 n_quantile = n_quantile)
+
+  median <- qnt_md[["median"]]
 
   gini <- md_compute_gini(
     welfare = welfare, weight = weight
@@ -60,6 +65,6 @@ md_compute_dist_stats <- function(welfare, weight,
     gini = gini,
     polarization = polarization,
     mld = mld,
-    quantiles = quantiles[["quantiles"]]
+    quantiles = share_quant
   ))
 }
