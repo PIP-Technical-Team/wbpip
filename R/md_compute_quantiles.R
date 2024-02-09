@@ -19,9 +19,9 @@
 #' @examples
 #' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
 #' wbpip:::md_compute_quantiles(
-#'   lwelfare = lz$welfare,
+#'   lwelfare = lz$lorenz_welfare,
 #'   lweight = lz$lorenz_weight,
-#'   percentile = lz$lorenz_welfare,
+#'   percentile = lz$welfare,
 #'   n_quantile = 10
 #' )
 #' @return list
@@ -105,9 +105,9 @@ old_md_compute_quantiles <- function(lwelfare,
 #' @examples
 #' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
 #' wbpip:::md_compute_quantiles(
-#'   lwelfare = lz$welfare,
+#'   lwelfare = lz$lorenz_welfare,
 #'   lweight = lz$lorenz_weight,
-#'   percentile = lz$lorenz_welfare,
+#'   percentile = lz$welfare,
 #'   n_quantile = 10
 #' )
 #' @return list
@@ -196,7 +196,7 @@ md_compute_bindata <- function(welfare,
 
   # I can add lorenz here if necessary
 
-  quantiles <- collapse::fquantile(welfare, probs = probs, w = df$weight, type=7)
+  quantiles <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
   median <- collapse::fmedian(welfare)
   share_quant <- diff(c(0,as.numeric(quantiles)))
 
