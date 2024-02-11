@@ -38,11 +38,8 @@ md_compute_dist_stats <- function(welfare, weight,
     n_quantile = n_quantile
   )
 
-  qnt_md <- md_compute_quantiles(welfare = welfare,
-                                 weight = weight,
-                                 n_quantile = n_quantile)
-
-  median <- qnt_md[["median"]]
+  median <- md_compute_median(welfare = welfare,
+                                 weight = weight)
 
   gini <- md_compute_gini(
     welfare = welfare, weight = weight
