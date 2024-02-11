@@ -101,7 +101,7 @@ old_md_compute_quantiles <- function(lwelfare,
 #' Lorenz curve provided by the user.  default is 10.
 #'
 #' @examples
-#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' md_compute_quantiles_share(welfare = 1:2000, weight = rep(1, 2000))
 #'
 #' @return list
 #' @keywords internal
@@ -136,7 +136,7 @@ md_compute_quantiles_share <- function(welfare,
   # cum_share <- vector("numeric",n_quantile)
   #
   # for (i in seq_len(n_quantile)){
-  #   qnt_i <- qnt[["quantiles"]][i]
+  #   qnt_i <- qnt[i]
   #   cum_share[i] <- fsum(welfare[welfare<=qnt_i],
   #                          w = weight[welfare<=qnt_i]) / fsum(welfare, w = weight)
   # }
@@ -156,7 +156,7 @@ md_compute_quantiles_share <- function(welfare,
 
 }
 
-#' Compute quantiles and median for microdata with lorenz function
+#' Compute quantiles for microdata with lorenz function
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
@@ -173,6 +173,33 @@ md_compute_quantiles_share <- function(welfare,
 md_compute_quantiles <- function(welfare,
                                   weight,
                                   n_quantile = 10) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  lz <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
+  quantiles <- lz$welfare
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  return(quantiles = quantiles)
+
+}
+
+#' Compute median for microdata
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' @keywords internal
+md_compute_median <- function(welfare,
+                                 weight) {
   # deal with NAs -----
   if (anyNA(welfare)) {
     ina      <- !is.na(welfare)
@@ -189,16 +216,13 @@ md_compute_quantiles <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  lz <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
-  quantiles <- lz$welfare
 
   median <- collapse::fmedian(welfare, w = weight)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(list(quantiles = quantiles,
-              median = median))
+  return(median = median)
 
 }
 
@@ -214,7 +238,7 @@ md_compute_quantiles <- function(welfare,
 #' @export
 #'
 #' @examples
-#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' md_compute_quantiles_c(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_quantiles_c <- function(welfare,
                                     weight,
@@ -238,12 +262,10 @@ md_compute_quantiles_c <- function(welfare,
   bins_groups <- 1:n_quantile
   probs       <- bins_groups/n_quantile
   quantiles <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
-  median <- collapse::fmedian(welfare, w = weight)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(list(quantiles = quantiles,
-              median = median))
+  return(quantiles = quantiles)
 
 }
