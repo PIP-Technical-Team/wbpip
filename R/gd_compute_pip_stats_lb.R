@@ -409,7 +409,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_polarization_lb <- function(mean,
                                        p0,
                                        dcm,

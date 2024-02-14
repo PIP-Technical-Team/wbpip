@@ -492,7 +492,7 @@ gd_compute_watts_lq <- function(headcount,
 #' @inheritParams gd_estimate_lq
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_polarization_lq <- function(mean,
                                        p0,
                                        dcm,

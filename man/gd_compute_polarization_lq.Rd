@@ -28,4 +28,3 @@ numeric
 \description{
 Used for grouped data computations
 }
-\keyword{internal}
