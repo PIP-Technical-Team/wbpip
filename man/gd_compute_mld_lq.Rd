@@ -4,11 +4,9 @@
 \alias{gd_compute_mld_lq}
 \title{Computes MLD from Lorenz Quadratic fit}
 \usage{
-gd_compute_mld_lq(dd, A, B, C)
+gd_compute_mld_lq(A, B, C)
 }
 \arguments{
-\item{dd}{numeric: \strong{TO BE DOCUMENTED}.}
-
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[1]}.}
 

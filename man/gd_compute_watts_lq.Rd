@@ -4,12 +4,24 @@
 \alias{gd_compute_watts_lq}
 \title{Computes Watts Index from Quadratic Lorenz fit}
 \usage{
-gd_compute_watts_lq(headcount, mu, povline, dd = 0.01, A, B, C)
+gd_compute_watts_lq(
+  headcount,
+  mu = lifecycle::deprecated(),
+  mean = NULL,
+  povline,
+  dd = 0.01,
+  A,
+  B,
+  C
+)
 }
 \arguments{
 \item{headcount}{numeric: Headcount index.}
 
-\item{mu}{numeric: \strong{TO BE DOCUMENTED}.}
+\item{mu}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} \code{mu} is no longer supported. Use
+instead \code{mean}}
+
+\item{mean}{numeric: Welfare mean.}
 
 \item{povline}{numeric: Poverty line.}
 
@@ -23,14 +35,16 @@ gd_compute_watts_lq(headcount, mu, povline, dd = 0.01, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{meean}{numeric: mean of group data distribution}
 }
 \value{
 numeric
 }
 \description{
-\code{gd_compute_watts_lq()} computes Watts Index from Quadratic Lorenz fit
-The first distribution-sensitive poverty measure was proposed in 1968 by Watts
-It is defined as the mean across the population of the proportionate poverty
+\code{gd_compute_watts_lq()} computes Watts Index from Quadratic Lorenz fit The
+first distribution-sensitive poverty measure was proposed in 1968 by Watts It
+is defined as the mean across the population of the proportionate poverty
 gaps, as measured by the log of the ratio of the poverty line to income,
 where the mean is formed over the whole population, counting the nonpoor as
 having a zero poverty gap.
