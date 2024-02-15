@@ -123,7 +123,7 @@ test_that("md_welfare_share_at", {
 })
 
 
-md_quantile_welfare_share
+
 
 test_that("md_quantile_welfare_share", {
 

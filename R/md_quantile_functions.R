@@ -235,7 +235,6 @@ md_quantile_welfare_share <- function(
   }
   format <- match.arg(format)
 
-
   # ____________________________________________________________________________
   # Specify Quantiles ----------------------------------------------------------
   if (!is.null(n)) {
@@ -254,7 +253,7 @@ md_quantile_welfare_share <- function(
 
   # ____________________________________________________________________________
   # Get welfare shares ---------------------------------------------------------
-  total_sum <- fsum(welfare)
+  total_sum <- fsum(welfare*weight)
 
   # Create a factor indicating the range of each element
   # Add a small epsilon to the max value
@@ -263,11 +262,22 @@ md_quantile_welfare_share <- function(
     quantiles <- c(quantiles, fmax(welfare) + .Machine$double.eps)
   }
 
-  shares <- tapply(welfare, cut(welfare, breaks = quantiles), sum)
+  quantile_groups <- cut(welfare, breaks = quantiles)
+  welfare_split   <- split(welfare, quantile_groups)
+  weight_split    <- split(weight, quantile_groups)
+
+  shares <- sapply(seq_along(welfare_split), function(i) {
+    fsum(x = welfare_split[[i]],
+         w = weight_split[[i]])
+  })
 
   # Calculate the share of each category
   shares        <- shares / total_sum
   names(shares) <- paste0(popshare*100, "%")
+
+  if (is.null(n)) {
+    shares <- shares[1]
+  }
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
