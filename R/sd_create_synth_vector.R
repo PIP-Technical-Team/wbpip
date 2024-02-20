@@ -123,8 +123,10 @@ sd_create_synth_vector <- function(welfare,
     # Compute welfare values
 
     # Vectorize is faster than purrr
-    vderive_lq <- Vectorize(derive_lq, vectorize.args = "x")
-    welfare_s <- vderive_lq(weight_range, A, B, C) * mean
+    # vderive_lq <- Vectorize(derive_lq, vectorize.args = "x")
+    # welfare_s <- vderive_lq(weight_range, A, B, C) * mean
+
+    welfare_s <- derive_lq(weight_range, A, B, C) * mean
 
     model_used <- "quadratic Lorenz"
 
@@ -135,8 +137,10 @@ sd_create_synth_vector <- function(welfare,
 
     # Compute welfare values
 
-    vderive_lb <- Vectorize(derive_lb, vectorize.args = "x")
-    welfare_s <- vderive_lb(weight_range, A, B, C) * mean
+    # vderive_lb <- Vectorize(derive_lb, vectorize.args = "x")
+    # welfare_s <- vderive_lb(weight_range, A, B, C) * mean
+
+    welfare_s <- derive_lb(weight_range, A, B, C) * mean
 
     model_used <- "Beta Lorenz"
   }

@@ -143,6 +143,39 @@ create_functional_form_lq <- function(welfare,
 
 #' Returns the first derivative of the quadratic Lorenz
 #'
+#' `old_derive_lq()` returns the first derivative of the quadratic Lorenz curves
+#' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0. This
+#' function implements computes the derivative of equation (6b) in the original
+#' Lorenz Quadratic paper: \deqn{-(B / 2) - (\beta + 2 \alpha x) / (4
+#' \sqrt(\alpha x^2 + \beta x + e^2)}
+#'
+#' @param x numeric: Point on curve.
+#' @inheritParams gd_estimate_lq
+#'
+#' @references
+#' Villasenor, J., B. C. Arnold. 1989.
+#' "[Elliptical Lorenz curves](https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338)".
+#' *Journal of Econometrics 40* (2): 327-338.
+#'
+#' @return numeric
+#' @keywords internal
+old_derive_lq <- function(x, A, B, C) {
+  e <- -(A + B + C + 1)
+  alpha <- (B^2) - (4 * A)
+  beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
+  tmp <- (alpha * x^2) + (beta * x) + (e^2)
+  tmp <- if (!is.na(tmp)) {
+    if (tmp < 0) 0L else tmp # Why would we set tmp to 0? It would still fail: division by 0.
+  }
+
+  # Formula for first derivative of GQ Lorenz Curve
+  val <- -(B / 2) - ((2 * alpha * x + beta) / (4 * sqrt(tmp)))
+
+  return(val)
+}
+
+#' Returns the first derivative of the quadratic Lorenz - Vectorized
+#'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
 #' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0. This
 #' function implements computes the derivative of equation (6b) in the original
@@ -160,11 +193,16 @@ create_functional_form_lq <- function(welfare,
 #' @return numeric
 #' @export
 derive_lq <- function(x, A, B, C) {
+
+  if (anyNA(x) == TRUE){
+    cli::cli_abort("`x' must be a numeric or integer vector")
+  }
+
   e <- -(A + B + C + 1)
   alpha <- (B^2) - (4 * A)
   beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
   tmp <- (alpha * x^2) + (beta * x) + (e^2)
-  tmp[!is.na(tmp) & tmp < 0]  <- 0L
+  tmp[(!is.na(tmp) & tmp < 0)] <- 0 # If tmp == 0, val = Inf.
 
   # Formula for first derivative of GQ Lorenz Curve
   val <- -(B / 2) - ((2 * alpha * x + beta) / (4 * sqrt(tmp)))
