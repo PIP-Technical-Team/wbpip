@@ -21,14 +21,3 @@ Numeric vector giving total shortfall in the same units as the poverty line
 \description{
 Calculate total shortfall from headcount, poverty gap, and poverty line
 }
-\examples{
-if (suppressWarnings(require(pipr))) {
-  pip <- get_stats()
-  get_total_shortfall(
-    pip$headcount,
-    pip$pop,
-    pip$poverty_gap,
-    pip$poverty_line) |>
-    head()
-}
-}

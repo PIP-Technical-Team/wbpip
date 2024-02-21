@@ -16,6 +16,10 @@ gd_compute_pov_severity_lb(
 )
 }
 \arguments{
+\item{mean}{numeric: Welfare mean.}
+
+\item{povline}{numeric: Poverty line.}
+
 \item{headcount}{numeric: Headcount index.}
 
 \item{pov_gap}{numeric: Poverty gap.}

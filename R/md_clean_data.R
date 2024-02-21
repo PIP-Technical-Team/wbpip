@@ -1,6 +1,3 @@
-#' @import data.table
-NULL
-
 # Add global variables to avoid NSE notes in R CMD check
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(

@@ -9,6 +9,9 @@ md_compute_polarization(welfare, weight, gini, mean, median)
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric: A vector of population weights, optional, a vector
+of 1s if not specified.}
+
 \item{gini}{numeric: Gini. Output of \code{\link[=md_compute_gini]{md_compute_gini()}}.}
 
 \item{mean}{numeric: A value with the mean. Optional.}

@@ -416,7 +416,7 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #' @inheritParams gd_compute_fit_lq
 #' @param mu `r lifecycle::badge("deprecated")` `mu` is no longer supported. Use
 #'   instead `mean`
-#' @param  meean numeric: mean of group data distribution
+#' @param  mean numeric: mean of group data distribution
 #' @param dd numeric: **TO BE DOCUMENTED**.
 #' @inheritParams gd_estimate_lq
 #'
@@ -725,6 +725,7 @@ gd_compute_headcount_lq <- function(
 #' Compute poverty gap using Lorenz quadratic fit
 #'
 #' @inheritParams gd_compute_poverty_stats_lq
+#' @inheritParams gd_compute_fit_lq
 #' @inheritParams value_at_lq
 #'
 #' @return numeric

@@ -6,6 +6,9 @@
 \usage{
 check_NA_Inf_values(x)
 }
+\arguments{
+\item{x}{numeric vector}
+}
 \value{
 A message if any values are NA or Inf
 }
