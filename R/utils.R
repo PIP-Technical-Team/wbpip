@@ -36,7 +36,7 @@ get_weights <- function(year) {
 #'
 #' It is used for now on Lorenz curves equation
 #'
-#' @param x
+#' @param x numeric: A vector
 #' @return A message if any values are NA or Inf
 #' @keywords internal
 check_NA_Inf_values <- function(x){
@@ -52,7 +52,7 @@ check_NA_Inf_values <- function(x){
 #'
 #' It is used for now on Lorenz curves equation
 #'
-#' @param x
+#' @param x numeric: A vector
 #' @return A message if any values are negative
 #' @keywords internal
 check_neg_values <- function(x){
