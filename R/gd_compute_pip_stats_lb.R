@@ -114,7 +114,7 @@ create_functional_form_lb <- function(welfare, population) {
 
 }
 
-#' Returns the first derivative of the beta Lorenz
+#' Returns the first derivative of the beta Lorenz (without vectorization)
 #'
 #' `old_derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
@@ -148,7 +148,7 @@ old_derive_lb <- function(x, A, B, C) {
   return(val)
 }
 
-#' Returns the first derivative of the beta Lorenz- Vectorized
+#' Returns the first derivative of the beta Lorenz
 #'
 #' `derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
