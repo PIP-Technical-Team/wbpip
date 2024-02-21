@@ -235,7 +235,6 @@ md_compute_median <- function(welfare,
 #' Lorenz curve provided by the user.  default is 10.
 #'
 #' @return list
-#' @export
 #'
 #' @examples
 #' md_compute_quantiles_c(welfare = 1:2000, weight = rep(1, 2000))
