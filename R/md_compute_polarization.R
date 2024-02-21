@@ -3,6 +3,7 @@
 #' Compute the Wolfson polarization index for microdata.
 #'
 #' @inheritParams md_compute_dist_stats
+#' @inheritParams md_compute_gini
 #' @param gini numeric: Gini. Output of [md_compute_gini()].
 #' @param median numeric: Median. Output of [md_compute_quantiles()].
 #'

@@ -89,14 +89,14 @@ test_that("md_welfare_share_at", {
   )
 
   output <- md_welfare_share_at(
-    welfare    = c(1:100),
-    weight     = rep(1, 100),
+    welfare    = c(1:10),
+    weight     = rep(1, 10),
     n          = 10,
     format     = "atomic"
   )
   expect_equal(
     output |> unname(),
-    seq(from = 0.1, to = 1, by = 0.1)
+    fcumsum(1:10)/fsum(1:10)
   )
 
 
@@ -123,7 +123,7 @@ test_that("md_welfare_share_at", {
 })
 
 
-
+#md_quantile_welfare_share
 
 test_that("md_quantile_welfare_share", {
 

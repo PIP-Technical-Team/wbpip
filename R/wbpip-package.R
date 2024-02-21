@@ -28,7 +28,8 @@ if (getRversion() >= "2.15.1") {
       ".SD",
       ".",
       "!!",
-      ":="
+      ":=",
+      '..output'
     ),
     package = utils::packageName()
   )

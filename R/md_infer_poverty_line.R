@@ -41,19 +41,21 @@ md_infer_poverty_line <- function(welfare,
   if (include) {
 
     pctile <-
-      sapply(ps, \(.) {
+      vapply(ps, \(.) {
         fmean(
           x = c(welfare[.], welfare[. + 1]),
           w = c(weight[.], weight[. + 1])
         )
-      })
+      },
+      numeric(1))
 
 
   } else {
     pctile <-
-      sapply(ps, \(.) {
+      vapply(ps, \(.) {
         fmean(welfare[.])
-      })
+      },
+      numeric(1))
   }
 
 

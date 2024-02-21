@@ -7,6 +7,10 @@
 gd_compute_pov_gap_lb(mean, povline, headcount, A, B, C, u = NULL)
 }
 \arguments{
+\item{mean}{numeric: Welfare mean.}
+
+\item{povline}{numeric: Poverty line.}
+
 \item{headcount}{numeric: Headcount index.}
 
 \item{A}{numeric: Lorenz curve coefficient. Output of

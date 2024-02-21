@@ -21,7 +21,7 @@ md_welfare_share_at(
 \item{n}{numeric: number of equi-spaced quantiles}
 
 \item{popshare}{numeric atomic vector: the quantiles to return. Will only be
-used if \code{n = NULL}}
+used if \code{n = NULL}, else will be vector determined by the n equi-spaced quantiles.}
 
 \item{format}{character: "dt", "list", "atomic", giving the format of the
 output}
