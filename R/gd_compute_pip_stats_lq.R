@@ -141,7 +141,7 @@ create_functional_form_lq <- function(welfare,
 }
 
 
-#' Returns the first derivative of the quadratic Lorenz
+#' Returns the first derivative of the quadratic Lorenz (without vectorization)
 #'
 #' `old_derive_lq()` returns the first derivative of the quadratic Lorenz curves
 #' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0. This
@@ -174,7 +174,7 @@ old_derive_lq <- function(x, A, B, C) {
   return(val)
 }
 
-#' Returns the first derivative of the quadratic Lorenz - Vectorized
+#' Returns the first derivative of the quadratic Lorenz
 #'
 #' `derive_lq()` returns the first derivative of the quadratic Lorenz curves
 #' with c = 1. General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0. This
@@ -182,7 +182,7 @@ old_derive_lq <- function(x, A, B, C) {
 #' Lorenz Quadratic paper: \deqn{-(B / 2) - (\beta + 2 \alpha x) / (4
 #' \sqrt(\alpha x^2 + \beta x + e^2)}
 #'
-#' @param x numeric: Point on curve.
+#' @param x numeric: Point on curve. Allow for vectors.
 #' @inheritParams gd_estimate_lq
 #'
 #' @references

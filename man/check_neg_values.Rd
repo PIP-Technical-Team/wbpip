@@ -7,7 +7,7 @@
 check_neg_values(x)
 }
 \arguments{
-\item{x}{numeric vector}
+\item{x}{numeric: A vector}
 }
 \value{
 A message if any values are negative

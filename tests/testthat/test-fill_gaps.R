@@ -72,9 +72,13 @@ test_that("fill_gaps() returns the correct output format", {
 
 # Extrapolation
 test_that("fill_gaps() extrapolates correctly for microdata", {
+  # deciles <- c(  # These are the results using old_md_compute_quantiles
+  #   0.04013558, 0.05152938, 0.05902374, 0.06676945, 0.07472896,
+  #   0.08423328, 0.09665738, 0.11156888, 0.14029230, 0.27506106
+  # )
   deciles <- c(
-    0.04013558, 0.05152938, 0.05902374, 0.06676945, 0.07472896,
-    0.08423328, 0.09665738, 0.11156888, 0.14029230, 0.27506106
+    0.04019930, 0.05153769, 0.05913976, 0.06695021, 0.07469301,
+    0.08510186, 0.09560845, 0.11148479, 0.14050424, 0.27478070
   )
   res <- fill_gaps(
     request_year = 2005,
