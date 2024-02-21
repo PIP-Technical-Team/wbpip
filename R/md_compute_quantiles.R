@@ -17,8 +17,8 @@
 #' @param tolerance numeric: Tolerance parameter for `lorenzw >= nextQ` check.
 #'
 #' @examples
-#' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
-#' wbpip:::md_compute_quantiles(
+#' lz <- wbpip:::old_md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' wbpip:::old_md_compute_quantiles(
 #'   lwelfare = lz$lorenz_welfare,
 #'   lweight = lz$lorenz_weight,
 #'   percentile = lz$welfare,

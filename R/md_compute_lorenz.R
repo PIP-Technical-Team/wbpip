@@ -128,7 +128,7 @@ md_compute_lorenz <- function(welfare,
 #' @param nbins numeric: number of points on the Lorenz curve.
 #'
 #' @examples
-#' wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' wbpip:::old_md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
 #' @keywords internal
 old_md_compute_lorenz <- function(welfare, weight, nbins = NULL) {
