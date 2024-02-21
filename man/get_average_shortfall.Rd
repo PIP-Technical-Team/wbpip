@@ -19,13 +19,3 @@ Numeric vector giving average shortfall for the poor in the units of the poverty
 \description{
 Calculate average shortfall for the poor using headcount, poverty gap ratio, and poverty line
 }
-\examples{
-if (suppressWarnings(require(pipr))) {
-  pip <- get_stats()
-  get_average_shortfall(
-    pip$headcount,
-    pip$poverty_gap,
-    pip$poverty_line) |>
-    head()
-}
-}

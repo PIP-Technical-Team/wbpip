@@ -103,7 +103,7 @@ md_compute_poverty_stats <- function(
 #'   [md_compute_pov_gap]   Computes poverty gap, which is equivalent to
 #'   `md_compute_fgt(alpha = 1)`
 #'
-#'   [md_compute_pov_sverity] Computes poverty severity, which is equivalent to
+#'   [md_compute_pov_severity] Computes poverty severity, which is equivalent to
 #'   `md_compute_fgt(alpha = 2)`
 #'
 #'   [md_compute_watts] is not a wrapper of [md_compute_fgt] but it is part of

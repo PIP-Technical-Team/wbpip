@@ -11,6 +11,8 @@ gd_compute_pov_gap_lq(mean, povline, headcount, A, B, C)
 
 \item{povline}{numeric: Poverty line.}
 
+\item{headcount}{numeric: Headcount index.}
+
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[1]}.}
 

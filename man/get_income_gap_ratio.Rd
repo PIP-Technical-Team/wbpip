@@ -17,12 +17,3 @@ Numeric vector giving the income gap ratio
 \description{
 Calculate income gap ratio from headcount and poverty gap
 }
-\examples{
-if (suppressWarnings(require(pipr))) {
-  pip <- get_stats()
-  get_income_gap_ratio(
-    pip$headcount,
-    pip$poverty_gap) |>
-    head()
-}
-}

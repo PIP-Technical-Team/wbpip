@@ -1,5 +1,7 @@
 # wbpip (development version)
 
+# wbpip 0.1.1
+
 * Add new functions to compute the following indicators:  
   - Number of poor
   - Average shortfall

@@ -32,28 +32,3 @@ Numeric vector giving the Palma ratio, the ratio of top 10\% to bottom 40\% welf
 \description{
 Calculate Palma ratio using decile information
 }
-\examples{
-if (suppressWarnings(require(pipr))) {
-  pip <- get_stats()
-
-  get_palma_ratio(
-    top10   = pip$decile10,
-    decile1 = pip$decile1,
-    decile2 = pip$decile2,
-    decile3 = pip$decile3,
-    decile4 = pip$decile4,
-    ) |>
-    head()
-
-# Build the bottom 40 first
-
-pip <- pip |>
-transform(bottom40 = decile1 + decile2 + decile3 + decile4)
-
-  get_palma_ratio(
-    top10    = pip$decile10,
-    bottom40 = pip$bottom40
-    ) |>
-    head()
-}
-}

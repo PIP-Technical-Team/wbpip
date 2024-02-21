@@ -96,7 +96,7 @@ measure.
 \link{md_compute_pov_gap}   Computes poverty gap, which is equivalent to
 \code{md_compute_fgt(alpha = 1)}
 
-\link{md_compute_pov_sverity} Computes poverty severity, which is equivalent to
+\link{md_compute_pov_severity} Computes poverty severity, which is equivalent to
 \code{md_compute_fgt(alpha = 2)}
 
 \link{md_compute_watts} is not a wrapper of \link{md_compute_fgt} but it is part of

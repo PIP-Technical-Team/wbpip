@@ -8,8 +8,8 @@
 #'
 #' @docType package
 #' @name wbpip
-#' @import data.table
-#' @import collapse
+#' @rawNamespace import(collapse, except = fdroplevels)
+#' @rawNamespace import(data.table, except = fdroplevels)
 #' @importFrom cli cli_abort cli_warn cli_inform cli_alert cli_alert_danger
 #'   cli_alert_info cli_alert_success
 
@@ -28,7 +28,8 @@ if (getRversion() >= "2.15.1") {
       ".SD",
       ".",
       "!!",
-      ":="
+      ":=",
+      '..output'
     ),
     package = utils::packageName()
   )

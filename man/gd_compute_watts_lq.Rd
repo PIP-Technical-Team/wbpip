@@ -21,7 +21,7 @@ gd_compute_watts_lq(
 \item{mu}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} \code{mu} is no longer supported. Use
 instead \code{mean}}
 
-\item{mean}{numeric: Welfare mean.}
+\item{mean}{numeric: mean of group data distribution}
 
 \item{povline}{numeric: Poverty line.}
 
@@ -35,8 +35,6 @@ instead \code{mean}}
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
-
-\item{meean}{numeric: mean of group data distribution}
 }
 \value{
 numeric

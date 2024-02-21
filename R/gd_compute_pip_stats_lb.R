@@ -844,6 +844,7 @@ BETAICF <- function(a, b, x) {
 #'
 #' @param u numeric: Normalized mean.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
 #' @export
@@ -872,6 +873,7 @@ gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) 
 #' @param u numeric: Mean? **TO BE DOCUMENTED**.
 #' @param pov_gap numeric: Poverty gap.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
 #' @export
