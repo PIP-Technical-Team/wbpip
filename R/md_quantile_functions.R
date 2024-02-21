@@ -18,7 +18,7 @@
 #' provided, the return value is equal to `x`.
 #'
 #' @param welfare welfare vector
-#' @param weight population weight vector
+#' @param weight population weight vector. Default is 1
 #' @param n numeric: number of equi-spaced quantiles
 #' @param popshare numeric atomic vector: the quantiles to return. Will only be
 #' used if `n = NULL`
@@ -36,9 +36,11 @@
 #' )
 md_quantile_values <- function(
     welfare    = NULL,
-    weight     = NULL,
-    n          = 10,
-    popshare   = seq(from = 1/n, to = 1, by = 1/n),
+    weight     = rep(1, length = length(welfare)),
+    n          = NULL,
+    popshare   = ifelse(is.null(n),
+                        seq(from = 1/10, to = 1, by = 1/10),
+                        seq(from = 1/n, to = 1, by = 1/n)),
     format     = c("dt", "list", "atomic")
 ){
 
@@ -52,12 +54,6 @@ md_quantile_values <- function(
   }
   if (length(weight) > 1 & any(is.na(weight))) {
     cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(weight)) {
-    weight <- rep(1, length = length(welfare))
-    cli::cli_alert_warning(
-      text = "No weight vector specified, each observation assigned equal weight"
-    )
   }
   if (is.null(n) & is.null(popshare)) {
     cli::cli_abort("Either `n` or `popshare` must be non-NULL")
@@ -115,9 +111,11 @@ md_quantile_values <- function(
 #'                     weight = md_GHI_2000_consumption$weight)
 md_welfare_share_at <- function(
     welfare    = NULL,
-    weight     = NULL,
-    n          = 10,
-    popshare   = seq(from = 1/n, to = 1, by = 1/n),
+    weight     = rep(1, length = length(welfare)),
+    n          = NULL,
+    popshare   = ifelse(is.null(n),
+                        seq(from = 1/10, to = 1, by = 1/10),
+                        seq(from = 1/n, to = 1, by = 1/n)),
     format     = c("dt", "list", "atomic")
 ){
   # ____________________________________________________________________________
@@ -130,12 +128,6 @@ md_welfare_share_at <- function(
   }
   if (length(weight) > 1 & any(is.na(weight))) {
     cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(weight)) {
-    weight <- rep(1, length = length(welfare))
-    cli::cli_alert_warning(
-      text = "No weight vector specified, each observation assigned equal weight"
-    )
   }
   if (is.null(n) & is.null(popshare)) {
     cli::cli_abort("Either `n` or `popshare` must be non-NULL")
@@ -205,9 +197,11 @@ md_welfare_share_at <- function(
 #'                              weight = md_GHI_2000_consumption$weight)
 md_quantile_welfare_share <- function(
     welfare    = NULL,
-    weight     = NULL,
-    n          = 10,
-    popshare   = seq(from = 1/n, to = 1, by = 1/n),
+    weight     = rep(1, length = length(welfare)),
+    n          = NULL,
+    popshare   = ifelse(is.null(n),
+                        seq(from = 1/10, to = 1, by = 1/10),
+                        seq(from = 1/n, to = 1, by = 1/n)),
     format     = c("dt", "list", "atomic")
 ){
   # ____________________________________________________________________________
@@ -220,12 +214,6 @@ md_quantile_welfare_share <- function(
   }
   if (length(weight) > 1 & any(is.na(weight))) {
     cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(weight)) {
-    weight <- rep(1, length = length(welfare))
-    cli::cli_alert_warning(
-      text = "No weight vector specified, each observation assigned equal weight"
-    )
   }
   if (is.null(n) & is.null(popshare)) {
     cli::cli_abort("Either `n` or `popshare` must be non-NULL")

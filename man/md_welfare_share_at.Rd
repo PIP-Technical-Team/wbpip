@@ -6,16 +6,17 @@
 \usage{
 md_welfare_share_at(
   welfare = NULL,
-  weight = NULL,
-  n = 10,
-  popshare = seq(from = 1/n, to = 1, by = 1/n),
+  weight = rep(1, length = length(welfare)),
+  n = NULL,
+  popshare = ifelse(is.null(n), seq(from = 1/10, to = 1, by = 1/10), seq(from = 1/n, to =
+    1, by = 1/n)),
   format = c("dt", "list", "atomic")
 )
 }
 \arguments{
 \item{welfare}{welfare vector}
 
-\item{weight}{population weight vector}
+\item{weight}{population weight vector. Default is 1}
 
 \item{n}{numeric: number of equi-spaced quantiles}
 

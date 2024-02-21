@@ -6,6 +6,9 @@
 \usage{
 check_neg_values(x)
 }
+\arguments{
+\item{x}{numeric vector}
+}
 \value{
 A message if any values are negative
 }
