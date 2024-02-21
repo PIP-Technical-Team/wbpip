@@ -13,7 +13,7 @@ md_compute_polarization(welfare, weight, gini, mean, median)
 
 \item{mean}{numeric: A value with the mean. Optional.}
 
-\item{median}{numeric: Median. Output of \code{\link[=md_compute_quantiles]{md_compute_quantiles()}}.}
+\item{median}{numeric: Median. Output of \code{\link[=md_compute_median]{md_compute_median()}}.}
 }
 \value{
 numeric

@@ -196,7 +196,7 @@ md_compute_quantiles <- function(welfare,
 #' @export
 #'
 #' @examples
-#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' md_compute_median(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_median <- function(welfare,
                                  weight) {
