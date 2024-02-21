@@ -95,7 +95,7 @@ old_md_compute_quantiles <- function(lwelfare,
 #' of each percentile (`percentile`).
 #'
 #' @param welfare numeric: A vector of income or consumption values.
-#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#' @param weight numeric: A vector of weights. Default is a vector of ones
 #' @param n_quantile numeric: Number of quantiles for which share of total income
 #' is desired. It can't be larger that the total number of percentiles in the
 #' Lorenz curve provided by the user.  default is 10.
@@ -190,7 +190,7 @@ md_compute_quantiles <- function(welfare,
 #' Compute median for microdata
 #'
 #' @param welfare numeric: A vector of income or consumption values.
-#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#' @param weight numeric: A vector of weights. Default is a vector of ones
 #'
 #' @return numeric
 #' @export
