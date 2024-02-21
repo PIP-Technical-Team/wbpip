@@ -22,14 +22,6 @@ list
 Compute quantiles for microdata.
 }
 \details{
-Calculate share of total welfare in each quantile from Lorenz curve and
-the its corresponding percentile. That is, it requires a vector with the
-cumulative share of the population (\code{lweight}), a vector with cumulative
-share of welfare (\code{lwelfare}), and a vector the corresponding monetary value
-of each percentile (\code{percentile}).
-}
-\examples{
-md_compute_quantiles_share(welfare = 1:2000, weight = rep(1, 2000))
-
+Calculate share of total welfare in each quantile from Lorenz curve
 }
 \keyword{internal}

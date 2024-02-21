@@ -88,20 +88,13 @@ old_md_compute_quantiles <- function(lwelfare,
 #'
 #' Compute quantiles for microdata.
 #'
-#' Calculate share of total welfare in each quantile from Lorenz curve and
-#' the its corresponding percentile. That is, it requires a vector with the
-#' cumulative share of the population (`lweight`), a vector with cumulative
-#' share of welfare (`lwelfare`), and a vector the corresponding monetary value
-#' of each percentile (`percentile`).
+#' Calculate share of total welfare in each quantile from Lorenz curve
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
 #' @param n_quantile numeric: Number of quantiles for which share of total income
 #' is desired. It can't be larger that the total number of percentiles in the
 #' Lorenz curve provided by the user.  default is 10.
-#'
-#' @examples
-#' md_compute_quantiles_share(welfare = 1:2000, weight = rep(1, 2000))
 #'
 #' @return list
 #' @keywords internal
@@ -235,9 +228,6 @@ md_compute_median <- function(welfare,
 #' Lorenz curve provided by the user.  default is 10.
 #'
 #' @return list
-#'
-#' @examples
-#' md_compute_quantiles_c(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_quantiles_c <- function(welfare,
                                     weight,

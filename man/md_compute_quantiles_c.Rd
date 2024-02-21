@@ -21,7 +21,4 @@ list
 \description{
 Compute quantiles for microdata with collapse
 }
-\examples{
-md_compute_quantiles_c(welfare = 1:2000, weight = rep(1, 2000))
-}
 \keyword{internal}
