@@ -8,23 +8,14 @@ md_quantile_welfare_share(
   welfare = NULL,
   weight = rep(1, length = length(welfare)),
   n = NULL,
-  popshare = ifelse(is.null(n), seq(from = 1/10, to = 1, by = 1/10), seq(from = 1/n, to =
-    1, by = 1/n)),
   format = c("dt", "list", "atomic")
 )
 }
 \arguments{
-\item{welfare}{welfare vector}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{population weight vector. Default is 1}
-
-\item{n}{numeric: number of equi-spaced quantiles}
-
-\item{popshare}{numeric atomic vector: the quantiles to return. Will only be
-used if \code{n = NULL}, else will be vector determined by the n equi-spaced quantiles.}
-
-\item{format}{character: "dt", "list", "atomic", giving the format of the
-output}
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,
+\code{rep(1, length(welfare))}.}
 }
 \value{
 list with vector of share of welfare by quantiles

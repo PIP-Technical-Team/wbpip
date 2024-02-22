@@ -7,33 +7,23 @@
 md_welfare_share_at(
   welfare = NULL,
   weight = rep(1, length = length(welfare)),
-  n = NULL,
-  popshare = ifelse(is.null(n), seq(from = 1/10, to = 1, by = 1/10), seq(from = 1/n, to =
-    1, by = 1/n)),
+  n = 10,
   format = c("dt", "list", "atomic")
 )
 }
 \arguments{
-\item{welfare}{welfare vector}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{population weight vector. Default is 1}
-
-\item{n}{numeric: number of equi-spaced quantiles}
-
-\item{popshare}{numeric atomic vector: the quantiles to return. Will only be
-used if \code{n = NULL}, else will be vector determined by the n equi-spaced quantiles.}
-
-\item{format}{character: "dt", "list", "atomic", giving the format of the
-output}
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,
+\code{rep(1, length(welfare))}.}
 }
 \value{
 list with vector of share of welfare by quantiles
 }
 \description{
-\code{md_welfare_share_at} returns the share of welfare held by the specified
-share of the population in the parameter \code{popshare}. Alternatively, you can
-select the number of quantiles (10 be default), to estimate the corresponding
-share of welfare in each.
+\code{md_welfare_share_at} returns the share of welfare held by an specified
+share of the population. You can select the number of quantiles (10 be default).
+This function makes use of \code{md_compute_lorenz}.
 }
 \examples{
 md_welfare_share_at(welfare = md_GHI_2000_consumption$welfare,
