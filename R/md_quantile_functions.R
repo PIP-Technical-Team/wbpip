@@ -282,7 +282,8 @@ old_md_welfare_share_at <- function(
 #' This function makes use of `md_compute_lorenz`.
 #'
 #'
-#' @inheritParams md_compute_lorenz
+#' @inheritParams md_quantile_values
+#'
 #'
 #' @return list with vector of share of welfare by quantiles
 #' @export
@@ -457,7 +458,7 @@ old_md_quantile_welfare_share <- function(
 #' the cumulative share. Instead, `md_quantile_welfare_share` returns
 #' the proportion of welfare that only the specified quantile holds.
 #'
-#' @inheritParams md_compute_lorenz
+#' @inheritParams md_quantile_values
 #'
 #' @return list with vector of share of welfare by quantiles
 #' @export
@@ -468,7 +469,7 @@ old_md_quantile_welfare_share <- function(
 md_quantile_welfare_share <- function(
     welfare    = NULL,
     weight     = rep(1, length = length(welfare)),
-    n          = NULL,
+    n          = 10,
     format     = c("dt", "list", "atomic")
 ){
   # ____________________________________________________________________________

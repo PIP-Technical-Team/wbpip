@@ -15,12 +15,21 @@ gd_compute_gini_lq(A, B, C, key_values = NULL)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{vector with (e,m,n,r)}
 }
 \value{
 numeric
 }
 \description{
-\code{gd_compute_gini_lq()} computes the gini index from a Lorenz Quadratic fit
+\code{gd_compute_gini_lq()} computes the gini index from a Lorenz Quadratic fit.
+Key values is a vector that can be set to fit the follwing formulas:
+e = -(A + B + C + 1): condition for the curve to go through
+(1, 1).
+m = (B^2) - (4 * A). m < 0: condition for the curve to be
+an ellipse (m is called alpha in paper).
+n = (2 * B * e) - (4 * C). n is called Beta in paper
+r = (n^2) - (4 * m * e^2). r is called K in paper.
 }
 \references{
 Datt, G. 1998. "\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{Computational Tools For Poverty Measurement And Analysis}". FCND

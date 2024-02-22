@@ -12,10 +12,14 @@ md_welfare_share_at(
 )
 }
 \arguments{
-\item{welfare}{numeric: A vector of income or consumption values.}
+\item{welfare}{welfare vector}
 
-\item{weight}{numeric: A vector of weights. Default is a vector of ones,
-\code{rep(1, length(welfare))}.}
+\item{weight}{population weight vector. Default is 1}
+
+\item{n}{numeric: number of equi-spaced quantiles}
+
+\item{format}{character: "dt", "list", "atomic", giving the format of the
+output}
 }
 \value{
 list with vector of share of welfare by quantiles
