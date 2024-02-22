@@ -93,10 +93,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
+
   benchmark <- list(
     gini = 0.32126464221602591,
     median = 42.247782467994874,
@@ -124,11 +121,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     p0 = p0,
     A = A,
     B = B,
-    C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r
+    C = C
   )
 
   expect_equal(names(out), c(
@@ -831,3 +824,13 @@ test_that("derive_lq shows error message when NA values",{
 
 })
 
+
+test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
+
+  benchmark <- old_gd_compute_gini_lq(A,B,C,e,m,n,r)
+
+  out <- gd_compute_gini_lq(A,B,C)
+
+  expect_equal(out,
+               benchmark)
+})
