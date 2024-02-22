@@ -2,7 +2,7 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{derive_lb}
 \alias{derive_lb}
-\title{Returns the first derivative of the beta Lorenz}
+\title{Returns the first derivative of the beta Lorenz- Vectorized}
 \usage{
 derive_lb(x, A, B, C)
 }
@@ -24,3 +24,4 @@ numeric
 \description{
 \code{derive_lb()} returns the first derivative of a beta Lorenz curve.
 }
+\keyword{internal}
