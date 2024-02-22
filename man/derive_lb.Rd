@@ -24,4 +24,3 @@ numeric
 \description{
 \code{derive_lb()} returns the first derivative of a beta Lorenz curve.
 }
-\keyword{internal}

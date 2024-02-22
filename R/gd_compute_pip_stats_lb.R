@@ -156,7 +156,7 @@ old_derive_lb <- function(x, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 derive_lb <- function(x, A, B, C) {
   val <- vector("numeric", length(x))
   val[x == 0] <- -Inf
