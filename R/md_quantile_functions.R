@@ -357,7 +357,7 @@ md_welfare_share_at <- function(
 #' @export
 #'
 #' @examples
-#' md_quantile_welfare_share(welfare = md_GHI_2000_consumption$welfare,
+#' old_md_quantile_welfare_share(welfare = md_GHI_2000_consumption$welfare,
 #'                              weight = md_GHI_2000_consumption$weight)
 old_md_quantile_welfare_share <- function(
     welfare    = NULL,
@@ -457,7 +457,7 @@ old_md_quantile_welfare_share <- function(
 #' the cumulative share. Instead, `md_quantile_welfare_share` returns
 #' the proportion of welfare that only the specified quantile holds.
 #'
-#' @inheritParams md_quantile_values
+#' @inheritParams md_compute_lorenz
 #'
 #' @return list with vector of share of welfare by quantiles
 #' @export
@@ -469,9 +469,6 @@ md_quantile_welfare_share <- function(
     welfare    = NULL,
     weight     = rep(1, length = length(welfare)),
     n          = NULL,
-    popshare   = ifelse(is.null(n),
-                        seq(from = 1/10, to = 1, by = 1/10),
-                        seq(from = 1/n, to = 1, by = 1/n)),
     format     = c("dt", "list", "atomic")
 ){
   # ____________________________________________________________________________
@@ -485,57 +482,20 @@ md_quantile_welfare_share <- function(
   if (length(weight) > 1 & any(is.na(weight))) {
     cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
   }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
   if (length(unique(welfare)) == 1) {
     cli::cli_abort("The `welfare` vector should have more than one unique values")
   }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
-  # Specify Quantiles ----------------------------------------------------------
-  if (!is.null(n)) {
-    popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-  weight  <- weight[order(welfare)]
-  welfare <- welfare[order(welfare)]
-
-  quantiles <- md_quantile_values(
+  # Get welfare shares ---------------------------------------------------------
+  lz            <- md_compute_lorenz(
     welfare  = welfare,
     weight   = weight,
-    n        = n,
-    popshare = popshare,
-    format   = "atomic"
-  )
-
-  # ____________________________________________________________________________
-  # Get welfare shares ---------------------------------------------------------
-  total_sum <- fsum(welfare*weight)
-
-  # Create a factor indicating the range of each element
-  # Add a small epsilon to the max value
-  quantiles <- c(-Inf, quantiles)
-  if (!fmax(quantiles) == fmax(welfare)) {
-    quantiles <- c(quantiles, fmax(welfare) + .Machine$double.eps)
-  }
-
-  quantile_groups <- cut(welfare, breaks = quantiles)
-  welfare_split   <- split(welfare, quantile_groups)
-  weight_split    <- split(weight, quantile_groups)
-
-  shares <- sapply(seq_along(welfare_split), function(i) {
-    fsum(x = welfare_split[[i]],
-         w = weight_split[[i]])
-  })
-
-  # Calculate the share of each category
-  shares        <- shares / total_sum
-  names(shares) <- paste0(popshare*100, "%")
-
-  if (is.null(n)) {
-    shares <- shares[1]
-  }
+    nbins    = n)
+  shares        <- diff(c(0,lz$lorenz_welfare))
+  popshare      <- seq(from = 1/n, to = 1, by = 1/n)
+  names(shares) <- paste0(popshare*100, '%')
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
