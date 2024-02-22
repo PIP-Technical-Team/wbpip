@@ -227,7 +227,7 @@ old_md_welfare_share_at <- function(
   # Calculations ---------------------------------------------------------------
 
   # Get quantiles
-  q       <- md_quantile_values(
+  q       <- old_md_quantile_values(
     welfare  = welfare,
     weight   = weight,
     n        = n,
@@ -277,12 +277,12 @@ old_md_welfare_share_at <- function(
 
 #' Welfare share by quantile in micro data
 #'
-#' `md_welfare_share_at` returns the share of welfare held by the specified
-#' share of the population in the parameter `popshare`. Alternatively, you can
-#' select the number of quantiles (10 be default), to estimate the corresponding
-#' share of welfare in each.
+#' `md_welfare_share_at` returns the share of welfare held by an specified
+#' share of the population. You can select the number of quantiles (10 be default).
+#' This function makes use of `md_compute_lorenz`.
 #'
-#' @inheritParams md_quantile_values
+#'
+#' @inheritParams md_compute_lorenz
 #'
 #' @return list with vector of share of welfare by quantiles
 #' @export
@@ -293,10 +293,7 @@ old_md_welfare_share_at <- function(
 md_welfare_share_at <- function(
     welfare    = NULL,
     weight     = rep(1, length = length(welfare)),
-    n          = NULL,
-    popshare   = ifelse(is.null(n),
-                        seq(from = 1/10, to = 1, by = 1/10),
-                        seq(from = 1/n, to = 1, by = 1/n)),
+    n          = 10,
     format     = c("dt", "list", "atomic")
 ){
   # ____________________________________________________________________________
@@ -310,58 +307,20 @@ md_welfare_share_at <- function(
   if (length(weight) > 1 & any(is.na(weight))) {
     cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
   }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
+
   format <- match.arg(format)
-
-  # ____________________________________________________________________________
-  # Validate n ----------------------------------------------------------
-  if (!is.null(n)) {
-    popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-
-  # ----------------------------------------------------------------------------
-  # Validate popshare ----------------------------------------------------------
-  if (!is.null(popshare)) {
-    if (any(popshare < 0 | popshare > 1)) {
-      cli::cli_abort("popshare must be within the range [0, 1]")
-    }
-  }
 
   # ____________________________________________________________________________
   # Calculations ---------------------------------------------------------------
 
   # Get quantiles
-  q       <- md_quantile_values(
+  lz            <- md_compute_lorenz(
     welfare  = welfare,
     weight   = weight,
-    n        = n,
-    popshare = popshare,
-    format   = "list"
-  )
-
-
-  if (length(funique(unlist(unname(q)))) < length(unlist(unname(q)))) {
-    cli::cli_alert_warning(
-      "Some quantile threshold values are equal. Please either reduce `n`,
-      investigate `welfare` and `weight` vectors, or
-      check using `md_quantile_values`."
-    )
-  }
-
-  # Get total welfare, and order other vecs
-  total_welfare <- fsum(x = welfare,
-                        w = weight)
-  weight        <- weight[order(welfare)]
-  welfare       <- welfare[order(welfare)]
-
-  # Weighted welfare shares
-  output <- lapply(q,
-                   \(y){
-                     fsum(x = welfare[welfare <= y],
-                          w = weight[welfare <= y]) / total_welfare
-                   })
+    nbins    = n)
+  output        <- lz$lorenz_welfare
+  popshare      <- seq(from = 1/n, to = 1, by = 1/n)
+  names(output) <- paste0(popshare*100, '%')
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
@@ -436,7 +395,7 @@ old_md_quantile_welfare_share <- function(
   weight  <- weight[order(welfare)]
   welfare <- welfare[order(welfare)]
 
-  quantiles <- md_quantile_values(
+  quantiles <- old_md_quantile_values(
     welfare  = welfare,
     weight   = weight,
     n        = n,
