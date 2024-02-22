@@ -170,7 +170,7 @@ md_compute_quantiles <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  lz <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
+  lz        <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
   quantiles <- lz$welfare
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -250,7 +250,7 @@ md_compute_quantiles_c <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   bins_groups <- 1:n_quantile
   probs       <- bins_groups/n_quantile
-  quantiles <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
+  quantiles   <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
