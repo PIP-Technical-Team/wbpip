@@ -37,5 +37,6 @@ Given a vector of weights and welfare, this functions computes the Lorenz
 curve.
 }
 \examples{
-md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+md_compute_lorenz(welfare = md_ABC_2010_income$welfare,
+weight = md_ABC_2010_income$weight)
 }

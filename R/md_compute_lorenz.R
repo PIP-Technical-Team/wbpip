@@ -17,7 +17,8 @@
 #'   some observations will be repeated.
 #'
 #' @examples
-#' md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' md_compute_lorenz(welfare = md_ABC_2010_income$welfare,
+#' weight = md_ABC_2010_income$weight)
 #' @return data.frame
 #' @export
 md_compute_lorenz <- function(welfare,
@@ -42,7 +43,7 @@ md_compute_lorenz <- function(welfare,
   # Sort data ------
 
   if (is.unsorted(welfare)) {
-    o       <- collapse::radixorder(welfare)
+    o       <- order(welfare) # this is faster than collapse::radixorder
     welfare <- welfare[o]
     weight  <- weight[o]
   }
