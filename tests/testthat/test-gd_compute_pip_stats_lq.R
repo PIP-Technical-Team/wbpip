@@ -93,10 +93,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
+
   benchmark <- list(
     gini = 0.32126464221602591,
     median = 42.247782467994874,
@@ -124,11 +121,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     p0 = p0,
     A = A,
     B = B,
-    C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r
+    C = C
   )
 
   expect_equal(names(out), c(
@@ -740,3 +733,104 @@ test_that("value_at_lq works when x is a vector", {
                tolerance = 1.1e-04)
 })
 
+test_that("derive_lq works as old_derive_lq",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  # # New values (With these values tmp=0 and val is Inf when x==1)
+  # A <- 0.6
+  # B <- 0.3
+  # C <- 0.4
+
+  benchmark <- vector("numeric",length(x))
+  for (i in 1:length(x)){
+    benchmark[i] <- old_derive_lq(x[i],A,B,C)
+  }
+
+  res <- derive_lq(x,A,B,C)
+
+  expect_equal(res,benchmark)
+
+})
+
+test_that("derive_lq can handle vectors",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  # # New values (With these values tmp=0 and val is Inf when x==1)
+  # A <- 0.6
+  # B <- 0.3
+  # C <- 0.4
+
+  res <- derive_lq(x,A,B,C)
+
+  expect_equal(res,c(0.1728754,
+                     0.1742445,
+                     0.1801808,
+                     0.1956871,
+                     0.2261887,
+                     0.3296133,
+                     0.4924598,
+                     0.7034354,
+                     0.9518634,
+                     25.2728763), tolerance = 1e-5 )
+
+})
+
+test_that("derive_lq shows error message when NA values",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    NA,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    NA,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  expect_error(derive_lq(x,A,B,C))
+
+})
+
+
+test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
+
+  benchmark <- old_gd_compute_gini_lq(A,B,C,e,m,n,r)
+
+  out <- gd_compute_gini_lq(A,B,C)
+
+  expect_equal(out,
+               benchmark)
+})

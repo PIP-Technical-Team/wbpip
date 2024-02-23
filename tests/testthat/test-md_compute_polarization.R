@@ -21,11 +21,10 @@ test_that("md_compute_polarization() computations are correct", {
     # Calculate weighted mean
     weighted_mean <- stats::weighted.mean(df$welfare, df$weight)
     # Calculate weighted median
-    weighted_median <- md_compute_quantiles(
-      lwelfare = lz$lorenz_welfare,
-      lweight = lz$lorenz_weight,
-      percentile = lz$welfare
-    )[["median"]]
+    weighted_median <- md_compute_median(
+      welfare = df$welfare,
+      weight = df$weight
+    )
     # Calculate polarization
     pol <- md_compute_polarization(
       welfare = df$welfare,
