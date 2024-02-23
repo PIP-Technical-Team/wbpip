@@ -353,9 +353,9 @@ old_gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #' @export
 gd_compute_gini_lq <- function(A, B, C, key_values = NULL) {
 
-  val <- gd_lq_key_values(A,B,C)
 
   if (is.null(key_values) == TRUE){
+    val <- gd_lq_key_values(A,B,C)
     e <- val$e
     m <- val$m
     n <- val$n
