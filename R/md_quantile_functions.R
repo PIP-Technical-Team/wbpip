@@ -46,32 +46,12 @@ old_md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Validate n ----------------------------------------------------------
   if (!is.null(n)) {
     popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-
-  # ----------------------------------------------------------------------------
-  # Validate popshare ----------------------------------------------------------
-  if (!is.null(popshare)) {
-    if (any(popshare < 0 | popshare > 1)) {
-      cli::cli_abort("popshare must be within the range [0, 1]")
-    }
   }
 
   # ____________________________________________________________________________
@@ -132,15 +112,6 @@ md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
   format <- match.arg(format) # Ask about this argument to Zander
 
   # ____________________________________________________________________________
@@ -195,32 +166,12 @@ old_md_welfare_share_at <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Validate n ----------------------------------------------------------
   if (!is.null(n)) {
     popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-
-  # ----------------------------------------------------------------------------
-  # Validate popshare ----------------------------------------------------------
-  if (!is.null(popshare)) {
-    if (any(popshare < 0 | popshare > 1)) {
-      cli::cli_abort("popshare must be within the range [0, 1]")
-    }
   }
 
   # ____________________________________________________________________________
@@ -234,15 +185,6 @@ old_md_welfare_share_at <- function(
     popshare = popshare,
     format   = "list"
   )
-
-
-  if (length(funique(unlist(unname(q)))) < length(unlist(unname(q)))) {
-    cli::cli_alert_warning(
-      "Some quantile threshold values are equal. Please either reduce `n`,
-      investigate `welfare` and `weight` vectors, or
-      check using `md_quantile_values`."
-    )
-  }
 
   # Get total welfare, and order other vecs
   total_welfare <- fsum(x = welfare,
@@ -299,26 +241,15 @@ md_welfare_share_at <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Calculations ---------------------------------------------------------------
 
   # Get quantiles
-  lz            <- md_compute_lorenz(
-    welfare  = welfare,
-    weight   = weight,
-    nbins    = n)
+  lz            <- md_compute_lorenz(welfare  = welfare,
+                                     weight   = weight,
+                                     nbins    = n)
   output        <- lz$lorenz_welfare
   popshare      <- seq(from = 1/n, to = 1, by = 1/n)
   names(output) <- paste0(popshare*100, '%')
@@ -371,21 +302,6 @@ old_md_quantile_welfare_share <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
-  if (length(unique(welfare)) == 1) {
-    cli::cli_abort("The `welfare` vector should have more than one unique values")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
@@ -474,18 +390,6 @@ md_quantile_welfare_share <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (length(unique(welfare)) == 1) {
-    cli::cli_abort("The `welfare` vector should have more than one unique values")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
