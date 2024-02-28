@@ -117,7 +117,7 @@ test_that("md_compute_fgt works", {
                        weight      = weight,
                        return_data =  TRUE)
   expect_equal(names(fgt),
-               c("pov_status", "relative_distance", "weight", "FGT0"))
+               c("povline","pov_status", "relative_distance", "weight", "FGT0"))
 
   expect_equal(fgt$FGT0, 0.18186165)
 
@@ -132,7 +132,7 @@ test_that("md_compute_fgt works", {
 
 
   expect_equal(names(fgt),
-               c(
+               c("povline",
                  "pov_status",
                  "relative_distance",
                  "weight",
@@ -168,7 +168,7 @@ test_that("md_compute_headcount works", {
                0.7333513,
                tolerance = 1e-6) #match compute_poverty_stats in povcalnet
 
-  expect_equal(
+  expect_equal( # This doesn't makes sense.
     out1,
     out2
   )

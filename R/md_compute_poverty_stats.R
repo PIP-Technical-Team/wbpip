@@ -65,7 +65,7 @@ md_compute_poverty_stats <- function(
 
 
 
-#' Compute FGT poverty family measures and Watts index for Microdata
+#' Compute FGT poverty family measures and Watts index for Microdata (old version)
 #'
 #' @param fgt_data list of previously computed fgt calculations
 #' @param welfare numeric vector with either income or consumption
@@ -77,14 +77,14 @@ md_compute_poverty_stats <- function(
 #'   the poverty severity. In practice, you can use higher levels of `alpha`,
 #'   but their theoretical interpretation usually goes up to a value of `2`.
 #' @param return_data logical: whether to return a list to be used in subsequent
-#'   calls of [md_compute_fgt] in the parameter `fgt_data`.
+#'   calls of [old_md_compute_fgt] in the parameter `fgt_data`.
 #' @param include_povline logical: Whether to include the poverty line as
 #'   threshold for poverty measure. The default is `FALSE`, as absolute poverty
 #'   is defined as those household *below* the poverty line. Yet, it might be
 #'   useful to include the value of the poverty line for a very limited set of
 #'   analysis (*seldom used*).
 #'
-#' @details [md_compute_fgt] works in two ways. It could either receive a list
+#' @details [old_md_compute_fgt] works in two ways. It could either receive a list
 #'   of previously computed calculations in argument `fgt_data` or receive the
 #'   standard poverty calculation inputs such as `welfare`, `weights` and
 #'   `povline`. The first modality ensures efficiency in computations as the
@@ -93,20 +93,20 @@ md_compute_poverty_stats <- function(
 #'
 #' @section wrappers:
 #'
-#'   There are a few functions that are basically wrappers of [md_compute_fgt].
+#'   There are a few functions that are basically wrappers of [old_md_compute_fgt].
 #'   They do not serve any purpose beyond ease to the user to identify the right
 #'   measure.
 #'
 #'   [md_compute_headcount] Computes poverty headcount, which is equivalent to
-#'   `md_compute_fgt(alpha = 0)`
+#'   `old_md_compute_fgt(alpha = 0)`
 #'
 #'   [md_compute_pov_gap]   Computes poverty gap, which is equivalent to
-#'   `md_compute_fgt(alpha = 1)`
+#'   `old_md_compute_fgt(alpha = 1)`
 #'
 #'   [md_compute_pov_severity] Computes poverty severity, which is equivalent to
-#'   `md_compute_fgt(alpha = 2)`
+#'   `old_md_compute_fgt(alpha = 2)`
 #'
-#'   [md_compute_watts] is not a wrapper of [md_compute_fgt] but it is part of
+#'   [md_compute_watts] is not a wrapper of [old_md_compute_fgt] but it is part of
 #'   the poverty measures, so it is included in this documentation. Notice that
 #'   the arguments are the same as of the functions above.
 #'
@@ -116,7 +116,7 @@ md_compute_poverty_stats <- function(
 #'
 #'
 #' @return either a vector with the fgt measure selected in argument `alpha` or
-#'   a list of dgt estimations if `return_data` is `TRUE`
+#'   a list of fgt estimations if `return_data` is `TRUE`
 #' @export
 #'
 #' @examples
@@ -127,21 +127,21 @@ md_compute_poverty_stats <- function(
 #' welfare <- welfare[wna]
 #' weight  <- weight[wna]
 #'
-#' md_compute_fgt(welfare = welfare,
+#' old_md_compute_fgt(welfare = welfare,
 #'                weight  = weight,
 #'                povline = 5)
 #'
-#' fgt <- md_compute_fgt(welfare     = welfare,
+#' fgt <- old_md_compute_fgt(welfare     = welfare,
 #'                       weight      = weight,
 #'                       povline     = 5,
 #'                       return_data =  TRUE) |>
-#'   md_compute_fgt(alpha = 1,
+#'   old_md_compute_fgt(alpha = 1,
 #'                  return_data =  TRUE) |>
-#'   md_compute_fgt(alpha = 2,
+#'   old_md_compute_fgt(alpha = 2,
 #'                  return_data =  TRUE)
 #'
 #' c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
-md_compute_fgt <- function(fgt_data        = NULL,
+old_md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
                            povline         = fmedian(welfare, w = weight)/2,
@@ -190,6 +190,139 @@ md_compute_fgt <- function(fgt_data        = NULL,
   }
 
   x
+}
+
+#' Compute FGT poverty family measures and Watts index for Microdata
+#'
+#' @param fgt_data list of previously computed fgt calculations
+#' @param welfare numeric vector with either income or consumption
+#' @param weight numeric vector with sample weights. Default is 1.
+#' @param povline poverty line. Default is the half the weighted median of
+#'   `welfare`. Allows for vector.
+#' @param alpha numeric. Alpha parameter of FGT measures. if `0`, the default,
+#'   it estimates the poverty headcount. If `1`, the poverty gap, and if `2`,
+#'   the poverty severity. In practice, you can use higher levels of `alpha`,
+#'   but their theoretical interpretation usually goes up to a value of `2`.
+#' @param return_data logical: whether to return a list to be used in subsequent
+#'   calls of [md_compute_fgt] in the parameter `fgt_data`.
+#' @param include_povline logical: Whether to include the poverty line as
+#'   threshold for poverty measure. The default is `FALSE`, as absolute poverty
+#'   is defined as those household *below* the poverty line. Yet, it might be
+#'   useful to include the value of the poverty line for a very limited set of
+#'   analysis (*seldom used*).
+#'
+#' @details [md_compute_fgt] works in two ways. It could either receive a list
+#'   of previously computed calculations in argument `fgt_data` or receive the
+#'   standard poverty calculation inputs such as `welfare`, `weights` and
+#'   `povline`. The first modality ensures efficiency in computations as the
+#'   poverty status of each observation and their relative distance to the
+#'   poverty line is calculated only once.
+#'
+#' @section wrappers:
+#'
+#'   There are a few functions that are basically wrappers of [md_compute_fgt].
+#'   They do not serve any purpose beyond ease to the user to identify the right
+#'   measure.
+#'
+#'   [md_compute_headcount] Computes poverty headcount, which is equivalent to
+#'   `md_compute_fgt(alpha = 0)`
+#'
+#'   [md_compute_pov_gap]   Computes poverty gap, which is equivalent to
+#'   `md_compute_fgt(alpha = 1)`
+#'
+#'   [md_compute_pov_severity] Computes poverty severity, which is equivalent to
+#'   `md_compute_fgt(alpha = 2)`
+#'
+#'   [md_compute_watts] is not a wrapper of [md_compute_fgt] but it is part of
+#'   the poverty measures, so it is included in this documentation. Notice that
+#'   the arguments are the same as of the functions above.
+#'
+#' @section inclusion of poverty line: when `include_povline` is `TRUE`, the
+#'   value of the `povline` is artificially modify to `povline + e` where `e` is
+#'   a very small number (`1e-10`), ensure the inclusion of the line.
+#'
+#'
+#' @return either a vector with the fgt measure selected in argument `alpha` or
+#'   a list of fgt estimations if `return_data` is `TRUE`
+#' @export
+#'
+#' @examples
+#' welfare <- md_ABC_2010_income$welfare/1e6
+#' weight  <- md_ABC_2010_income$weight
+#'
+#' wna     <- !is.na(welfare)
+#' welfare <- welfare[wna]
+#' weight  <- weight[wna]
+#'
+#' md_compute_fgt(welfare = welfare,
+#'                weight  = weight,
+#'                povline = 5)
+#'
+#' fgt <- md_compute_fgt(welfare     = welfare,
+#'                       weight      = weight,
+#'                       povline     = 5,
+#'                       return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 1,
+#'                  return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 2,
+#'                  return_data =  TRUE)
+#'
+#' c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+md_compute_fgt <- function(fgt_data        = NULL,
+                           welfare         = NULL,
+                           weight          = rep(1, length(welfare)),
+                           povline         = fmedian(welfare, w = weight)/2,
+                           alpha           = 0,
+                           return_data     = FALSE,
+                           include_povline = FALSE
+) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Defenses --------
+  if (is.null(fgt_data) && is.null(welfare) ||
+      !is.null(fgt_data) && !is.null(welfare)) {
+    cli::cli_abort("You must provide either {.arg fgt_data} of {.arg welfare}")
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  if (include_povline) {
+    povline <- povline + 1e-10
+  }
+  if (is.null(fgt_data)) {
+    fgt_data        <- vector("list", length = 4)
+    names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
+
+    fgt_data$pov_status         <- sapply(povline, function(x) welfare < x)
+    fgt_data$relative_distance  <- sapply(povline, function(x) 1 - (welfare / x))
+    fgt_data$weight             <- weight
+    fgt_data$povline            <- povline
+
+  }
+
+  x <-
+    ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
+    fmean(w = fgt_data$weight)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (return_data) {
+    fgt_name <- paste0("FGT",alpha)
+    fgt_data[[fgt_name]] <- x
+    return(fgt_data)
+  }
+
+  if (length(povline) > 1){
+    names(x)<-paste0("povline_",seq(length(povline)))
+    x
+  }else{
+    x
+  }
+
 }
 
 #' @rdname md_compute_fgt
