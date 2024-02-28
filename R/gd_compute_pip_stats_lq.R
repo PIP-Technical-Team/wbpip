@@ -486,16 +486,16 @@ gd_compute_mld_lq <- function(A, B, C) {
   return(-mld)
 }
 
-#' Compute quantiles from Lorenz Quandratic fit
+#' Compute quantiles from Lorenz Quandratic fit (old version)
 #'
-#' `gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
+#' `old_gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
 #'
 #' @inheritParams gd_estimate_lq
 #' @param n_quantile numeric: Number of quantiles to return.
 #'
 #' @return numeric
 #' @keywords internal
-gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+old_gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
   vec <- vector(mode = "numeric", length = n_quantile)
   x1 <- 1 / n_quantile
   q <- 0L
@@ -512,6 +512,25 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
   return(vec)
 }
 
+#' Compute quantiles from Lorenz Quandratic fit
+#'
+#' `gd_compute_quantile_lq()` computes quantiles from a Lorenz Quadratic fit.
+#'
+#' @inheritParams gd_estimate_lq
+#' @param n_quantile numeric: Number of quantiles to return.
+#'
+#' @return numeric
+#' @keywords internal
+gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+
+  x   <- seq(from = 1/n_quantile, to = 1, by = 1/n_quantile)
+
+  vec <- diff(c(0,value_at_lq(x, A, B, C)))
+
+  vec[n_quantile] <- 1- value_at_lq(x[n_quantile-1], A, B, C) # Is this correct?
+
+  return(vec)
+}
 
 #' Computes Watts Index from Quadratic Lorenz fit
 #'

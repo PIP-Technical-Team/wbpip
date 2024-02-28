@@ -834,3 +834,13 @@ test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
   expect_equal(out,
                benchmark)
 })
+
+test_that("gd_compute_quantile_lq works as old_gd_compute_quantile_lq",{
+
+  benchmark <- old_gd_compute_quantile_lq(A,B,C,10)
+
+  out <- gd_compute_quantile_lq(A,B,C,10)
+
+  expect_equal(out,
+               benchmark)
+})
