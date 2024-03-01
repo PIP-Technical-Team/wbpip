@@ -782,10 +782,13 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
-
-  if (anyNA(headcount)==TRUE) {
-    cli::cli_abort("headcount must be numeric or an integer vector")
-  }
+#
+#   if (anyNA(headcount)) {
+#     return(list(
+#       sse  = NA_real_,
+#       ssez = NA_real_
+#     ))
+#   }
 
   residual <- welfare - value_at_lq(population, A, B, C)
   residual_sq <- residual^2
@@ -793,6 +796,8 @@ gd_compute_fit_lq <- function(welfare,
 
   ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
   ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
+
+  ssez[is.na(ssez)] <- NA_real_
 
   out <- list(sse, ssez)
   names(out) <- list("sse", "ssez")
