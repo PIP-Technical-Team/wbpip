@@ -794,6 +794,7 @@ gd_compute_fit_lq <- function(welfare,
   sse <- sum(residual_sq)
 
   ssez <- sum(residual_sq[population < headcount])
+  ssez <- ssez + residual_sq[population >= headcount][1]
 
   out <- list(sse, ssez)
   names(out) <- list("sse", "ssez")
