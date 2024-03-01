@@ -708,7 +708,7 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
   return(out)
 }
 
-#' Computes the sum of squares of error
+#' Computes the sum of squares of error (old version)
 #'
 #' Measures the fit of the model to the data.
 #'
@@ -766,7 +766,7 @@ old_gd_compute_fit_lq <- function(welfare,
 #'
 #' @param welfare numeric: Welfare vector (grouped).
 #' @param population numeric: Population vector (grouped).
-#' @param headcount numeric: Headcount index.
+#' @param headcount numeric: Headcount index. Allows for vector.
 #' @param A numeric: Lorenz curve coefficient. Output of
 #'   `regres_lq()$coef[1]`.
 #' @param B numeric: Lorenz curve coefficient. Output of
@@ -782,19 +782,17 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
-  # if (is.na(headcount)) {
-  #   return(list(
-  #     sse  = NA_real_,
-  #     ssez = NA_real_
-  #   ))
-  # }
+
+  if (anyNA(headcount)==TRUE) {
+    cli::cli_abort("headcount must be numeric or an integer vector")
+  }
 
   residual <- welfare - value_at_lq(population, A, B, C)
   residual_sq <- residual^2
   sse <- sum(residual_sq)
 
-  ssez <- sum(residual_sq[population < headcount])
-  ssez <- ssez + residual_sq[population >= headcount][1]
+  ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
+  ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
 
   out <- list(sse, ssez)
   names(out) <- list("sse", "ssez")
