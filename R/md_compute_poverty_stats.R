@@ -152,10 +152,6 @@ md_compute_fgt <- function(fgt_data        = NULL,
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Defenses --------
-    # if (is.null(fgt_data) && is.null(welfare) ||
-    #     !is.null(fgt_data) && !is.null(welfare)) {
-    #   cli::cli_abort("You must provide either {.arg fgt_data} of {.arg welfare}")
-    # }
   stopifnot(length(povline) == 1) # should we vectorize this?
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
