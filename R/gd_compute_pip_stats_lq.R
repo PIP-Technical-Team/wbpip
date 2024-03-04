@@ -512,7 +512,7 @@ gd_compute_mld_lq <- function(A, B, C) {
   if (any(x[1:33]<=0)){ # To account for the if within the loop.
     return(-1)
   }else{
-    mld <- mld + sum( (log(x[1:999])+log(x[2:1000])) *0.0005) # Not sure why add previous mld
+    mld <- mld + fsum( (log(x[1:999])+log(x[2:1000])) *0.0005) # Not sure why add previous mld
     return(-mld)
   }
 
