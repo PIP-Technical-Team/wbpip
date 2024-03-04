@@ -277,17 +277,9 @@ md_compute_fgt <- function(fgt_data        = NULL,
                            include_povline = FALSE
 ) {
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## Defenses --------
-  if (is.null(fgt_data) && is.null(welfare) ||
-      !is.null(fgt_data) && !is.null(welfare)) {
-    cli::cli_abort("You must provide either {.arg fgt_data} of {.arg welfare}")
-  }
-
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
   if (include_povline) {
     povline <- povline + 1e-10
@@ -311,13 +303,13 @@ md_compute_fgt <- function(fgt_data        = NULL,
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (return_data) {
-    fgt_name <- paste0("FGT",alpha)
+    fgt_name <- paste0("FGT", alpha)
     fgt_data[[fgt_name]] <- x
     return(fgt_data)
   }
 
-  if (length(povline) > 1){
-    names(x)<-paste0("povline_",seq(length(povline)))
+  if (length(povline) > 1) {
+    names(x) <- paste0("povline_",seq(length(povline)))
     x
   }else{
     x
