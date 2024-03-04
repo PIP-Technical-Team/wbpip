@@ -90,19 +90,20 @@ weight_total      <- sum(benchmark$weight)
 # MD FGT
 #
 test_that("md_compute_fgt throughs erros", {
+
   welfare <- benchmark$welfare
   weight  <- benchmark$weight
 
   md_compute_fgt() |>
     expect_error()
 
-
-  fgt <- md_compute_fgt(welfare    = welfare,
-                        weight      = weight,
-                        return_data =  TRUE)
-  md_compute_fgt(fgt_data = fgt,
-                 welfare = welfare) |>
-    expect_error()
+  # removed test below, because cli_abort removed for efficiency
+  # fgt <- md_compute_fgt(welfare    = welfare,
+  #                       weight      = weight,
+  #                       return_data =  TRUE)
+  # md_compute_fgt(fgt_data = fgt,
+  #                welfare = welfare) |>
+  #   expect_error()
 
 
   })
@@ -110,14 +111,11 @@ test_that("md_compute_fgt works", {
   welfare <- benchmark$welfare
   weight  <- benchmark$weight
 
-  md_compute_fgt(welfare = welfare,
-                 weight  = weight)
-
   fgt <- md_compute_fgt(welfare    = welfare,
                        weight      = weight,
                        return_data =  TRUE)
   expect_equal(names(fgt),
-               c("pov_status", "relative_distance", "weight", "FGT0"))
+               c("povline","pov_status", "relative_distance", "weight", "FGT0"))
 
   expect_equal(fgt$FGT0, 0.18186165)
 
@@ -132,7 +130,7 @@ test_that("md_compute_fgt works", {
 
 
   expect_equal(names(fgt),
-               c(
+               c("povline",
                  "pov_status",
                  "relative_distance",
                  "weight",
@@ -146,6 +144,95 @@ test_that("md_compute_fgt works", {
 
 })
 
+test_that("md_compute_fgt works with vectorization of povline", {
+  welfare <- benchmark$welfare
+  weight  <- benchmark$weight
+  povline <- c(fmedian(welfare, w = weight)/2,
+               fmedian(welfare, w = weight),
+               fmedian(welfare, w = weight)*2)
+
+  fgt <- md_compute_fgt(welfare     = welfare,
+                        weight      = weight,
+                        povline     = povline,
+                        return_data =  TRUE)
+
+  expect_equal(names(fgt),
+               c("povline",
+                 "pov_status",
+                 "relative_distance",
+                 "weight",
+                 "FGT0"))
+
+  res_1 <- old_md_compute_fgt(welfare = welfare,
+                              weight = weight,
+                              povline = povline[1])
+
+  res_2 <- old_md_compute_fgt(welfare = welfare,
+                              weight = weight,
+                              povline = povline[2])
+
+  res_3 <- old_md_compute_fgt(welfare = welfare,
+                              weight = weight,
+                              povline = povline[3])
+
+  expect_equal(fgt$FGT0, c(res_1,
+                           res_2,
+                           res_3))
+
+  ## return all three measures -----------
+  fgt2 <- md_compute_fgt(welfare     = welfare,
+                        weight      = weight,
+                        povline     = povline,
+                        return_data =  TRUE) |>
+    md_compute_fgt(alpha = 1,
+                   return_data =  TRUE) |>
+    md_compute_fgt(alpha = 2,
+                   return_data =  TRUE)
+
+
+  expect_equal(names(fgt2),
+               c("povline",
+                 "pov_status",
+                 "relative_distance",
+                 "weight",
+                 "FGT0",
+                 "FGT1",
+                 "FGT2"
+               ))
+
+  res2_1 <- old_md_compute_fgt(welfare     = welfare,
+                               weight      = weight,
+                               povline     = povline[1],
+                               return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 1,
+                       return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 2,
+                       return_data =  TRUE)
+
+  res2_2 <- old_md_compute_fgt(welfare     = welfare,
+                               weight      = weight,
+                               povline     = povline[2],
+                               return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 1,
+                       return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 2,
+                       return_data =  TRUE)
+
+  res2_3 <- old_md_compute_fgt(welfare     = welfare,
+                               weight      = weight,
+                               povline     = povline[3],
+                               return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 1,
+                       return_data =  TRUE) |>
+    old_md_compute_fgt(alpha       = 2,
+                       return_data =  TRUE)
+
+
+  expect_equal(fgt2$FGT0, c(res2_1$FGT0,res2_2$FGT0,res2_3$FGT0))
+  expect_equal(fgt2$FGT1, c(res2_1$FGT1,res2_2$FGT1,res2_3$FGT1))
+  expect_equal(fgt2$FGT2, c(res2_1$FGT2,res2_2$FGT2,res2_3$FGT2))
+
+})
 
 #_______________________________________________________________________
 # Test - md_compute_headcount
@@ -158,19 +245,23 @@ test_that("md_compute_headcount works", {
     povline      = povline_lcu
   )
 
-  out2 <- md_compute_headcount(
-    welfare      = benchmark$welfare,
-    weight       = benchmark$weight,
-    povline      = povline_lcu
-  )
-
   expect_equal(out1,
                0.7333513,
                tolerance = 1e-6) #match compute_poverty_stats in povcalnet
 
+
+  welf <- c(1:10)
+  wei  <- rep(c(1, 2), 5)
+
+  out2 <- md_compute_headcount(
+    welfare      = welf,
+    weight       = wei,
+    povline      = 5
+  )
+
+
   expect_equal(
-    out1,
-    out2
+    out2, 0.4
   )
 
 })
