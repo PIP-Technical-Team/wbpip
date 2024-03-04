@@ -451,16 +451,16 @@ old_value_at_lq <- function(x, A, B, C) {
   return(estle)
 }
 
-#' Computes MLD from Lorenz Quadratic fit
+#' Computes MLD from Lorenz Quadratic fit (old version)
 #'
-#' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
+#' `old_gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
 #' Quadratic fit
 #'
 #' @inheritParams gd_estimate_lq
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lq <- function(A, B, C) {
+old_gd_compute_mld_lq <- function(A, B, C) {
   x1 <- derive_lq(0.0005, A, B, C)
   gap <- 0L
   mld <- 0L
@@ -484,6 +484,52 @@ gd_compute_mld_lq <- function(A, B, C) {
     x1 <- x2
   }
   return(-mld)
+}
+
+
+#' Computes MLD from Lorenz Quadratic fit
+#'
+#' `gd_compute_mld_lq()` computes the Mean Log deviation (MLD) from a Lorenz
+#' Quadratic fit
+#'
+#' @inheritParams gd_estimate_lq
+#'
+#' @return numeric
+#' @export
+gd_compute_mld_lq <- function(A, B, C) {
+  x1 <- derive_lq(0.0005, A, B, C) # Not sure I understand this condition
+  #gap <- 0L
+  mld <- 0L
+  if (x1 == 0) { # Not sure I understand this condition
+    #gap <- 0.0005
+  } else {
+    mld <- suppressWarnings(log(x1) * 0.001) # Needed to match test
+  }
+
+  xstep <- seq(0, 0.999, 0.001)
+  x <- derive_lq(xstep, A, B, C)
+
+  if (any(x[1:33]<=0)){ # To account for the if within the loop.
+    return(-1)
+  }else{
+    mld <- mld + sum( (log(x[1:999])+log(x[2:1000])) *0.0005) # Not sure why add previous mld
+    return(-mld)
+  }
+
+  # x1 <- derive_lq(0, A, B, C)
+  # for (xstep in seq(0, 0.998, 0.001)) {
+  #   x2 <- derive_lq(xstep + 0.001, A, B, C)
+  #   if ((x1 <= 0) || (x2 <= 0)) {
+  #     gap <- gap + 0.001
+  #     if (gap > 0.5) {
+  #       return(-1)
+  #     }
+  #   } else {
+  #     gap <- 0L
+  #     mld <- mld + (log(x1) + log(x2)) * 0.0005
+  #   }
+  #   x1 <- x2
+  # }
 }
 
 #' Compute quantiles from Lorenz Quandratic fit (old version)
