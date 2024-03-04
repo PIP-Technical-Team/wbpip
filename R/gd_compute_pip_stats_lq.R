@@ -782,20 +782,17 @@ gd_compute_fit_lq <- function(welfare,
                               A,
                               B,
                               C) {
-#
-#   if (anyNA(headcount)) {
-#     return(list(
-#       sse  = NA_real_,
-#       ssez = NA_real_
-#     ))
-#   }
 
   residual <- welfare - value_at_lq(population, A, B, C)
   residual_sq <- residual^2
   sse <- sum(residual_sq)
 
-  ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
-  ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
+  if ( headcount > population[length(population)] ){
+    ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
+  }else{
+    ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
+    ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
+  }
 
   ssez[is.na(ssez)] <- NA_real_
 
