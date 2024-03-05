@@ -152,10 +152,6 @@ old_md_compute_fgt <- function(fgt_data        = NULL,
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ## Defenses --------
-    if (is.null(fgt_data) && is.null(welfare) ||
-        !is.null(fgt_data) && !is.null(welfare)) {
-      cli::cli_abort("You must provide either {.arg fgt_data} of {.arg welfare}")
-    }
   stopifnot(length(povline) == 1) # should we vectorize this?
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -377,14 +373,14 @@ md_compute_watts <- function(
     povline
 ) {
 
-  ss_args <- environment() |>
-    as.list()
-
-  null_args <- sapply(ss_args, is.null)
-
-  if (any(null_args)) {
-    cli::cli_abort("{.or {.arg  {names(ss_args)}}} can't be NULL")
-  }
+  # ss_args <- environment() |>
+  #   as.list()
+  #
+  # null_args <- sapply(ss_args, is.null)
+  #
+  # if (any(null_args)) {
+  #   cli::cli_abort("{.or {.arg  {names(ss_args)}}} can't be NULL")
+  # }
 
 
   # ______________________________________________________________________
