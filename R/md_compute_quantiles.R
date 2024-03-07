@@ -207,25 +207,42 @@ md_compute_quantiles <- function( welfare,
 #' md_compute_median(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_median <- function(welfare,
-                                 weight) {
-  # deal with NAs -----
-  if (anyNA(welfare)) {
-    ina      <- !is.na(welfare)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
-  }
-
-  if (anyNA(weight)) {
-    ina      <- !is.na(weight)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
-  }
+                              weight,
+                              lorenz = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  median <- collapse::fmedian(welfare, w = weight)
+  #median <- collapse::fmedian(df$welfare, w = df$weight)
+
+  if (is.null(lorenz)) {
+
+    # deal with NAs -----
+    if (anyNA(welfare)) {
+      ina      <- !is.na(welfare)
+      weight   <- weight[ina]
+      welfare  <- as.numeric(welfare)[ina]
+    }
+
+    if (anyNA(weight)) {
+      ina      <- !is.na(weight)
+      weight   <- weight[ina]
+      welfare  <- as.numeric(welfare)[ina]
+    }
+
+    lorenz <- md_compute_lorenz(
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = 10
+    )
+  }
+
+  if ((length(lorenz$welfare) %% 2) == 0){
+    median <- lorenz$welfare[length(lorenz$welfare)/2]
+  }else{
+    median <- lorenz$welfare[(length(lorenz$welfare)+1)/2]
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
