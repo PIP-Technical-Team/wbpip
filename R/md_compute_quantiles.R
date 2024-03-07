@@ -93,8 +93,9 @@ old_md_compute_quantiles <- function(lwelfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
 #' @param n_quantile numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
+#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
+#' using the function `md_compute_lorenz`
 #'
 #' @return list
 #' @keywords internal
@@ -161,8 +162,9 @@ md_compute_quantiles_share <- function( welfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantiles numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
+#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
+#' using the function `md_compute_lorenz`
 #'
 #' @return list
 #' @export
@@ -199,6 +201,8 @@ md_compute_quantiles <- function( welfare,
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
+#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
+#' using the function `md_compute_lorenz`
 #'
 #' @return numeric
 #' @export
@@ -256,8 +260,7 @@ md_compute_median <- function(welfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantiles numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
 #'
 #' @return list
 #' @keywords internal

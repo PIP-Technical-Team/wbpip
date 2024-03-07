@@ -12,8 +12,7 @@ md_compute_quantiles_c(welfare, weight, n_quantile = 10)
 \item{weight}{numeric: A vector of weights. Default is a vector of ones,}
 
 \item{n_quantiles}{numeric: Number of quantiles for which share of total income
-is desired. It can't be larger that the total number of percentiles in the
-Lorenz curve provided by the user.  default is 10.}
+is desired. Default is 10.}
 }
 \value{
 list

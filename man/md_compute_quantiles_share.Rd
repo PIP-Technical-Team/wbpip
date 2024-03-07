@@ -4,7 +4,7 @@
 \alias{md_compute_quantiles_share}
 \title{Compute quantiles share}
 \usage{
-md_compute_quantiles_share(welfare, weight, n_quantile = 10)
+md_compute_quantiles_share(welfare, weight, n_quantile = 10, lorenz = NULL)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
@@ -12,8 +12,10 @@ md_compute_quantiles_share(welfare, weight, n_quantile = 10)
 \item{weight}{numeric: A vector of weights. Default is a vector of ones}
 
 \item{n_quantile}{numeric: Number of quantiles for which share of total income
-is desired. It can't be larger that the total number of percentiles in the
-Lorenz curve provided by the user.  default is 10.}
+is desired. Default is 10.}
+
+\item{lorenz}{numeric: A vector with the Lorenz curve percentiles. It can be computed
+using the function \code{md_compute_lorenz}}
 }
 \value{
 list
