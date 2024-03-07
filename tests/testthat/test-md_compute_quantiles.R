@@ -176,4 +176,19 @@ test_that("md_compute_median() computations are correct", {
 
 })
 
+test_that("md_compute_median() takes lorenz argument", {
+  lz <- md_compute_lorenz(
+    welfare = df$welfare,
+    weight = df$weight,
+    nbins = 10
+  )
 
+  out <- md_compute_median(
+    lorenz = lz
+  )
+
+  expect_equal(length(out), 1)
+
+  expect_equal(out, 183.3333)
+
+})
