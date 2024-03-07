@@ -4,15 +4,14 @@
 \alias{md_compute_median}
 \title{Compute median for microdata}
 \usage{
-md_compute_median(welfare, weight, lorenz = NULL)
+md_compute_median(welfare, weight = rep(1, length(welfare)), lorenz = NULL)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
 \item{weight}{numeric: A vector of weights. Default is a vector of ones}
 
-\item{lorenz}{numeric: A vector with the Lorenz curve percentiles. It can be computed
-using the function \code{md_compute_lorenz}}
+\item{lorenz}{numeric: Output from \code{md_compute_lorenz}}
 }
 \value{
 numeric

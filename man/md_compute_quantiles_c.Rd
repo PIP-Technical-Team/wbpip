@@ -4,7 +4,11 @@
 \alias{md_compute_quantiles_c}
 \title{Compute quantiles for microdata with collapse}
 \usage{
-md_compute_quantiles_c(welfare, weight, n_quantile = 10)
+md_compute_quantiles_c(
+  welfare,
+  weight = rep(1, length(welfare)),
+  n_quantile = 10
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}

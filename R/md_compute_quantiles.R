@@ -94,8 +94,7 @@ old_md_compute_quantiles <- function(lwelfare,
 #' @param weight numeric: A vector of weights. Default is a vector of ones
 #' @param n_quantile numeric: Number of quantiles for which share of total income
 #' is desired. Default is 10.
-#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
-#' using the function `md_compute_lorenz`
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return list
 #' @keywords internal
@@ -163,8 +162,7 @@ md_compute_quantiles_share <- function( welfare,
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantiles numeric: Number of quantiles for which share of total income
 #' is desired. Default is 10.
-#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
-#' using the function `md_compute_lorenz`
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return list
 #' @export
@@ -201,8 +199,7 @@ md_compute_quantiles <- function( welfare,
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
-#' @param lorenz numeric: A vector with the Lorenz curve percentiles. It can be computed
-#' using the function `md_compute_lorenz`
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return numeric
 #' @export
