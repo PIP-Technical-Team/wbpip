@@ -100,7 +100,7 @@ old_md_compute_quantiles <- function(lwelfare,
 #' @return list
 #' @keywords internal
 md_compute_quantiles_share <- function( welfare,
-                                        weight,
+                                        weight = rep(1, length(welfare)),
                                         n_quantile = 10,
                                         lorenz     = NULL){
   # # deal with NAs -----
@@ -173,7 +173,7 @@ md_compute_quantiles_share <- function( welfare,
 #' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_quantiles <- function( welfare,
-                                  weight,
+                                  weight = rep(1, length(welfare)),
                                   n_quantile = 10,
                                   lorenz = NULL) {
 
@@ -211,7 +211,7 @@ md_compute_quantiles <- function( welfare,
 #' md_compute_median(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_median <- function(welfare,
-                              weight,
+                              weight = rep(1, length(welfare)),
                               lorenz = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -265,7 +265,7 @@ md_compute_median <- function(welfare,
 #' @return list
 #' @keywords internal
 md_compute_quantiles_c <- function(welfare,
-                                    weight,
+                                    weight = rep(1, length(welfare)),
                                     n_quantile = 10) {
   # deal with NAs -----
   if (anyNA(welfare)) {
