@@ -98,9 +98,10 @@ old_md_compute_quantiles <- function(lwelfare,
 #'
 #' @return list
 #' @keywords internal
-md_compute_quantiles_share <- function(welfare,
+md_compute_quantiles_share <- function( welfare,
                                         weight,
-                                        n_quantile = 10){
+                                        n_quantile = 10,
+                                        lorenz     = NULL){
   # # deal with NAs -----
   # if (anyNA(welfare)) {
   #   ina      <- !is.na(welfare)
@@ -115,10 +116,16 @@ md_compute_quantiles_share <- function(welfare,
   # }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Compute Lorenz   ---------
+  # Compute Lorenz if NULL  ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  lz <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
+  if (is.null(lorenz)) {
+    lorenz <- md_compute_lorenz(
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = n_quantile
+    )
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Compute share with quantile function and collapse   ---------
@@ -140,7 +147,7 @@ md_compute_quantiles_share <- function(welfare,
   # Compute share with lorenz   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  share_quant <- diff(c(0,lz$lorenz_welfare))
+  share_quant <- diff(c(0,lorenz$lorenz_welfare))
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
@@ -163,15 +170,23 @@ md_compute_quantiles_share <- function(welfare,
 #' @examples
 #' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
-md_compute_quantiles <- function(welfare,
+md_compute_quantiles <- function( welfare,
                                   weight,
-                                  n_quantile = 10) {
+                                  n_quantile = 10,
+                                  lorenz = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  lz        <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
-  quantiles <- lz$welfare
+  if (is.null(lorenz)) {
+    lorenz <- md_compute_lorenz(
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = n_quantile
+    )
+  }
+
+  quantiles <- lorenz$welfare
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
