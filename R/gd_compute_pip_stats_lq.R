@@ -783,16 +783,27 @@ gd_compute_fit_lq <- function(welfare,
                               B,
                               C) {
 
+  if (any(population > 1) | any(population < 0)){
+    cli::cli_abort("Population vector should be between 0 and 1")
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Ceiling to Headcount vector --------
+
+  headcount[headcount > 1] <- 1
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Calculations for sum of squares of error--------
+
   residual <- welfare - value_at_lq(population, A, B, C)
   residual_sq <- residual^2
   sse <- sum(residual_sq)
 
-  if ( headcount > population[length(population)] ){
-    ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
-  }else{
-    ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
-    ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
-  }
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Calculations for sum of squares of error right to the headcount level--------
+
+  ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
+  ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
 
   ssez[is.na(ssez)] <- NA_real_
 
