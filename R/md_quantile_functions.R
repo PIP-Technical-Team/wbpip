@@ -125,7 +125,8 @@ md_quantile_values <- function(
   # ____________________________________________________________________________
   # Format and Return ----------------------------------------------------------
   format_out(quantiles = q,
-             format = format)
+             format    = format,
+             name      = "values")
 
 }
 
@@ -245,19 +246,9 @@ md_welfare_share_at <- function(
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
-  if (format == "list") {
-    return(output)
-  } else if (format == "atomic") {
-    return(
-      output |> unlist()
-    )
-  } else if (format == "dt") {
-    output <- data.table(
-      quantile   = paste0("q_", names(output)),
-      share_at   = output |> as.numeric()
-    )
-    return(output)
-  }
+  format_out(quantiles = output,
+             format    = format,
+             name      = "share_at")
 
 }
 
@@ -393,17 +384,9 @@ md_quantile_welfare_share <- function(
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
-  if (format == "list") {
-    return(shares |> as.list())
-  } else if (format == "atomic") {
-    return(shares)
-  } else if (format == "dt") {
-    shares <- data.table::data.table(
-      quantile   = paste0("q_", names(shares)),
-      share_at   = shares |> as.numeric()
-    )
-    return(shares)
-  }
+  format_out(quantiles = shares,
+             format    = format,
+             name      = "share_at")
 
 }
 
@@ -417,22 +400,27 @@ md_quantile_welfare_share <- function(
 #' @param quantiles: the output from functions `md_quantile_values`,
 #' `md_welfare_share_at`, and `md_quantile_welfare_share`.
 #' @param format character: "dt", "list", "atomic", giving the format of
-#' the output
+#' the output. Default: "atomic"
+#' @param name Name of the output value if format is "dt"
 #'
-#' @return output of quantile functions: see `format`
+#' @return output of quantile functions: see `format`.
 #' @export
 #'
 #' @examples
 format_out <- function(quantiles,
-                       format){
+                       format = "atomic",
+                       name   = "values"){
 
   if (format == "atomic") {
     return(quantiles)
   } else if (format == "dt") {
     quantiles <- data.table::data.table(
       quantiles = paste0("q_", names(quantiles)),
-      values    = quantiles |> as.numeric()
+      value = quantiles |> as.numeric()
     )
+    data.table::setnames(quantiles,
+                         "value",
+                         name)
     return(quantiles)
   } else if (format == "list") {
     return(
