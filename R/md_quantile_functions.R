@@ -392,21 +392,20 @@ md_quantile_welfare_share <- function(
 
 
 
-#' Format function for quantile output
+#' Format for output on quantile functions
 #'
 #' This function helps modify the output of quantile functions to a specific
-#' format (see `format` parameter for options)
+#' format (see `format` parameter for the options)
 #'
 #' @param quantiles: the output from functions `md_quantile_values`,
 #' `md_welfare_share_at`, and `md_quantile_welfare_share`.
 #' @param format character: "dt", "list", "atomic", giving the format of
 #' the output. Default: "atomic"
-#' @param name Name of the output value if format is "dt"
+#' @param name Name of the column that contains the key values from output
+#' if format is "dt"
 #'
 #' @return output of quantile functions: see `format`.
-#' @export
-#'
-#' @examples
+#' @keywords internal
 format_out <- function(quantiles,
                        format = "atomic",
                        name   = "values"){
