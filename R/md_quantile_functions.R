@@ -411,7 +411,8 @@ md_quantile_welfare_share <- function(
 
 #' Format function for quantile output
 #'
-#'
+#' This function helps modify the output of quantile functions to a specific
+#' format (see `format` parameter for options)
 #'
 #' @param quantiles: the output from functions `md_quantile_values`,
 #' `md_welfare_share_at`, and `md_quantile_welfare_share`.
@@ -430,7 +431,7 @@ format_out <- function(quantiles,
   } else if (format == "dt") {
     quantiles <- data.table::data.table(
       quantiles = paste0("q_", names(quantiles)),
-      values   = quantiles |> as.numeric()
+      values    = quantiles |> as.numeric()
     )
     return(quantiles)
   } else if (format == "list") {
