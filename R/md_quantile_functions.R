@@ -112,7 +112,7 @@ md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  format <- match.arg(format) # Ask about this argument to Zander
+  format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Calculations ---------------------------------------------------------------
@@ -124,19 +124,8 @@ md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Format and Return ----------------------------------------------------------
-  if (format == "atomic") {
-    return(q)
-  } else if (format == "dt") {
-    q <- data.table::data.table(
-      quantile = paste0("q_", names(q)),
-      values   = q |> as.numeric()
-    )
-    return(q)
-  } else if (format == "list") {
-    return(
-      as.list(q)
-    )
-  }
+  format_out(quantiles = q,
+             format = format)
 
 }
 
@@ -420,7 +409,37 @@ md_quantile_welfare_share <- function(
 
 
 
+#' Format function for quantile output
+#'
+#'
+#'
+#' @param quantiles: the output from functions `md_quantile_values`,
+#' `md_welfare_share_at`, and `md_quantile_welfare_share`.
+#' @param format character: "dt", "list", "atomic", giving the format of
+#' the output
+#'
+#' @return output of quantile functions: see `format`
+#' @export
+#'
+#' @examples
+format_out <- function(quantiles,
+                       format){
 
+  if (format == "atomic") {
+    return(quantiles)
+  } else if (format == "dt") {
+    quantiles <- data.table::data.table(
+      quantiles = paste0("q_", names(quantiles)),
+      values   = quantiles |> as.numeric()
+    )
+    return(quantiles)
+  } else if (format == "list") {
+    return(
+      as.list(quantiles)
+    )
+  }
+
+}
 
 
 
