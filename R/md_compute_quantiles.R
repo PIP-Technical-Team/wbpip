@@ -98,61 +98,29 @@ old_md_compute_quantiles <- function(lwelfare,
 #'
 #' @return list
 #' @keywords internal
-md_compute_quantiles_share <- function( welfare,
-                                        weight = rep(1, length(welfare)),
-                                        n_quantile = 10,
-                                        lorenz     = NULL){
-  # # deal with NAs -----
-  # if (anyNA(welfare)) {
-  #   ina      <- !is.na(welfare)
-  #   weight   <- weight[ina]
-  #   welfare  <- as.numeric(welfare)[ina]
-  # }
-  #
-  # if (anyNA(weight)) {
-  #   ina      <- !is.na(weight)
-  #   weight   <- weight[ina]
-  #   welfare  <- as.numeric(welfare)[ina]
-  # }
-
+md_compute_quantiles_share <- function(welfare    = NULL,
+                                       weight     = rep(1, length(welfare)),
+                                       n_quantile = 10,
+                                       lorenz     = NULL){
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Compute Lorenz if NULL  ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  if (is.null(lorenz)) {
-    lorenz <- md_compute_lorenz(
-      welfare    = welfare,
-      weight     = weight,
-      nbins      = n_quantile
-    )
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
   }
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Compute share with quantile function and collapse   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  # qnt <- md_compute_quantiles_c(welfare, weight, n_quantile)
-  #
-  # cum_share <- vector("numeric",n_quantile)
-  #
-  # for (i in seq_len(n_quantile)){
-  #   qnt_i <- qnt[i]
-  #   cum_share[i] <- fsum(welfare[welfare<=qnt_i],
-  #                          w = weight[welfare<=qnt_i]) / fsum(welfare, w = weight)
-  # }
-  #
-  # share_quant <- diff(c(0,cum_share))
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Compute share with lorenz   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  share_quant <- diff(c(0,lorenz$lorenz_welfare))
+  share_quant <- diff(c(0, lorenz$lorenz_welfare))
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(share_quant = share_quant)
+  share_quant
 
 }
 
@@ -170,28 +138,26 @@ md_compute_quantiles_share <- function( welfare,
 #' @examples
 #' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
-md_compute_quantiles <- function( welfare,
-                                  weight = rep(1, length(welfare)),
-                                  n_quantile = 10,
-                                  lorenz = NULL) {
+md_compute_quantiles <- function(welfare    = NULL,
+                                 weight     = rep(1, length(welfare)),
+                                 n_quantile = 10,
+                                 lorenz     = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (is.null(lorenz)) {
-    lorenz <- md_compute_lorenz(
-      welfare    = welfare,
-      weight     = weight,
-      nbins      = n_quantile
-    )
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
   }
-
   quantiles <- lorenz$welfare
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(quantiles = quantiles)
+  quantiles
 
 }
 
@@ -214,24 +180,7 @@ md_compute_median <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  #median <- collapse::fmedian(df$welfare, w = df$weight)
-
   if (is.null(lorenz)) {
-
-    # deal with NAs -----
-    if (anyNA(welfare)) {
-      ina      <- !is.na(welfare)
-      weight   <- weight[ina]
-      welfare  <- as.numeric(welfare)[ina]
-    }
-
-    if (anyNA(weight)) {
-      ina      <- !is.na(weight)
-      weight   <- weight[ina]
-      welfare  <- as.numeric(welfare)[ina]
-    }
-
     lorenz <- md_compute_lorenz(
       welfare    = welfare,
       weight     = weight,
@@ -239,16 +188,29 @@ md_compute_median <- function(welfare,
     )
   }
 
-  if ((length(lorenz$welfare) %% 2) == 0){
-    median <- lorenz$welfare[length(lorenz$welfare)/2]
-  }else{
-    median <- lorenz$welfare[(length(lorenz$welfare)+1)/2]
+  n      <- collapse::fnrow(lorenz)
+  median <- lorenz$welfare[n/2]
+
+  if (!(n %% 2) == 0) {
+    n_upp  <- ceiling(n)/2
+    n_down <- floor(n)/2
+  #} else {
+    # median <- lorenz$welfare[length(lorenz$welfare + 1)/2]
+
+    welf2 <- lorenz$welfare[n_upp]
+    wei2  <- lorenz$weight[n_upp]
+    welf1 <- lorenz$welfare[n_down]
+    wei1  <- lorenz$weight[n_down]
+
+    median <- welf1 +
+      (welf2 - welf1)*(0.5 - wei1)/(wei2 - wei1)
+
   }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(median = median)
+  median
 
 }
 
