@@ -188,23 +188,18 @@ md_compute_median <- function(welfare,
     )
   }
 
-  n      <- collapse::fnrow(lorenz)
-  median <- lorenz$welfare[n/2]
+  n  <- collapse::fnrow(lorenz)
 
-  if (!(n %% 2) == 0) {
-    n_upp  <- ceiling(n)/2
-    n_down <- floor(n)/2
-  #} else {
-    # median <- lorenz$welfare[length(lorenz$welfare + 1)/2]
-
-    welf2 <- lorenz$welfare[n_upp]
-    wei2  <- lorenz$weight[n_upp]
-    welf1 <- lorenz$welfare[n_down]
-    wei1  <- lorenz$weight[n_down]
-
-    median <- welf1 +
-      (welf2 - welf1)*(0.5 - wei1)/(wei2 - wei1)
-
+  if (n %% 2 == 0) {
+    median <- lorenz$welfare[n/2]
+  } else {
+    w1 <- lorenz$lorenz_weight[(n - 1)/2]
+    w2 <- lorenz$lorenz_weight[(n + 1)/2]
+    if (abs(0.5 - w1) < abs(0.5 - w2)) {
+      median <- lorenz$welfare[(n - 1)/2]
+    } else {
+      median <- lorenz$welfare[(n + 1)/2]
+    }
   }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
