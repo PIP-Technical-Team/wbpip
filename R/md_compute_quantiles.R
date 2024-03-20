@@ -93,59 +93,34 @@ old_md_compute_quantiles <- function(lwelfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
 #' @param n_quantile numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return list
 #' @keywords internal
-md_compute_quantiles_share <- function(welfare,
-                                        weight,
-                                        n_quantile = 10){
-  # # deal with NAs -----
-  # if (anyNA(welfare)) {
-  #   ina      <- !is.na(welfare)
-  #   weight   <- weight[ina]
-  #   welfare  <- as.numeric(welfare)[ina]
-  # }
-  #
-  # if (anyNA(weight)) {
-  #   ina      <- !is.na(weight)
-  #   weight   <- weight[ina]
-  #   welfare  <- as.numeric(welfare)[ina]
-  # }
-
+md_compute_quantiles_share <- function(welfare    = NULL,
+                                       weight     = rep(1, length(welfare)),
+                                       n_quantile = 10,
+                                       lorenz     = NULL){
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Compute Lorenz   ---------
+  # Compute Lorenz if NULL  ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  lz <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Compute share with quantile function and collapse   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  # qnt <- md_compute_quantiles_c(welfare, weight, n_quantile)
-  #
-  # cum_share <- vector("numeric",n_quantile)
-  #
-  # for (i in seq_len(n_quantile)){
-  #   qnt_i <- qnt[i]
-  #   cum_share[i] <- fsum(welfare[welfare<=qnt_i],
-  #                          w = weight[welfare<=qnt_i]) / fsum(welfare, w = weight)
-  # }
-  #
-  # share_quant <- diff(c(0,cum_share))
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Compute share with lorenz   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  share_quant <- diff(c(0,lz$lorenz_welfare))
+  share_quant <- diff(c(0, lorenz$lorenz_welfare))
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(share_quant = share_quant)
+  share_quant
 
 }
 
@@ -154,8 +129,8 @@ md_compute_quantiles_share <- function(welfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantiles numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return list
 #' @export
@@ -163,20 +138,26 @@ md_compute_quantiles_share <- function(welfare,
 #' @examples
 #' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
-md_compute_quantiles <- function(welfare,
-                                  weight,
-                                  n_quantile = 10) {
+md_compute_quantiles <- function(welfare    = NULL,
+                                 weight     = rep(1, length(welfare)),
+                                 n_quantile = 10,
+                                 lorenz     = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  lz        <- md_compute_lorenz(welfare, weight, nbins = n_quantile)
-  quantiles <- lz$welfare
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
+  }
+  quantiles <- lorenz$welfare
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(quantiles = quantiles)
+  quantiles
 
 }
 
@@ -184,6 +165,7 @@ md_compute_quantiles <- function(welfare,
 #'
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones
+#' @param lorenz numeric: Output from `md_compute_lorenz`
 #'
 #' @return numeric
 #' @export
@@ -192,30 +174,38 @@ md_compute_quantiles <- function(welfare,
 #' md_compute_median(welfare = 1:2000, weight = rep(1, 2000))
 #' @keywords internal
 md_compute_median <- function(welfare,
-                                 weight) {
-  # deal with NAs -----
-  if (anyNA(welfare)) {
-    ina      <- !is.na(welfare)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
-  }
-
-  if (anyNA(weight)) {
-    ina      <- !is.na(weight)
-    weight   <- weight[ina]
-    welfare  <- as.numeric(welfare)[ina]
-  }
+                              weight = rep(1, length(welfare)),
+                              lorenz = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (is.null(lorenz)) {
+    lorenz <- md_compute_lorenz(
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = 10
+    )
+  }
 
-  median <- collapse::fmedian(welfare, w = weight)
+  n  <- collapse::fnrow(lorenz)
+
+  if (n %% 2 == 0) {
+    median <- lorenz$welfare[n/2]
+  } else {
+    w1 <- lorenz$lorenz_weight[(n - 1)/2]
+    w2 <- lorenz$lorenz_weight[(n + 1)/2]
+    if (abs(0.5 - w1) < abs(0.5 - w2)) {
+      median <- lorenz$welfare[(n - 1)/2]
+    } else {
+      median <- lorenz$welfare[(n + 1)/2]
+    }
+  }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  return(median = median)
+  median
 
 }
 
@@ -224,13 +214,12 @@ md_compute_median <- function(welfare,
 #' @param welfare numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights. Default is a vector of ones,
 #' @param n_quantiles numeric: Number of quantiles for which share of total income
-#' is desired. It can't be larger that the total number of percentiles in the
-#' Lorenz curve provided by the user.  default is 10.
+#' is desired. Default is 10.
 #'
 #' @return list
 #' @keywords internal
 md_compute_quantiles_c <- function(welfare,
-                                    weight,
+                                    weight = rep(1, length(welfare)),
                                     n_quantile = 10) {
   # deal with NAs -----
   if (anyNA(welfare)) {
