@@ -26,4 +26,3 @@ numeric
 \description{
 Compute the headcount statistic from Lorenz Beta fit
 }
-\keyword{internal}

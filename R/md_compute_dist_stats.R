@@ -16,50 +16,59 @@
 #' wbpip:::md_compute_dist_stats(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
 #' @keywords internal
-md_compute_dist_stats <- function(welfare, weight,
-                                  mean = NULL,
-                                  nbins = NULL,
-                                  lorenz = NULL,
+md_compute_dist_stats <- function(welfare,
+                                  weight,
+                                  mean       = NULL,
+                                  nbins      = NULL,
+                                  lorenz     = NULL,
                                   n_quantile = 10) {
   if (is.null(mean)) {
-    mean <- collapse::fmean(x = welfare, w = weight)
+    mean <- fmean(x = welfare,
+                  w = weight)
   }
 
   if (is.null(lorenz)) {
     lorenz <- md_compute_lorenz(
-      welfare = welfare, weight = weight,
-      nbins = nbins
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = nbins
     )
   }
 
-  quantiles <- md_compute_quantiles(
-    lwelfare = lorenz[["lorenz_welfare"]],
-    lweight = lorenz[["lorenz_weight"]],
-    percentile = lorenz[["welfare"]]
+  share_quant <- md_compute_quantiles_share(
+    welfare = welfare,
+    weight = weight,
+    n_quantile = n_quantile
   )
-  median <- quantiles[["median"]]
+
+  median <- md_compute_median(welfare = welfare,
+                                 weight = weight)
 
   gini <- md_compute_gini(
-    welfare = welfare, weight = weight
+    welfare      = welfare,
+    weight       = weight
   )
 
   mld <- md_compute_mld(
-    welfare = welfare, weight = weight,
-    mean = mean
+    welfare      = welfare,
+    weight       = weight,
+    mean         = mean
   )
 
   polarization <- md_compute_polarization(
-    welfare = welfare, weight = weight,
-    gini = gini, mean = mean,
-    median = median
+    welfare      = welfare,
+    weight       = weight,
+    gini         = gini,
+    mean         = mean,
+    median       = median
   )
 
   return(list(
-    mean = mean,
-    median = median,
-    gini = gini,
+    mean         = mean,
+    median       = median,
+    gini         = gini,
     polarization = polarization,
     mld = mld,
-    quantiles = quantiles[["quantiles"]]
+    quantiles = share_quant
   ))
 }

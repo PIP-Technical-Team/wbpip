@@ -21,4 +21,3 @@ returns FALSE for Lorenz Beta
 \description{
 Algorithm to decide which Lorenz fit to use for poverty statistics
 }
-\keyword{internal}

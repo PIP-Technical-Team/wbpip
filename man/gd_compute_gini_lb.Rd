@@ -28,4 +28,3 @@ numeric
 Datt, G. 1998. "\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{Computational Tools For Poverty Measurement And Analysis}". FCND
 Discussion Paper 50. World Bank, Washington, DC.
 }
-\keyword{internal}

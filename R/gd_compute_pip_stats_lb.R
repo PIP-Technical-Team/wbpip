@@ -87,7 +87,7 @@ gd_compute_pip_stats_lb <- function(welfare,
 #' *Econometrica 48* (2): 437-46.
 #'
 #' @return data.frame
-#' @keywords internal
+#' @export
 create_functional_form_lb <- function(welfare, population) {
   # CHECK inputs
   # assertthat::assert_that(is.numeric(population))
@@ -114,7 +114,7 @@ create_functional_form_lb <- function(welfare, population) {
 
 }
 
-#' Returns the first derivative of the beta Lorenz
+#' Returns the first derivative of the beta Lorenz (without vectorization)
 #'
 #' `old_derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
@@ -156,7 +156,7 @@ old_derive_lb <- function(x, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 derive_lb <- function(x, A, B, C) {
   val <- vector("numeric", length(x))
   val[x == 0] <- -Inf
@@ -182,15 +182,6 @@ derive_lb <- function(x, A, B, C) {
   return(val)
 }
 
-# derive_lb <- function(x, A, B, C) {
-#   ifelse(x == 0 & B == 1, 1 - A,
-#          ifelse(x == 0 & B > 1, 1,
-#                 ifelse(x == 0, Inf,
-#                        ifelse(x == 1 & C == 1, 1 + A,
-#                                            ifelse(x == 1 & C > 1, 1,
-#                                                   ifelse(x == 1, Inf,
-#                             1 - ((A * x^B) * ((1 - x)^C) * ((B / x) -( C / (1 - x)) ) )))))))
-# }
 
 #' Check validity of Lorenz beta fit
 #'
@@ -199,17 +190,16 @@ derive_lb <- function(x, A, B, C) {
 #' @inheritParams gd_estimate_lb
 #' @inheritParams gd_compute_fit_lb
 #'
-#' @references
-#' Datt, G. 1998. "[Computational Tools For Poverty Measurement And
-#' Analysis](https://www.ifpri.org/cdmref/p15738coll2/id/125673)". FCND
-#' Discussion Paper 50. World Bank, Washington, DC.
+#' @references Datt, G. 1998. "[Computational Tools For Poverty Measurement And
+#'   Analysis](https://ageconsearch.umn.edu/record/94862/)". FCND Discussion
+#'   Paper 50. World Bank, Washington, DC.
 #'
-#' Kakwani, N. 1980. "[On a Class of Poverty
-#' Measures](https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46)".
-#' *Econometrica 48* (2): 437-46.
+#'   Kakwani, N. 1980. "[On a Class of Poverty
+#'   Measures](https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46)".
+#'    *Econometrica 48* (2): 437-46.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 check_curve_validity_lb <- function(headcount, A, B, C) {
   is_valid <- TRUE
 
@@ -254,7 +244,7 @@ check_curve_validity_lb <- function(headcount, A, B, C) {
 #' Discussion Paper 50. World Bank, Washington, DC.
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
   out <- vector(mode = "numeric", length = nbins)
 
@@ -275,7 +265,7 @@ gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
 #' @param x numeric: Point on curve.
 #' @inheritParams gd_compute_fit_lb
 #' @return numeric
-#' @keywords internal
+#' @export
 value_at_lb <- function(x, A, B, C) {
 
   # Check for NA, Inf and negative values in x
@@ -292,14 +282,13 @@ value_at_lb <- function(x, A, B, C) {
 #' `gd_compute_mld_lb()` computes the Mean Log deviation (MLD) from a Lorenz
 #' beta fit.
 #'
-#' @param dd numeric: **TO BE DOCUMENTED**.
 #' @param A numeric: Lorenz curve coefficient.
 #' @param B numeric: Lorenz curve coefficient.
 #' @param C numeric: Lorenz curve coefficient.
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_mld_lb <- function(dd, A, B, C) {
+#' @export
+gd_compute_mld_lb <- function(A, B, C) {
   x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
@@ -365,9 +354,9 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @param dd numeric: **TO BE DOCUMENTED**.
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 #'
-gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
 
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
@@ -429,7 +418,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
   dcm <- (1 - gini) * mean
   pol <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
   ris <- value_at_lb(0.5, A, B, C)
-  mld <- gd_compute_mld_lb(0.01, A, B, C)
+  mld <- gd_compute_mld_lb(A, B, C)
   deciles <- gd_compute_quantile_lb(A, B, C)
 
   return(list(
@@ -453,7 +442,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_polarization_lb <- function(mean,
                                        p0,
                                        dcm,
@@ -488,10 +477,21 @@ gd_compute_poverty_stats_lb <- function(mean,
 
   # Poverty gap
   u <- mean / povline
-  pov_gap <- gd_compute_pov_gap_lb(u, headcount, A, B, C)
+  pov_gap <- gd_compute_pov_gap_lb(headcount = headcount,
+                                   A         = A,
+                                   B         = B,
+                                   C         = C,
+                                   u         = u)
 
   # Poverty severity
-  pov_gap_sq <- gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
+  pov_gap_sq <- gd_compute_pov_severity_lb(
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    u         = u
+  )
 
   # First derivative of the Lorenz curve
   dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
@@ -604,7 +604,7 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
 #'   `regres()$coef[3]`.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 gd_compute_fit_lb <- function(welfare,
                               population,
                               headcount,
@@ -661,7 +661,7 @@ DDLK <- function(h, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
   # Compute headcount
   headcount <- rtSafe(0.0001, 0.9999, 1e-4,
@@ -810,10 +810,15 @@ BETAICF <- function(a, b, x) {
 #'
 #' @param u numeric: Normalized mean.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_pov_gap_lb <- function(u, headcount, A, B, C) {
+#' @export
+gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) {
+
+  if (is.null(u)) {
+    u <- mean/povline
+  }
   # REVIEW RATIONAL FOR THESE ADJUSTMENTS
   # Adjust Poverty gap
   if (!is.na(headcount)) {
@@ -834,10 +839,15 @@ gd_compute_pov_gap_lb <- function(u, headcount, A, B, C) {
 #' @param u numeric: Mean? **TO BE DOCUMENTED**.
 #' @param pov_gap numeric: Poverty gap.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
+#' @export
+gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, C, u = NULL) {
+
+  if (is.null(u)) {
+    u <-  mean/povline
+  }
 
   if (!anyNA(headcount, pov_gap)) {
     u1 <- 1 - u

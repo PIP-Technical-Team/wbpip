@@ -25,4 +25,3 @@ numeric
 \code{value_at_lq()}solves for quadratic Lorenz curves with c = 1
 General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 }
-\keyword{internal}

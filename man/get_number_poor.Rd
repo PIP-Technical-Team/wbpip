@@ -17,12 +17,3 @@ A numeric vector giving number of poor for each observation
 \description{
 Calculate the number of poor using headcount and population
 }
-\examples{
-if (suppressWarnings(require(pipr))) {
-  pip <- get_stats()
-  get_number_poor(
-    pip$headcount,
-    pip$pop) |>
-    head()
-}
-}

@@ -8,6 +8,9 @@ md_compute_gini(welfare, weight)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
+
+\item{weight}{numeric: A vector of population weights, optional, a vector
+of 1s if not specified.}
 }
 \value{
 numeric
@@ -20,6 +23,5 @@ Given a vector of income or consumption values and their respective weights
 \code{md_compute_gini()} computes the Gini coefficient for the distribution.
 }
 \examples{
-wbpip:::md_compute_gini(welfare = 1:2000, weight = rep(1, 2000))
+md_compute_gini(welfare = 1:2000, weight = rep(1, 2000))
 }
-\keyword{internal}

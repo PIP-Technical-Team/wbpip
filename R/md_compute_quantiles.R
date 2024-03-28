@@ -1,4 +1,4 @@
-#' Compute quantiles
+#' Compute quantiles (old version)
 #'
 #' Compute quantiles for microdata.
 #'
@@ -17,16 +17,16 @@
 #' @param tolerance numeric: Tolerance parameter for `lorenzw >= nextQ` check.
 #'
 #' @examples
-#' lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
-#' wbpip:::md_compute_quantiles(
-#'   lwelfare = lz$welfare,
+#' lz <- wbpip:::old_md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+#' wbpip:::old_md_compute_quantiles(
+#'   lwelfare = lz$lorenz_welfare,
 #'   lweight = lz$lorenz_weight,
-#'   percentile = lz$lorenz_welfare,
+#'   percentile = lz$welfare,
 #'   n_quantile = 10
 #' )
 #' @return list
 #' @keywords internal
-md_compute_quantiles <- function(lwelfare,
+old_md_compute_quantiles <- function(lwelfare,
                                  lweight,
                                  percentile,
                                  n_quantile = 10,
@@ -82,4 +82,168 @@ md_compute_quantiles <- function(lwelfare,
   }
 
   return(list(quantiles = quantiles, median = median))
+}
+
+#' Compute quantiles share
+#'
+#' Compute quantiles for microdata.
+#'
+#' Calculate share of total welfare in each quantile from Lorenz curve
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones
+#' @param n_quantile numeric: Number of quantiles for which share of total income
+#' is desired. Default is 10.
+#' @param lorenz numeric: Output from `md_compute_lorenz`
+#'
+#' @return list
+#' @keywords internal
+md_compute_quantiles_share <- function(welfare    = NULL,
+                                       weight     = rep(1, length(welfare)),
+                                       n_quantile = 10,
+                                       lorenz     = NULL){
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Compute Lorenz if NULL  ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Compute share with lorenz   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  share_quant <- diff(c(0, lorenz$lorenz_welfare))
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  share_quant
+
+}
+
+#' Compute quantiles for microdata with lorenz function
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#' @param n_quantiles numeric: Number of quantiles for which share of total income
+#' is desired. Default is 10.
+#' @param lorenz numeric: Output from `md_compute_lorenz`
+#'
+#' @return list
+#' @export
+#'
+#' @examples
+#' md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
+#' @keywords internal
+md_compute_quantiles <- function(welfare    = NULL,
+                                 weight     = rep(1, length(welfare)),
+                                 n_quantile = 10,
+                                 lorenz     = NULL) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (is.null(lorenz) ||
+      !n_quantile == nrow(lorenz)) {
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = n_quantile)
+  }
+  quantiles <- lorenz$welfare
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  quantiles
+
+}
+
+#' Compute median for microdata
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones
+#' @param lorenz numeric: Output from `md_compute_lorenz`
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' md_compute_median(welfare = 1:2000, weight = rep(1, 2000))
+#' @keywords internal
+md_compute_median <- function(welfare,
+                              weight = rep(1, length(welfare)),
+                              lorenz = NULL) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (is.null(lorenz)) {
+    lorenz <- md_compute_lorenz(
+      welfare    = welfare,
+      weight     = weight,
+      nbins      = 10
+    )
+  }
+
+  n  <- collapse::fnrow(lorenz)
+
+  if (n %% 2 == 0) {
+    median <- lorenz$welfare[n/2]
+  } else {
+    w1 <- lorenz$lorenz_weight[(n - 1)/2]
+    w2 <- lorenz$lorenz_weight[(n + 1)/2]
+    if (abs(0.5 - w1) < abs(0.5 - w2)) {
+      median <- lorenz$welfare[(n - 1)/2]
+    } else {
+      median <- lorenz$welfare[(n + 1)/2]
+    }
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  median
+
+}
+
+#' Compute quantiles for microdata with collapse
+#'
+#' @param welfare numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights. Default is a vector of ones,
+#' @param n_quantiles numeric: Number of quantiles for which share of total income
+#' is desired. Default is 10.
+#'
+#' @return list
+#' @keywords internal
+md_compute_quantiles_c <- function(welfare,
+                                    weight = rep(1, length(welfare)),
+                                    n_quantile = 10) {
+  # deal with NAs -----
+  if (anyNA(welfare)) {
+    ina      <- !is.na(welfare)
+    weight   <- weight[ina]
+    welfare  <- as.numeric(welfare)[ina]
+  }
+
+  if (anyNA(weight)) {
+    ina      <- !is.na(weight)
+    weight   <- weight[ina]
+    welfare  <- as.numeric(welfare)[ina]
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  bins_groups <- 1:n_quantile
+  probs       <- bins_groups/n_quantile
+  quantiles   <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  return(quantiles = quantiles)
+
 }

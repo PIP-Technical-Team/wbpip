@@ -9,7 +9,7 @@
 #' @param is_lq logical: TRUE if Lorenz Quadratic, FALSE if Beta Lorenz.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 #' @examples
 #' # Beta Lorenz
 #' lb_data <- wbpip:::create_functional_form_lb(grouped_data_ex2$welfare,

@@ -3,8 +3,9 @@
 #' Compute the Wolfson polarization index for microdata.
 #'
 #' @inheritParams md_compute_dist_stats
+#' @inheritParams md_compute_gini
 #' @param gini numeric: Gini. Output of [md_compute_gini()].
-#' @param median numeric: Median. Output of [md_compute_quantiles()].
+#' @param median numeric: Median. Output of [md_compute_median()].
 #'
 #' @references
 #' Ravallion, M., S. Chen. 1996.
@@ -21,7 +22,7 @@
 #'   median = 1000
 #' )
 #' @return numeric
-#' @keywords internal
+#' @export
 md_compute_polarization <- function(welfare, weight, gini,
                                     mean, median) {
 

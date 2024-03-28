@@ -93,10 +93,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
+
   benchmark <- list(
     gini = 0.32126464221602591,
     median = 42.247782467994874,
@@ -124,11 +121,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     p0 = p0,
     A = A,
     B = B,
-    C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r
+    C = C
   )
 
   expect_equal(names(out), c(
@@ -231,6 +224,146 @@ test_that("compute_poverty_stats_lq works as expected", {
   expect_equal(round(out$dl, 7), round(benchmark$dl, 7))
   expect_equal(round(out$ddl, 6), round(benchmark$ddl, 6))
 })
+
+test_that("gd_compute_pov_severity_lq() works as before the function update", {
+
+  # Define objects -----
+  mean          <- 51.5660557757944
+  povline       <- 57.791666666666664
+  A             <- 0.795981535745657
+  B             <- -1.4445933880119242
+  C             <- 0.14728191995919815
+  e             <- -0.498670067692931
+  m             <- -1.0970760862948583
+  n             <- 0.851623285340541
+  r             <- 1.3477796260474386
+  s1            <- -0.22612667749534146
+  s2            <- 1.002393060455814
+  headcount     <- 0.76005810499191284
+  pov_gap       <- 0.27617606019159308
+
+  foo_benchmark <- 0.12832887439632906
+
+  # function output
+  foo <- gd_compute_pov_severity_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    e         = e,
+    m         = m,
+    n         = n,
+    r         = r,
+    s1        = s1,
+    s2        = s2
+  )
+
+  expect_equal(
+    foo,
+    foo_benchmark
+  )
+
+})
+
+test_that("gd_compute_poverty_stats_lq works with negative headcount", {
+  mean <- 51.5660557757944
+  povline <- 57.791666666666664
+  A <- 0.795981535745657
+  B <- -1.4445933880119242
+  C <- 0.14728191995919815
+  e <- -0.498670067692931
+  m <- -1.0970760862948583
+  n <- 0.851623285340541
+  r <- 1.3477796260474386
+  s1 <- -0.22612667749534146
+  s2 <- 1.002393060455814
+
+  povline_neg <- -57.791666666666664 # Negative to test negative headcount
+
+  benchmark <- list(
+    headcount = 0,
+    pg        = 0,
+    p2        = 0,
+    eh        = 0,
+    epg       = 0,
+    ep        = 0,
+    gh        = 0,
+    gpg       = 0,
+    gp        = 0,
+    watts     = 0,
+    dl        = -1.120731,
+    ddl       = 41.74948
+  )
+
+  out <- gd_compute_poverty_stats_lq(
+    mean    = mean,
+    povline = povline_neg,
+    A       = A,
+    B       = B,
+    C       = C,
+    e       = e,
+    m       = m,
+    n       = n,
+    r       = r,
+    s1      = s1,
+    s2      = s2
+  )
+
+  out_original <- old_gd_compute_poverty_stats_lq(
+    mean    = mean,
+    povline = povline_neg,
+    A       = A,
+    B       = B,
+    C       = C,
+    e       = e,
+    m       = m,
+    n       = n,
+    r       = r,
+    s1      = s1,
+    s2      = s2
+  )
+
+
+  expect_equal(length(out), length(benchmark))
+  expect_equal(names(out),
+               c("headcount", "pg", "p2", "eh", "epg",
+                 "ep", "gh", "gpg", "gp", "watts", "dl", "ddl"))
+  expect_equal(round(out$headcount, 7),
+               round(benchmark$headcount, 7))
+  expect_equal(out$pg,
+               benchmark$pg)
+  expect_equal(out$p2,
+               benchmark$p2)
+  expect_equal(round(out$eh, 6),
+               round(benchmark$eh, 6)) # Due to headcount difference
+  expect_equal(round(out$epg, 7),
+               round(benchmark$epg, 7)) # Due to headcount difference
+  expect_equal(out$ep,
+               benchmark$ep)
+  expect_equal(out$gh,
+               benchmark$gh, tolerance = 1.1e-07)
+  expect_equal(out$gpg,
+               benchmark$gpg)
+  expect_equal(out$gp,
+               benchmark$gp)
+  expect_equal(out$watts,
+               benchmark$watts)
+  expect_equal(round(out$dl, 5),
+               round(benchmark$dl, 5))
+  expect_equal(round(out$ddl, 5),
+               round(benchmark$ddl, 5))
+  expect_equal(out,
+               benchmark,
+               tolerance = 0.000001)
+  expect_equal(out,
+               out_original)
+})
+
+
+
 
 test_that("old_gd_compute_fit_lq works as expected", {
   p <- c(
@@ -418,7 +551,7 @@ test_that("gd_compute_watts_lq() gives correct results", {
 
   res <- gd_compute_watts_lq(
     headcount = 0.4,
-    mu = 20,
+    mean = 20,
     povline = 1.9,
     dd = 0.005,
     A = 0.2,
@@ -429,7 +562,7 @@ test_that("gd_compute_watts_lq() gives correct results", {
 
   res <- gd_compute_watts_lq(
     headcount = 0.513180957,
-    mu = 78.962,
+    mean = 78.962,
     povline = 57.79166667,
     dd = 0.005,
     A = 0.7688156902,
@@ -437,6 +570,204 @@ test_that("gd_compute_watts_lq() gives correct results", {
     C = 0.4720329161
   )
   expect_equal(res, 0.4366290738)
+
+})
+
+mean      <- 51.5660557757944
+povline   <- 57.791666666666664
+A         <- 0.795981535745657
+B         <- -1.4445933880119242
+C         <- 0.14728191995919815
+e         <- -0.498670067692931
+m         <- -1.0970760862948583
+n         <- 0.851623285340541
+r         <- 1.3477796260474386
+s1        <- -0.22612667749534146
+s2        <- 1.002393060455814
+headcount <- 0.76005810499191284
+pov_gap   <- 0.27617606019159308
+
+test_that("gd_compute_headcount works as expected", {
+
+  # expected headcount ----
+  benchmark <- 0.76005810499191284
+
+  # headcount function ----
+  out <- gd_compute_headcount_lq(
+    mean    = mean,
+    povline = povline,
+    B       = B,
+    m       = m,
+    n       = n,
+    r       = r
+  )
+
+  expect_equal(round(out, 7),
+               round(benchmark, 7))
+
+})
+
+
+test_that("gd_compute_pov_gap_lq works as expected", {
+
+  # expected pov gap
+  benchmark <- 0.27617606019159308
+
+  # output
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_gap_lq works as expected when headcount negative", {
+
+  headcount_neg <- -0.76005810499191284
+  benchmark     <- 0
+
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount_neg,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_severity_lq works as expected", {
+
+  benchmark <- 0.12832887439632906
+
+  out <- gd_compute_pov_severity_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    e         = e,
+    m         = m,
+    n         = n,
+    r         = r,
+    s1        = s1,
+    s2        = s2
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+mean      <- 51.5660557757944
+povline   <- 57.791666666666664
+A         <- 0.795981535745657
+B         <- -1.4445933880119242
+C         <- 0.14728191995919815
+e         <- -0.498670067692931
+m         <- -1.0970760862948583
+n         <- 0.851623285340541
+r         <- 1.3477796260474386
+s1        <- -0.22612667749534146
+s2        <- 1.002393060455814
+headcount <- 0.76005810499191284
+pov_gap   <- 0.27617606019159308
+
+test_that("gd_compute_headcount works as expected", {
+
+  # expected headcount ----
+  benchmark <- 0.76005810499191284
+
+  # headcount function ----
+  out <- gd_compute_headcount_lq(
+    mean    = mean,
+    povline = povline,
+    B       = B,
+    m       = m,
+    n       = n,
+    r       = r
+  )
+
+  expect_equal(round(out, 7),
+               round(benchmark, 7))
+
+})
+
+
+test_that("gd_compute_pov_gap_lq works as expected", {
+
+  # expected pov gap
+  benchmark <- 0.27617606019159308
+
+  # output
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_gap_lq works as expected when headcount negative", {
+
+  headcount_neg <- -0.76005810499191284
+  benchmark     <- 0
+
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount_neg,
+    A         = A,
+    B         = B,
+    C         = C
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_severity_lq works as expected", {
+
+  benchmark <- 0.12832887439632906
+
+  out <- gd_compute_pov_severity_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    e         = e,
+    m         = m,
+    n         = n,
+    r         = r,
+    s1        = s1,
+    s2        = s2
+  )
+
+  expect_equal(out,
+               benchmark)
 
 })
 
@@ -607,3 +938,13 @@ test_that("derive_lq shows error message when NA values",{
 
 })
 
+
+test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
+
+  benchmark <- old_gd_compute_gini_lq(A,B,C,e,m,n,r)
+
+  out <- gd_compute_gini_lq(A,B,C)
+
+  expect_equal(out,
+               benchmark)
+})

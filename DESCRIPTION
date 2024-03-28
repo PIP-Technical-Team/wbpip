@@ -1,6 +1,6 @@
 Package: wbpip
 Title: What the Package Does (One Line, Title Case)
-Version: 0.1.0.9001
+Version: 0.1.1.9001
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -10,13 +10,17 @@ Authors@R:
             family = "Eilertsen",
             role = "aut",
             email = "aeilertsen@worldbank.org"),
-     person(given = "R. Andrés",
+     person(given = "R.Andrés",
             family = "Castañeda",
             role = "aut",
             email = "acastanedaa@worldbank.org"),
+     person(given = "Zander",
+            family = "Prinsloo",
+            role = "aut",
+            email = "zprinsloo@worldbank.org"),
      person(given = "Ifeanyi",
             family = "Nzegwu Edochie",
-            role = "aut",
+            role = "ctb",
             email = "iedochie@worldbank.org"),
      person(given = "Minh",
             family = "Cong Nguyen",
@@ -30,7 +34,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     testthat,
     knitr,
@@ -48,8 +52,9 @@ Imports:
     data.table,
     assertthat,
     cli,
-    collapse,
-    MASS
+    collapse (>= 2.0.9),
+    MASS,
+    lifecycle
 VignetteBuilder: knitr
 ByteCompile: true
 Config/testthat/edition: 3

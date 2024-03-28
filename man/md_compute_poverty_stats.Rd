@@ -9,13 +9,15 @@ md_compute_poverty_stats(welfare, weight, povline_lcu)
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric vector with sample weights. Default is 1.}
+
 \item{povline_lcu}{numeric: Poverty line in Local Currency Unit (LCU).}
 }
 \value{
 list
 }
 \description{
-Compute poverty statictics for microdata.
+Compute poverty statictics for microdata - replace old \link{md_compute_poverty_stats}
 }
 \details{
 Given a vector of consumption or income values and their respective weights
@@ -29,4 +31,3 @@ wbpip:::md_compute_poverty_stats(
   povline_lcu = 10
 )
 }
-\keyword{internal}

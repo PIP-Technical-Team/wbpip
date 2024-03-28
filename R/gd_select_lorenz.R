@@ -102,7 +102,7 @@ gd_select_lorenz <- function(lq, lb) {
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 
 use_lq_for_poverty <- function(lq,
                                lb) {
@@ -153,9 +153,7 @@ use_lq_for_poverty <- function(lq,
     use_lq_for_pov <- lq[["ssez"]] <= lb[["ssez"]]
   }
 
-  return(
-    use_lq_for_pov
-  )
+  use_lq_for_pov
 }
 
 #' Algorithm to decide which Lorenz fit to use for distributional statistics
@@ -166,7 +164,7 @@ use_lq_for_poverty <- function(lq,
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 use_lq_for_distributional <- function(lq,
                                       lb) {
   # X = Yes

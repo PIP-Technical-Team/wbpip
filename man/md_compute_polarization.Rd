@@ -9,11 +9,14 @@ md_compute_polarization(welfare, weight, gini, mean, median)
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric: A vector of population weights, optional, a vector
+of 1s if not specified.}
+
 \item{gini}{numeric: Gini. Output of \code{\link[=md_compute_gini]{md_compute_gini()}}.}
 
 \item{mean}{numeric: A value with the mean. Optional.}
 
-\item{median}{numeric: Median. Output of \code{\link[=md_compute_quantiles]{md_compute_quantiles()}}.}
+\item{median}{numeric: Median. Output of \code{\link[=md_compute_median]{md_compute_median()}}.}
 }
 \value{
 numeric
@@ -36,4 +39,3 @@ Ravallion, M., S. Chen. 1996.
 Policy Research Working Paper 1694.
 World Bank, Washington, DC.
 }
-\keyword{internal}
