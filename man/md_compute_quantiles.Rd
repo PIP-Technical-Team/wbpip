@@ -5,7 +5,7 @@
 \title{Compute quantiles for microdata with lorenz function}
 \usage{
 md_compute_quantiles(
-  welfare,
+  welfare = NULL,
   weight = rep(1, length(welfare)),
   n_quantile = 10,
   lorenz = NULL

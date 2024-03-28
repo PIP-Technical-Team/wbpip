@@ -5,7 +5,7 @@
 \title{Compute quantiles share}
 \usage{
 md_compute_quantiles_share(
-  welfare,
+  welfare = NULL,
   weight = rep(1, length(welfare)),
   n_quantile = 10,
   lorenz = NULL
