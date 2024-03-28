@@ -42,11 +42,18 @@ gd_compute_dist_stats <- function(welfare,
                                                     C = C)
 
   # STEP 3: Calculate distributional stats
+  # Compute key numbers from Lorenz quadratic form
+  kv <- gd_lq_key_values(A, B, C)
+
   results_lq <- gd_estimate_dist_stats_lq(mean = mean,
                                           p0 = p0,
                                           A = A,
                                           B = B,
-                                          C = C)
+                                          C = C,
+                                          e = kv$e,
+                                          m = kv$m,
+                                          n = kv$n,
+                                          r = kv$r)
 
   results_lq <- append(results_lq, reg_results_lq)
 
@@ -105,20 +112,17 @@ gd_compute_dist_stats <- function(welfare,
 #' @inheritParams gd_estimate_lq
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
+gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
-
-  # Compute key numbers from Lorenz quadratic form
-  kv <- gd_lq_key_values(A, B, C)
 
   validity <- check_curve_validity_lq(A,
                                       B,
                                       C,
-                                      kv$e,
-                                      kv$m,
-                                      kv$n,
-                                      kv$r^2)
+                                      e,
+                                      m,
+                                      n,
+                                      r^2)
 
   # Compute distributional measures -----------------------------------------
 
@@ -126,7 +130,11 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
                                          p0,
                                          A,
                                          B,
-                                         C)
+                                         C,
+                                         e,
+                                         m,
+                                         n,
+                                         r)
 
   out <- list(
     mean = mean,
