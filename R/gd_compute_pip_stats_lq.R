@@ -351,21 +351,7 @@ old_gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #'
 #' @return numeric
 #' @export
-gd_compute_gini_lq <- function(A, B, C, key_values = NULL) {
-
-
-  if (is.null(key_values) == TRUE){
-    val <- gd_lq_key_values(A,B,C)
-    e <- val$e
-    m <- val$m
-    n <- val$n
-    r <- val$r
-  } else{
-    e <- key_values[1]
-    m <- key_values[2]
-    n <- key_values[3]
-    r <- key_values[4]
-  }
+gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
@@ -621,8 +607,8 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C) {
-  gini <- gd_compute_gini_lq(A, B, C)
+gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+  gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
   median <- mean * derive_lq(0.5, A, B, C)
   rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
   dcm <- (1 - gini) * mean
@@ -938,30 +924,21 @@ gd_compute_pov_severity_lq <- function(
 #' @keywords internal
 gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
+  kv <- gd_lq_key_values(A,B,C)
 
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+  validity <- check_curve_validity_lq(A, B, C, kv$e, kv$m, kv$n, kv$r^2)
   if (validity$is_valid == FALSE & validity$is_normal == FALSE) {
     return(empty_gd_compute_pip_stats_response)
   }
 
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
-
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C)
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, kv$e, kv$m, kv$n, kv$r)
 
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, kv$e, kv$m, kv$n, kv$r, kv$s1, kv$s2)
 
   out <- list(
     gini = dist_stats$gini,
