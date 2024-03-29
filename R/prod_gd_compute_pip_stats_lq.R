@@ -81,7 +81,7 @@ prod_gd_compute_pip_stats_lq <- function(welfare,
   results2 <- prod_gd_estimate_lq(requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C, key_values = kv)
 
   res <- c(results1, results2, results_fit, reg_results)
 
