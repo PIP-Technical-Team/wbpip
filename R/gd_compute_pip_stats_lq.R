@@ -66,23 +66,27 @@ gd_compute_pip_stats_lq <- function(welfare,
   B <- reg_coef[2]
   C <- reg_coef[3]
 
+  # Step 2.1: pre-calculate key values
+  kv <- gd_lq_key_values(A, B, C)
+
   # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * requested_mean
+    povline <- derive_lq(popshare, A, B, C, key_values = kv) * requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- requested_mean * derive_lq(0.001, A, B, C, key_values = kv) + 4
+  z_max <- requested_mean * derive_lq(0.980, A, B, C, key_values = kv) - 4
   z_min <- if (z_min < 0) 0L else z_min
 
   results1 <- list(requested_mean, povline, z_min, z_max, ppp)
   names(results1) <- list("mean", "poverty_line", "z_min", "z_max", "ppp")
 
   # STEP 3: Estimate poverty measures based on identified parameters
-  results2 <- gd_estimate_lq(requested_mean, povline, p0, A, B, C)
+  results2 <- gd_estimate_lq(requested_mean, povline, p0,
+                             A, B, C, key_values = kv)
 
   # STEP 4: Compute measure of regression fit
   results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
@@ -192,20 +196,30 @@ old_derive_lq <- function(x, A, B, C) {
 #'
 #' @return numeric
 #' @export
-derive_lq <- function(x, A, B, C) {
+derive_lq <- function(x, A, B, C, key_values) {
 
-  if (anyNA(x) == TRUE){
-    cli::cli_abort("`x' must be a numeric or integer vector")
+  if (is.null(key_values)) {
+    key_values <- gd_lq_key_values(A, B, C)
+    e          <- key_values$e
+    m          <- key_values$m
+    n          <- key_values$n
   }
 
+  if (anyNA(x) == TRUE) {
+    cli::cli_abort("`x' must be a numeric or integer vector")
+  }
+  # note:
+  #   alpha --> m
+  #   beta  --> n
+
   e <- -(A + B + C + 1)
-  alpha <- (B^2) - (4 * A)
-  beta <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
-  tmp <- (alpha * x^2) + (beta * x) + (e^2)
+  m <- (B^2) - (4 * A)
+  n <- (2 * B * e) - (4 * C) # C is called D in original paper, but C in Datt paper
+  tmp <- (m * x^2) + (n * x) + (e^2)
   tmp[(!is.na(tmp) & tmp < 0)] <- 0 # If tmp == 0, val = Inf.
 
   # Formula for first derivative of GQ Lorenz Curve
-  val <- -(B / 2) - ((2 * alpha * x + beta) / (4 * sqrt(tmp)))
+  val <- -(B / 2) - ((2 * m * x + n) / (4 * sqrt(tmp)))
 
   return(val)
 }
@@ -237,9 +251,10 @@ derive_lq <- function(x, A, B, C) {
 #'
 #' @return list
 #' @export
-check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
+check_curve_validity_lq <- function(A, B, C, key_values) {
   is_normal <- FALSE
   is_valid <- FALSE
+  r <- (key_values$r)^2
 
   # r needs to be > 0 because need to extract sq root
   if (r < 0) {
@@ -249,7 +264,7 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
     ))
   }
 
-  if (e > 0 || C < 0) {
+  if (key_values$e > 0 || C < 0) {
     return(list(
       is_normal = is_normal,
       is_valid = is_valid
@@ -258,12 +273,12 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
   # Failure conditions for checking theoretically valid Lorenz curve
   # Found in section 4 of Datt computational tools paper
-  cn1 <- n^2
-  cn3 <- cn1 / (4 * e^2)
+  cn1 <- key_values$n^2
+  cn3 <- cn1 / (4 * key_values$e^2)
 
-  if (!((m < 0) |
-    ((m > 0) & (m < cn3) & (n >= 0)) |
-    ((m > 0) & (m < -n / 2) & (m < cn3)))) {
+  if (!((key_values$m < 0) |
+    ((key_values$m > 0) & (key_values$m < cn3) & (key_values$n >= 0)) |
+    ((key_values$m > 0) & (key_values$m < -key_values$n / 2) & (key_values$m < cn3)))) {
     return(list(
       is_normal = is_normal,
       is_valid = is_valid
@@ -275,7 +290,7 @@ check_curve_validity_lq <- function(A, B, C, e, m, n, r) {
 
   return(list(
     is_normal = is_normal,
-    is_valid = is_valid
+    is_valid  = is_valid
   ))
 }
 
@@ -351,35 +366,38 @@ old_gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #'
 #' @return numeric
 #' @export
-gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
+gd_compute_gini_lq <- function(A, B, C, key_values) {
 
   # For the GQ Lorenz curve, the Gini formula are valid under the condition A+C>=1
   # P.isValid <- (A + C) >= 0.9
   # P.isNormal <- TRUE
 
   e1 <- abs(A + C - 1)
-  e2 <- 1 + (B / 2) + e
+  e2 <- 1 + (B / 2) + key_values$e
 
-  tmp1 <- n * (B + 2) / (4 * m)
-  tmp2 <- (r^2) / (8 * m)
-  tmp3 <- (2 * m) + n
+  tmp1 <- key_values$n * (B + 2) / (4 * key_values$m)
+  tmp2 <- (key_values$r^2) / (8 * key_values$m)
+  tmp3 <- (2 * key_values$m) + key_values$n
 
-  if (m > 0) {
+  if (key_values$m > 0) {
     # tmpnum <- tmp3 + 2 * sqrt(m) * abs(e)
     # tmpden <- n - 2 * abs(e) * sqrt(m)
 
     # Formula from Datt paper
     # CHECK that code matches formulas in paper
-    gini <- e2 + (tmp3 / (4 * m)) * e1 - (n * abs(e) / (4 * m)) - ((r^2) / (8 * sqrt(m)^3)) *
-      log(abs(((tmp3 + (2 * sqrt(m) * e1))) / (n + (2 * sqrt(m) * abs(e)))))
+    gini <- e2 + (tmp3 / (4 * key_values$m)) * e1 - (key_values$n * abs(key_values$e) / (4 * key_values$m)) - ((key_values$r^2) / (8 * sqrt(key_values$m)^3)) *
+      log(abs(((tmp3 + (2 * sqrt(key_values$m) * e1))) / (key_values$n + (2 * sqrt(key_values$m) * abs(key_values$e)))))
     # P.gi <- (e/2) - tmp1 - (tmp2 * log(abs(tmpnum/tmpden)) / sqrt(m))
   } else {
-    tmp4 <- ((2 * m) + n) / r
+    tmp4 <- ((2 * key_values$m) + key_values$n) / key_values$r
     tmp4 <- if (tmp4 < -1) -1 else tmp4
     tmp4 <- if (tmp4 > 1) 1 else tmp4
 
     # Formula does not match with paper
-    gini <- e2 + (tmp3 / (4 * m)) * e1 - (n * abs(e) / (4 * m)) + (tmp2 * (asin(tmp4) - asin(n / r)) / sqrt(-m))
+    gini <- e2 +
+      (tmp3 / (4 * key_values$m)) *
+      e1 - (key_values$n * abs(key_values$e) / (4 * key_values$m)) +
+      (tmp2 * (asin(tmp4) - asin(key_values$n / key_values$r)) / sqrt(-key_values$m))
     # P.gi <- (e/2) - tmp1 + ((tmp2 * (asin(tmp4) - asin(n/r))) / sqrt(-m))
   }
 
@@ -395,21 +413,21 @@ gd_compute_gini_lq <- function(A, B, C, e, m, n, r) {
 #'
 #' @return numeric
 #' @export
-value_at_lq <- function(x, A, B, C) {
+value_at_lq <- function(x, A, B, C, key_values) {
 
   # Check for NA, Inf and negative values in x
   check_NA_Inf_values(x)
   check_neg_values(x)
 
   # Calculations
-  e <- -(A + B + C + 1)
-  m <- (B^2) - (4 * A)
-  n <- (2 * B * e) - (4 * C)
-  temp <- (m * x^2) + (n * x) + (e^2)
+  # e <- -(A + B + C + 1)
+  # m <- (B^2) - (4 * A)
+  # n <- (2 * B * e) - (4 * C)
+  temp <- (key_values$m * x^2) + (key_values$n * x) + (key_values$e^2)
   temp[temp < 0] <- 0
 
   # Solving the equation of the Lorenz curve
-  estle <- -0.5 * ((B * x) + e + sqrt(temp))
+  estle <- -0.5 * ((B * x) + key_values$e + sqrt(temp))
 
   return(estle)
 }
@@ -446,8 +464,8 @@ old_value_at_lq <- function(x, A, B, C) {
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lq <- function(A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C)
+gd_compute_mld_lq <- function(A, B, C, key_values) {
+  x1 <- derive_lq(0.0005, A, B, C, key_values)
   gap <- 0L
   mld <- 0L
   if (x1 == 0) {
@@ -455,9 +473,9 @@ gd_compute_mld_lq <- function(A, B, C) {
   } else {
     mld <- suppressWarnings(log(x1) * 0.001)
   }
-  x1 <- derive_lq(0, A, B, C)
+  x1 <- derive_lq(0, A, B, C, key_values)
   for (xstep in seq(0, 0.998, 0.001)) {
-    x2 <- derive_lq(xstep + 0.001, A, B, C)
+    x2 <- derive_lq(xstep + 0.001, A, B, C, key_values)
     if ((x1 <= 0) || (x2 <= 0)) {
       gap <- gap + 0.001
       if (gap > 0.5) {
@@ -481,13 +499,13 @@ gd_compute_mld_lq <- function(A, B, C) {
 #'
 #' @return numeric
 #' @keywords internal
-gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10, key_values) {
   vec <- vector(mode = "numeric", length = n_quantile)
   x1 <- 1 / n_quantile
   q <- 0L
   lastq <- 0L
   for (i in seq_len(n_quantile - 1)) {
-    q <- value_at_lq(x1, A, B, C)
+    q <- value_at_lq(x1, A, B, C, key_values = key_values)
     v <- q - lastq
     vec[i] <- v
     lastq <- q
@@ -520,7 +538,8 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 gd_compute_watts_lq <- function(headcount,
                                 mu = lifecycle::deprecated(),
                                 mean = NULL,
-                                povline, dd = 0.01, A, B, C) {
+                                povline, dd = 0.01, A, B, C,
+                                key_values) {
 
 
   if (lifecycle::is_present(mu)) {
@@ -540,7 +559,7 @@ gd_compute_watts_lq <- function(headcount,
   }
 
   snw <- headcount * dd
-  x1 <- derive_lq(snw / 2, A, B, C)
+  x1 <- derive_lq(snw / 2, A, B, C, key_values = key_values)
   if (x1 <= 0) {
     gap <- snw / 2
     watts <- 0L
@@ -552,8 +571,10 @@ gd_compute_watts_lq <- function(headcount,
   xend <- headcount - snw
   xstep_snw <- seq(0, xend, by = snw) + snw
   x2 <- vapply(xstep_snw, function(x)
-    derive_lq(x, A, B, C), FUN.VALUE = numeric(1))
-  x1 <- c(derive_lq(0, A, B, C), x2[1:(length(x2) - 1)])
+    derive_lq(x, A, B, C, key_values),
+    FUN.VALUE = numeric(1))
+  x1 <- c(derive_lq(0, A, B, C, key_values),
+          x2[1:(length(x2) - 1)])
 
   check <- (x1 <= 0 ) | (x2 <= 0)
   if (any(check)) {
@@ -591,10 +612,11 @@ gd_compute_watts_lq <- function(headcount,
 gd_compute_polarization_lq <- function(mean,
                                        p0,
                                        dcm,
-                                       A, B, C) {
+                                       A, B, C,
+                                       key_values) {
   pol <- 2 - (1 / p0) +
-    (dcm - (2 * value_at_lq(p0, A, B, C) * mean)) /
-      (p0 * mean * derive_lq(p0, A, B, C))
+    (dcm - (2 * value_at_lq(p0, A, B, C, key_values) * mean)) /
+      (p0 * mean * derive_lq(p0, A, B, C, key_values))
 
   return(pol)
 }
@@ -607,15 +629,15 @@ gd_compute_polarization_lq <- function(mean,
 #'
 #' @return list
 #' @keywords internal
-gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
-  gini <- gd_compute_gini_lq(A, B, C, e, m, n, r)
-  median <- mean * derive_lq(0.5, A, B, C)
-  rmhalf <- value_at_lq(p0, A, B, C) * mean / p0 # What is this??
+gd_compute_dist_stats_lq <- function(mean, p0, A, B, C, key_values = key_values) {
+  gini <- gd_compute_gini_lq(A, B, C, key_values = key_values)
+  median <- mean * derive_lq(0.5, A, B, C, key_values = key_values)
+  rmhalf <- value_at_lq(p0, A, B, C, key_values = key_values) * mean / p0 # What is this??
   dcm <- (1 - gini) * mean
-  pol <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C)
-  ris <- value_at_lq(0.5, A, B, C)
-  mld <- gd_compute_mld_lq(A, B, C)
-  deciles <- gd_compute_quantile_lq(A, B, C)
+  pol <- gd_compute_polarization_lq(mean, p0, dcm, A, B, C, key_values = key_values)
+  ris <- value_at_lq(0.5, A, B, C, key_values = key_values)
+  mld <- gd_compute_mld_lq(A, B, C, key_values = key_values)
+  deciles <- gd_compute_quantile_lq(A, B, C, key_values = key_values)
 
   return(list(
     gini         = gini,
@@ -644,12 +666,7 @@ gd_compute_poverty_stats_lq <- function(
     A,
     B,
     C,
-    e,
-    m,
-    n,
-    r,
-    s1,
-    s2
+    key_values
 ) {
   # ____________________________________________________________________________
   # Compute headcount
@@ -658,28 +675,28 @@ gd_compute_poverty_stats_lq <- function(
     mean    = mean,
     povline = povline,
     B       = B,
-    m       = m,
-    n       = n,
-    r       = r
+    key_values = key_values
   )
 
   # ____________________________________________________________________________
   # Compute intermediate terms
   # ____________________________________________________________________________
   u    <- mean / povline
-  tmp0 <- (m * headcount^2) + (n * headcount) + (e^2)
+  tmp0 <- (key_values$m * headcount^2) +
+    (key_values$n * headcount) +
+    (key_values$e^2)
   tmp0 <- if (tmp0 < 0) 0L else tmp0
   tmp0 <- sqrt(tmp0)
 
   # ____________________________________________________________________________
   # Compute dl - first derivative of Lorenz curve
   # ____________________________________________________________________________
-  dl <- -(0.5 * B) - (0.25 * ((2 * m * headcount) + n) / tmp0)
+  dl <- -(0.5 * B) - (0.25 * ((2 * key_values$m * headcount) + key_values$n) / tmp0)
 
   # ____________________________________________________________________________
   # Compute ddl - second derivative of Lorenz curve
   # ____________________________________________________________________________
-  ddl <- r^2 / (tmp0^3 * 8)
+  ddl <- key_values$r^2 / (tmp0^3 * 8)
 
   # if negative headcount, set all to 0
   if (headcount < 0) {
@@ -691,12 +708,13 @@ gd_compute_poverty_stats_lq <- function(
     # Compute Poverty gap
     # __________________________________________________________________________
     pov_gap <- gd_compute_pov_gap_lq(
-      mean      = mean,
-      povline   = povline,
-      headcount = headcount,
-      A         = A,
-      B         = B,
-      C         = C
+      mean       = mean,
+      povline    = povline,
+      headcount  = headcount,
+      A          = A,
+      B          = B,
+      C          = C,
+      key_values = key_values
     )
 
     # __________________________________________________________________________
@@ -704,19 +722,14 @@ gd_compute_poverty_stats_lq <- function(
     # __________________________________________________________________________
 
     pov_gap_sq <- gd_compute_pov_severity_lq(
-      mean      = mean,
-      povline   = povline,
-      headcount = headcount,
-      pov_gap   = pov_gap,
-      A         = A,
-      B         = B,
-      C         = C,
-      e         = e,
-      m         = m,
-      n         = n,
-      r         = r,
-      s1        = s1,
-      s2        = s2
+      mean       = mean,
+      povline    = povline,
+      headcount  = headcount,
+      pov_gap    = pov_gap,
+      A          = A,
+      B          = B,
+      C          = C,
+      key_values = key_values
     )
     # __________________________________________________________________________
     # Compute elasticity of headcount index wrt mean (P.eh)
@@ -753,13 +766,14 @@ gd_compute_poverty_stats_lq <- function(
     # ____________________________________________________________________________
     # Compute Watts
     # ____________________________________________________________________________
-    watts <- gd_compute_watts_lq(headcount = headcount,
-                                 mean = mean,
-                                 povline = povline,
-                                 dd = 0.01,
-                                 A = A,
-                                 B = B,
-                                 C = C)
+    watts <- gd_compute_watts_lq(headcount  = headcount,
+                                 mean       = mean,
+                                 povline    = povline,
+                                 dd         = 0.01,
+                                 A          = A,
+                                 B          = B,
+                                 C          = C,
+                                 key_values = key_values)
   }
 
   return(
@@ -796,16 +810,16 @@ gd_compute_headcount_lq <- function(
     mean,
     povline,
     B,
-    m,
-    n,
-    r
+    key_values
 ) {
 
   #   _____________________________________________________________________
   #   Compute headcount
   #   _____________________________________________________________________
   bu <- B + (2 * povline / mean)
-  headcount <- -(n + ((r * bu) / sqrt(bu^2 - m))) / (2 * m)
+  headcount <- -(key_values$n +
+                   ((key_values$r * bu) / sqrt(bu^2 - key_values$m))) /
+    (2 * key_values$m)
 
 
   #   _____________________________________________________________________
@@ -830,7 +844,8 @@ gd_compute_pov_gap_lq <- function(mean,
                                   headcount,
                                   A,
                                   B,
-                                  C) {
+                                  C,
+                                  key_values) {
 
   #   _____________________________________________________________________
   #   Computations
@@ -843,7 +858,8 @@ gd_compute_pov_gap_lq <- function(mean,
 
     u    <- mean / povline
 
-    hc_lq <- value_at_lq(headcount, A, B, C)
+    hc_lq <- value_at_lq(headcount, A, B, C,
+                         key_values)
 
     # Poverty gap index (P.pg)
     pov_gap <- headcount - (u * hc_lq)
@@ -877,19 +893,14 @@ gd_compute_pov_severity_lq <- function(
     A,
     B,
     C,
-    e,
-    m,
-    n,
-    r,
-    s1,
-    s2
+    key_values
 ) {
 
   # ________________________________________________________________________
   # Define objects
   # ________________________________________________________________________
   u <-  mean/povline
-  hc_lq <- value_at_lq(headcount, A, B, C)
+  hc_lq <- value_at_lq(headcount, A, B, C, key_values = key_values)
 
   # ________________________________________________________________________
   # Calculations
@@ -899,8 +910,8 @@ gd_compute_pov_severity_lq <- function(
     headcount -
     (u ^ 2 * (A * headcount +
                 B * hc_lq -
-                ((r / 16) * log(
-                  (1 - headcount / s1) / (1 - headcount / s2)
+                ((key_values$r / 16) * log(
+                  (1 - headcount / key_values$s1) / (1 - headcount / key_values$s2)
                 ))))
   # ________________________________________________________________________
   # Return
@@ -922,23 +933,29 @@ gd_compute_pov_severity_lq <- function(
 #' @inheritParams gd_compute_fit_lq
 #' @return list
 #' @keywords internal
-gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
+gd_estimate_lq <- function(mean, povline, p0, A, B, C, key_values) {
 
-  kv <- gd_lq_key_values(A,B,C)
+  if (is.null(key_values)) {
+    key_values <- gd_lq_key_values(A, B, C)
+  }
+  e  <- key_values$e
+  m  <- key_values$m
+  n  <- key_values$n
+  r  <- key_values$r
+  s1 <- key_values$s1
+  s2 <- key_values$s2
 
-  validity <- check_curve_validity_lq(A, B, C, kv$e, kv$m, kv$n, kv$r^2)
+  validity <- check_curve_validity_lq(A, B, C, key_values = key_values)
+                                      #e, m, n, r^2)
   if (validity$is_valid == FALSE & validity$is_normal == FALSE) {
     return(empty_gd_compute_pip_stats_response)
   }
 
   # Compute distributional measures -----------------------------------------
-
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, kv$e, kv$m, kv$n, kv$r)
-
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
 
   # Compute poverty stats ---------------------------------------------------
-
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, kv$e, kv$m, kv$n, kv$r, kv$s1, kv$s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
 
   out <- list(
     gini = dist_stats$gini,
@@ -989,7 +1006,8 @@ gd_compute_fit_lq <- function(welfare,
                               headcount,
                               A,
                               B,
-                              C) {
+                              C,
+                              key_values) {
   if (is.na(headcount)) {
     return(list(
       sse  = NA_real_,
@@ -1002,7 +1020,8 @@ gd_compute_fit_lq <- function(welfare,
   ssez <- 0L
 
   for (i in seq_len(length(welfare) - 1)) {
-    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual <- welfare[i] - value_at_lq(population[i], A, B, C,
+                                         key_values = key_values)
     residual_sq <- residual^2
     sse <- sse + residual_sq
     if (population[i] < headcount) {
@@ -1011,7 +1030,8 @@ gd_compute_fit_lq <- function(welfare,
     }
   }
   lasti <- lasti + 1
-  residual <- welfare[lasti] - value_at_lq(population[lasti], A, B, C)
+  residual <- welfare[lasti] - value_at_lq(population[lasti], A, B, C,
+                                           key_values = key_values)
   ssez <- ssez + residual^2
 
   out <- list(sse, ssez)
