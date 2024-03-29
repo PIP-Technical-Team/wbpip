@@ -52,10 +52,7 @@ gd_compute_dist_stats <- function(welfare,
                                           A = A,
                                           B = B,
                                           C = C,
-                                          e = kv$e,
-                                          m = kv$m,
-                                          n = kv$n,
-                                          r = kv$r)
+                                          key_values = kv)
 
   results_lq <- append(results_lq, reg_results_lq)
 

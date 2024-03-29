@@ -52,10 +52,15 @@ sd_create_synth_vector <- function(welfare,
   reg_results_lq <- regres(prepped_data, is_lq = TRUE)
   reg_coef_lq <- reg_results_lq$coef
 
+  kv <- gd_lq_key_values(A = reg_coef_lq[1],
+                         B = reg_coef_lq[2],
+                         C = reg_coef_lq[3])
+
   ## STEP 3: Calculate distributional stats
   results_lq <- gd_estimate_dist_stats_lq(
     mean = mean, p0 = p0, A = reg_coef_lq[1],
-    B = reg_coef_lq[2], C = reg_coef_lq[3]
+    B = reg_coef_lq[2], C = reg_coef_lq[3],
+    key_values = kv
   )
 
   results_lq <- append(results_lq, reg_results_lq)
