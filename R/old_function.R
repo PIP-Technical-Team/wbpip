@@ -40,7 +40,7 @@ old_gd_compute_poverty_stats_lq <- function(mean,
   } else {
 
     # HC value at LQ
-    hc_lq <- value_at_lq(headcount, A, B, C)
+    hc_lq <- old_value_at_lq(headcount, A, B, C)
 
     # Poverty gap index (P.pg)
     pov_gap <- headcount - (u * hc_lq)
