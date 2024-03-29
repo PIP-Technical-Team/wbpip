@@ -55,7 +55,7 @@ gd_compute_poverty_stats <- function(welfare,
     povline = povline,
     A = reg_coef_lq[1],
     B = reg_coef_lq[2],
-    C = reg_coef_lq[3],
+    C = reg_coef_lq[3]
   )
 
   # STEP 4: Compute measure of regression fit
