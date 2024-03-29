@@ -118,10 +118,7 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, key_values = key_values
   validity <- check_curve_validity_lq(A,
                                       B,
                                       C,
-                                      key_values$e,
-                                      key_values$m,
-                                      key_values$n,
-                                      key_values$r)
+                                      key_values = key_values)
 
   # Compute distributional measures -----------------------------------------
 
