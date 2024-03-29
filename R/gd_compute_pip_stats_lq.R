@@ -89,7 +89,7 @@ gd_compute_pip_stats_lq <- function(welfare,
                              A, B, C, key_values = kv)
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C, key_values = kv)
 
   res <- c(results1, results2, results_fit, reg_results)
 
@@ -952,10 +952,10 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C, key_values) {
   }
 
   # Compute distributional measures -----------------------------------------
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, key_values = key_values)
 
   # Compute poverty stats ---------------------------------------------------
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, key_values = key_values)
 
   out <- list(
     gini = dist_stats$gini,

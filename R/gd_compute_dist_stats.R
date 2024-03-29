@@ -33,17 +33,19 @@ gd_compute_dist_stats <- function(welfare,
   A <- reg_results_lq$coef[1]
   B <- reg_results_lq$coef[2]
   C <- reg_results_lq$coef[3]
+  kv <- gd_lq_key_values(A, B, C)
 
   # STEP 3: Compute Sum of Squared Error
   reg_results_lq[["sse"]] <- gd_compute_dist_fit_lq(welfare = welfare,
                                                     population = population,
                                                     A = A,
                                                     B = B,
-                                                    C = C)
+                                                    C = C,
+                                                    key_values = kv)
 
   # STEP 3: Calculate distributional stats
   # Compute key numbers from Lorenz quadratic form
-  kv <- gd_lq_key_values(A, B, C)
+
 
   results_lq <- gd_estimate_dist_stats_lq(mean = mean,
                                           p0 = p0,
@@ -112,17 +114,17 @@ gd_compute_dist_stats <- function(welfare,
 #' @inheritParams gd_estimate_lq
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
+gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, key_values = key_values) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
 
   validity <- check_curve_validity_lq(A,
                                       B,
                                       C,
-                                      e,
-                                      m,
-                                      n,
-                                      r^2)
+                                      key_values$e,
+                                      key_values$m,
+                                      key_values$n,
+                                      key_values$r)
 
   # Compute distributional measures -----------------------------------------
 
@@ -131,10 +133,7 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, e, m, n, r) {
                                          A,
                                          B,
                                          C,
-                                         e,
-                                         m,
-                                         n,
-                                         r)
+                                         key_values = key_values)
 
   out <- list(
     mean = mean,
@@ -294,12 +293,13 @@ gd_compute_dist_fit_lq <- function(welfare,
                                    population,
                                    A,
                                    B,
-                                   C) {
+                                   C,
+                                   key_values) {
 
   sse <- 0L # Sum of square error
 
   for (i in seq_len(length(welfare) - 1)) {
-    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual <- welfare[i] - value_at_lq(population[i], A, B, C, key_values)
     residual_sq <- residual^2
     sse <- sse + residual_sq
   }
