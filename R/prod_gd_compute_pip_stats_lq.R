@@ -103,7 +103,7 @@ prod_gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, kv$e, kv$m, kv$n, kv$r, kv$s1, kv$s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, key_values = kv)
 
   out <- list(
     headcount = pov_stats$headcount,

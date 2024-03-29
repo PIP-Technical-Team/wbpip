@@ -140,12 +140,7 @@ gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
     A = A,
     B = B,
     C = C,
-    e = kv$e,
-    m = kv$m,
-    n = kv$n,
-    r = kv$r,
-    s1 = kv$s1,
-    s2 = kv$s2
+    key_values = kv
   )
 
   out <- list(
