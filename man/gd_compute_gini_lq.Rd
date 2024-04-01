@@ -4,7 +4,7 @@
 \alias{gd_compute_gini_lq}
 \title{Compute gini index from Lorenz Quadratic fit}
 \usage{
-gd_compute_gini_lq(A, B, C, key_values = NULL)
+gd_compute_gini_lq(A, B, C, key_values)
 }
 \arguments{
 \item{A}{numeric: Lorenz curve coefficient. Output of
