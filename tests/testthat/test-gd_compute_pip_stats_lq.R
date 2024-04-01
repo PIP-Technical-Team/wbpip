@@ -405,11 +405,12 @@ test_that("old_gd_compute_fit_lq works as expected", {
 
   out <- old_gd_compute_fit_lq(
     population = p,
-    welfare = l,
-    headcount = h,
-    A = A,
-    B = B,
-    C = C
+    welfare    = l,
+    headcount  = h,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
   )
   out <- unlist(out)
   out <- unname(out)
@@ -446,6 +447,9 @@ test_that("gd_compute_fit_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
   benchmark <- c(0.0032215656135074632,0.0032215656135074632)
 
   out <- gd_compute_fit_lq(
@@ -492,40 +496,47 @@ test_that("gd_compute_fit_lq allows for vector on headcount", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
 
   h1 <- old_gd_compute_fit_lq(
     population = p,
-    welfare = l,
-    headcount = h[1],
-    A = A,
-    B = B,
-    C = C)
+    welfare    = l,
+    headcount  = h[1],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
 
   h2 <- old_gd_compute_fit_lq(
     population = p,
-    welfare = l,
-    headcount = h[2],
-    A = A,
-    B = B,
-    C = C)
+    welfare    = l,
+    headcount  = h[2],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
 
   h3 <- old_gd_compute_fit_lq(
     population = p,
-    welfare = l,
-    headcount = h[3],
-    A = A,
-    B = B,
-    C = C)
+    welfare    = l,
+    headcount  = h[3],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
 
   benchmark <- c(h1$ssez,h2$ssez,h3$ssez)
 
   out <- gd_compute_fit_lq(
     population = p,
-    welfare = l,
-    headcount = h,
-    A = A,
-    B = B,
-    C = C
+    welfare    = l,
+    headcount  = h,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
   )
 
   expect_equal(out$sse, 0.0032215656135074632)

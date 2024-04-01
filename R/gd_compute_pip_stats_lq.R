@@ -1029,7 +1029,8 @@ old_gd_compute_fit_lq <- function(welfare,
                                   headcount,
                                   A,
                                   B,
-                                  C) {
+                                  C,
+                                  key_values = key_values) {
   if (is.na(headcount)) {
     return(list(
       sse  = NA_real_,
@@ -1107,8 +1108,9 @@ gd_compute_fit_lq <- function(welfare,
   ssez <- vapply(headcount,
                  function(x) fsum(residual_sq[population < x]),
                  FUN.VALUE = double(1))
-  ssez <- ssez + sapply(headcount,
-                        function(x) residual_sq[population >= x][1])
+  ssez <- ssez + vapply(headcount,
+                        function(x) residual_sq[population >= x][1],
+                        FUN.VALUE = double(1))
 
   ssez[is.na(ssez)] <- NA_real_
 
