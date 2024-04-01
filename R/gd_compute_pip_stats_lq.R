@@ -500,7 +500,7 @@ gd_compute_mld_lq <- function(A, B, C) {
   x1 <- derive_lq(0.0005, A, B, C) # Not sure I understand this condition
   #gap <- 0L
   mld <- 0L
-  if (x1 == 0) { # Not sure I understand this condition
+  if (x1 == 0) { # So log is not undefined
     #gap <- 0.0005
   } else {
     mld <- suppressWarnings(log(x1) * 0.001) # Needed to match test
@@ -509,7 +509,7 @@ gd_compute_mld_lq <- function(A, B, C) {
   xstep <- seq(0, 0.999, 0.001)
   x <- derive_lq(xstep, A, B, C)
 
-  if (any(x[1:33]<=0)){ # To account for the if within the loop.
+  if (any(x[1:33]<=0)){ # To account for the gap and the stop parameter within the loop.
     return(-1)
   }else{
     mld <- mld + fsum( (log(x[1:999])+log(x[2:1000])) *0.0005) # Not sure why add previous mld
