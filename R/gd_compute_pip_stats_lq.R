@@ -242,12 +242,17 @@ derive_lq <- function(x, A, B, C, key_values) {
 #' `check_curve_validity_lq()` checks the validity of the Lorenz Quadratic fit
 #'
 #' @inheritParams gd_estimate_lq
-#' @param e numeric: e = -(A + B + C + 1): condition for the curve to go through
+#' @param key_values named list: key values for lq fit, calculated using A, B, C
+#' parameters using [gd_lq_key_values]
+#' @details
+#' e numeric: e = -(A + B + C + 1): condition for the curve to go through
 #' (1, 1).
-#' @param m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+#'
+#' m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
 #' an ellipse (m is called alpha in paper).
-#' @param n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
-#' @param r r = (n^2) - (4 * m * e^2). r is called K in paper.
+#'
+#' n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
+#' r r = (n^2) - (4 * m * e^2). r is called K in paper.
 #'
 #' @references
 #' Datt, G. 1998. "[Computational Tools For Poverty Measurement And
@@ -953,6 +958,8 @@ gd_compute_pov_severity_lq <- function(
 #' @param mean numeric: Welfare mean.
 #' @param povline numeric: Poverty line.
 #' @param p0 numeric: **TO BE DOCUMENTED**.
+#' @param key_values named list: key values for lq fit, calculated using A, B, C
+#' parameters using [gd_lq_key_values]
 #' @inheritParams gd_compute_fit_lq
 #' @return list
 #' @keywords internal
@@ -1021,6 +1028,8 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C, key_values) {
 #'   `regres_lq()$coef[2]`.
 #' @param C numeric: Lorenz curve coefficient. Output of
 #'   `regres_lq()$coef[3]`.
+#' @param key_values named list: key values for lq fit, calculated using A, B, C
+#' parameters using [gd_lq_key_values]
 #'
 #' @return list
 #' @keywords internal

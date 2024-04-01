@@ -12,11 +12,12 @@ gd_compute_watts_lq(
   dd = 0.01,
   A,
   B,
-  C
+  C,
+  key_values
 )
 }
 \arguments{
-\item{headcount}{numeric: Headcount index.}
+\item{headcount}{numeric: Headcount index. Allows for vector.}
 
 \item{mu}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} \code{mu} is no longer supported. Use
 instead \code{mean}}
@@ -35,6 +36,9 @@ instead \code{mean}}
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 numeric

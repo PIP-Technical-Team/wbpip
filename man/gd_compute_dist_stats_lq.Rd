@@ -4,7 +4,7 @@
 \alias{gd_compute_dist_stats_lq}
 \title{Computes distributional stats from Lorenz Quadratic fit}
 \usage{
-gd_compute_dist_stats_lq(mean, p0, A, B, C)
+gd_compute_dist_stats_lq(mean, p0, A, B, C, key_values = key_values)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
@@ -19,6 +19,9 @@ gd_compute_dist_stats_lq(mean, p0, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 list
