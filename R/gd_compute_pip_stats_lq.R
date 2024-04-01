@@ -1008,11 +1008,11 @@ gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 #' @return list
 #' @keywords internal
 old_gd_compute_fit_lq <- function(welfare,
-                              population,
-                              headcount,
-                              A,
-                              B,
-                              C) {
+                                  population,
+                                  headcount,
+                                  A,
+                                  B,
+                                  C) {
   if (is.na(headcount)) {
     return(list(
       sse  = NA_real_,
@@ -1066,32 +1066,33 @@ gd_compute_fit_lq <- function(welfare,
                               B,
                               C) {
 
-  if (any(population > 1) | any(population < 0)){
+  if (any(population > 1) | any(population < 0)) {
     cli::cli_abort("Population vector should be between 0 and 1")
   }
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Ceiling to Headcount vector --------
-
   headcount[headcount > 1] <- 1
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Calculations for sum of squares of error--------
-
-  residual <- welfare - value_at_lq(population, A, B, C)
+  residual    <- welfare - value_at_lq(population,
+                                       A, B, C)
   residual_sq <- residual^2
-  sse <- sum(residual_sq)
+  sse         <- fsum(residual_sq)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Calculations for sum of squares of error right to the headcount level--------
-
-  ssez <- sapply(headcount, function(x) sum(residual_sq[population < x]))
-  ssez <- ssez + sapply(headcount, function(x) residual_sq[population >= x][1])
+  ssez <- vapply(headcount,
+                 function(x) fsum(residual_sq[population < x]),
+                 FUN.VALUE = double(1))
+  ssez <- ssez + sapply(headcount,
+                        function(x) residual_sq[population >= x][1])
 
   ssez[is.na(ssez)] <- NA_real_
 
   out <- list(sse, ssez)
   names(out) <- list("sse", "ssez")
 
-  return(out)
+  out
 }
