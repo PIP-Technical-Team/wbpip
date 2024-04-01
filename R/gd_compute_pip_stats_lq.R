@@ -1106,11 +1106,11 @@ gd_compute_fit_lq <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Calculations for sum of squares of error right to the headcount level--------
   ssez <- vapply(headcount,
-                 function(x) fsum(residual_sq[population < x]),
+                 function(x) {
+                   n <- sum(population < x) + 1
+                   sum(residual_sq[1:n])
+                 },
                  FUN.VALUE = double(1))
-  ssez <- ssez + vapply(headcount,
-                        function(x) residual_sq[population >= x][1],
-                        FUN.VALUE = double(1))
 
   ssez[is.na(ssez)] <- NA_real_
 
