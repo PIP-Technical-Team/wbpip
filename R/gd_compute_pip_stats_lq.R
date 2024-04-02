@@ -556,7 +556,7 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 
   vec <- diff(c(0,value_at_lq(x, A, B, C)))
 
-  vec[n_quantile] <- 1- value_at_lq(x[n_quantile-1], A, B, C) # Is this correct?
+  vec[n_quantile] <- 1- value_at_lq(x[n_quantile-1], A, B, C) # Issue with the A and C parameters
 
   return(vec)
 }
