@@ -263,11 +263,11 @@ md_compute_watts <- function(
   # Computations
   # ______________________________________________________________________
   pov_status         <- (welfare < povline)
-  weight_total       <- fsum(weight)
+  weight_total       <- sum(weight)
   keep               <- welfare > 0 & pov_status
   w_gt_zero          <- welfare[keep]
   sensitive_distance <- log(povline / w_gt_zero)
-  watts              <- fsum(sensitive_distance * weight[keep])/weight_total
+  watts              <- sum(sensitive_distance * weight[keep])/weight_total
 
   # Handle cases where Watts is numeric(0)
   if (identical(watts, numeric(0))) {

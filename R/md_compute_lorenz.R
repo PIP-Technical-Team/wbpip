@@ -23,7 +23,7 @@
 #' @export
 md_compute_lorenz <- function(welfare,
                               weight = rep(1, length(welfare)),
-                              nbins = if (length(welfare) > 1000) 100 else 20,
+                              nbins  = if (length(welfare) > 1000) 100 else 20,
                               force_nbins = TRUE) {
 
 
@@ -51,10 +51,8 @@ md_compute_lorenz <- function(welfare,
   # Compute Lorenz curve  -----
   weighted_welfare     <- weight * welfare
 
-  p <- collapse::fcumsum(weight)/collapse::fsum(weight)
-  L <- collapse::fcumsum(weighted_welfare)/collapse::fsum(weighted_welfare)
-
-
+  p <- fcumsum(weight)/sum(weight)
+  L <- fcumsum(weighted_welfare)/sum(weighted_welfare)
 
   # get nbins  ----
   if (!is.null(nbins)) {
@@ -71,7 +69,7 @@ md_compute_lorenz <- function(welfare,
     rp       <- which(di >= 1) # [2] See notes.
 
     # in case there are empty bins.
-    uniq_fi <- collapse::funique(fi)
+    uniq_fi <- funique(fi)
     if (!collapse::all_obj_equal(uniq_fi, bins_groups) &
         force_nbins ) {
       ind  <- rep(rp, di[rp]) # [3] See notes.

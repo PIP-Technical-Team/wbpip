@@ -1110,7 +1110,7 @@ gd_compute_fit_lq <- function(welfare,
                                        A, B, C,
                                        key_values = key_values)
   residual_sq <- residual^2
-  sse         <- fsum(residual_sq)
+  sse         <- sum(residual_sq)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Calculations for sum of squares of error right to the headcount level--------

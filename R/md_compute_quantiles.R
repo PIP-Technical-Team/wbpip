@@ -188,7 +188,7 @@ md_compute_median <- function(welfare,
     )
   }
 
-  n  <- collapse::fnrow(lorenz)
+  n  <- fnrow(lorenz)
 
   if (n %% 2 == 0) {
     median <- lorenz$welfare[n/2]
@@ -239,7 +239,7 @@ md_compute_quantiles_c <- function(welfare,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   bins_groups <- 1:n_quantile
   probs       <- bins_groups/n_quantile
-  quantiles   <- collapse::fquantile(welfare, probs = probs, w = weight, type=7)
+  quantiles   <- fquantile(welfare, probs = probs, w = weight, type = 7)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------

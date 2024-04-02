@@ -96,7 +96,7 @@ test_that("md_welfare_share_at", {
   )
   expect_equal(
     output |> unname(),
-    fcumsum(1:10)/fsum(1:10)
+    fcumsum(1:10)/sum(1:10)
   )
 
 

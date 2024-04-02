@@ -29,7 +29,7 @@ md_infer_poverty_line <- function(welfare,
     cli::cli_abort("neither {.arg welfare} nor {.arg weight} can have {.var NAs}")
   }
 
-  prob <- fcumsum(weight) / fsum(weight)
+  prob <- fcumsum(weight) / sum(weight)
   ps <- lapply(popshare, \(.) {
     abs(prob - .) |>
       which.min()
