@@ -40,7 +40,7 @@ old_gd_compute_poverty_stats_lq <- function(mean,
   } else {
 
     # HC value at LQ
-    hc_lq <- value_at_lq(headcount, A, B, C)
+    hc_lq <- old_value_at_lq(headcount, A, B, C)
 
     # Poverty gap index (P.pg)
     pov_gap <- headcount - (u * hc_lq)
@@ -70,13 +70,16 @@ old_gd_compute_poverty_stats_lq <- function(mean,
     # Elasticity of distributionally sensitive FGT poverty measure w.r.t gini index (P.gp)
     gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
+    kv <- gd_lq_key_values(A,B,C)
+
     watts <- gd_compute_watts_lq(headcount = headcount,
                                  mean = mean,
                                  povline = povline,
                                  dd = 0.01,
                                  A = A,
                                  B = B,
-                                 C = C)
+                                 C = C,
+                                 key_values = kv)
   }
 
   return(

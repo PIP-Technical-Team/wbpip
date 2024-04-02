@@ -59,16 +59,19 @@ prod_gd_compute_pip_stats_lq <- function(welfare,
   B <- reg_coef[2]
   C <- reg_coef[3]
 
+  # Step 2.1: pre-calculate key values
+  kv <- gd_lq_key_values(A, B, C)
+
   # OPTIONAL: Only when popshare is supplied
   # return poverty line if share of population living in poverty is supplied
   # intead of a poverty line
   if (!is.null(popshare)) {
-    povline <- derive_lq(popshare, A, B, C) * requested_mean
+    povline <- derive_lq(popshare, A, B, C, key_values = kv) * requested_mean
   }
 
   # Boundary conditions (Why 4?)
-  z_min <- requested_mean * derive_lq(0.001, A, B, C) + 4
-  z_max <- requested_mean * derive_lq(0.980, A, B, C) - 4
+  z_min <- requested_mean * derive_lq(0.001, A, B, C, key_values = kv) + 4
+  z_max <- requested_mean * derive_lq(0.980, A, B, C, key_values = kv) - 4
   z_min <- if (z_min < 0) 0 else z_min
 
   results1 <- list(requested_mean, povline, z_min, z_max, ppp)
@@ -78,7 +81,7 @@ prod_gd_compute_pip_stats_lq <- function(welfare,
   results2 <- prod_gd_estimate_lq(requested_mean, povline, p0, A, B, C)
 
   # STEP 4: Compute measure of regression fit
-  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C)
+  results_fit <- gd_compute_fit_lq(welfare, population, results2$headcount, A, B, C, key_values = kv)
 
   res <- c(results1, results2, results_fit, reg_results)
 
@@ -94,24 +97,16 @@ prod_gd_compute_pip_stats_lq <- function(welfare,
 prod_gd_estimate_lq <- function(mean, povline, p0, A, B, C) {
 
   # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
+  kv <- gd_lq_key_values(A,B,C)
 
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
+  validity <- check_curve_validity_lq(A, B, C, key_values = kv)
   if (!validity$is_valid & !validity$is_normal) {
     return(empty_gd_compute_pip_stats_response)
   }
 
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
-
   # Compute poverty stats ---------------------------------------------------
 
-  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, e, m, n, r, s1, s2)
+  pov_stats <- gd_compute_poverty_stats_lq(mean, povline, A, B, C, key_values = kv)
 
   out <- list(
     headcount = pov_stats$headcount,

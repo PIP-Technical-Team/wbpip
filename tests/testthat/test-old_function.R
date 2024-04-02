@@ -83,18 +83,15 @@ test_that("old_gd_compute_poverty_stats_lq works as expected", {
 
 test_that("old_gd_compute_poverty_stats_lq works as gd_compute_poverty_stats_lq", {
 
+  kv <- gd_lq_key_values(A,B,C)
+
   benchmark <- gd_compute_poverty_stats_lq(
     mean    = mean,
     povline = povline,
     A       = A,
     B       = B,
     C       = C,
-    e       = e,
-    m       = m,
-    n       = n,
-    r       = r,
-    s1      = s1,
-    s2      = s2)
+    key_values = kv)
 
   out <- old_gd_compute_poverty_stats_lq(
     mean    = mean,

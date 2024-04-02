@@ -4,16 +4,22 @@
 \alias{md_compute_quantiles}
 \title{Compute quantiles for microdata with lorenz function}
 \usage{
-md_compute_quantiles(welfare, weight, n_quantile = 10)
+md_compute_quantiles(
+  welfare = NULL,
+  weight = rep(1, length(welfare)),
+  n_quantile = 10,
+  lorenz = NULL
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
 \item{weight}{numeric: A vector of weights. Default is a vector of ones,}
 
+\item{lorenz}{numeric: Output from \code{md_compute_lorenz}}
+
 \item{n_quantiles}{numeric: Number of quantiles for which share of total income
-is desired. It can't be larger that the total number of percentiles in the
-Lorenz curve provided by the user.  default is 10.}
+is desired. Default is 10.}
 }
 \value{
 list

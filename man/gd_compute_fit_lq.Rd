@@ -4,14 +4,14 @@
 \alias{gd_compute_fit_lq}
 \title{Computes the sum of squares of error}
 \usage{
-gd_compute_fit_lq(welfare, population, headcount, A, B, C)
+gd_compute_fit_lq(welfare, population, headcount, A, B, C, key_values)
 }
 \arguments{
 \item{welfare}{numeric: Welfare vector (grouped).}
 
 \item{population}{numeric: Population vector (grouped).}
 
-\item{headcount}{numeric: Headcount index.}
+\item{headcount}{numeric: Headcount index. Allows for vector.}
 
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[1]}.}
@@ -28,3 +28,4 @@ list
 \description{
 Measures the fit of the model to the data.
 }
+\keyword{internal}

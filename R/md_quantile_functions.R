@@ -46,32 +46,12 @@ old_md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Validate n ----------------------------------------------------------
   if (!is.null(n)) {
     popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-
-  # ----------------------------------------------------------------------------
-  # Validate popshare ----------------------------------------------------------
-  if (!is.null(popshare)) {
-    if (any(popshare < 0 | popshare > 1)) {
-      cli::cli_abort("popshare must be within the range [0, 1]")
-    }
   }
 
   # ____________________________________________________________________________
@@ -132,16 +112,7 @@ md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  format <- match.arg(format) # Ask about this argument to Zander
+  format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Calculations ---------------------------------------------------------------
@@ -153,19 +124,9 @@ md_quantile_values <- function(
 
   # ____________________________________________________________________________
   # Format and Return ----------------------------------------------------------
-  if (format == "atomic") {
-    return(q)
-  } else if (format == "dt") {
-    q <- data.table::data.table(
-      quantile = paste0("q_", names(q)),
-      values   = q |> as.numeric()
-    )
-    return(q)
-  } else if (format == "list") {
-    return(
-      as.list(q)
-    )
-  }
+  format_out(quantiles = q,
+             format    = format,
+             name      = "values")
 
 }
 
@@ -195,32 +156,12 @@ old_md_welfare_share_at <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Validate n ----------------------------------------------------------
   if (!is.null(n)) {
     popshare <- seq(from = 1/n, to = 1, by = 1/n)
-  }
-
-  # ----------------------------------------------------------------------------
-  # Validate popshare ----------------------------------------------------------
-  if (!is.null(popshare)) {
-    if (any(popshare < 0 | popshare > 1)) {
-      cli::cli_abort("popshare must be within the range [0, 1]")
-    }
   }
 
   # ____________________________________________________________________________
@@ -234,15 +175,6 @@ old_md_welfare_share_at <- function(
     popshare = popshare,
     format   = "list"
   )
-
-
-  if (length(funique(unlist(unname(q)))) < length(unlist(unname(q)))) {
-    cli::cli_alert_warning(
-      "Some quantile threshold values are equal. Please either reduce `n`,
-      investigate `welfare` and `weight` vectors, or
-      check using `md_quantile_values`."
-    )
-  }
 
   # Get total welfare, and order other vecs
   total_welfare <- fsum(x = welfare,
@@ -299,45 +231,24 @@ md_welfare_share_at <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-
   format <- match.arg(format)
 
   # ____________________________________________________________________________
   # Calculations ---------------------------------------------------------------
 
   # Get quantiles
-  lz            <- md_compute_lorenz(
-    welfare  = welfare,
-    weight   = weight,
-    nbins    = n)
+  lz            <- md_compute_lorenz(welfare  = welfare,
+                                     weight   = weight,
+                                     nbins    = n)
   output        <- lz$lorenz_welfare
   popshare      <- seq(from = 1/n, to = 1, by = 1/n)
   names(output) <- paste0(popshare*100, '%')
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
-  if (format == "list") {
-    return(output)
-  } else if (format == "atomic") {
-    return(
-      output |> unlist()
-    )
-  } else if (format == "dt") {
-    output <- data.table(
-      quantile   = paste0("q_", names(output)),
-      share_at   = output |> as.numeric()
-    )
-    return(output)
-  }
+  format_out(quantiles = output,
+             format    = format,
+             name      = "share_at")
 
 }
 
@@ -371,21 +282,6 @@ old_md_quantile_welfare_share <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (is.null(n) & is.null(popshare)) {
-    cli::cli_abort("Either `n` or `popshare` must be non-NULL")
-  }
-  if (length(unique(welfare)) == 1) {
-    cli::cli_abort("The `welfare` vector should have more than one unique values")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
@@ -474,18 +370,6 @@ md_quantile_welfare_share <- function(
 ){
   # ____________________________________________________________________________
   # Arguments ------------------------------------------------------------------
-  if (is.na(welfare) |> any()) {
-    cli::cli_abort("No elements in welfare vector can be NA")
-  }
-  if (is.null(welfare)) {
-    cli::cli_abort("Welfare vector cannot be NULL")
-  }
-  if (length(weight) > 1 & any(is.na(weight))) {
-    cli::cli_abort("No elements in weight vector can be NA - make NULL to use equal weighting")
-  }
-  if (length(unique(welfare)) == 1) {
-    cli::cli_abort("The `welfare` vector should have more than one unique values")
-  }
   format <- match.arg(format)
 
   # ____________________________________________________________________________
@@ -500,23 +384,50 @@ md_quantile_welfare_share <- function(
 
   # ____________________________________________________________________________
   # Format & Return -------------------------------------------------------------
-  if (format == "list") {
-    return(shares |> as.list())
-  } else if (format == "atomic") {
-    return(shares)
-  } else if (format == "dt") {
-    shares <- data.table::data.table(
-      quantile   = paste0("q_", names(shares)),
-      share_at   = shares |> as.numeric()
-    )
-    return(shares)
-  }
+  format_out(quantiles = shares,
+             format    = format,
+             name      = "share_at")
 
 }
 
 
 
+#' Format for output on quantile functions
+#'
+#' This function helps modify the output of quantile functions to a specific
+#' format (see `format` parameter for the options)
+#'
+#' @param quantiles: the output from functions `md_quantile_values`,
+#' `md_welfare_share_at`, and `md_quantile_welfare_share`.
+#' @param format character: "dt", "list", "atomic", giving the format of
+#' the output. Default: "atomic"
+#' @param name Name of the column that contains the key values from output
+#' if format is "dt"
+#'
+#' @return output of quantile functions: see `format`.
+#' @keywords internal
+format_out <- function(quantiles,
+                       format = "atomic",
+                       name   = "values"){
 
+  if (format == "atomic") {
+    return(quantiles)
+  } else if (format == "dt") {
+    quantiles <- data.table::data.table(
+      quantiles = paste0("q_", names(quantiles)),
+      value = quantiles |> as.numeric()
+    )
+    data.table::setnames(quantiles,
+                         "value",
+                         name)
+    return(quantiles)
+  } else if (format == "list") {
+    return(
+      as.list(quantiles)
+    )
+  }
+
+}
 
 
 

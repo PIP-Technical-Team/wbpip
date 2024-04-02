@@ -100,7 +100,7 @@ test_that("md_welfare_share_at", {
   )
 
 
-  output <- md_quantile_values(
+  output <- md_welfare_share_at(
     welfare    = md_GHI_2000_consumption$welfare,
     weight     = md_GHI_2000_consumption$weight,
     n          = 10,
@@ -109,7 +109,7 @@ test_that("md_welfare_share_at", {
   expect_true(
     output |> is.list()
   )
-  output <- md_quantile_values(
+  output <- md_welfare_share_at(
     welfare    = md_GHI_2000_consumption$welfare,
     weight     = md_GHI_2000_consumption$weight,
     n          = 10,

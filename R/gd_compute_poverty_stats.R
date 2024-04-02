@@ -43,6 +43,12 @@ gd_compute_poverty_stats <- function(welfare,
   reg_results_lq <- regres(prepped_data, is_lq = TRUE)
   reg_coef_lq <- reg_results_lq$coef
 
+  # Step 2.1: pre-calculate key values
+  kv <- gd_lq_key_values(
+    A = reg_coef_lq[1],
+    B = reg_coef_lq[2],
+    C = reg_coef_lq[3])
+
   # STEP 3: Calculate poverty stats
   results_lq <- gd_estimate_poverty_stats_lq(
     mean = requested_mean,
@@ -59,7 +65,8 @@ gd_compute_poverty_stats <- function(welfare,
     headcount = results_lq$headcount,
     A = reg_coef_lq[1],
     B = reg_coef_lq[2],
-    C = reg_coef_lq[3]
+    C = reg_coef_lq[3],
+    key_values = kv
   )
 
   results_lq <- c(results_lq, reg_results_lq, fit_lq)
@@ -128,17 +135,9 @@ gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
   # Compute Lorenz quadratic  -----------------------------------------------
 
   # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
+  kv <- gd_lq_key_values(A,B,C)
 
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
+  validity <- check_curve_validity_lq(A, B, C, key_values = kv)
 
   # Compute poverty measures -----------------------------------------
 
@@ -148,12 +147,7 @@ gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
     A = A,
     B = B,
     C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r,
-    s1 = s1,
-    s2 = s2
+    key_values = kv
   )
 
   out <- list(

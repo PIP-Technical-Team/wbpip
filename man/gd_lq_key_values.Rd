@@ -2,8 +2,7 @@
 % Please edit documentation in R/gd_compute_dist_stats.R
 \name{gd_lq_key_values}
 \alias{gd_lq_key_values}
-\title{gd_lq_key_values
-Get key values in Table 2 of Datt (1998) paper}
+\title{Calculates the key values in Table 2 of Datt (1998)}
 \usage{
 gd_lq_key_values(A, B, C)
 }
@@ -21,6 +20,6 @@ gd_lq_key_values(A, B, C)
 list
 }
 \description{
-gd_lq_key_values
-Get key values in Table 2 of Datt (1998) paper
+Calculates the key values in Table 2 of Datt (1998)
 }
+\keyword{internal}
