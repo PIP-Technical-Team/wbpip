@@ -497,40 +497,23 @@ old_gd_compute_mld_lq <- function(A, B, C) {
 #' @return numeric
 #' @export
 gd_compute_mld_lq <- function(A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C) # Not sure I understand this condition
-  #gap <- 0L
+  x1 <- derive_lq(0.0005, A, B, C)
   mld <- 0L
-  if (x1 == 0) { # So log is not undefined
-    #gap <- 0.0005
-  } else {
+  if (x1 != 0) {
     mld <- suppressWarnings(log(x1) * 0.001) # Needed to match test
   }
 
   xstep <- seq(0, 0.999, 0.001)
   x <- derive_lq(xstep, A, B, C)
 
-  if (any(x[1:33]<=0)){ # To account for the gap and the stop parameter within the loop.
+  if (any(x[1:33]<=0)){ # In case of negative values
     return(-1)
   }else{
-    mld <- mld + fsum( (log(x[1:999])+log(x[2:1000])) *0.0005) # Not sure why add previous mld
+    mld <- mld + sum((log(x[1:999])+log(x[2:1000]))*0.0005)
     return(-mld)
   }
-
-  # x1 <- derive_lq(0, A, B, C)
-  # for (xstep in seq(0, 0.998, 0.001)) {
-  #   x2 <- derive_lq(xstep + 0.001, A, B, C)
-  #   if ((x1 <= 0) || (x2 <= 0)) {
-  #     gap <- gap + 0.001
-  #     if (gap > 0.5) {
-  #       return(-1)
-  #     }
-  #   } else {
-  #     gap <- 0L
-  #     mld <- mld + (log(x1) + log(x2)) * 0.0005
-  #   }
-  #   x1 <- x2
-  # }
 }
+
 
 #' Compute quantiles from Lorenz Quandratic fit (old version)
 #'
