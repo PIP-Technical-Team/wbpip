@@ -160,8 +160,12 @@ md_compute_fgt <- function(fgt_data        = NULL,
     fgt_data        <- vector("list", length = 4)
     names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
 
-    fgt_data$pov_status         <- sapply(povline, function(x) welfare < x)
-    fgt_data$relative_distance  <- sapply(povline, function(x) 1 - (welfare / x))
+    fgt_data$pov_status         <- vapply(povline,
+                                          function(x) welfare < x,
+                                          logical(length(welfare)))
+    fgt_data$relative_distance  <- vapply(povline,
+                                          function(x) 1 - (welfare / x),
+                                          double(length(welfare)))
     fgt_data$weight             <- weight
     fgt_data$povline            <- povline
 
