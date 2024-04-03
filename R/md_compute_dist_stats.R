@@ -28,47 +28,37 @@ md_compute_dist_stats <- function(welfare,
   }
 
   if (is.null(lorenz)) {
-    lorenz <- md_compute_lorenz(
-      welfare    = welfare,
-      weight     = weight,
-      nbins      = nbins
-    )
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = nbins)
   }
 
-  share_quant <- md_compute_quantiles_share(
-    welfare = welfare,
-    weight = weight,
-    n_quantile = n_quantile
-  )
+  share_quant <- md_compute_quantiles_share(welfare    = welfare,
+                                            weight     = weight,
+                                            n_quantile = n_quantile)
 
   median <- md_compute_median(welfare = welfare,
-                                 weight = weight)
+                              weight  = weight)
 
-  gini <- md_compute_gini(
-    welfare      = welfare,
-    weight       = weight
-  )
+  gini <- md_compute_gini(welfare = welfare,
+                          weight  = weight)
 
-  mld <- md_compute_mld(
-    welfare      = welfare,
-    weight       = weight,
-    mean         = mean
-  )
+  mld <- md_compute_mld(welfare = welfare,
+                        weight  = weight,
+                        mean    = mean)
 
-  polarization <- md_compute_polarization(
-    welfare      = welfare,
-    weight       = weight,
-    gini         = gini,
-    mean         = mean,
-    median       = median
-  )
+  polarization <- md_compute_polarization(welfare = welfare,
+                                          weight  = weight,
+                                          gini    = gini,
+                                          mean    = mean,
+                                          median  = median)
 
   return(list(
     mean         = mean,
     median       = median,
     gini         = gini,
     polarization = polarization,
-    mld = mld,
-    quantiles = share_quant
-  ))
+    mld          = mld,
+    quantiles    = share_quant))
+
 }

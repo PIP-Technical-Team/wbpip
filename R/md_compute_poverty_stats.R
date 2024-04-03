@@ -24,7 +24,6 @@ md_compute_poverty_stats <- function(
     povline_lcu
 ) {
 
-
   # ______________________________________________________________________
   # FGT measures
   # ______________________________________________________________________
@@ -157,14 +156,21 @@ md_compute_fgt <- function(fgt_data        = NULL,
     povline <- povline + 1e-10
   }
   if (is.null(fgt_data)) {
-    fgt_data        <- vector("list", length = 4)
-    names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
+    if (is.null(welfare) || is.null(povline)) {
+      fgt_data <- NA_real_
+    } else {
+      fgt_data        <- vector("list", length = 4)
+      names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
 
-    fgt_data$pov_status         <- sapply(povline, function(x) welfare < x)
-    fgt_data$relative_distance  <- sapply(povline, function(x) 1 - (welfare / x))
-    fgt_data$weight             <- weight
-    fgt_data$povline            <- povline
-
+      fgt_data$pov_status         <- vapply(povline,
+                                            function(x) welfare < x,
+                                            logical(length(welfare)))
+      fgt_data$relative_distance  <- vapply(povline,
+                                            function(x) 1 - (welfare / x),
+                                            double(length(welfare)))
+      fgt_data$weight             <- weight
+      fgt_data$povline            <- povline
+    }
   }
 
   x <-
@@ -263,11 +269,11 @@ md_compute_watts <- function(
   # Computations
   # ______________________________________________________________________
   pov_status         <- (welfare < povline)
-  weight_total       <- fsum(weight)
+  weight_total       <- sum(weight)
   keep               <- welfare > 0 & pov_status
   w_gt_zero          <- welfare[keep]
   sensitive_distance <- log(povline / w_gt_zero)
-  watts              <- fsum(sensitive_distance * weight[keep])/weight_total
+  watts              <- sum(sensitive_distance * weight[keep])/weight_total
 
   # Handle cases where Watts is numeric(0)
   if (identical(watts, numeric(0))) {

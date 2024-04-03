@@ -22,11 +22,11 @@ md_compute_gini <- function(welfare, weight) {
   # Compute area under the curve using
   # Area of trapezoid = Base * Average height
   v <- (fcumsum(weighted_welfare_lag) + (weighted_welfare / 2)) * weight
-  auc <- fsum(v) # Area Under the Curve
+  auc <- sum(v) # Area Under the Curve
 
   # Compute Area Under the Lorenz Curve
   # Normalize auc so it is always between 0 and 0.5
-  auc <- (auc / fsum(weight)) / fsum(weighted_welfare)
+  auc <- (auc / sum(weight)) / sum(weighted_welfare)
 
   # Compute Gini
   gini <- 1 - (2 * auc)

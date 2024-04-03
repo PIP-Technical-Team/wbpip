@@ -177,7 +177,7 @@ old_md_welfare_share_at <- function(
   )
 
   # Get total welfare, and order other vecs
-  total_welfare <- fsum(x = welfare,
+  total_welfare <- sum(x = welfare,
                         w = weight)
   weight        <- weight[order(welfare)]
   welfare       <- welfare[order(welfare)]
@@ -185,8 +185,8 @@ old_md_welfare_share_at <- function(
   # Weighted welfare shares
   output <- lapply(q,
                      \(y){
-                       fsum(x = welfare[welfare <= y],
-                            w = weight[welfare <= y]) / total_welfare
+                       sum(x = welfare[welfare <= y],
+                           w = weight[welfare <= y]) / total_welfare
                      })
 
   # ____________________________________________________________________________
@@ -302,13 +302,13 @@ old_md_quantile_welfare_share <- function(
 
   # ____________________________________________________________________________
   # Get welfare shares ---------------------------------------------------------
-  total_sum <- fsum(welfare*weight)
+  total_sum <- sum(welfare*weight)
 
   # Create a factor indicating the range of each element
   # Add a small epsilon to the max value
   quantiles <- c(-Inf, quantiles)
-  if (!fmax(quantiles) == fmax(welfare)) {
-    quantiles <- c(quantiles, fmax(welfare) + .Machine$double.eps)
+  if (!max(quantiles) == max(welfare)) {
+    quantiles <- c(quantiles, max(welfare) + .Machine$double.eps)
   }
 
   quantile_groups <- cut(welfare, breaks = quantiles)
@@ -316,8 +316,8 @@ old_md_quantile_welfare_share <- function(
   weight_split    <- split(weight, quantile_groups)
 
   shares <- sapply(seq_along(welfare_split), function(i) {
-    fsum(x = welfare_split[[i]],
-         w = weight_split[[i]])
+    sum(x = welfare_split[[i]],
+        w = weight_split[[i]])
   })
 
   # Calculate the share of each category
