@@ -24,7 +24,6 @@ md_compute_poverty_stats <- function(
     povline_lcu
 ) {
 
-
   # ______________________________________________________________________
   # FGT measures
   # ______________________________________________________________________
@@ -157,18 +156,21 @@ md_compute_fgt <- function(fgt_data        = NULL,
     povline <- povline + 1e-10
   }
   if (is.null(fgt_data)) {
-    fgt_data        <- vector("list", length = 4)
-    names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
+    if (is.null(welfare) || is.null(povline)) {
+      fgt_data <- NA_real_
+    } else {
+      fgt_data        <- vector("list", length = 4)
+      names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
 
-    fgt_data$pov_status         <- vapply(povline,
-                                          function(x) welfare < x,
-                                          logical(length(welfare)))
-    fgt_data$relative_distance  <- vapply(povline,
-                                          function(x) 1 - (welfare / x),
-                                          double(length(welfare)))
-    fgt_data$weight             <- weight
-    fgt_data$povline            <- povline
-
+      fgt_data$pov_status         <- vapply(povline,
+                                            function(x) welfare < x,
+                                            logical(length(welfare)))
+      fgt_data$relative_distance  <- vapply(povline,
+                                            function(x) 1 - (welfare / x),
+                                            double(length(welfare)))
+      fgt_data$weight             <- weight
+      fgt_data$povline            <- povline
+    }
   }
 
   x <-
