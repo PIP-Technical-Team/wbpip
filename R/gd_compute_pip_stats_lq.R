@@ -482,8 +482,8 @@ old_value_at_lq <- function(x, A, B, C) {
 #'
 #' @return numeric
 #' @export
-old_gd_compute_mld_lq <- function(A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C)
+old_gd_compute_mld_lq <- function(A, B, C, key_values) {
+  x1 <- derive_lq(0.0005, A, B, C, key_values)
   gap <- 0L
   mld <- 0L
   if (x1 == 0) {
@@ -530,7 +530,7 @@ gd_compute_mld_lq <- function(A, B, C, key_values) {
 
   if (any(x[1:33] <= 0)) { # In case of negative values
     return(-1)
-  }else{
+  } else{
     mld <- mld + sum((log(x[1:999]) + log(x[2:1000]))*0.0005)
     return(-mld)
   }
