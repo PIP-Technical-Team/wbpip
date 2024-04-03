@@ -192,3 +192,35 @@ test_that("md_compute_median() takes lorenz argument", {
   expect_equal(out, 183.3333)
 
 })
+
+
+
+
+
+test_that("md_compute_cumulative_share", {
+
+  output <- md_compute_cumulative_share(
+    welfare    = md_GHI_2000_consumption$welfare,
+    weight     = md_GHI_2000_consumption$weight,
+    n          = 10
+  )
+  expect_length(
+    output,10
+  )
+  expect_true( # different quantile algorithms, so not precise
+    (output <= 1 & output >= 0) |> all()
+  )
+
+  output <- md_compute_cumulative_share(
+    welfare    = c(1:10),
+    weight     = rep(1, 10),
+    n          = 10
+  )
+  expect_equal(
+    output |> unname(),
+    fcumsum(1:10)/sum(1:10)
+  )
+
+
+})
+

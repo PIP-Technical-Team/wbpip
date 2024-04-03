@@ -247,3 +247,45 @@ md_compute_quantiles_c <- function(welfare,
   return(quantiles = quantiles)
 
 }
+
+
+
+#' Welfare share by quantile in micro data
+#'
+#' `md_welfare_share_at` returns the share of welfare held by an specified
+#' share of the population. You can select the number of quantiles (10 be default).
+#' This function makes use of `md_compute_lorenz`.
+#'
+#'
+#' @inheritParams md_quantile_values
+#'
+#'
+#' @return list with vector of share of welfare by quantiles
+#' @export
+#'
+#' @examples
+#' md_compute_cumulative_share(welfare = md_GHI_2000_consumption$welfare,
+#'                             weight = md_GHI_2000_consumption$weight)
+md_compute_cumulative_share <- function(
+    welfare    = NULL,
+    weight     = rep(1, length = length(welfare)),
+    n          = 10
+){
+
+  # ____________________________________________________________________________
+  # Calculations ---------------------------------------------------------------
+
+  # Get quantiles
+  lz     <- md_compute_lorenz(welfare = welfare,
+                              weight  = weight,
+                              nbins   = n)
+  output <- lz$lorenz_welfare
+
+  # ____________________________________________________________________________
+  # Format & Return -------------------------------------------------------------
+  output
+
+}
+
+
+
