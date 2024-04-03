@@ -146,7 +146,7 @@ sd_create_synth_vector <- function(welfare,
     # vderive_lb <- Vectorize(derive_lb, vectorize.args = "x")
     # welfare_s <- vderive_lb(weight_range, A, B, C) * mean
 
-    welfare_s <- derive_lb(weight_range, A, B, C, key_values = kv) * mean
+    welfare_s <- derive_lb(weight_range, A, B, C) * mean
 
     model_used <- "Beta Lorenz"
   }
