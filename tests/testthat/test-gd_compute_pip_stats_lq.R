@@ -998,10 +998,12 @@ test_that("gd_compute_gini_lq works as old_gd_compute_gini_lq",{
 })
 
 test_that("gd_compute_quantile_lq works as old_gd_compute_quantile_lq",{
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  benchmark <- old_gd_compute_quantile_lq(A,B,C,10, key_values = key_values)
 
-  benchmark <- old_gd_compute_quantile_lq(A,B,C,10)
-
-  out <- gd_compute_quantile_lq(A,B,C,10)
+  out <- gd_compute_quantile_lq(A,B,C,10, key_values = key_values)
 
   expect_equal(out,
                benchmark)

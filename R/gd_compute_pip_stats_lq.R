@@ -518,20 +518,20 @@ old_gd_compute_mld_lq <- function(A, B, C) {
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lq <- function(A, B, C) {
-  x1 <- derive_lq(0.0005, A, B, C)
+gd_compute_mld_lq <- function(A, B, C, key_values) {
+  x1 <- derive_lq(0.0005, A, B, C, key_values = key_values)
   mld <- 0L
   if (x1 != 0) {
     mld <- suppressWarnings(log(x1) * 0.001) # Needed to match test
   }
 
   xstep <- seq(0, 0.999, 0.001)
-  x <- derive_lq(xstep, A, B, C)
+  x <- derive_lq(xstep, A, B, C, key_values = key_values)
 
-  if (any(x[1:33]<=0)){ # In case of negative values
+  if (any(x[1:33] <= 0)) { # In case of negative values
     return(-1)
   }else{
-    mld <- mld + sum((log(x[1:999])+log(x[2:1000]))*0.0005)
+    mld <- mld + sum((log(x[1:999]) + log(x[2:1000]))*0.0005)
     return(-mld)
   }
 }
@@ -546,7 +546,7 @@ gd_compute_mld_lq <- function(A, B, C) {
 #'
 #' @return numeric
 #' @keywords internal
-old_gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+old_gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10, key_values) {
   vec <- vector(mode = "numeric", length = n_quantile)
   x1 <- 1 / n_quantile
   q <- 0L
@@ -573,13 +573,17 @@ old_gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
 #'
 #' @return numeric
 #' @keywords internal
-gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10) {
+gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10, key_values) {
 
   x   <- seq(from = 1/n_quantile, to = 1, by = 1/n_quantile)
 
-  vec <- diff(c(0,value_at_lq(x, A, B, C)))
+  vec <- diff(c(0, value_at_lq(x,
+                              A, B, C,
+                              key_values = key_values)))
 
-  vec[n_quantile] <- 1- value_at_lq(x[n_quantile-1], A, B, C) # Issue with the A and C parameters
+  vec[n_quantile] <- 1 - value_at_lq(x[n_quantile - 1],
+                                     A, B, C,
+                                     key_values = key_values) # Issue with the A and C parameters
 
   return(vec)
 }
