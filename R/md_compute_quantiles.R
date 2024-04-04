@@ -146,8 +146,17 @@ md_compute_quantiles <- function(welfare    = NULL,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (is.null(lorenz) ||
-      !n_quantile == nrow(lorenz)) {
+
+  estimate_lorenz <-
+    if (is.null(lorenz)) {
+      TRUE
+    } else if (!n_quantile == nrow(lorenz)) {
+      TRUE
+    } else {
+      FALSE
+    }
+
+  if (estimate_lorenz) {
     lorenz <- md_compute_lorenz(welfare = welfare,
                                 weight  = weight,
                                 nbins   = n_quantile)
