@@ -111,7 +111,7 @@ gd_compute_dist_stats <- function(welfare,
 #' @inheritParams gd_estimate_lq
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, key_values = key_values) {
+gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, key_values) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
 
