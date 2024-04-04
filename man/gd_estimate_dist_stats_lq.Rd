@@ -5,7 +5,7 @@
 \title{gd_estimate_dist_stats_lq
 Estimates distributional stats from Quadratic Lorenz fit}
 \usage{
-gd_estimate_dist_stats_lq(mean, p0, A, B, C, key_values = key_values)
+gd_estimate_dist_stats_lq(mean, p0, A, B, C, key_values)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
