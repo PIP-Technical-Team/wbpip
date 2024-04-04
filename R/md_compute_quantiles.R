@@ -161,12 +161,11 @@ md_compute_quantiles <- function(welfare    = NULL,
                                 weight  = weight,
                                 nbins   = n_quantile)
   }
-  quantiles <- lorenz$welfare
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  quantiles
+  lorenz$welfare
 
 }
 
@@ -277,22 +276,29 @@ md_compute_cumulative_share <- function(
     welfare     = NULL,
     weight      = rep(1, length = length(welfare)),
     n_quantile  = 10,
-    lorenz      = NULL
-){
+    lorenz      = NULL){
 
-  # ____________________________________________________________________________
-  # Calculations ---------------------------------------------------------------
-  if (is.null(lorenz) ||
-      !n_quantile == nrow(lorenz)) {
+  # ____________________________________________________________________
+  # Calculations --------------------------------------------------
+  estimate_lorenz <-
+    if (is.null(lorenz)) {
+      TRUE
+    } else if (!n_quantile == nrow(lorenz)) {
+      TRUE
+    } else {
+      FALSE
+    }
+
+  if (estimate_lorenz) {
     lorenz <- md_compute_lorenz(welfare = welfare,
                                 weight  = weight,
                                 nbins   = n_quantile)
   }
-  output <- lorenz$lorenz_welfare
 
-  # ____________________________________________________________________________
-  # Format & Return -------------------------------------------------------------
-  output
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  lorenz$lorenz_welfare
 
 }
 
