@@ -577,9 +577,10 @@ gd_compute_quantile_lq <- function(A, B, C, n_quantile = 10, key_values) {
 
   x   <- seq(from = 1/n_quantile, to = 1, by = 1/n_quantile)
 
-  vec <- diff(c(0, value_at_lq(x,
-                              A, B, C,
-                              key_values = key_values)))
+  vec <- c(0, value_at_lq(x,
+                          A, B, C,
+                          key_values = key_values)) |>
+    diff()
 
   vec[n_quantile] <- 1 - value_at_lq(x[n_quantile - 1],
                                      A, B, C,
