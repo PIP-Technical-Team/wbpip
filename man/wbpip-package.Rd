@@ -25,6 +25,7 @@ Authors:
   \item Aleksander Eilertsen \email{aeilertsen@worldbank.org}
   \item R.Andrés Castañeda \email{acastanedaa@worldbank.org}
   \item Zander Prinsloo \email{zprinsloo@worldbank.org}
+  \item Diana Carolina Garcia Rojas \email{dgarciarojas@worldbank.org}
 }
 
 Other contributors:
