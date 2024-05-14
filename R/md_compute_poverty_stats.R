@@ -129,6 +129,7 @@ md_compute_poverty_stats <- function(
 #'                weight  = weight,
 #'                povline = 5)
 #'
+#' # Multiple values of alpha using the return_data argument
 #' fgt <- md_compute_fgt(welfare     = welfare,
 #'                       weight      = weight,
 #'                       povline     = 5,
@@ -139,6 +140,12 @@ md_compute_poverty_stats <- function(
 #'                  return_data =  TRUE)
 #'
 #' c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+#'
+#' # multiple poverty lines
+#' dtgft <- md_compute_fgt(welfare = welfare,
+#' weight  = weight,
+#' povline = seq(from = 1, to = 10, by = .1))
+#' attributes(dtgft)
 md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
@@ -157,10 +164,13 @@ md_compute_fgt <- function(fgt_data        = NULL,
   }
   if (is.null(fgt_data)) {
     if (is.null(welfare) || is.null(povline)) {
-      fgt_data <- NA_real_
+      stop("welfare and povline can't be NULL")
     } else {
       fgt_data        <- vector("list", length = 4)
-      names(fgt_data) <- c("povline","pov_status", "relative_distance", "weight")
+      names(fgt_data) <- c("povline",
+                           "pov_status",
+                           "relative_distance",
+                           "weight")
 
       fgt_data$pov_status         <- vapply(povline,
                                             function(x) welfare < x,
@@ -173,6 +183,7 @@ md_compute_fgt <- function(fgt_data        = NULL,
     }
   }
 
+  # estimate FGT
   x <-
     ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
     fmean(w = fgt_data$weight)
@@ -186,12 +197,8 @@ md_compute_fgt <- function(fgt_data        = NULL,
     return(fgt_data)
   }
 
-  if (length(povline) > 1) {
-    names(x) <- paste0("povline_",seq(length(povline)))
-    x
-  }else{
-    x
-  }
+  attr(x,"povline_value") <- fgt_data$povline
+  x
 
 }
 
