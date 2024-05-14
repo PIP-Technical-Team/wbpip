@@ -122,6 +122,7 @@ md_compute_fgt(welfare = welfare,
                weight  = weight,
                povline = 5)
 
+# Multiple values of alpha using the return_data argument
 fgt <- md_compute_fgt(welfare     = welfare,
                       weight      = weight,
                       povline     = 5,
@@ -132,4 +133,27 @@ fgt <- md_compute_fgt(welfare     = welfare,
                  return_data =  TRUE)
 
 c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+
+# multiple poverty lines
+dtgft <- md_compute_fgt(welfare = welfare,
+weight  = weight,
+povline = seq(from = 1, to = 10, by = .1))
+attributes(dtgft)
+
+
+fgt <- md_compute_fgt(welfare     = welfare,
+                      weight      = weight,
+                      povline     = seq(from = 1, to = 10, by = .1),
+                      return_data =  TRUE) |>
+  md_compute_fgt(alpha = 1,
+                 return_data =  TRUE) |>
+  md_compute_fgt(alpha = 2,
+                 return_data =  TRUE)
+
+
+
+dt_fgt <- data.table(povline = fgt$povline,
+                     FGT0    = fgt$FGT0,
+                     FGT1    = fgt$FGT1,
+                     FGT2    = fgt$FGT2)
 }

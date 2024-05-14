@@ -146,6 +146,23 @@ md_compute_poverty_stats <- function(
 #' weight  = weight,
 #' povline = seq(from = 1, to = 10, by = .1))
 #' attributes(dtgft)
+#'
+#'
+#' fgt <- md_compute_fgt(welfare     = welfare,
+#'                       weight      = weight,
+#'                       povline     = seq(from = 1, to = 10, by = .1),
+#'                       return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 1,
+#'                  return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 2,
+#'                  return_data =  TRUE)
+#'
+#'
+#'
+#' dt_fgt <- data.table(povline = fgt$povline,
+#'                      FGT0    = fgt$FGT0,
+#'                      FGT1    = fgt$FGT1,
+#'                      FGT2    = fgt$FGT2)
 md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
