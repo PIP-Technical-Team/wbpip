@@ -43,8 +43,6 @@ prod_compute_pip_stats <- function(welfare,
       default_ppp = default_ppp,
       ppp = ppp
     ))
-    out <- data.table::rbindlist(res, fill = TRUE)
-    return(out)
   } else if (distribution_type %in% c("group", "aggregate")) {
     res <- lapply(povline, \(x) prod_gd_compute_pip_stats(
       welfare = welfare,
@@ -58,9 +56,10 @@ prod_compute_pip_stats <- function(welfare,
       ppp = ppp,
       p0 = p0
     ))
-    out <- data.table::rbindlist(res, fill = TRUE)
-    return(out)
   } else {
     return(NA_real_)
   }
+
+  out <- data.table::rbindlist(res, fill = TRUE)
+  return(as.list(out))
 }
