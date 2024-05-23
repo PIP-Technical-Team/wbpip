@@ -31,9 +31,9 @@ prod_compute_pip_stats <- function(welfare,
   distribution_type <- match.arg(distribution_type)
 
   if (distribution_type %in% c("micro", "imputed")) {
-    out <- prod_md_compute_pip_stats(
+    res <- lapply(povline, \(x) prod_md_compute_pip_stats(
       welfare = welfare,
-      povline = povline,
+      povline = x,
       population = population,
       requested_mean = requested_mean,
       svy_mean_lcu = svy_mean_lcu,
@@ -42,13 +42,13 @@ prod_compute_pip_stats <- function(welfare,
       popshare = popshare,
       default_ppp = default_ppp,
       ppp = ppp
-    )
-
+    ))
+    out <- data.table::rbindlist(res, fill = TRUE)
     return(out)
   } else if (distribution_type %in% c("group", "aggregate")) {
-    out <- prod_gd_compute_pip_stats(
+    res <- lapply(povline, \(x) prod_gd_compute_pip_stats(
       welfare = welfare,
-      povline = povline,
+      povline = x,
       population = population,
       requested_mean = requested_mean,
       svy_median_lcu = svy_median_lcu,
@@ -57,8 +57,8 @@ prod_compute_pip_stats <- function(welfare,
       default_ppp = default_ppp,
       ppp = ppp,
       p0 = p0
-    )
-
+    ))
+    out <- data.table::rbindlist(res, fill = TRUE)
     return(out)
   } else {
     return(NA_real_)
