@@ -156,4 +156,13 @@ dt_fgt <- data.table(povline = fgt$povline,
                      FGT0    = fgt$FGT0,
                      FGT1    = fgt$FGT1,
                      FGT2    = fgt$FGT2)
+\dontrun {
+ md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+                  weight = c(0.1041,0.1411,0.1792,0.2182),
+                  povline = 1.9)
+
+md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+                 weight = c(0.1041,0.1411,0.1792,0.2182),
+                 povline = c(1.9, 2.5))
+}
 }
