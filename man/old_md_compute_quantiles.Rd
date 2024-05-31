@@ -9,7 +9,7 @@ old_md_compute_quantiles(
   lweight,
   percentile,
   n_quantile = 10,
-  tolerance = 0.000001
+  tolerance = 1e-06
 )
 }
 \arguments{
