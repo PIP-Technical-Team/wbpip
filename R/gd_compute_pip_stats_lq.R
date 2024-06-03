@@ -1139,7 +1139,7 @@ old_gd_compute_fit_lq <- function(welfare,
 #'   `regres_lq()$coef[3]`.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 gd_compute_fit_lq <- function(welfare,
                               population,
                               headcount,
