@@ -59,7 +59,5 @@ prod_compute_pip_stats <- function(welfare,
   } else {
     return(NA_real_)
   }
-
-  out <- data.table::rbindlist(res, fill = TRUE)
-  return(as.list(out))
+  return(res)
 }
