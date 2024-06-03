@@ -33,7 +33,7 @@ prod_compute_pip_stats <- function(welfare,
   if (distribution_type %in% c("micro", "imputed")) {
     res <- prod_md_compute_pip_stats(
       welfare = welfare,
-      povline = x,
+      povline = povline,
       population = population,
       requested_mean = requested_mean,
       svy_mean_lcu = svy_mean_lcu,
@@ -46,7 +46,7 @@ prod_compute_pip_stats <- function(welfare,
   } else if (distribution_type %in% c("group", "aggregate")) {
     res <- prod_gd_compute_pip_stats(
       welfare = welfare,
-      povline = x,
+      povline = povline,
       population = population,
       requested_mean = requested_mean,
       svy_median_lcu = svy_median_lcu,
