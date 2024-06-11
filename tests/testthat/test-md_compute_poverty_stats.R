@@ -239,9 +239,17 @@ test_that("md_compute_headcount works", {
     povline      = povline_lcu
   )
 
+  expect_equal(attributes(out1) |>
+                 names(),
+               'povline_value')
+
+  expect_equal(attributes(out1)$povline_value, povline_lcu)
+
+  #match compute_poverty_stats in povcalnet
   expect_equal(out1,
                0.7333513,
-               tolerance = 1e-6) #match compute_poverty_stats in povcalnet
+               tolerance = 1e-6,
+               ignore_attr = "povline_value")
 
 
   welf <- c(1:10)
@@ -255,7 +263,8 @@ test_that("md_compute_headcount works", {
 
 
   expect_equal(
-    out2, 0.4
+    out2, 0.4,
+    ignore_attr = "povline_value"
   )
 
 })
@@ -269,7 +278,8 @@ test_that("md_compute_headcount works with NULL for weight_pov and weight_total"
   )
   expect_equal(out,
                0.7333513,
-               tolerance = 1e-6) #match compute_poverty_stats in povcalnet
+               tolerance = 1e-6,
+               ignore_attr = "povline_value") #match compute_poverty_stats in povcalnet
 
 
 })
@@ -290,7 +300,8 @@ test_that("md_compute_pov_gap works", {
 
   expect_equal(out,
                0.3957584,
-               tolerance = 1e-6) # match compute_poverty_stats in povcalnet
+               tolerance = 1e-6,
+               ignore_attr = "povline_value") # match compute_poverty_stats in povcalnet
 
 })
 
@@ -306,7 +317,8 @@ test_that("md_compute_pov_gap works with NULLs", {
 
   expect_equal(out,
                0.3957584,
-               tolerance = 1e-6) #match compute_poverty_stats in povcalnet
+               tolerance = 1e-6,
+               ignore_attr = "povline_value") #match compute_poverty_stats in povcalnet
 
 })
 
@@ -324,7 +336,8 @@ test_that("md_compute_pov_severity works", {
 
   expect_equal(out,
                0.2534849,
-               tolerance = 1e-6) #match compute_poverty_stats in povcalnet
+               tolerance = 1e-6,
+               ignore_attr = "povline_value") #match compute_poverty_stats in povcalnet
 })
 
 
@@ -338,7 +351,9 @@ test_that("md_compute_watts works", {
     povline           = povline_lcu
   )
 
-  expect_equal(out, 0.6899868, tolerance = 1e-4) #match compute_poverty_stats in povcalnet
+  expect_equal(out, 0.6899868,
+               tolerance = 1e-4,
+               ignore_attr = "povline_value") #match compute_poverty_stats in povcalnet
 
 })
 
