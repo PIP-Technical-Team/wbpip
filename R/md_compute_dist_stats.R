@@ -35,10 +35,12 @@ md_compute_dist_stats <- function(welfare,
 
   share_quant <- md_compute_quantiles_share(welfare    = welfare,
                                             weight     = weight,
-                                            n_quantile = n_quantile)
+                                            n_quantile = n_quantile,
+                                            lorenz     = lorenz)
 
   median <- md_compute_median(welfare = welfare,
-                              weight  = weight)
+                              weight  = weight,
+                              lorenz  = lorenz)
 
   gini <- md_compute_gini(welfare = welfare,
                           weight  = weight)
