@@ -10,7 +10,7 @@ sd_create_synth_vector(
   mean,
   pop = NULL,
   p0 = 0.5,
-  nobs = 100000,
+  nobs = 1e+05,
   selected_model = NULL,
   verbose = FALSE
 )
