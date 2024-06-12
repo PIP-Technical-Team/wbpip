@@ -1,7 +1,11 @@
 # Constants
 dl <- readRDS(test_path("testdata", "synthetic-microdata.RDS"))
 v <- c(0.4667890, 0.2457807, 0.3102726, 0.2928000, 0.4392192)
-benchmark_old <- c(0.46977696, 0.24659578, 0.31082372, 0.29347875, 0.44266146)
+benchmark_old <- c(0.46977696, # old values from polarization function
+                   0.24659578, #    using dl, this was previously skipped
+                   0.31082372, #    but has still been shown in PIP
+                   0.29347875,
+                   0.44266146)
 
 # Tests
 test_that("md_compute_polarization() computations are correct", {
@@ -41,3 +45,32 @@ test_that("md_compute_polarization() computations are correct", {
   expect_equal(res, benchmark_old, tolerance = 1.5e-7)
 
 })
+
+
+test_that("new benchmark for polarization is correct", {
+
+  welf_new   <- 1:1000
+  weight_new <- rep(1, 1000)
+  gini_new   <- md_compute_gini(welfare = welf_new,
+                                weight  = weight_new) # 0.333
+  med_new    <- fmedian(x = welf_new,
+                        w = weight_new)
+  mu_new     <- fmean(x = welf_new,
+                      w = weight_new)
+  muL_new    <- fmean(x = welf_new[welf_new < med_new],
+                      w = weight_new[welf_new < med_new])
+  mustar_new <- mu_new*(1 - gini_new)
+
+  res <- md_compute_polarization(welfare = welf_new,
+                                 weight  = weight_new,
+                                 gini    = gini_new,
+                                 mean    = mu_new,
+                                 median  = med_new)
+
+  benchmark_new <- 2*(mustar_new - muL_new)/med_new
+
+
+
+  expect_equal(res, benchmark_new, tolerance = 1.5e-7)
+})
+
