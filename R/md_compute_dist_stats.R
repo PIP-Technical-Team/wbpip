@@ -8,7 +8,7 @@
 #' @param lorenz data.frame: A table with points on the Lorenz curve. Output of
 #'   `md_compute_lorenz()`. Optional.
 #' @param nbins numeric: number of points on the Lorenz curve. Optional. Only
-#'   used if `lorenz` is NULL
+#'   used if `lorenz` is NULL. Default is 10.
 #' @param n_quantile numeric: Number of quantiles for which share of total
 #'   income is desired. It can't be larger that the total number of percentiles
 #'   in the Lorenz curve provided by the user. Default is 10.
@@ -19,7 +19,7 @@
 md_compute_dist_stats <- function(welfare,
                                   weight,
                                   mean       = NULL,
-                                  nbins      = NULL,
+                                  nbins      = 10,
                                   lorenz     = NULL,
                                   n_quantile = 10) {
   if (is.null(mean)) {
@@ -35,10 +35,12 @@ md_compute_dist_stats <- function(welfare,
 
   share_quant <- md_compute_quantiles_share(welfare    = welfare,
                                             weight     = weight,
-                                            n_quantile = n_quantile)
+                                            n_quantile = n_quantile,
+                                            lorenz     = lorenz)
 
   median <- md_compute_median(welfare = welfare,
-                              weight  = weight)
+                              weight  = weight,
+                              lorenz  = lorenz)
 
   gini <- md_compute_gini(welfare = welfare,
                           weight  = weight)
