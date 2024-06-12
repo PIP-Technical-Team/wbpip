@@ -1,6 +1,7 @@
 # Constants
 dl <- readRDS(test_path("testdata", "synthetic-microdata.RDS"))
 v <- c(0.4667890, 0.2457807, 0.3102726, 0.2928000, 0.4392192)
+benchmark_old <- c(0.46977696, 0.24659578, 0.31082372, 0.29347875, 0.44266146)
 
 # Tests
 test_that("md_compute_polarization() computations are correct", {
@@ -35,6 +36,8 @@ test_that("md_compute_polarization() computations are correct", {
     )
     return(pol)
   })
-  skip("Watts Index computation refactoring")
-  expect_equal(res, v, tolerance = 1.5e-7)
+  #skip("Watts Index computation refactoring")
+  #expect_equal(res, v, tolerance = 1.5e-7)
+  expect_equal(res, benchmark_old, tolerance = 1.5e-7)
+
 })
