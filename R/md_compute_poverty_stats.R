@@ -24,7 +24,6 @@ md_compute_poverty_stats <- function(
     povline_lcu
 ) {
 
-
   # ______________________________________________________________________
   # FGT measures
   # ______________________________________________________________________
@@ -64,14 +63,13 @@ md_compute_poverty_stats <- function(
 
 
 
-
 #' Compute FGT poverty family measures and Watts index for Microdata
 #'
 #' @param fgt_data list of previously computed fgt calculations
 #' @param welfare numeric vector with either income or consumption
 #' @param weight numeric vector with sample weights. Default is 1.
 #' @param povline poverty line. Default is the half the weighted median of
-#'   `welfare`
+#'   `welfare`. Allows for vector.
 #' @param alpha numeric. Alpha parameter of FGT measures. if `0`, the default,
 #'   it estimates the poverty headcount. If `1`, the poverty gap, and if `2`,
 #'   the poverty severity. In practice, you can use higher levels of `alpha`,
@@ -116,7 +114,7 @@ md_compute_poverty_stats <- function(
 #'
 #'
 #' @return either a vector with the fgt measure selected in argument `alpha` or
-#'   a list of dgt estimations if `return_data` is `TRUE`
+#'   a list of fgt estimations if `return_data` is `TRUE`
 #' @export
 #'
 #' @examples
@@ -131,6 +129,7 @@ md_compute_poverty_stats <- function(
 #'                weight  = weight,
 #'                povline = 5)
 #'
+#' # Multiple values of alpha using the return_data argument
 #' fgt <- md_compute_fgt(welfare     = welfare,
 #'                       weight      = weight,
 #'                       povline     = 5,
@@ -141,6 +140,27 @@ md_compute_poverty_stats <- function(
 #'                  return_data =  TRUE)
 #'
 #' c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+#'
+#' # multiple poverty lines
+#' dtgft <- md_compute_fgt(welfare = welfare,
+#' weight  = weight,
+#' povline = seq(from = 1, to = 10, by = .1))
+#' attributes(dtgft)
+#'
+#'
+#' fgt <- md_compute_fgt(welfare     = welfare,
+#'                       weight      = weight,
+#'                       povline     = seq(from = 1, to = 10, by = .1),
+#'                       return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 1,
+#'                  return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 2,
+#'                  return_data =  TRUE)
+#'
+#' dt_fgt <- data.frame(povline = fgt$povline,
+#'                      FGT0    = fgt$FGT0,
+#'                      FGT1    = fgt$FGT1,
+#'                      FGT2    = fgt$FGT2)
 md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
@@ -148,34 +168,37 @@ md_compute_fgt <- function(fgt_data        = NULL,
                            alpha           = 0,
                            return_data     = FALSE,
                            include_povline = FALSE
-                           ) {
-
-    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ## Defenses --------
-    if (is.null(fgt_data) && is.null(welfare) ||
-        !is.null(fgt_data) && !is.null(welfare)) {
-      cli::cli_abort("You must provide either {.arg fgt_data} of {.arg welfare}")
-    }
-  stopifnot(length(povline) == 1) # should we vectorize this?
+) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # computations   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
   if (include_povline) {
     povline <- povline + 1e-10
   }
   if (is.null(fgt_data)) {
-    fgt_data <- vector("list", length = 3)
-    names(fgt_data) <- c("pov_status", "relative_distance", "weight")
+    if (is.null(welfare) || is.null(povline)) {
+      stop("welfare and povline can't be NULL")
+    } else {
+      fgt_data        <- vector("list", length = 4)
+      names(fgt_data) <- c("povline",
+                           "pov_status",
+                           "relative_distance",
+                           "weight")
 
-    fgt_data$pov_status         <-  welfare < povline
-    fgt_data$relative_distance  <- 1 - (welfare / povline)
-    fgt_data$weight             <- weight
-
+      fgt_data$pov_status         <- vapply(povline,
+                                            function(x) welfare < x,
+                                            logical(length(welfare)))
+      fgt_data$relative_distance  <- vapply(povline,
+                                            function(x) 1 - (welfare / x),
+                                            double(length(welfare)))
+      fgt_data$weight             <- weight
+      fgt_data$povline            <- povline
+    }
   }
 
+  # estimate FGT
   x <-
     ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
     fmean(w = fgt_data$weight)
@@ -184,12 +207,14 @@ md_compute_fgt <- function(fgt_data        = NULL,
   # Return   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (return_data) {
-    fgt_name <- paste0("FGT",alpha)
+    fgt_name <- paste0("FGT", alpha)
     fgt_data[[fgt_name]] <- x
     return(fgt_data)
   }
 
+  attr(x,"povline_value") <- fgt_data$povline
   x
+
 }
 
 #' @rdname md_compute_fgt
@@ -252,25 +277,25 @@ md_compute_watts <- function(
     povline
 ) {
 
-  ss_args <- environment() |>
-    as.list()
-
-  null_args <- sapply(ss_args, is.null)
-
-  if (any(null_args)) {
-    cli::cli_abort("{.or {.arg  {names(ss_args)}}} can't be NULL")
-  }
+  # ss_args <- environment() |>
+  #   as.list()
+  #
+  # null_args <- sapply(ss_args, is.null)
+  #
+  # if (any(null_args)) {
+  #   cli::cli_abort("{.or {.arg  {names(ss_args)}}} can't be NULL")
+  # }
 
 
   # ______________________________________________________________________
   # Computations
   # ______________________________________________________________________
   pov_status         <- (welfare < povline)
-  weight_total       <- fsum(weight)
+  weight_total       <- sum(weight)
   keep               <- welfare > 0 & pov_status
   w_gt_zero          <- welfare[keep]
   sensitive_distance <- log(povline / w_gt_zero)
-  watts              <- fsum(sensitive_distance * weight[keep])/weight_total
+  watts              <- sum(sensitive_distance * weight[keep])/weight_total
 
   # Handle cases where Watts is numeric(0)
   if (identical(watts, numeric(0))) {

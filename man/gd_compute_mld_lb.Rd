@@ -4,11 +4,9 @@
 \alias{gd_compute_mld_lb}
 \title{Computes MLD from Lorenz beta fit}
 \usage{
-gd_compute_mld_lb(dd, A, B, C)
+gd_compute_mld_lb(A, B, C)
 }
 \arguments{
-\item{dd}{numeric: \strong{TO BE DOCUMENTED}.}
-
 \item{A}{numeric: Lorenz curve coefficient.}
 
 \item{B}{numeric: Lorenz curve coefficient.}

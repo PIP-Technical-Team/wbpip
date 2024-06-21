@@ -4,10 +4,10 @@
 \alias{derive_lq}
 \title{Returns the first derivative of the quadratic Lorenz}
 \usage{
-derive_lq(x, A, B, C)
+derive_lq(x, A, B, C, key_values)
 }
 \arguments{
-\item{x}{numeric: Point on curve.}
+\item{x}{numeric: Point on curve. Allow for vectors.}
 
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[1]}.}
@@ -17,6 +17,9 @@ derive_lq(x, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 numeric

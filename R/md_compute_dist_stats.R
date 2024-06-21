@@ -8,7 +8,7 @@
 #' @param lorenz data.frame: A table with points on the Lorenz curve. Output of
 #'   `md_compute_lorenz()`. Optional.
 #' @param nbins numeric: number of points on the Lorenz curve. Optional. Only
-#'   used if `lorenz` is NULL
+#'   used if `lorenz` is NULL. Default is 10.
 #' @param n_quantile numeric: Number of quantiles for which share of total
 #'   income is desired. It can't be larger that the total number of percentiles
 #'   in the Lorenz curve provided by the user. Default is 10.
@@ -16,50 +16,51 @@
 #' wbpip:::md_compute_dist_stats(welfare = 1:2000, weight = rep(1, 2000))
 #' @return data.frame
 #' @keywords internal
-md_compute_dist_stats <- function(welfare, weight,
-                                  mean = NULL,
-                                  nbins = NULL,
-                                  lorenz = NULL,
+md_compute_dist_stats <- function(welfare,
+                                  weight,
+                                  mean       = NULL,
+                                  nbins      = 10,
+                                  lorenz     = NULL,
                                   n_quantile = 10) {
   if (is.null(mean)) {
-    mean <- collapse::fmean(x = welfare, w = weight)
+    mean <- fmean(x = welfare,
+                  w = weight)
   }
 
   if (is.null(lorenz)) {
-    lorenz <- md_compute_lorenz(
-      welfare = welfare, weight = weight,
-      nbins = nbins
-    )
+    lorenz <- md_compute_lorenz(welfare = welfare,
+                                weight  = weight,
+                                nbins   = nbins)
   }
 
-  quantiles <- md_compute_quantiles(
-    lwelfare = lorenz[["lorenz_welfare"]],
-    lweight = lorenz[["lorenz_weight"]],
-    percentile = lorenz[["welfare"]]
-  )
-  median <- quantiles[["median"]]
+  share_quant <- md_compute_quantiles_share(welfare    = welfare,
+                                            weight     = weight,
+                                            n_quantile = n_quantile,
+                                            lorenz     = lorenz)
 
-  gini <- md_compute_gini(
-    welfare = welfare, weight = weight
-  )
+  median <- md_compute_median(welfare = welfare,
+                              weight  = weight,
+                              lorenz  = lorenz)
 
-  mld <- md_compute_mld(
-    welfare = welfare, weight = weight,
-    mean = mean
-  )
+  gini <- md_compute_gini(welfare = welfare,
+                          weight  = weight)
 
-  polarization <- md_compute_polarization(
-    welfare = welfare, weight = weight,
-    gini = gini, mean = mean,
-    median = median
-  )
+  mld <- md_compute_mld(welfare = welfare,
+                        weight  = weight,
+                        mean    = mean)
+
+  polarization <- md_compute_polarization(welfare = welfare,
+                                          weight  = weight,
+                                          gini    = gini,
+                                          mean    = mean,
+                                          median  = median)
 
   return(list(
-    mean = mean,
-    median = median,
-    gini = gini,
+    mean         = mean,
+    median       = median,
+    gini         = gini,
     polarization = polarization,
-    mld = mld,
-    quantiles = quantiles[["quantiles"]]
-  ))
+    mld          = mld,
+    quantiles    = share_quant))
+
 }
