@@ -1,4 +1,4 @@
-# wbpip (development version)
+# wbpip 0.1.2
 
 ## main changes
 1. Key values: removed as individual arguments, instead supplied as one list using argument `key_values` created using `gd_lq_key_values`
