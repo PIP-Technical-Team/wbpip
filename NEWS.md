@@ -23,7 +23,7 @@
 
 # wbpip 0.1.2
 
-# wbpip 0.1.2
+No relevant changes to the package in this version.
 
 # wbpip 0.1.1
 
