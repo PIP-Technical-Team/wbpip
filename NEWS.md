@@ -1,4 +1,5 @@
-# wbpip 0.1.2
+# wbpip 0.1.3
+
 
 ## main changes
 1. Key values: removed as individual arguments, instead supplied as one list using argument `key_values` created using `gd_lq_key_values`
@@ -21,6 +22,7 @@
 * Exported many additional functions.
 * Some functions have been improved/vectorized. The new functions have taken the names of the old functions, and the old functions have the prefix "old_"
 
+# wbpip 0.1.2
 
 # wbpip 0.1.1
 
