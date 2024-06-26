@@ -1,1 +1,11 @@
 url: https://pip-technical-team.github.io/wbpip
+
+template:
+  bootstrap: 5
+  bottswatch: simplex
+  bslib:
+    primary: "#007BA7"
+
+development:
+  mode: auto
+
