@@ -9,3 +9,13 @@ template:
 development:
   mode: auto
 
+navbar:
+  bg: primary
+  structure:
+    right:
+    - github
+  components:
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/PIP-Technical-Team/wbpip
+
