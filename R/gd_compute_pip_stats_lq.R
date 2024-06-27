@@ -894,7 +894,8 @@ gd_compute_headcount_lq <- function(
     B,
     key_values
 ) {
-
+  # This is vectorized provided everything here is always a single number
+  # including everything in key_values
   #   _____________________________________________________________________
   #   Compute headcount
   #   _____________________________________________________________________
@@ -927,28 +928,28 @@ gd_compute_pov_gap_lq <- function(mean,
                                   B,
                                   C,
                                   key_values) {
-
+  # For vectorization purpose, check length of z, hc and pov_gap to be equal
+  if(length(povline) != length(headcount)) {
+    cli::cli_abort("Please ensure that `povline` and `headcount` are of same length")
+  }
   #   _____________________________________________________________________
   #   Computations
   #   _____________________________________________________________________
+  inds <- headcount >= 0
+  hc <- headcount[inds]
+  u    <- mean / povline
 
-  if (headcount < 0 ) {
-    pov_gap <- 0L
-  } else {
+  hc_lq <- value_at_lq(hc, A, B, C,
+                       key_values)
 
-    u    <- mean / povline
-
-    hc_lq <- value_at_lq(headcount, A, B, C,
-                         key_values)
-
-    # Poverty gap index (P.pg)
-    pov_gap <- headcount - (u * hc_lq)
-  }
-
+  # Poverty gap index (P.pg)
+  pov_gap <- hc - (u[inds] * hc_lq)
   #   _____________________________________________________________________
   #   Return
   #   _____________________________________________________________________
-  return(pov_gap)
+  result <- numeric(length(headcount))
+  result[inds] <- pov_gap
+  return(result)
 
 }
 
@@ -974,6 +975,15 @@ gd_compute_pov_severity_lq <- function(
     C,
     key_values
 ) {
+
+  # For vectorization purpose, check length of z, hc and pov_gap to be equal
+  if(!
+     (length(povline) == length(headcount) &&
+     length(headcount) == length(pov_gap))
+     ) {
+      cli::cli_abort("Please ensure that `povline`, `headcount` and `pov_gap` are of same length")
+
+  }
 
   # ________________________________________________________________________
   # Define objects
