@@ -626,6 +626,16 @@ gd_compute_watts_lq <- function(headcount,
     length(mean) == 1
   })
 
+  # This function is complex to vectorize so using mapply to perform the vectorization.
+  # It is assumed that the arguments mean, dd, and key_values would remain of constant length
+  res <- mapply(\(h, p, a, b, c) gd_compute_watts_lq_single(h, mean, p, dd, a, b, c, key_values),
+         headcount, povline, A, B, C)
+  return(res)
+}
+
+gd_compute_watts_lq_single <- function(headcount, mean, povline, dd,
+                                       A, B, C, key_values) {
+
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -672,7 +682,6 @@ gd_compute_watts_lq <- function(headcount,
     return(watts)
   }
 }
-
 
 #' Computes polarization index from parametric Lorenz fit
 #'
