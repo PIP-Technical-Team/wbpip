@@ -991,6 +991,10 @@ funcD <- function(x, mean, povline, A, B, C) {
 #' @return numeric
 #' @noRd
 rtNewt <- function(mean, povline, A, B, C) {
+  sapply(povline, function(x) rtNewt_calc(mean, x, A, B, C))
+}
+
+rtNewt_calc <- function(mean, povline, A, B, C) {
   x1 <- 0L
   x2 <- 1L
   xacc <- 1e-4

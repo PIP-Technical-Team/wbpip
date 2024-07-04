@@ -171,6 +171,25 @@ test_that("rtNewt returns expected results", {
   expect_equal(out, benchmarck)
 })
 
+test_that("rtNewt returns expected results for a vectorized povline", {
+  # Constants
+  mean <- 51.5660557757944
+  povline <- c(57.791666666666664, 59)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  benchmarck <- c(0.718339386776914, 0.7312734)
+
+  out <- rtNewt(
+    mean = 51.5660557757944,
+    povline = povline,
+    A = A,
+    B = B,
+    C = C
+  )
+  expect_equal(out, benchmarck)
+})
+
 test_that("GAMMLN returns expected results", {
   # Test1
   xx <- 0.88410180773089975
