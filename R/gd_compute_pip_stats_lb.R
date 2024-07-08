@@ -709,6 +709,7 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #'
 #' @return numeric
 #' @noRd
+
 BETAI <- function(a, b, x) {
   if (!is.na(x)) {
     bt <- betai <- 0
@@ -897,6 +898,11 @@ gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, 
 #' @return numeric
 #' @noRd
 rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
+  vapply(povline, function(x) rtSafe_calc(x1, x2, xacc, mean, x, A, B, C), numeric(1L))
+}
+
+
+rtSafe_calc <- function(x1, x2, xacc, mean, povline, A, B, C) {
   funcCall1 <- funcD(x1, mean, povline, A, B, C)
   fl <- funcCall1[[1]]
 
@@ -959,7 +965,6 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 
   return(NA_real_)
 }
-
 #' funcD
 #'
 #' **TO BE DOCUMENTED**

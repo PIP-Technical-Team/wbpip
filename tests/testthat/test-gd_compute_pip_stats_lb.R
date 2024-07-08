@@ -127,6 +127,31 @@ test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
   )
 })
 
+test_that("rtSafe works for vectorized povline", {
+  # Constants
+  x1 <- 0.0001
+  x2 <- 0.9999
+  xacc <- 0.0001
+  mean <- 51.5660557757944
+  povline <- c(57.791666666666664, 59)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  benchmarck <- c(0.71833938360214233, 0.7312770)
+
+  out <- rtSafe(
+    x1 = x1,
+    x2 = x2,
+    xacc = xacc,
+    povline = povline,
+    mean = mean,
+    A = A,
+    B = B,
+    C = C
+  )
+  expect_equal(round(out, 5), round(benchmarck, 5))
+})
+
 test_that("funcD returns expected results", {
   # Constants
   x <- 0.0001
