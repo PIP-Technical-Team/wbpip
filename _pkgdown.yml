@@ -5,6 +5,7 @@ template:
   bottswatch: simplex
   bslib:
     primary: "#6CB4EE"
+    type: light
 
 development:
   mode: auto
