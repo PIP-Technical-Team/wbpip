@@ -4,7 +4,7 @@ template:
   bootstrap: 5
   bottswatch: simplex
   bslib:
-    primary: "#6CB4EE"
+    primary: "#76ABDF"
 
 development:
   mode: auto
