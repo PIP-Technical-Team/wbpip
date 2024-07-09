@@ -1,19 +1,15 @@
-url: https://pip-technical-team.github.io/wbpip
-
+url: https://pip-technical-team.github.io/wbpip/
 template:
   bootstrap: 5
   bottswatch: simplex
   bslib:
-    primary: "#76ABDF"
-
+    primary: '#76ABDF'
 development:
   mode: auto
-
 navbar:
   bg: primary
   structure:
-    right:
-    - github
+    right: github
   components:
     github:
       icon: fab fa-github fa-lg
