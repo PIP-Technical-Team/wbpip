@@ -873,3 +873,14 @@ test_that("derive_lb can handle NA values",{
                      Inf), tolerance = 1e-5 )
 
 })
+
+
+test_that("GAMMLN works as expected", {
+  expect_equal(GAMMLN(10), 12.80183, tolerance = 1e-5)
+  expect_equal(GAMMLN(12), 17.50231, tolerance = 1e-5)
+})
+
+test_that("GAMMLN works for vectors as expected", {
+  expect_equal(GAMMLN(c(10, 12, -12)), c(12.80183,17.50231, NA), tolerance = 1e-5)
+})
+

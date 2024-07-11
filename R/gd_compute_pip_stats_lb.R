@@ -672,9 +672,7 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     C = C
   )
   # Check headcount invalidity conditions
-  if (headcount < 0 | is.na(headcount)) {
-    return(NA_real_)
-  }
+  condition0 <- headcount < 0 | is.na(headcount)
 
   condition1 <- is.na(BETAI(
     a = 2 * B - 1,
@@ -691,12 +689,8 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     b = 2 * C - 1,
     x = headcount
   ))
-
-  if (condition1 | condition2 | condition3) {
-    return(NA_real_)
-  }
-
-  return(headcount)
+  # return
+  ifelse(condition0 | condition1 | condition2 | condition3, NA_real_, headcount)
 }
 
 #' BETAI
@@ -748,20 +742,24 @@ GAMMLN <- function(xx) {
   fpf <- 5.5
   x <- xx - 1
   tmp <- x + fpf
-  if (tmp <= 0) {
-    return(NA_real_)
-  }
+  result <- numeric(length(xx))
+  idx1 <- tmp <= 0
+  result[idx1] <- NA_real_
+  tmp <- tmp[!idx1]
+  x <- x[!idx1]
 
   tmp <- (x + 0.5) * log(tmp) - tmp
-  # ser <- 1L
-  x <-  c(x + 1:6)
-  ser <- sum(cof / x) + 1
 
-  if (stp * ser <= 0) {
-    return(NA_real_)
-  }
+  ser <- sapply(x, \(p) {
+    q <- p + 1:6
+    sum(cof/q) + 1
+  })
+  idx2 <- stp * ser <= 0
+  res <- tmp + log(stp * ser)
+  res[idx2] <- NA_real_
+  result[!idx1] <- res
 
-  return(tmp + log(stp * ser))
+  return(result)
 }
 
 #' BETAICF
