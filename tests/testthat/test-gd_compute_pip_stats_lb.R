@@ -252,6 +252,14 @@ test_that("BETAI returns expected values", {
     BETAI(a = 0, b = 0, x = 0),
     NaN
   )
+  expect_equal(BETAI(1, 2, 0.985), 0.4998875, tolerance = 1e-6)
+  expect_equal(BETAI(1, 2, 0.567), 0.4062555, tolerance = 1e-6)
+})
+
+test_that("BETAI works for vectorized results expected values", {
+  out1 <- BETAI(1, 2, 0.985)
+  out2 <- BETAI(1, 2, 0.567)
+  expect_equal(BETAI(1, 2, c(0.985, 0.567)), c(out1, out2), tolerance = 1e-6)
 })
 
 test_that("BETAICF returns expected results", {
@@ -291,6 +299,12 @@ test_that("BETAICF returns expected results", {
   expect_equal(BETAICF(0.97744306, 1.9339481, 0.25566411), 1.559899929)
 })
 
+test_that("BETAICF works for vectorized x", {
+  out1 <- BETAICF(1, 2, 3)
+  out2 <- BETAICF(1, 2, 4.3)
+  expect_equal(BETAICF(1, 2, c(3, 4.3)), c(out1, out2), tolerance = 1e-6)
+})
+
 test_that("gd_compute_headcount_lb returns expected results", {
   # Constants
   mean <- 51.5660557757944
@@ -322,6 +336,18 @@ test_that("gd_compute_headcount_lb will return NAs, headcount is negative or NA"
     NA_real_
   )
 })
+
+test_that("gd_compute_headcount_lb works for vectorized povline", {
+  mu <- 109.9
+  z <- c(89, 96)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  out1 <- gd_compute_headcount_lb(mu, z[1], A, B, C)
+  out2 <- gd_compute_headcount_lb(mu, z[2], A, B, C)
+  expect_equal(gd_compute_headcount_lb(mu, z, A, B, C), c(out1, out2), tolerance = 1e-6)
+})
+
 
 test_that("gd_compute_pov_severity_lb returns expected results", {
   # Constants

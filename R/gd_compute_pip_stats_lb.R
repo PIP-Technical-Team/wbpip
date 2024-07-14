@@ -705,26 +705,17 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #' @noRd
 
 BETAI <- function(a, b, x) {
-  if (!is.na(x)) {
-    bt <- betai <- 0
-
-    if (x == 0 || x == 1) {
-      bt <- 0
-    } else {
-      bt <- exp((a * log(x)) + (b * log(1 - x)))
-    }
-
-    if (x < (a + 1) / (a + b + 2)) {
-      betai <- bt * BETAICF(a, b, x) / a
-    } else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b))) {
-      betai <- NA_real_
-    } else {
-      betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
-    }
-  } else {
-    betai <- NA_real_
-  }
-
+  betai <- vector("numeric", length(x))
+  indx1 <- is.na(x)
+  betai[indx1] <- NA_real_
+  x <- x[!indx1]
+  bt <- ifelse(x %in% c(0, 1), 0, exp((a * log(x)) + (b * log(1 - x))))
+  out <- data.table::fcase(
+    x < (a + 1) / (a + b + 2), bt * BETAICF(a, b, x) / a,
+    rep(is.na(GAMMLN(a)) | is.na(GAMMLN(b)) | is.na(GAMMLN(a + b)), length(x)), NA_real_,
+    rep(TRUE, length(x)) , exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
+  )
+  betai[!indx1] <- out
   return(betai)
 }
 
@@ -774,6 +765,10 @@ GAMMLN <- function(xx) {
 #' @noRd
 #'
 BETAICF <- function(a, b, x) {
+  vapply(x, function(p) BETAICF_calc(a, b, p), numeric(1L))
+}
+
+BETAICF_calc <- function(a, b, x) {
   eps <- 3e-7
   am <- 1
   bm <- 1
