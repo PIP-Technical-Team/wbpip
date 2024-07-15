@@ -809,7 +809,7 @@ BETAICF_calc <- function(a, b, x) {
 #' @return numeric
 #' @export
 gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) {
-
+  browser()
   if (is.null(u)) {
     u <- mean/povline
   }

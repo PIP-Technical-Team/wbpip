@@ -910,3 +910,18 @@ test_that("GAMMLN works for vectors as expected", {
   expect_equal(GAMMLN(c(10, 12, -12)), c(12.80183,17.50231, NA), tolerance = 1e-5)
 })
 
+
+test_that("value_at_lb works as expected", {
+  A <- 0.578
+  B <- 0.942
+  C <- 0.526
+  hc <- c(0.473, 0.689)
+  res1 <- 0.2691459
+  res2 <- 0.4688482
+  out1 <- value_at_lb(hc[1], A, B, C)
+  out2 <- value_at_lb(hc[2], A, B, C)
+  out3 <- value_at_lb(hc, A, B, C)
+  expect_equal(out1, res1, tolerance = 1e-5)
+  expect_equal(out2, res2, tolerance = 1e-5)
+  expect_equal(out3, c(res1,res2), tolerance = 1e-5)
+})
