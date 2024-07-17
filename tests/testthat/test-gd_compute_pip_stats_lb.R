@@ -735,6 +735,21 @@ test_that("tests for the gd_compute_watts_lb", {
   expect_equal(try_cover1, 1)
 })
 
+
+test_that("test for vectorized headcount and povline", {
+  u <- 8922
+  headcount <- c(0.7183, 0.9865)
+  pg <- c(0.2713, 0.3543)
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+
+  expect_equal(
+    gd_compute_watts_lb(headcount = headcount, mean = u, povline = pg, A = A, B = B, C = C),
+    c(NA_real_, NA_real_)
+  )
+})
+
 test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
 
   ## not really a test but it should get the red mark away on coverage report to go away

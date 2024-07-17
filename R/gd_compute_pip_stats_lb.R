@@ -357,7 +357,14 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @export
 #'
 gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
+  if(length(headcount) != length(povline)) {
+    cli::cli_abort("Length of headcount and povline is not the same")
+  }
+  mapply(\(x, y) gd_compute_watts_lb_calc(x, mean, y, dd, A, B, C), headcount, povline)
+}
 
+
+gd_compute_watts_lb_calc <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -403,7 +410,6 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
     return(watts)
   }
 }
-
 #' Computes distributional stats from Lorenz beta fit
 #'
 #' @inheritParams gd_estimate_lb
