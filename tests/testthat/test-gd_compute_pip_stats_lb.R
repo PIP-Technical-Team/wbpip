@@ -370,6 +370,19 @@ test_that("gd_compute_pov_severity_lb returns expected results", {
   expect_equal(out, benchmarck)
 })
 
+test_that("gd_compute_pov_severity_lb works for vectorized inputs", {
+  u <- 0.8922
+  headcount <- c(0.7183, 0.9865)
+  pg <- c(0.2713, 0.3543)
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  benchmarck <- c(0.1293419, 0.2605747)
+  res <- gd_compute_pov_severity_lb(u = u,headcount = headcount,pov_gap = pg,A = A,B = B,C = C)
+  expect_equal(res, benchmarck, tolerance = 1e-5)
+
+})
+
 test_that("gd_compute_watts_lb returns expected results", {
   headcount <- 0.71833938360214233
   mean <- 51.5660557757944

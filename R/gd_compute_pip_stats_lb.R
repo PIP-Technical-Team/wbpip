@@ -840,42 +840,36 @@ gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) 
 #' @return numeric
 #' @export
 gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, C, u = NULL) {
-
+  # Do we want to check length of povline, headcount and pov_gap to be equal?
   if (is.null(u)) {
     u <-  mean/povline
   }
 
-  if (!anyNA(headcount, pov_gap)) {
-    u1 <- 1 - u
-    beta1 <- BETAI(
-      a = 2 * B - 1,
-      b = 2 * C + 1,
-      x = headcount
-    )
-    beta2 <- BETAI(
-      a = 2 * B,
-      b = 2 * C,
-      x = headcount
-    )
-    beta3 <- BETAI(
-      a = 2 * B + 1,
-      b = 2 * C - 1,
-      x = headcount
-    )
+  u1 <- 1 - u
+  beta1 <- BETAI(
+    a = 2 * B - 1,
+    b = 2 * C + 1,
+    x = headcount
+  )
+  beta2 <- BETAI(
+    a = 2 * B,
+    b = 2 * C,
+    x = headcount
+  )
+  beta3 <- BETAI(
+    a = 2 * B + 1,
+    b = 2 * C - 1,
+    x = headcount
+  )
 
-    pov_gap_sq <-
-      u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
-      (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+  pov_gap_sq <-
+    u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
+    (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
 
-    # REVIEW RATIONAL FOR THESE ADJUSTMENTS
-    # Adjust Poverty severity
-    if (!anyNA(pov_gap, pov_gap_sq)) {
-      pov_gap_sq <- if (pov_gap < pov_gap_sq) pov_gap - 0.00001 else pov_gap_sq
-      pov_gap_sq <- if (pov_gap_sq < 0) 0 else pov_gap_sq
-    }
-  } else {
-    pov_gap_sq <- NA_real_
-  }
+  # REVIEW RATIONAL FOR THESE ADJUSTMENTS
+  # Adjust Poverty severity
+  pov_gap_sq <- ifelse(pov_gap < pov_gap_sq, pov_gap - 0.00001, pov_gap_sq)
+  pov_gap_sq <- pmax(pov_gap_sq, 0)
 
   return(pov_gap_sq)
 }
