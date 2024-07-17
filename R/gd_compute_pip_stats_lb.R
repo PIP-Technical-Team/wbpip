@@ -809,23 +809,25 @@ BETAICF_calc <- function(a, b, x) {
 #' @return numeric
 #' @export
 gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) {
-  browser()
+  if(length(povline) != length(headcount)) {
+    cli::cli_abort("povline and headcount are not of same length!")
+  }
   if (is.null(u)) {
     u <- mean/povline
   }
   # REVIEW RATIONAL FOR THESE ADJUSTMENTS
   # Adjust Poverty gap
-  if (!is.na(headcount)) {
-    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
-    if (!anyNA(headcount, pov_gap)) {
-      pov_gap <- if (headcount < pov_gap) headcount - 0.00001 else pov_gap
-      pov_gap <- if (pov_gap < 0) 0 else pov_gap
-    }
-  } else {
-    pov_gap <- NA_real_
-  }
+  res <- rep(NA_real_, length(povline))
+  indx <- !is.na(headcount)
 
-  return(pov_gap)
+  if(any(indx)) {
+    headcount <- headcount[indx]
+    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
+    pov_gap <- ifelse(headcount < pov_gap, headcount - 0.00001, pov_gap)
+    pov_gap <- pmax(pov_gap, 0)
+    res[indx] <- pov_gap
+  }
+  return(res)
 }
 
 #' Compute poverty severity for Lorenz Beta fit
