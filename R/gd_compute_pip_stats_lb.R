@@ -821,7 +821,7 @@ gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) 
   }
   # REVIEW RATIONAL FOR THESE ADJUSTMENTS
   # Adjust Poverty gap
-  res <- rep(NA_real_, length(povline))
+  res <- rep(NA_real_, length(headcount))
   indx <- !is.na(headcount)
 
   if(any(indx)) {
