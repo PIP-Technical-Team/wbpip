@@ -776,7 +776,7 @@ gd_compute_poverty_stats_lq <- function(
   tmp0 <- (key_values$m * headcount^2) +
     (key_values$n * headcount) +
     (key_values$e^2)
-  tmp0 <- if (tmp0 < 0) 0L else tmp0
+  tmp0 <- pmax(tmp0, 0L)
   tmp0 <- sqrt(tmp0)
 
   # ____________________________________________________________________________
@@ -788,13 +788,12 @@ gd_compute_poverty_stats_lq <- function(
   # Compute ddl - second derivative of Lorenz curve
   # ____________________________________________________________________________
   ddl <- key_values$r^2 / (tmp0^3 * 8)
-
+  # TODO :
   # if negative headcount, set all to 0
-  if (headcount < 0) {
-    headcount <- pov_gap <- pov_gap_sq <- watts <- 0L
-    eh <- epg <- ep <- gh <- gpg <- gp <- 0L
-  } else {
-
+  # if (headcount < 0) {
+  #   headcount <- pov_gap <- pov_gap_sq <- watts <- 0L
+  #   eh <- epg <- ep <- gh <- gpg <- gp <- 0L
+  # } else {
     # __________________________________________________________________________
     # Compute Poverty gap
     # __________________________________________________________________________
@@ -865,7 +864,7 @@ gd_compute_poverty_stats_lq <- function(
                                  B          = B,
                                  C          = C,
                                  key_values = key_values)
-  }
+  #}
 
   return(
     list(
