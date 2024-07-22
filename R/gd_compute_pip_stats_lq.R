@@ -768,7 +768,7 @@ gd_compute_poverty_stats_lq <- function(
     B       = B,
     key_values = key_values
   )
-
+  print(headcount)
   # ____________________________________________________________________________
   # Compute intermediate terms
   # ____________________________________________________________________________
