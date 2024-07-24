@@ -220,11 +220,13 @@ check_curve_validity_lb <- function(headcount, A, B, C) {
   }
 
   # WHAT IS THE RATIONAL HERE?
-  is_normal <- if (!is.na(headcount)) {
-    is_normal <- TRUE
-  } else {
-    is_normal <- FALSE
-  }
+  # is_normal <- if (!is.na(headcount)) {
+  #   is_normal <- TRUE
+  # } else {
+  #   is_normal <- FALSE
+  # }
+
+  is_normal <- all(!is.na(headcount))
 
   return(list(
     is_valid = is_valid,
