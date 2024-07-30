@@ -1,8 +1,8 @@
 on:
   push:
-    branches: [DEV, PROD]
+    branches: [wb_update_rt, DEV, PROD]
   pull_request:
-    branches: [DEV, PROD]
+    branches: [wb_update_rt, DEV, PROD]
   release:
     types: [published]
   workflow_dispatch:
