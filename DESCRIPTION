@@ -45,8 +45,8 @@ Suggests:
     rmarkdown,
     markdown,
     readr,
-    pipr
-URL: https://pip-technical-team.github.io/wbpip, https://github.com/PIP-Technical-Team/wbpip
+    pipr (>= 1.0.0)
+URL: https://pip-technical-team.github.io/wbpip, https://github.com/PIP-Technical-Team/wbpip, https://pip-technical-team.github.io/wbpip/
 BugReports: https://github.com/PIP-Technical-Team/wbpip/issues
 Depends: 
     R (>= 3.5.0)
@@ -62,3 +62,5 @@ Imports:
 VignetteBuilder: knitr
 ByteCompile: true
 Config/testthat/edition: 3
+Remotes:  
+    github::worldbank/pipr
