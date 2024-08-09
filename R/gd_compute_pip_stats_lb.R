@@ -619,6 +619,23 @@ gd_compute_fit_lb <- function(welfare,
                               A,
                               B,
                               C) {
+
+  out <- lapply(headcount, function(x)
+    gd_compute_fit_lb_calc(welfare, population, x, A, B, C))
+
+  res <- collapse::rowbind(out)
+
+  return(res)
+}
+
+gd_compute_fit_lb_calc <- function(welfare,
+                                   population,
+                                   headcount,
+                                   A,
+                                   B,
+                                   C
+
+) {
   if (!is.na(headcount)) {
     lasti <- 0
     sse <- 0 # Sum of square error
@@ -642,7 +659,6 @@ gd_compute_fit_lb <- function(welfare,
   } else {
     out <- list(sse = NA_real_, ssez = NA_real_)
   }
-
   return(out)
 }
 

@@ -973,3 +973,56 @@ test_that("GAMMLN works for vectors as expected", {
   expect_equal(GAMMLN(c(10, 12, -12)), c(12.80183,17.50231, NA), tolerance = 1e-5)
 })
 
+
+test_that("gd_compute_fit_lb works as expected for scalar inputs", {
+  L <- c(
+    0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
+    0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1
+  )
+  P <- c(
+    0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
+    0.8196, 0.9174, 0.957, 0.9751, 1
+  )
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  headcount <- c(0.7183, 0.9865)
+
+  out1 <- gd_compute_fit_lb(L, P, headcount[1], A, B, C)
+
+  expect_length(out1, 2L)
+  expect_equal(names(out1), c("sse", "ssez"))
+  expect_equal(out1$sse, 0.002082803, tolerance = 1e-6)
+  expect_equal(out1$ssez, 0.000730413, tolerance = 1e-6)
+
+  out2 <- gd_compute_fit_lb(L, P, headcount[2], A, B, C)
+  expect_length(out2, 2L)
+  expect_equal(names(out1), c("sse", "ssez"))
+  expect_equal(out2$sse, 0.002082803, tolerance = 1e-6)
+  expect_equal(out2$ssez, 0.002082803, tolerance = 1e-6)
+})
+
+
+test_that("gd_compute_fit_lb works as expected for vectorized inputs", {
+  L <- c(
+    0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
+    0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1
+  )
+  P <- c(
+    0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
+    0.8196, 0.9174, 0.957, 0.9751, 1
+  )
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  headcount <- c(0.7183, 0.9865)
+
+  out <- gd_compute_fit_lb(L, P, headcount, A, B, C)
+
+  expect_length(out, 2L)
+  expect_equal(names(out), c("sse", "ssez"))
+  expect_equal(out$sse, c(0.002082803,0.002082803), tolerance = 1e-6)
+  expect_equal(out$ssez, c(0.000730413,0.002082803), tolerance = 1e-6)
+
+})
+
