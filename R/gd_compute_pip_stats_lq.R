@@ -432,7 +432,7 @@ gd_compute_gini_lq <- function(A, B, C, key_values) {
 #' @return numeric
 #' @export
 value_at_lq <- function(x, A, B, C, key_values) {
-
+  print(x)
   # Check for NA, Inf and negative values in x
   check_NA_Inf_values(x)
   check_neg_values(x)
