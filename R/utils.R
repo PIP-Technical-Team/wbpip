@@ -58,7 +58,6 @@ check_NA_Inf_values <- function(x){
 check_neg_values <- function(x){
 
   if(length(x) > 0 && any(x<0)){
-    print(x)
     cli::cli_abort("All values in x should be positive")
   }
 
