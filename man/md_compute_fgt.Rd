@@ -111,6 +111,7 @@ a very small number (\code{1e-10}), ensure the inclusion of the line.
 }
 
 \examples{
+\dontrun{
 welfare <- md_ABC_2010_income$welfare/1e6
 weight  <- md_ABC_2010_income$weight
 
@@ -156,7 +157,9 @@ dt_fgt <- data.table(povline = fgt$povline,
                      FGT0    = fgt$FGT0,
                      FGT1    = fgt$FGT1,
                      FGT2    = fgt$FGT2)
-\dontrun {
+}
+
+\dontrun{
  md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
                   weight = c(0.1041,0.1411,0.1792,0.2182),
                   povline = 1.9)
