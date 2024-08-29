@@ -291,6 +291,7 @@ md_compute_watts <- function(
     weight          = rep(1, length(welfare)),
     povline
 ) {
+  browser()
   vapply(povline, function(x) watt_computation(welfare, weight, x), numeric(1))
 }
 
