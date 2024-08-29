@@ -49,7 +49,7 @@ prod_md_compute_pip_stats <- function(welfare,
     povline_lcu = adjusted_povline[["povline_lcu"]],
     weight = population
   )
-
+  browser()
   return(list(
     poverty_line     = adjusted_povline[["povline"]],
     mean             = mean,
