@@ -40,7 +40,7 @@ md_compute_poverty_stats <- function(
   hc <- fgt$FGT0
   pg <- fgt$FGT1
   ps <- fgt$FGT2
-
+  browser()
   watts <- md_compute_watts(
     welfare           = welfare,
     weight            = weight,
@@ -291,7 +291,6 @@ md_compute_watts <- function(
     weight          = rep(1, length(welfare)),
     povline
 ) {
-  browser()
   vapply(povline, function(x) watt_computation(welfare, weight, x), numeric(1))
 }
 
