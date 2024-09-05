@@ -21,6 +21,9 @@ gd_compute_fit_lq(welfare, population, headcount, A, B, C, key_values)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 list
@@ -28,4 +31,3 @@ list
 \description{
 Measures the fit of the model to the data.
 }
-\keyword{internal}

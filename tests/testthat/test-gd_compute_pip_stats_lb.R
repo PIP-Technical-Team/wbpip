@@ -869,7 +869,7 @@ test_that("GAMMLN works as expected", {
 
 })
 
-test_that("derive_lb works as old_derive_lb",{
+test_that("derive_lb works vectorized",{
   x <- c(
     0.00000000000000000000,
     0.00320000000000000015,
@@ -886,14 +886,18 @@ test_that("derive_lb works as old_derive_lb",{
   B <- 0.94205090386544987
   C <- 0.52578600019473676
 
+  # old version, before vectorisation
+  bm_oversion <- c(-Inf, 0.24300371, 0.31608768, 0.37950313, 0.44682910,
+                   0.59333558, 0.76211314, 0.93565850, 1.10428056, Inf)
   benchmark <- vector("numeric",length(x))
-  for (i in 1:length(x)){
-    benchmark[i] <- old_derive_lb(x[i],A,B,C)
+  for (i in 1:length(x)) {
+    benchmark[i] <- derive_lb(x[i],A,B,C)
   }
 
   res <- derive_lb(x,A,B,C)
 
-  expect_equal(res,benchmark)
+  expect_equal(res, benchmark)
+  expect_equal(res, bm_oversion)
 
 })
 

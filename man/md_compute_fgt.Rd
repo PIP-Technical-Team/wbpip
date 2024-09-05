@@ -151,9 +151,7 @@ fgt <- md_compute_fgt(welfare     = welfare,
   md_compute_fgt(alpha = 2,
                  return_data =  TRUE)
 
-
-
-dt_fgt <- data.table(povline = fgt$povline,
+dt_fgt <- data.frame(povline = fgt$povline,
                      FGT0    = fgt$FGT0,
                      FGT1    = fgt$FGT1,
                      FGT2    = fgt$FGT2)
