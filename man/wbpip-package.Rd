@@ -13,6 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://pip-technical-team.github.io/wbpip}
   \item \url{https://github.com/PIP-Technical-Team/wbpip}
+  \item \url{https://pip-technical-team.github.io/wbpip/}
   \item Report bugs at \url{https://github.com/PIP-Technical-Team/wbpip/issues}
 }
 
@@ -23,7 +24,7 @@ Useful links:
 Authors:
 \itemize{
   \item Aleksander Eilertsen \email{aeilertsen@worldbank.org}
-  \item R.Andrés Castañeda \email{acastanedaa@worldbank.org}
+  \item R.AndrÃ©s CastaÃ±eda \email{acastanedaa@worldbank.org}
   \item Zander Prinsloo \email{zprinsloo@worldbank.org}
   \item Diana Carolina Garcia Rojas \email{dgarciarojas@worldbank.org}
 }
