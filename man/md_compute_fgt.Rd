@@ -52,7 +52,7 @@ md_compute_watts(welfare, weight = rep(1, length(welfare)), povline)
 \item{weight}{numeric vector with sample weights. Default is 1.}
 
 \item{povline}{poverty line. Default is the half the weighted median of
-\code{welfare}}
+\code{welfare}. Allows for vector.}
 
 \item{alpha}{numeric. Alpha parameter of FGT measures. if \code{0}, the default,
 it estimates the poverty headcount. If \code{1}, the poverty gap, and if \code{2},
@@ -70,7 +70,7 @@ analysis (\emph{seldom used}).}
 }
 \value{
 either a vector with the fgt measure selected in argument \code{alpha} or
-a list of dgt estimations if \code{return_data} is \code{TRUE}
+a list of fgt estimations if \code{return_data} is \code{TRUE}
 }
 \description{
 Compute FGT poverty family measures and Watts index for Microdata
@@ -122,6 +122,7 @@ md_compute_fgt(welfare = welfare,
                weight  = weight,
                povline = 5)
 
+# Multiple values of alpha using the return_data argument
 fgt <- md_compute_fgt(welfare     = welfare,
                       weight      = weight,
                       povline     = 5,
@@ -132,4 +133,25 @@ fgt <- md_compute_fgt(welfare     = welfare,
                  return_data =  TRUE)
 
 c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+
+# multiple poverty lines
+dtgft <- md_compute_fgt(welfare = welfare,
+weight  = weight,
+povline = seq(from = 1, to = 10, by = .1))
+attributes(dtgft)
+
+
+fgt <- md_compute_fgt(welfare     = welfare,
+                      weight      = weight,
+                      povline     = seq(from = 1, to = 10, by = .1),
+                      return_data =  TRUE) |>
+  md_compute_fgt(alpha = 1,
+                 return_data =  TRUE) |>
+  md_compute_fgt(alpha = 2,
+                 return_data =  TRUE)
+
+dt_fgt <- data.frame(povline = fgt$povline,
+                     FGT0    = fgt$FGT0,
+                     FGT1    = fgt$FGT1,
+                     FGT2    = fgt$FGT2)
 }

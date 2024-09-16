@@ -114,38 +114,37 @@ create_functional_form_lb <- function(welfare, population) {
 
 }
 
-#' Returns the first derivative of the beta Lorenz
+#' Returns the first derivative of the beta Lorenz- Vectorized
 #'
 #' `derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
-#' @param x numeric: Point on curve.
+#' @param x numeric: Point on curve. Allow for vectors.
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
 #' @export
 derive_lb <- function(x, A, B, C) {
-
-  # Formula for first derivative of GQ Lorenz Curve
-  val <-
-    1 - ((A * x ^ B) * ((1 - x) ^ C) * ((B / x) - (C / (1 - x))))
-
+  val <- vector("numeric", length(x))
+  val[x == 0] <- -Inf
+  val[x == 1] <- Inf
 
   if (B == 1) {
-    val[x == 0] <- 1 - A
-  } else if (B > 1) {
-    val[x == 0] <- 1
-  } else {
-    val[x == 0] <- -Inf
-  }
+      val[x == 0] <- 1 - A
+    }
+    if (B > 1) {
+      val[x == 0] <- 1
+    }
+    if (C == 1) {
+      val[x == 1] <- 1 + A
+    }
+    if (C > 1) {
+      val[x == 1] <- 1
+    } else {
 
-  if (C == 1) {
-    val[x == 1] <- 1 + A
-  } else if  (C > 1) {
-    val[x == 1] <- 1
-  } else {
-    val[x == 1] <- Inf
-  }
-
+      # Formula for first derivative of GQ Lorenz Curve
+      new_x <- x[!(x %in% c(0,1))]
+      val[!(x %in% c(0,1))] <- 1 - ((A * new_x^B) * ((1 - new_x)^C) * ((B / new_x) - (C / (1 - new_x)) ) )
+    }
   return(val)
 }
 
@@ -234,6 +233,11 @@ gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
 #' @return numeric
 #' @export
 value_at_lb <- function(x, A, B, C) {
+
+  # Check for NA, Inf and negative values in x
+  check_NA_Inf_values(x)
+  check_neg_values(x)
+
   out <- x - (A * (x^B) * ((1 - x)^C))
 
   return(out)
@@ -244,14 +248,13 @@ value_at_lb <- function(x, A, B, C) {
 #' `gd_compute_mld_lb()` computes the Mean Log deviation (MLD) from a Lorenz
 #' beta fit.
 #'
-#' @param dd numeric: **TO BE DOCUMENTED**.
 #' @param A numeric: Lorenz curve coefficient.
 #' @param B numeric: Lorenz curve coefficient.
 #' @param C numeric: Lorenz curve coefficient.
 #'
 #' @return numeric
 #' @export
-gd_compute_mld_lb <- function(dd, A, B, C) {
+gd_compute_mld_lb <- function(A, B, C) {
   x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
@@ -319,7 +322,7 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @return numeric
 #' @export
 #'
-gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
 
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
@@ -381,7 +384,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
   dcm <- (1 - gini) * mean
   pol <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
   ris <- value_at_lb(0.5, A, B, C)
-  mld <- gd_compute_mld_lb(0.01, A, B, C)
+  mld <- gd_compute_mld_lb(A, B, C)
   deciles <- gd_compute_quantile_lb(A, B, C)
 
   return(list(
@@ -405,7 +408,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_polarization_lb <- function(mean,
                                        p0,
                                        dcm,

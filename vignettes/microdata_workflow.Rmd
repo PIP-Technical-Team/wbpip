@@ -1,8 +1,8 @@
 ---
-title: "microdata_workflow"
+title: "Workflow for microdata"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{microdata_workflow}
+  %\VignetteIndexEntry{Workflow for microdata}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

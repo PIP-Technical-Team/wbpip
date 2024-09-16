@@ -2,12 +2,12 @@
 % Please edit documentation in R/gd_compute_pip_stats_lb.R
 \name{derive_lb}
 \alias{derive_lb}
-\title{Returns the first derivative of the beta Lorenz}
+\title{Returns the first derivative of the beta Lorenz- Vectorized}
 \usage{
 derive_lb(x, A, B, C)
 }
 \arguments{
-\item{x}{numeric: Point on curve.}
+\item{x}{numeric: Point on curve. Allow for vectors.}
 
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres()$coef[1]}.}

@@ -4,7 +4,7 @@
 \alias{gd_compute_headcount_lq}
 \title{Compute poverty for Quadratic Lorenz}
 \usage{
-gd_compute_headcount_lq(mean, povline, B, m, n, r)
+gd_compute_headcount_lq(mean, povline, B, key_values)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
@@ -14,12 +14,8 @@ gd_compute_headcount_lq(mean, povline, B, m, n, r)
 \item{B}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[2]}.}
 
-\item{m}{numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-an ellipse (m is called alpha in paper).}
-
-\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
-
-\item{r}{r = (n^2) - (4 * m * e^2). r is called K in paper.}
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 poverty headcount

@@ -2,7 +2,7 @@
 title: "How to interpolate between two surveys"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{interpolation}
+  %\VignetteIndexEntry{How to interpolate between two surveys}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

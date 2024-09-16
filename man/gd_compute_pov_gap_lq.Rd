@@ -4,14 +4,14 @@
 \alias{gd_compute_pov_gap_lq}
 \title{Compute poverty gap using Lorenz quadratic fit}
 \usage{
-gd_compute_pov_gap_lq(mean, povline, headcount, A, B, C)
+gd_compute_pov_gap_lq(mean, povline, headcount, A, B, C, key_values)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
 
 \item{povline}{numeric: Poverty line.}
 
-\item{headcount}{numeric: Headcount index.}
+\item{headcount}{numeric: Headcount index. Allows for vector.}
 
 \item{A}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[1]}.}
@@ -21,6 +21,9 @@ gd_compute_pov_gap_lq(mean, povline, headcount, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 numeric

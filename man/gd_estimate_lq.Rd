@@ -4,7 +4,7 @@
 \alias{gd_estimate_lq}
 \title{Estimates poverty and inequality stats from Quadratic Lorenz fit}
 \usage{
-gd_estimate_lq(mean, povline, p0, A, B, C)
+gd_estimate_lq(mean, povline, p0, A, B, C, key_values)
 }
 \arguments{
 \item{mean}{numeric: Welfare mean.}
@@ -21,6 +21,9 @@ gd_estimate_lq(mean, povline, p0, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 list

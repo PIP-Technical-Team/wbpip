@@ -655,7 +655,7 @@ test_that("tests for the gd_compute_watts_lb", {
 test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
 
   ## not really a test but it should get the red mark away on coverage report to go away
-  expect_equal(gd_compute_mld_lb(0.0005, A = 1, B = 0.9676324, C = 1),
+  expect_equal(gd_compute_mld_lb(A = 1, B = 0.9676324, C = 1),
     0.2165068,
     tolerance = 1e-7
   )
@@ -736,6 +736,100 @@ test_that("GAMMLN works as expected", {
 
 })
 
+test_that("derive_lb works vectorized",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
 
+  # old version, before vectorisation
+  bm_oversion <- c(-Inf, 0.24300371, 0.31608768, 0.37950313, 0.44682910,
+                   0.59333558, 0.76211314, 0.93565850, 1.10428056, Inf)
+  benchmark <- vector("numeric",length(x))
+  for (i in 1:length(x)) {
+    benchmark[i] <- derive_lb(x[i],A,B,C)
+  }
 
+  res <- derive_lb(x,A,B,C)
 
+  expect_equal(res, benchmark)
+  expect_equal(res, bm_oversion)
+
+})
+
+test_that("derive_lb can handle vectors",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  res <- derive_lb(x,A,B,C)
+
+  expect_equal(res,c(-Inf,
+                     0.2430037,
+                     0.3160877,
+                     0.3795031,
+                     0.4468291,
+                     0.5933356,
+                     0.7621131,
+                     0.9356585,
+                     1.1042806,
+                     Inf), tolerance = 1e-5 )
+
+})
+
+test_that("derive_lb can handle NA values",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    NA,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    NA,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    NA,
+    1.00000000000000000000
+  )
+
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  res <- derive_lb(x,A,B,C)
+
+  expect_equal(res,c(-Inf,
+                     0.2430037,
+                     NA,
+                     0.3795031,
+                     0.4468291,
+                     NA,
+                     0.7621131,
+                     0.9356585,
+                     NA,
+                     Inf), tolerance = 1e-5 )
+
+})

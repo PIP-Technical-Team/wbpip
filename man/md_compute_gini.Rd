@@ -23,5 +23,5 @@ Given a vector of income or consumption values and their respective weights
 \code{md_compute_gini()} computes the Gini coefficient for the distribution.
 }
 \examples{
-wbpip:::md_compute_gini(welfare = 1:2000, weight = rep(1, 2000))
+md_compute_gini(welfare = 1:2000, weight = rep(1, 2000))
 }

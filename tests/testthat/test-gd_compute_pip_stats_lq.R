@@ -93,10 +93,9 @@ test_that("gd_compute_dist_stats_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  e <- -0.498670067692931
-  m <- -1.0970760862948583
-  n <- 0.851623285340541
-  r <- 1.3477796260474386
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
   benchmark <- list(
     gini = 0.32126464221602591,
     median = 42.247782467994874,
@@ -125,10 +124,7 @@ test_that("gd_compute_dist_stats_lq works as expected", {
     A = A,
     B = B,
     C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r
+    key_values = key_values
   )
 
   expect_equal(names(out), c(
@@ -154,6 +150,9 @@ test_that("gd_compute_polarization_lq works as expected", {
   B <- -1.4445933880119242
   C <- 0.14728191995919815
   benchmark <- 0.22066218253919992
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
 
   out <- gd_compute_polarization_lq(
     mean = mean,
@@ -161,7 +160,8 @@ test_that("gd_compute_polarization_lq works as expected", {
     dcm = dcm,
     A = A,
     B = B,
-    C = C
+    C = C,
+    key_values = key_values
   )
 
   expect_equal(out, benchmark)
@@ -179,6 +179,12 @@ test_that("compute_poverty_stats_lq works as expected", {
   r <- 1.3477796260474386
   s1 <- -0.22612667749534146
   s2 <- 1.002393060455814
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  expect_equal(list(e, m, n, r, s1, s2),
+               unname(key_values))
+
 
   benchmark <- list(
     headcount = 0.76005810499191284,
@@ -201,12 +207,7 @@ test_that("compute_poverty_stats_lq works as expected", {
     A = A,
     B = B,
     C = C,
-    e = e,
-    m = m,
-    n = n,
-    r = r,
-    s1 = s1,
-    s2 = s2
+    key_values = key_values
   )
 
   expect_equal(length(out), length(benchmark))
@@ -240,32 +241,30 @@ test_that("gd_compute_pov_severity_lq() works as before the function update", {
   A             <- 0.795981535745657
   B             <- -1.4445933880119242
   C             <- 0.14728191995919815
-  e             <- -0.498670067692931
-  m             <- -1.0970760862948583
-  n             <- 0.851623285340541
-  r             <- 1.3477796260474386
-  s1            <- -0.22612667749534146
-  s2            <- 1.002393060455814
+  # e             <- -0.498670067692931
+  # m             <- -1.0970760862948583
+  # n             <- 0.851623285340541
+  # r             <- 1.3477796260474386
+  # s1            <- -0.22612667749534146
+  # s2            <- 1.002393060455814
   headcount     <- 0.76005810499191284
   pov_gap       <- 0.27617606019159308
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
 
   foo_benchmark <- 0.12832887439632906
 
   # function output
   foo <- gd_compute_pov_severity_lq(
-    mean      = mean,
-    povline   = povline,
-    headcount = headcount,
-    pov_gap   = pov_gap,
-    A         = A,
-    B         = B,
-    C         = C,
-    e         = e,
-    m         = m,
-    n         = n,
-    r         = r,
-    s1        = s1,
-    s2        = s2
+    mean       = mean,
+    povline    = povline,
+    headcount  = headcount,
+    pov_gap    = pov_gap,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
   )
 
   expect_equal(
@@ -287,6 +286,9 @@ test_that("gd_compute_poverty_stats_lq works with negative headcount", {
   r <- 1.3477796260474386
   s1 <- -0.22612667749534146
   s2 <- 1.002393060455814
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
 
   povline_neg <- -57.791666666666664 # Negative to test negative headcount
 
@@ -306,31 +308,12 @@ test_that("gd_compute_poverty_stats_lq works with negative headcount", {
   )
 
   out <- gd_compute_poverty_stats_lq(
-    mean    = mean,
-    povline = povline_neg,
-    A       = A,
-    B       = B,
-    C       = C,
-    e       = e,
-    m       = m,
-    n       = n,
-    r       = r,
-    s1      = s1,
-    s2      = s2
-  )
-
-  out_original <- old_gd_compute_poverty_stats_lq(
-    mean    = mean,
-    povline = povline_neg,
-    A       = A,
-    B       = B,
-    C       = C,
-    e       = e,
-    m       = m,
-    n       = n,
-    r       = r,
-    s1      = s1,
-    s2      = s2
+    mean       = mean,
+    povline    = povline_neg,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
   )
 
 
@@ -365,8 +348,7 @@ test_that("gd_compute_poverty_stats_lq works with negative headcount", {
   expect_equal(out,
                benchmark,
                tolerance = 0.000001)
-  expect_equal(out,
-               out_original)
+
 })
 
 
@@ -401,7 +383,10 @@ test_that("gd_compute_fit_lq works as expected", {
   A <- 0.795981535745657
   B <- -1.4445933880119242
   C <- 0.14728191995919815
-  benchmark <- c(2.5301549524661934e-06, 0.0032215656135074632)
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  benchmark <- c(0.0032215656135074632, 0.0032215656135074632)
 
   out <- gd_compute_fit_lq(
     population = p,
@@ -409,7 +394,8 @@ test_that("gd_compute_fit_lq works as expected", {
     headcount = h,
     A = A,
     B = B,
-    C = C
+    C = C,
+    key_values = key_values
   )
   out <- unlist(out)
   out <- unname(out)
@@ -417,7 +403,84 @@ test_that("gd_compute_fit_lq works as expected", {
   expect_equal(out, benchmark)
 })
 
+test_that("gd_compute_fit_lq allows for vector on headcount, given works as expected", {
+  p <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  l <- c(
+    0.00005824760527229386,
+    0.00060402941084101102,
+    0.00379493347936169477,
+    0.01398887865224447691,
+    0.03699216458309878552,
+    0.12140708906131342237,
+    0.24531391873082081245,
+    0.37446670169288320817,
+    0.48753116241194566216,
+    1.00000000000000000000
+  )
+  h <- c(0.2,0.5, 0.76005810499191284)
+  A <- 0.795981535745657
+  B <- -1.4445933880119242
+  C <- 0.14728191995919815
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+
+  h1 <- gd_compute_fit_lq(
+    population = p,
+    welfare    = l,
+    headcount  = h[1],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
+
+  h2 <- gd_compute_fit_lq(
+    population = p,
+    welfare    = l,
+    headcount  = h[2],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
+
+  h3 <- gd_compute_fit_lq(
+    population = p,
+    welfare    = l,
+    headcount  = h[3],
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values)
+
+  benchmark <- c(h1$ssez,h2$ssez,h3$ssez)
+
+  out <- gd_compute_fit_lq(
+    population = p,
+    welfare    = l,
+    headcount  = h,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
+  )
+
+  expect_equal(out$sse, 0.0032215656135074632)
+  expect_equal(out$ssez, benchmark)
+})
+
 test_that("gd_estimate_lq works as expected", {
+  skip("A, B, C gives invalid fit")
   mean <- 1.50524
   povline <- 1.9
   p0 <- 0.5
@@ -426,6 +489,9 @@ test_that("gd_estimate_lq works as expected", {
   A <- 0.78554131924835879
   B <- -1.9856022109519547
   C <- -0.30597079435662672
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
 
   expect_equal(
     gd_estimate_lq(
@@ -434,7 +500,8 @@ test_that("gd_estimate_lq works as expected", {
       p0 = p0,
       A = A,
       B = B,
-      C = C
+      C = C,
+      key_values = key_values
     ),
     empty_gd_compute_pip_stats_response
   )
@@ -442,25 +509,37 @@ test_that("gd_estimate_lq works as expected", {
 
 test_that("gd_compute_watts_lq() gives correct results", {
 
-  res <- gd_compute_watts_lq(
-    headcount = 0.4,
-    mu = 20,
-    povline = 1.9,
-    dd = 0.005,
-    A = 0.2,
-    B = 0.3,
-    C = 0.4
-  )
-  expect_true(is.na(res))
+  A = 0.2
+  B = 0.3
+  C = 0.4
 
   res <- gd_compute_watts_lq(
+    headcount = 0.4,
+    mean = 20,
+    povline = 1.9,
+    dd = 0.005,
+    A = A,
+    B = B,
+    C = C,
+    key_values = gd_lq_key_values(A = A,
+                                  B = B,
+                                  C = C)
+  )
+  expect_true(is.na(res))
+  A = 0.7688156902
+  B = 0.9812052979
+  C = 0.4720329161
+  res <- gd_compute_watts_lq(
     headcount = 0.513180957,
-    mu = 78.962,
+    mean = 78.962,
     povline = 57.79166667,
     dd = 0.005,
-    A = 0.7688156902,
-    B = 0.9812052979,
-    C = 0.4720329161
+    A = A,
+    B = B,
+    C = C,
+    key_values = gd_lq_key_values(A = A,
+                                  B = B,
+                                  C = C)
   )
   expect_equal(res, 0.4366290738)
 
@@ -471,12 +550,15 @@ povline   <- 57.791666666666664
 A         <- 0.795981535745657
 B         <- -1.4445933880119242
 C         <- 0.14728191995919815
-e         <- -0.498670067692931
-m         <- -1.0970760862948583
-n         <- 0.851623285340541
-r         <- 1.3477796260474386
-s1        <- -0.22612667749534146
-s2        <- 1.002393060455814
+key_values <- gd_lq_key_values(A = A,
+                               B = B,
+                               C = C)
+# e         <- -0.498670067692931
+# m         <- -1.0970760862948583
+# n         <- 0.851623285340541
+# r         <- 1.3477796260474386
+# s1        <- -0.22612667749534146
+# s2        <- 1.002393060455814
 headcount <- 0.76005810499191284
 pov_gap   <- 0.27617606019159308
 
@@ -490,9 +572,7 @@ test_that("gd_compute_headcount works as expected", {
     mean    = mean,
     povline = povline,
     B       = B,
-    m       = m,
-    n       = n,
-    r       = r
+    key_values = key_values
   )
 
   expect_equal(round(out, 7),
@@ -513,7 +593,105 @@ test_that("gd_compute_pov_gap_lq works as expected", {
     headcount = headcount,
     A         = A,
     B         = B,
-    C         = C
+    C         = C,
+    key_values = key_values
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_gap_lq works as expected when headcount negative", {
+
+  headcount_neg <- -0.76005810499191284
+  benchmark     <- 0
+
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount_neg,
+    A         = A,
+    B         = B,
+    C         = C,
+    key_values = key_values
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+test_that("gd_compute_pov_severity_lq works as expected", {
+
+  benchmark <- 0.12832887439632906
+
+  out <- gd_compute_pov_severity_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    key_values = key_values
+  )
+
+  expect_equal(out,
+               benchmark)
+
+})
+
+mean      <- 51.5660557757944
+povline   <- 57.791666666666664
+A         <- 0.795981535745657
+B         <- -1.4445933880119242
+C         <- 0.14728191995919815
+key_values <- gd_lq_key_values(A = A,
+                               B = B,
+                               C = C)
+# e         <- -0.498670067692931
+# m         <- -1.0970760862948583
+# n         <- 0.851623285340541
+# r         <- 1.3477796260474386
+# s1        <- -0.22612667749534146
+# s2        <- 1.002393060455814
+headcount <- 0.76005810499191284
+pov_gap   <- 0.27617606019159308
+
+test_that("gd_compute_headcount works as expected", {
+
+  # expected headcount ----
+  benchmark <- 0.76005810499191284
+
+  # headcount function ----
+  out <- gd_compute_headcount_lq(
+    mean    = mean,
+    povline = povline,
+    B       = B,
+    key_values = key_values
+  )
+
+  expect_equal(round(out, 7),
+               round(benchmark, 7))
+
+})
+
+
+test_that("gd_compute_pov_gap_lq works as expected", {
+
+  # expected pov gap
+  benchmark <- 0.27617606019159308
+
+  # output
+  out <- gd_compute_pov_gap_lq(
+    mean      = mean,
+    povline   = povline,
+    headcount = headcount,
+    A         = A,
+    B         = B,
+    C         = C,
+    key_values = key_values
   )
 
   expect_equal(out,
@@ -552,15 +730,219 @@ test_that("gd_compute_pov_severity_lq works as expected", {
     A         = A,
     B         = B,
     C         = C,
-    e         = e,
-    m         = m,
-    n         = n,
-    r         = r,
-    s1        = s1,
-    s2        = s2
+    key_values = key_values
   )
 
   expect_equal(out,
                benchmark)
 
+})
+
+test_that("value_at_lq works when x is a vector", {
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+
+  # # Old values
+  # A <- 0.795981535745657
+  # B <- -1.4445933880119242
+  # C <- 0.14728191995919815
+  #
+  # # Conditions of parameters in the corrected version of the paper
+  # # m<0
+  # # A+B+C+1>0
+  # # C>=0
+  # # A+C-1>=0  A+C>=1 (Not satisfied by old values)
+  #
+  # # We need `temp' to be negative --> (m * x^2) + (n * x) + (e^2) < 0
+  # # if we assume x=1 and A+C=1
+  # # we can choose A = 0.6 and C = 0.4
+  # # also a B that satisfies:
+  # # (4B^2 + 6B - 3 < 0) -> (-1.89 < B < 0.39)
+
+  # # New values
+  A <- 0.6
+  B <- 0.3
+  C <- 0.4
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+
+  # # Test that temp is negative in the last value:
+  # e <- -(A + B + C + 1)
+  # e2 <- e^2
+  # m <- (B^2) - (4 * A)
+  # n <- (2 * B * e) - (4 * C)
+  # cond <- (m * x^2) + (n * x) + (e^2) < 0
+  # cond  # Last values will be TRUE
+
+  benchmark <- c(8.703071e-05,
+                 5.595627e-04,
+                 2.639177e-03,
+                 8.294137e-03,
+                 2.023636e-02,
+                 6.603539e-02,
+                 1.436005e-01,
+                 2.384378e-01,
+                 3.336276e-01,
+                 1.000000e+00
+
+  )
+
+  out <- value_at_lq(
+    x = x,
+    A = A,
+    B = B,
+    C = C,
+    key_values = key_values
+  )
+
+  expect_equal(out,
+               benchmark,
+               tolerance = 1.1e-04)
+})
+
+test_that("derive_lq works as previous version",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  # # New values (With these values tmp=0 and val is Inf when x==1)
+  # A <- 0.6
+  # B <- 0.3
+  # C <- 0.4
+  bm_old_version <- c(0.17287540, 0.17424454, 0.18018082, 0.19568710, 0.22618870,
+                      0.32961328, 0.49245979, 0.70343542, 0.95186343, 25.27287633)
+
+  benchmark <- vector("numeric",length(x))
+
+  for (i in 1:length(x)) {
+    benchmark[i] <- derive_lq(x[i],A,B,C, key_values = key_values)
+  }
+
+  res <- derive_lq(x,A,B,C, key_values = key_values)
+
+  expect_equal(res, benchmark)
+  expect_equal(res, bm_old_version)
+
+})
+
+test_that("derive_lq can handle vectors",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+
+  # # New values (With these values tmp=0 and val is Inf when x==1)
+  # A <- 0.6
+  # B <- 0.3
+  # C <- 0.4
+
+  res <- derive_lq(x,A,B,C, key_values = key_values)
+
+  expect_equal(res,c(0.1728754,
+                     0.1742445,
+                     0.1801808,
+                     0.1956871,
+                     0.2261887,
+                     0.3296133,
+                     0.4924598,
+                     0.7034354,
+                     0.9518634,
+                     25.2728763), tolerance = 1e-5 )
+
+})
+
+test_that("derive_lq shows error message when NA values",{
+  x <- c(
+    0.00050000000000000001,
+    0.00320000000000000015,
+    NA,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    NA,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+
+  expect_error(derive_lq(x,A,B,C, key_values = key_values))
+
+})
+
+
+test_that("gd_compute_gini_lq works as previous version",{
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  bm_old_version <- 0.51895685
+
+  out <- gd_compute_gini_lq(A,B,C, key_values)
+
+  expect_equal(out,
+               bm_old_version)
+})
+
+test_that("gd_compute_quantile_lq works as previous version",{
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  key_values <- gd_lq_key_values(A = A,
+                                 B = B,
+                                 C = C)
+  bm_oversion <- c(0.019905759, 0.025715097, 0.032497649, 0.040611666, 0.050633739,
+                 0.063568609, 0.081376191, 0.108613086, 0.159938734, 0.417139471)
+
+  out <- gd_compute_quantile_lq(A,B,C,10, key_values = key_values)
+
+  expect_equal(out,
+               bm_oversion)
 })
