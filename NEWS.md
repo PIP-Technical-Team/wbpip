@@ -1,6 +1,21 @@
+# wbpip 0.1.5
+
+1. Vectorization of poverty line
+
 # wbpip 0.1.4
 
-* update webpage
+## main changes
+
+1. Site rebuild
+
+2. Vectorization of `pov_gap_lq()`, `gd_compute_watts_lq()`, `rtNewt`, `rtSafe`,`GAMMLSN`, `gd_compute_headcount`, `value_at_lb`, `gd_compute_pov_gap_lb`, `pov_severity`, and others
+
+3. update some functions and make them more efficient
+
+## minor changes
+
+1. cleaning and formating of some functions.
+
 
 # wbpip 0.1.3
 
