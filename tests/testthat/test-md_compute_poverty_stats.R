@@ -429,6 +429,22 @@ test_that("When watts is numeric(0) then watts equals 0" , {
   )
 })
 
+test_that("md_compute_watts works returns output same as watt_computation when povline is of length 1", {
+  out1 <- watt_computation(welfare = c(0.0355,0.0513,0.0689,0.0882),
+                           weight = c(0.1041,0.1411,0.1792,0.2182),
+                           povline = 1.9)
+  out2 <- md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+                           weight = c(0.1041,0.1411,0.1792,0.2182),
+                           povline = 1.9)
+  expect_equal(out1, out2)
+})
+
+test_that("md_compute_watts works for multiple povline values", {
+  out1 <- md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+                           weight = c(0.1041,0.1411,0.1792,0.2182),
+                           povline = c(1.9, 2.5))
+  expect_equal(out1, c(3.4053, 3.6797), tolerance = 0.001)
+})
 
 
 #_______________________________________________________________________

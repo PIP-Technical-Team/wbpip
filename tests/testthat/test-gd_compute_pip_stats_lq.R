@@ -233,6 +233,22 @@ test_that("compute_poverty_stats_lq works as expected", {
   expect_equal(round(out$ddl, 6), round(benchmark$ddl, 6))
 })
 
+test_that("gd_compute_poverty_stats_lq works on vectorized poverty line values", {
+  u <- 0.564
+  headcount <- c(0.7183, 0.9865)
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  kv <- list(e = -3.0457, m = -1.424636, n = -7.8408988, r = 10.693036617762,
+             s1 = -6.5047968104702, s2 = 1.00100580701388)
+
+  out1 <- gd_compute_poverty_stats_lq(u, headcount[1], A, B, C, kv)
+  out2 <- gd_compute_poverty_stats_lq(u, headcount[2], A, B, C, kv)
+  out <- Map(c, out1, out2)
+  out3 <- gd_compute_poverty_stats_lq(u, headcount, A, B, C, kv)
+  expect_equal(out3, out, tolerance = 1e-5)
+})
+
 test_that("gd_compute_pov_severity_lq() works as before the function update", {
 
   # Define objects -----

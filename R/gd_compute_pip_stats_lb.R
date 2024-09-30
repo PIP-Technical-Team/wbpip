@@ -186,11 +186,13 @@ check_curve_validity_lb <- function(headcount, A, B, C) {
   }
 
   # WHAT IS THE RATIONAL HERE?
-  is_normal <- if (!is.na(headcount)) {
-    is_normal <- TRUE
-  } else {
-    is_normal <- FALSE
-  }
+  # is_normal <- if (!is.na(headcount)) {
+  #   is_normal <- TRUE
+  # } else {
+  #   is_normal <- FALSE
+  # }
+
+  is_normal <- all(!is.na(headcount))
 
   return(list(
     is_valid = is_valid,
@@ -323,7 +325,14 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @export
 #'
 gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
+  if(length(headcount) != length(povline)) {
+    cli::cli_abort("Length of headcount and povline is not the same")
+  }
+  mapply(\(x, y) gd_compute_watts_lb_calc(x, mean, y, dd, A, B, C), headcount, povline)
+}
 
+
+gd_compute_watts_lb_calc <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -369,7 +378,6 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
     return(watts)
   }
 }
-
 #' Computes distributional stats from Lorenz beta fit
 #'
 #' @inheritParams gd_estimate_lb
@@ -577,6 +585,23 @@ gd_compute_fit_lb <- function(welfare,
                               A,
                               B,
                               C) {
+
+  out <- lapply(headcount, function(x)
+    gd_compute_fit_lb_calc(welfare, population, x, A, B, C))
+
+  res <- collapse::rowbind(out)
+
+  return(res)
+}
+
+gd_compute_fit_lb_calc <- function(welfare,
+                                   population,
+                                   headcount,
+                                   A,
+                                   B,
+                                   C
+
+) {
   if (!is.na(headcount)) {
     lasti <- 0
     sse <- 0 # Sum of square error
@@ -600,7 +625,6 @@ gd_compute_fit_lb <- function(welfare,
   } else {
     out <- list(sse = NA_real_, ssez = NA_real_)
   }
-
   return(out)
 }
 
@@ -638,9 +662,7 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     C = C
   )
   # Check headcount invalidity conditions
-  if (headcount < 0 | is.na(headcount)) {
-    return(NA_real_)
-  }
+  condition0 <- headcount < 0 | is.na(headcount)
 
   condition1 <- is.na(BETAI(
     a = 2 * B - 1,
@@ -657,12 +679,8 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     b = 2 * C - 1,
     x = headcount
   ))
-
-  if (condition1 | condition2 | condition3) {
-    return(NA_real_)
-  }
-
-  return(headcount)
+  # return
+  ifelse(condition0 | condition1 | condition2 | condition3, NA_real_, headcount)
 }
 
 #' BETAI
@@ -675,27 +693,19 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #'
 #' @return numeric
 #' @noRd
+
 BETAI <- function(a, b, x) {
-  if (!is.na(x)) {
-    bt <- betai <- 0
-
-    if (x == 0 || x == 1) {
-      bt <- 0
-    } else {
-      bt <- exp((a * log(x)) + (b * log(1 - x)))
-    }
-
-    if (x < (a + 1) / (a + b + 2)) {
-      betai <- bt * BETAICF(a, b, x) / a
-    } else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b))) {
-      betai <- NA_real_
-    } else {
-      betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
-    }
-  } else {
-    betai <- NA_real_
-  }
-
+  betai <- vector("numeric", length(x))
+  indx1 <- is.na(x)
+  betai[indx1] <- NA_real_
+  x <- x[!indx1]
+  bt <- ifelse(x %in% c(0, 1), 0, exp((a * log(x)) + (b * log(1 - x))))
+  out <- data.table::fcase(
+    x < (a + 1) / (a + b + 2), bt * BETAICF(a, b, x) / a,
+    rep(is.na(GAMMLN(a)) | is.na(GAMMLN(b)) | is.na(GAMMLN(a + b)), length(x)), NA_real_,
+    rep(TRUE, length(x)) , exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
+  )
+  betai[!indx1] <- out
   return(betai)
 }
 
@@ -713,20 +723,24 @@ GAMMLN <- function(xx) {
   fpf <- 5.5
   x <- xx - 1
   tmp <- x + fpf
-  if (tmp <= 0) {
-    return(NA_real_)
-  }
+  result <- numeric(length(xx))
+  idx1 <- tmp <= 0
+  result[idx1] <- NA_real_
+  tmp <- tmp[!idx1]
+  x <- x[!idx1]
 
   tmp <- (x + 0.5) * log(tmp) - tmp
-  # ser <- 1L
-  x <-  c(x + 1:6)
-  ser <- sum(cof / x) + 1
 
-  if (stp * ser <= 0) {
-    return(NA_real_)
-  }
+  ser <- sapply(x, \(p) {
+    q <- p + 1:6
+    sum(cof/q) + 1
+  })
+  idx2 <- stp * ser <= 0
+  res <- tmp + log(stp * ser)
+  res[idx2] <- NA_real_
+  result[!idx1] <- res
 
-  return(tmp + log(stp * ser))
+  return(result)
 }
 
 #' BETAICF
@@ -741,6 +755,10 @@ GAMMLN <- function(xx) {
 #' @noRd
 #'
 BETAICF <- function(a, b, x) {
+  vapply(x, function(p) BETAICF_calc(a, b, p), numeric(1L))
+}
+
+BETAICF_calc <- function(a, b, x) {
   eps <- 3e-7
   am <- 1
   bm <- 1
@@ -787,17 +805,17 @@ gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) 
   }
   # REVIEW RATIONAL FOR THESE ADJUSTMENTS
   # Adjust Poverty gap
-  if (!is.na(headcount)) {
-    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
-    if (!anyNA(headcount, pov_gap)) {
-      pov_gap <- if (headcount < pov_gap) headcount - 0.00001 else pov_gap
-      pov_gap <- if (pov_gap < 0) 0 else pov_gap
-    }
-  } else {
-    pov_gap <- NA_real_
-  }
+  res <- rep(NA_real_, length(headcount))
+  indx <- !is.na(headcount)
 
-  return(pov_gap)
+  if(any(indx)) {
+    headcount <- headcount[indx]
+    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
+    pov_gap <- ifelse(headcount < pov_gap, headcount - 0.00001, pov_gap)
+    pov_gap <- pmax(pov_gap, 0)
+    res[indx] <- pov_gap
+  }
+  return(res)
 }
 
 #' Compute poverty severity for Lorenz Beta fit
@@ -810,42 +828,36 @@ gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) 
 #' @return numeric
 #' @export
 gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, C, u = NULL) {
-
+  # Do we want to check length of povline, headcount and pov_gap to be equal?
   if (is.null(u)) {
     u <-  mean/povline
   }
 
-  if (!anyNA(headcount, pov_gap)) {
-    u1 <- 1 - u
-    beta1 <- BETAI(
-      a = 2 * B - 1,
-      b = 2 * C + 1,
-      x = headcount
-    )
-    beta2 <- BETAI(
-      a = 2 * B,
-      b = 2 * C,
-      x = headcount
-    )
-    beta3 <- BETAI(
-      a = 2 * B + 1,
-      b = 2 * C - 1,
-      x = headcount
-    )
+  u1 <- 1 - u
+  beta1 <- BETAI(
+    a = 2 * B - 1,
+    b = 2 * C + 1,
+    x = headcount
+  )
+  beta2 <- BETAI(
+    a = 2 * B,
+    b = 2 * C,
+    x = headcount
+  )
+  beta3 <- BETAI(
+    a = 2 * B + 1,
+    b = 2 * C - 1,
+    x = headcount
+  )
 
-    pov_gap_sq <-
-      u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
-      (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+  pov_gap_sq <-
+    u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
+    (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
 
-    # REVIEW RATIONAL FOR THESE ADJUSTMENTS
-    # Adjust Poverty severity
-    if (!anyNA(pov_gap, pov_gap_sq)) {
-      pov_gap_sq <- if (pov_gap < pov_gap_sq) pov_gap - 0.00001 else pov_gap_sq
-      pov_gap_sq <- if (pov_gap_sq < 0) 0 else pov_gap_sq
-    }
-  } else {
-    pov_gap_sq <- NA_real_
-  }
+  # REVIEW RATIONAL FOR THESE ADJUSTMENTS
+  # Adjust Poverty severity
+  pov_gap_sq <- ifelse(pov_gap < pov_gap_sq, pov_gap - 0.00001, pov_gap_sq)
+  pov_gap_sq <- pmax(pov_gap_sq, 0)
 
   return(pov_gap_sq)
 }
@@ -863,6 +875,11 @@ gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, 
 #' @return numeric
 #' @noRd
 rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
+  vapply(povline, function(x) rtSafe_calc(x1, x2, xacc, mean, x, A, B, C), numeric(1L))
+}
+
+
+rtSafe_calc <- function(x1, x2, xacc, mean, povline, A, B, C) {
   funcCall1 <- funcD(x1, mean, povline, A, B, C)
   fl <- funcCall1[[1]]
 
@@ -925,7 +942,6 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 
   return(NA_real_)
 }
-
 #' funcD
 #'
 #' **TO BE DOCUMENTED**
@@ -957,6 +973,10 @@ funcD <- function(x, mean, povline, A, B, C) {
 #' @return numeric
 #' @noRd
 rtNewt <- function(mean, povline, A, B, C) {
+  vapply(povline, function(x) rtNewt_calc(mean, x, A, B, C), numeric(1L))
+}
+
+rtNewt_calc <- function(mean, povline, A, B, C) {
   x1 <- 0L
   x2 <- 1L
   xacc <- 1e-4
