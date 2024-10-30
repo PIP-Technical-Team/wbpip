@@ -204,7 +204,7 @@ md_compute_fgt <- function(fgt_data        = NULL,
   # estimate FGT
   x <-
     ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
-    fmean(w = fgt_data$weight)
+    mean(w = fgt_data$weight)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
