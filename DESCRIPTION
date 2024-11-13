@@ -45,7 +45,8 @@ Suggests:
     rmarkdown,
     markdown,
     readr,
-    pipr (>= 1.0.0)
+    pipr (>= 1.0.0),
+    pipfaker
 URL: https://pip-technical-team.github.io/wbpip, https://github.com/PIP-Technical-Team/wbpip, https://pip-technical-team.github.io/wbpip/
 BugReports: https://github.com/PIP-Technical-Team/wbpip/issues
 Depends: 
