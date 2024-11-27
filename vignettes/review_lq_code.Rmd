@@ -1,8 +1,8 @@
 ---
-title: "review_lq_code"
+title: "Quadratic Lorenz function"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{review_lq_code}
+  %\VignetteIndexEntry{Quadratic Lorenz function}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

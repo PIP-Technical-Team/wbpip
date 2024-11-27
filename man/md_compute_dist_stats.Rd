@@ -8,7 +8,7 @@ md_compute_dist_stats(
   welfare,
   weight,
   mean = NULL,
-  nbins = NULL,
+  nbins = 10,
   lorenz = NULL,
   n_quantile = 10
 )
@@ -19,7 +19,7 @@ md_compute_dist_stats(
 \item{mean}{numeric: A value with the mean. Optional.}
 
 \item{nbins}{numeric: number of points on the Lorenz curve. Optional. Only
-used if \code{lorenz} is NULL}
+used if \code{lorenz} is NULL. Default is 10.}
 
 \item{lorenz}{data.frame: A table with points on the Lorenz curve. Output of
 \code{md_compute_lorenz()}. Optional.}

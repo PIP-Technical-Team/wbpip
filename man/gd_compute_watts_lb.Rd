@@ -4,7 +4,7 @@
 \alias{gd_compute_watts_lb}
 \title{Computes Watts Index from beta Lorenz fit}
 \usage{
-gd_compute_watts_lb(headcount, mean, povline, dd, A, B, C)
+gd_compute_watts_lb(headcount, mean, povline, dd = 0.005, A, B, C)
 }
 \arguments{
 \item{headcount}{numeric: Headcount index.}

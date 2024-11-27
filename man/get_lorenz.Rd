@@ -17,12 +17,16 @@ get_lorenz(
 
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights.}
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,
+\code{rep(1, length(welfare))}.}
 
 \item{distribution_type}{character: Type of distribution, either micro,
 group, aggregate or imputed.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve.}
+\item{nbins}{numeric: number of points on the Lorenz curve. if \code{NULL} the
+returning  Lorenz curve would be the  length of the original welfare vector
+minus the number of \code{NAs} of different observations in  \code{welfare} and
+\code{weight}. Default is \code{100} for \code{length(welfare) > 1000} and \code{20} otherwise.}
 }
 \value{
 data.frame

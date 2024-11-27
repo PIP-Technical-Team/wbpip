@@ -13,12 +13,12 @@ md_compute_mld <- function(welfare, weight, mean = NULL) {
 
   # Compute MLD
   if (is.null(mean)) {
-    mean <- collapse::fmean(x = welfare, w = weight)
+    mean <- fmean(x = welfare, w = weight)
   }
 
   welfare[welfare <= 0] <- 1 # this should be done before the mean
   deviation <- log(mean / welfare)
-  mld <- collapse::fmean(
+  mld <- fmean(
     x = deviation,
     w = weight
   )

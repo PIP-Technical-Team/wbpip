@@ -52,10 +52,15 @@ sd_create_synth_vector <- function(welfare,
   reg_results_lq <- regres(prepped_data, is_lq = TRUE)
   reg_coef_lq <- reg_results_lq$coef
 
+  kv <- gd_lq_key_values(A = reg_coef_lq[1],
+                         B = reg_coef_lq[2],
+                         C = reg_coef_lq[3])
+
   ## STEP 3: Calculate distributional stats
   results_lq <- gd_estimate_dist_stats_lq(
     mean = mean, p0 = p0, A = reg_coef_lq[1],
-    B = reg_coef_lq[2], C = reg_coef_lq[3]
+    B = reg_coef_lq[2], C = reg_coef_lq[3],
+    key_values = kv
   )
 
   results_lq <- append(results_lq, reg_results_lq)
@@ -120,11 +125,14 @@ sd_create_synth_vector <- function(welfare,
     A <- reg_coef_lq[1]
     B <- reg_coef_lq[2]
     C <- reg_coef_lq[3]
+
     # Compute welfare values
 
     # Vectorize is faster than purrr
-    vderive_lq <- Vectorize(derive_lq, vectorize.args = "x")
-    welfare_s <- vderive_lq(weight_range, A, B, C) * mean
+    # vderive_lq <- Vectorize(derive_lq, vectorize.args = "x")
+    # welfare_s <- vderive_lq(weight_range, A, B, C) * mean
+
+    welfare_s <- derive_lq(weight_range, A, B, C, key_values = kv) * mean
 
     model_used <- "quadratic Lorenz"
 
@@ -135,8 +143,10 @@ sd_create_synth_vector <- function(welfare,
 
     # Compute welfare values
 
-    vderive_lb <- Vectorize(derive_lb, vectorize.args = "x")
-    welfare_s <- vderive_lb(weight_range, A, B, C) * mean
+    # vderive_lb <- Vectorize(derive_lb, vectorize.args = "x")
+    # welfare_s <- vderive_lb(weight_range, A, B, C) * mean
+
+    welfare_s <- derive_lb(weight_range, A, B, C) * mean
 
     model_used <- "Beta Lorenz"
   }

@@ -31,3 +31,35 @@ get_weights <- function(year) {
   }
   return(out)
 }
+
+#' Check for NA values in vector
+#'
+#' It is used for now on Lorenz curves equation
+#'
+#' @param x numeric: A vector
+#' @return A message if any values are NA or Inf
+#' @keywords internal
+check_NA_Inf_values <- function(x){
+
+  if((anyNA(x)==TRUE | any(is.infinite(x))==TRUE)){
+    cli::cli_abort("x should not contain NA or Inf values")
+  }
+
+  return(invisible(TRUE))
+}
+
+#' Check for negative values in vector
+#'
+#' It is used for now on Lorenz curves equation
+#'
+#' @param x numeric: A vector
+#' @return A message if any values are negative
+#' @keywords internal
+check_neg_values <- function(x){
+
+  if(any(x<0)==TRUE){
+    cli::cli_abort("All values in x should be positive")
+  }
+
+  return(invisible(TRUE))
+}
