@@ -1,6 +1,6 @@
 Package: wbpip
 Title: What the Package Does (One Line, Title Case)
-Version: 0.1.0.9001
+Version: 0.1.5
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -10,13 +10,21 @@ Authors@R:
             family = "Eilertsen",
             role = "aut",
             email = "aeilertsen@worldbank.org"),
-     person(given = "R. Andrés",
+     person(given = "R.Andrés",
             family = "Castañeda",
             role = "aut",
             email = "acastanedaa@worldbank.org"),
+     person(given = "Zander",
+            family = "Prinsloo",
+            role = "aut",
+            email = "zprinsloo@worldbank.org"),
+     person(given = "Diana Carolina",
+            family = "Garcia Rojas",
+            role = "aut",
+            email = "dgarciarojas@worldbank.org"),
      person(given = "Ifeanyi",
             family = "Nzegwu Edochie",
-            role = "aut",
+            role = "ctb",
             email = "iedochie@worldbank.org"),
      person(given = "Minh",
             family = "Cong Nguyen",
@@ -30,15 +38,15 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Suggests: 
     testthat,
     knitr,
     rmarkdown,
     markdown,
     readr,
-    pipr
-URL: https://pip-technical-team.github.io/wbpip, https://github.com/PIP-Technical-Team/wbpip
+    pipr (>= 1.0.0)
+URL: https://pip-technical-team.github.io/wbpip, https://github.com/PIP-Technical-Team/wbpip, https://pip-technical-team.github.io/wbpip/
 BugReports: https://github.com/PIP-Technical-Team/wbpip/issues
 Depends: 
     R (>= 3.5.0)
@@ -48,8 +56,11 @@ Imports:
     data.table,
     assertthat,
     cli,
-    collapse,
-    MASS
+    collapse (>= 2.0.9),
+    MASS,
+    lifecycle
 VignetteBuilder: knitr
 ByteCompile: true
 Config/testthat/edition: 3
+Remotes: 
+    github::worldbank/pipr

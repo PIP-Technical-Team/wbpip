@@ -77,7 +77,7 @@ md_compute_bins <- function(welfare, weight,
   attr(dt$bins, "label") <- "Quantiles"
 
   if ("simple" %in% output) {
-    return(dt[, "bins"])
+    return(dt[, bins])
   } else if ("full" %in% output) {
     return(dt)
   } else {

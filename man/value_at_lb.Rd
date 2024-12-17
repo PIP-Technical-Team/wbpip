@@ -24,4 +24,3 @@ numeric
 \description{
 \code{value_at_lb()}solves for beta Lorenz curves.
 }
-\keyword{internal}

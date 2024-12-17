@@ -1,8 +1,8 @@
 ---
-title: "review_lb_code"
+title: "Lorenz Beta function"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{review_lb_code}
+  %\VignetteIndexEntry{Lorenz Beta function}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

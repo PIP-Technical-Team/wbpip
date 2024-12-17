@@ -127,6 +127,31 @@ test_that("rtSafe assigns xl and xh appropriately when fl < 0", {
   )
 })
 
+test_that("rtSafe works for vectorized povline", {
+  # Constants
+  x1 <- 0.0001
+  x2 <- 0.9999
+  xacc <- 0.0001
+  mean <- 51.5660557757944
+  povline <- c(57.791666666666664, 59)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  benchmarck <- c(0.71833938360214233, 0.7312770)
+
+  out <- rtSafe(
+    x1 = x1,
+    x2 = x2,
+    xacc = xacc,
+    povline = povline,
+    mean = mean,
+    A = A,
+    B = B,
+    C = C
+  )
+  expect_equal(round(out, 5), round(benchmarck, 5))
+})
+
 test_that("funcD returns expected results", {
   # Constants
   x <- 0.0001
@@ -171,6 +196,25 @@ test_that("rtNewt returns expected results", {
   expect_equal(out, benchmarck)
 })
 
+test_that("rtNewt returns expected results for a vectorized povline", {
+  # Constants
+  mean <- 51.5660557757944
+  povline <- c(57.791666666666664, 59)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  benchmarck <- c(0.718339386776914, 0.7312734)
+
+  out <- rtNewt(
+    mean = 51.5660557757944,
+    povline = povline,
+    A = A,
+    B = B,
+    C = C
+  )
+  expect_equal(out, benchmarck)
+})
+
 test_that("GAMMLN returns expected results", {
   # Test1
   xx <- 0.88410180773089975
@@ -208,6 +252,14 @@ test_that("BETAI returns expected values", {
     BETAI(a = 0, b = 0, x = 0),
     NaN
   )
+  expect_equal(BETAI(1, 2, 0.985), 0.4998875, tolerance = 1e-6)
+  expect_equal(BETAI(1, 2, 0.567), 0.4062555, tolerance = 1e-6)
+})
+
+test_that("BETAI works for vectorized results expected values", {
+  out1 <- BETAI(1, 2, 0.985)
+  out2 <- BETAI(1, 2, 0.567)
+  expect_equal(BETAI(1, 2, c(0.985, 0.567)), c(out1, out2), tolerance = 1e-6)
 })
 
 test_that("BETAICF returns expected results", {
@@ -247,6 +299,12 @@ test_that("BETAICF returns expected results", {
   expect_equal(BETAICF(0.97744306, 1.9339481, 0.25566411), 1.559899929)
 })
 
+test_that("BETAICF works for vectorized x", {
+  out1 <- BETAICF(1, 2, 3)
+  out2 <- BETAICF(1, 2, 4.3)
+  expect_equal(BETAICF(1, 2, c(3, 4.3)), c(out1, out2), tolerance = 1e-6)
+})
+
 test_that("gd_compute_headcount_lb returns expected results", {
   # Constants
   mean <- 51.5660557757944
@@ -279,6 +337,18 @@ test_that("gd_compute_headcount_lb will return NAs, headcount is negative or NA"
   )
 })
 
+test_that("gd_compute_headcount_lb works for vectorized povline", {
+  mu <- 109.9
+  z <- c(89, 96)
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  out1 <- gd_compute_headcount_lb(mu, z[1], A, B, C)
+  out2 <- gd_compute_headcount_lb(mu, z[2], A, B, C)
+  expect_equal(gd_compute_headcount_lb(mu, z, A, B, C), c(out1, out2), tolerance = 1e-6)
+})
+
+
 test_that("gd_compute_pov_severity_lb returns expected results", {
   # Constants
   u <- 0.892274937721028
@@ -298,6 +368,19 @@ test_that("gd_compute_pov_severity_lb returns expected results", {
     C = C
   )
   expect_equal(out, benchmarck)
+})
+
+test_that("gd_compute_pov_severity_lb works for vectorized inputs", {
+  u <- 0.8922
+  headcount <- c(0.7183, 0.9865)
+  pg <- c(0.2713, 0.3543)
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  benchmarck <- c(0.1293419, 0.2605747)
+  res <- gd_compute_pov_severity_lb(u = u,headcount = headcount,pov_gap = pg,A = A,B = B,C = C)
+  expect_equal(res, benchmarck, tolerance = 1e-5)
+
 })
 
 test_that("gd_compute_watts_lb returns expected results", {
@@ -652,10 +735,25 @@ test_that("tests for the gd_compute_watts_lb", {
   expect_equal(try_cover1, 1)
 })
 
+
+test_that("test for vectorized headcount and povline", {
+  u <- 8922
+  headcount <- c(0.7183, 0.9865)
+  pg <- c(0.2713, 0.3543)
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+
+  expect_equal(
+    gd_compute_watts_lb(headcount = headcount, mean = u, povline = pg, A = A, B = B, C = C),
+    c(NA_real_, NA_real_)
+  )
+})
+
 test_that("in gd_compute_mld_lb ensure gap is 0.0005 when x1 <= 0", {
 
   ## not really a test but it should get the red mark away on coverage report to go away
-  expect_equal(gd_compute_mld_lb(0.0005, A = 1, B = 0.9676324, C = 1),
+  expect_equal(gd_compute_mld_lb(A = 1, B = 0.9676324, C = 1),
     0.2165068,
     tolerance = 1e-7
   )
@@ -703,9 +801,44 @@ test_that("gd_compute_pov_gap_lb works when headcount is NA", {
   C <- 0.52578600019473676
 
   res <- gd_compute_pov_gap_lb(u = u, A = A, B = B, C = C,
-                               headcount = NA)
+                               headcount = NA, povline = 89)
   expect_true(is.na(res))
 
+})
+
+test_that("gd_compute_pov_gap_lb works for vectorized headcount and povline", {
+
+  # constants
+  u <- 0.892274937721028
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+  hc <- c(0.473, 0.689)
+  pl <- c(89.98, 27.76)
+  out <- c(0.23287756, 0.27071656)
+  res1 <- gd_compute_pov_gap_lb(u = u, A = A, B = B, C = C,
+                               headcount = hc[1], povline = pl[1])
+  res2 <- gd_compute_pov_gap_lb(u = u, A = A, B = B, C = C,
+                               headcount = hc[2], povline = pl[2])
+  res <- gd_compute_pov_gap_lb(u = u, A = A, B = B, C = C,headcount = hc, povline = pl)
+  expect_equal(c(res1, res2), out, tolerance = 1e-6)
+  expect_equal(res, c(res1, res2), tolerance = 1e-6)
+})
+
+
+test_that("value_at_lb works as expected", {
+  A <- 0.578
+  B <- 0.942
+  C <- 0.526
+  hc <- c(0.473, 0.689)
+  res1 <- 0.2691459
+  res2 <- 0.4688482
+  out1 <- value_at_lb(hc[1], A, B, C)
+  out2 <- value_at_lb(hc[2], A, B, C)
+  out3 <- value_at_lb(hc, A, B, C)
+  expect_equal(out1, res1, tolerance = 1e-5)
+  expect_equal(out2, res2, tolerance = 1e-5)
+  expect_equal(out3, c(res1,res2), tolerance = 1e-5)
 })
 
 test_that("gd_compute_pov_severity_lb works when headcount or pov_gap is NA", {
@@ -736,6 +869,164 @@ test_that("GAMMLN works as expected", {
 
 })
 
+test_that("derive_lb works vectorized",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  # old version, before vectorisation
+  bm_oversion <- c(-Inf, 0.24300371, 0.31608768, 0.37950313, 0.44682910,
+                   0.59333558, 0.76211314, 0.93565850, 1.10428056, Inf)
+  benchmark <- vector("numeric",length(x))
+  for (i in 1:length(x)) {
+    benchmark[i] <- derive_lb(x[i],A,B,C)
+  }
+
+  res <- derive_lb(x,A,B,C)
+
+  expect_equal(res, benchmark)
+  expect_equal(res, bm_oversion)
+
+})
+
+test_that("derive_lb can handle vectors",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    0.01479999999999999892,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    0.25700000000000000622,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    0.70889999999999997460,
+    1.00000000000000000000
+  )
+
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  res <- derive_lb(x,A,B,C)
+
+  expect_equal(res,c(-Inf,
+                     0.2430037,
+                     0.3160877,
+                     0.3795031,
+                     0.4468291,
+                     0.5933356,
+                     0.7621131,
+                     0.9356585,
+                     1.1042806,
+                     Inf), tolerance = 1e-5 )
+
+})
+
+test_that("derive_lb can handle NA values",{
+  x <- c(
+    0.00000000000000000000,
+    0.00320000000000000015,
+    NA,
+    0.04429999999999999910,
+    0.09909999999999999365,
+    NA,
+    0.43850000000000000089,
+    0.59379999999999999449,
+    NA,
+    1.00000000000000000000
+  )
+
+  A <- 0.57803721740313529
+  B <- 0.94205090386544987
+  C <- 0.52578600019473676
+
+  res <- derive_lb(x,A,B,C)
+
+  expect_equal(res,c(-Inf,
+                     0.2430037,
+                     NA,
+                     0.3795031,
+                     0.4468291,
+                     NA,
+                     0.7621131,
+                     0.9356585,
+                     NA,
+                     Inf), tolerance = 1e-5 )
+
+})
 
 
+test_that("GAMMLN works as expected", {
+  expect_equal(GAMMLN(10), 12.80183, tolerance = 1e-5)
+  expect_equal(GAMMLN(12), 17.50231, tolerance = 1e-5)
+})
+
+test_that("GAMMLN works for vectors as expected", {
+  expect_equal(GAMMLN(c(10, 12, -12)), c(12.80183,17.50231, NA), tolerance = 1e-5)
+})
+
+
+test_that("gd_compute_fit_lb works as expected for scalar inputs", {
+  L <- c(
+    0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
+    0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1
+  )
+  P <- c(
+    0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
+    0.8196, 0.9174, 0.957, 0.9751, 1
+  )
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  headcount <- c(0.7183, 0.9865)
+
+  out1 <- gd_compute_fit_lb(L, P, headcount[1], A, B, C)
+
+  expect_length(out1, 2L)
+  expect_equal(names(out1), c("sse", "ssez"))
+  expect_equal(out1$sse, 0.002082803, tolerance = 1e-6)
+  expect_equal(out1$ssez, 0.000730413, tolerance = 1e-6)
+
+  out2 <- gd_compute_fit_lb(L, P, headcount[2], A, B, C)
+  expect_length(out2, 2L)
+  expect_equal(names(out1), c("sse", "ssez"))
+  expect_equal(out2$sse, 0.002082803, tolerance = 1e-6)
+  expect_equal(out2$ssez, 0.002082803, tolerance = 1e-6)
+})
+
+
+test_that("gd_compute_fit_lb works as expected for vectorized inputs", {
+  L <- c(
+    0.00208, 0.01013, 0.03122, 0.07083, 0.12808, 0.23498, 0.34887,
+    0.51994, 0.6427, 0.79201, 0.86966, 0.91277, 1
+  )
+  P <- c(
+    0.0092, 0.0339, 0.085, 0.164, 0.2609, 0.4133, 0.5497, 0.7196,
+    0.8196, 0.9174, 0.957, 0.9751, 1
+  )
+  A <- 0.578
+  B <- 0.9420
+  C <- 0.5257
+  headcount <- c(0.7183, 0.9865)
+
+  out <- gd_compute_fit_lb(L, P, headcount, A, B, C)
+
+  expect_length(out, 2L)
+  expect_equal(names(out), c("sse", "ssez"))
+  expect_equal(out$sse, c(0.002082803,0.002082803), tolerance = 1e-6)
+  expect_equal(out$ssez, c(0.000730413,0.002082803), tolerance = 1e-6)
+
+})
 

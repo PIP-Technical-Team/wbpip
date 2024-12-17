@@ -1,1 +1,106 @@
-url: https://pip-technical-team.github.io/wbpip
+url: https://pip-technical-team.github.io/wbpip/
+template:
+  bootstrap: 5
+  bottswatch: lux
+  bslib:
+    primary: '#76ABDF'
+development:
+  mode: auto
+navbar:
+  bg: primary
+  structure:
+    right: github
+  components:
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/PIP-Technical-Team/wbpip
+
+reference:
+- title: Microdata
+  contents:
+  - md_ABC_2000_income
+  - md_ABC_2010_income
+  - md_DEF_2000_consumption
+  - md_GHI_2000_consumption
+  - md_GHI_2000_income
+- title: Grouped data
+  contents:
+  - grouped_data_ex1
+  - grouped_data_ex2
+  - grouped_data_ex3
+  - gd_GHI_2009_income
+  - gd_clean_data
+  - gd_estimate_distribution
+
+- title: Lorenz Curve Validity Checks
+  contents:
+  - check_curve_validity_lb
+  - check_curve_validity_lq
+- title: Lorenz Functional Form Creation
+  contents:
+  - create_functional_form_lb
+  - create_functional_form_lq
+- title: Derivative Calculations
+  contents:
+  - derive_lb
+  - derive_lq
+- title: Lorenz Curve Solvers/Computations
+  contents:
+  - value_at_lb
+  - value_at_lq
+  - get_lorenz
+  - md_compute_lorenz
+  - regres
+
+- title: Distributional and Poverty Statistics Algorithms
+  contents:
+  - use_lq_for_distributional
+  - use_lq_for_poverty
+
+- title: Model Fitting and Statistics (Grouped Data)
+  contents:
+  - gd_compute_fit_lb
+  - gd_compute_fit_lq
+  - gd_compute_gini_lb
+  - gd_compute_gini_lq
+  - gd_compute_headcount_lb
+  - gd_compute_headcount_lq
+  - gd_compute_mld_lb
+  - gd_compute_mld_lq
+  - gd_compute_polarization_lb
+  - gd_compute_polarization_lq
+  - gd_compute_pov_gap_lb
+  - gd_compute_pov_gap_lq
+  - gd_compute_pov_severity_lb
+  - gd_compute_pov_severity_lq
+  - gd_compute_watts_lb
+  - gd_compute_watts_lq
+
+- title: Poverty and Inequality Measures
+  contents:
+  - fill_gaps
+  - compute_pip_stats
+  - md_compute_cumulative_share
+  - md_compute_fgt
+  - md_compute_headcount
+  - md_compute_pov_gap
+  - md_compute_pov_severity
+  - md_compute_watts
+  - md_compute_mld
+  - md_compute_polarization
+  - md_compute_poverty_stats
+  - get_gini
+  - md_compute_gini
+  - prod_compute_pip_stats
+
+- title: Welfare Statistics
+  contents:
+  - deflate_welfare_mean
+  - get_bins
+  - predict_request_year_mean
+  - get_9010_ratio
+  - get_average_shortfall
+  - get_income_gap_ratio
+  - get_number_poor
+  - get_palma_ratio
+  - get_total_shortfall

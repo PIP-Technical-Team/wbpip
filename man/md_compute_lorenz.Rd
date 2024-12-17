@@ -4,14 +4,27 @@
 \alias{md_compute_lorenz}
 \title{Lorenz curve}
 \usage{
-md_compute_lorenz(welfare, weight, nbins = NULL)
+md_compute_lorenz(
+  welfare,
+  weight = rep(1, length(welfare)),
+  nbins = if (length(welfare) > 1000) 100 else 20,
+  force_nbins = TRUE
+)
 }
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights.}
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,
+\code{rep(1, length(welfare))}.}
 
-\item{nbins}{numeric: number of points on the Lorenz curve.}
+\item{nbins}{numeric: number of points on the Lorenz curve. if \code{NULL} the
+returning  Lorenz curve would be the  length of the original welfare vector
+minus the number of \code{NAs} of different observations in  \code{welfare} and
+\code{weight}. Default is \code{100} for \code{length(welfare) > 1000} and \code{20} otherwise.}
+
+\item{force_nbins}{logical; Force the creation of exact nbins even there is
+no actual data that falls in the corresponding interval. This implies that
+some observations will be repeated.}
 }
 \value{
 data.frame
@@ -20,10 +33,10 @@ data.frame
 Compute the Lorenz curve for microdata.
 }
 \details{
-Given a vector of weights and welfare, this functions computes the
-Lorenz curve.
+Given a vector of weights and welfare, this functions computes the Lorenz
+curve.
 }
 \examples{
-wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
+md_compute_lorenz(welfare = md_ABC_2010_income$welfare,
+weight = md_ABC_2010_income$weight)
 }
-\keyword{internal}

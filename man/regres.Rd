@@ -32,4 +32,3 @@ grouped_data_ex2$weight)
 lq_res <- wbpip:::regres(lq_data)
 
 }
-\keyword{internal}

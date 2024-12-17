@@ -1,8 +1,8 @@
 ---
-title: "review_select_lorenz"
+title: "Select Lorenz function"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{review_select_lorenz}
+  %\VignetteIndexEntry{Select Lorenz function}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

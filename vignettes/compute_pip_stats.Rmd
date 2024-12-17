@@ -1,8 +1,8 @@
 ---
-title: "compute_pip_stats"
+title: "Compute pip stats"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{compute_pip_stats}
+  %\VignetteIndexEntry{Compute pip stats}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

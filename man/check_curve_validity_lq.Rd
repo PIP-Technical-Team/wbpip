@@ -4,7 +4,7 @@
 \alias{check_curve_validity_lq}
 \title{Check validity of Lorenz Quadratic fit}
 \usage{
-check_curve_validity_lq(A, B, C, e, m, n, r)
+check_curve_validity_lq(A, B, C, key_values)
 }
 \arguments{
 \item{A}{numeric: Lorenz curve coefficient. Output of
@@ -16,21 +16,24 @@ check_curve_validity_lq(A, B, C, e, m, n, r)
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
 
-\item{e}{numeric: e = -(A + B + C + 1): condition for the curve to go through
-(1, 1).}
-
-\item{m}{numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
-an ellipse (m is called alpha in paper).}
-
-\item{n}{numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper}
-
-\item{r}{r = (n^2) - (4 * m * e^2). r is called K in paper.}
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 list
 }
 \description{
 \code{check_curve_validity_lq()} checks the validity of the Lorenz Quadratic fit
+}
+\details{
+e numeric: e = -(A + B + C + 1): condition for the curve to go through
+(1, 1).
+
+m numeric: m = (B^2) - (4 * A). m < 0: condition for the curve to be
+an ellipse (m is called alpha in paper).
+
+n numeric: n = (2 * B * e) - (4 * C). n is called Beta in paper
+r r = (n^2) - (4 * m * e^2). r is called K in paper.
 }
 \references{
 Datt, G. 1998. "\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{Computational Tools For Poverty Measurement And Analysis}". FCND
@@ -42,4 +45,3 @@ Econometrics 174} (1): 44.
 Villasenor, J., B. C. Arnold. 1989. "\href{https://EconPapers.repec.org/RePEc:eee:econom:v:40:y:1989:i:2:p:327-338}{Elliptical Lorenz curves}".
 \emph{Journal of Econometrics 40} (2): 327-338.
 }
-\keyword{internal}

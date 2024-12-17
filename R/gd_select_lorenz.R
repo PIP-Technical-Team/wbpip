@@ -102,7 +102,7 @@ gd_select_lorenz <- function(lq, lb) {
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 
 use_lq_for_poverty <- function(lq,
                                lb) {
@@ -153,9 +153,7 @@ use_lq_for_poverty <- function(lq,
     use_lq_for_pov <- lq[["ssez"]] <= lb[["ssez"]]
   }
 
-  return(
-    use_lq_for_pov
-  )
+  use_lq_for_pov
 }
 
 #' Algorithm to decide which Lorenz fit to use for distributional statistics
@@ -166,7 +164,7 @@ use_lq_for_poverty <- function(lq,
 #' @return logical:
 #' returns TRUE for Lorenz Quadratic
 #' returns FALSE for Lorenz Beta
-#' @keywords internal
+#' @export
 use_lq_for_distributional <- function(lq,
                                       lb) {
   # X = Yes
@@ -334,58 +332,62 @@ retrieve_poverty <- function(lq,
       watts            = NA_real_
     ))
   }
-  if (use_lq_for_pov) {
-    poverty_line <- lq[["poverty_line"]]
-    headcount <- lq[["headcount"]]
-    poverty_gap <- lq[["poverty_gap"]]
-    poverty_severity <- lq[["poverty_severity"]]
-    eh <- lq[["eh"]]
-    epg <- lq[["epg"]]
-    ep <- lq[["ep"]]
-    gh <- lq[["gh"]]
-    gpg <- lq[["gpg"]]
-    gp <- lq[["gp"]]
+  poverty_line <- headcount <- poverty_gap <- poverty_severity <- eh <- epg <- ep <- gh <- gpg <- gp <- watts <- NA_real_
+  for (i in seq_along(use_lq_for_pov)) {
+    if (use_lq_for_pov[i]) {
+      poverty_line[i] <- lq[["poverty_line"]][i]
+      headcount[i] <- lq[["headcount"]][i]
+      poverty_gap[i] <- lq[["poverty_gap"]][i]
+      poverty_severity[i] <- lq[["poverty_severity"]][i]
+      eh[i] <- lq[["eh"]][i]
+      epg[i] <- lq[["epg"]][i]
+      ep[i] <- lq[["ep"]][i]
+      gh[i] <- lq[["gh"]][i]
+      gpg[i] <- lq[["gpg"]][i]
+      gp[i] <- lq[["gp"]][i]
 
-    if (!is.na(lq[["watts"]])) {
-      watts <- lq[["watts"]]
-    } else if (!is.na(lb[["watts"]])) {
-      watts <- lb[["watts"]]
+      if (!is.na(lq[["watts"]][i])) {
+        watts[i] <- lq[["watts"]][i]
+      } else if (!is.na(lb[["watts"]][i])) {
+        watts[i] <- lb[["watts"]][i]
+      } else {
+        watts[i] <- NA_real_
+      }
     } else {
-      watts <- NA_real_
+      poverty_line[i] <- lb[["poverty_line"]][i]
+      headcount[i] <- lb[["headcount"]][i]
+      poverty_gap[i] <- lb[["poverty_gap"]][i]
+      poverty_severity[i] <- lb[["poverty_severity"]][i]
+      eh[i] <- lb[["eh"]][i]
+      epg[i] <- lb[["epg"]][i]
+      ep[i] <- lb[["ep"]][i]
+      gh[i] <- lb[["gh"]][i]
+      gpg[i] <- lb[["gpg"]][i]
+      gp[i] <- lb[["gp"]][i]
+      if (!is.na(lb[["watts"]][i])) {
+        watts[i] <- lb[["watts"]][i]
+      } else if (!is.na(lq[["watts"]][i])) {
+        watts[i] <- lq[["watts"]][i]
+      } else {
+        watts[i] <- NA_real_
+      }
     }
-  } else {
-    poverty_line <- lb[["poverty_line"]]
-    headcount <- lb[["headcount"]]
-    poverty_gap <- lb[["poverty_gap"]]
-    poverty_severity <- lb[["poverty_severity"]]
-    eh <- lb[["eh"]]
-    epg <- lb[["epg"]]
-    ep <- lb[["ep"]]
-    gh <- lb[["gh"]]
-    gpg <- lb[["gpg"]]
-    gp <- lb[["gp"]]
-    if (!is.na(lb[["watts"]])) {
-      watts <- lb[["watts"]]
-    } else if (!is.na(lq[["watts"]])) {
-      watts <- lq[["watts"]]
-    } else {
-      watts <- NA_real_
+    # fix abnormal values
+    if (headcount[i] < 0) {
+      headcount[i] <- NA_real_
+      poverty_gap[i] <- NA_real_
+      poverty_severity[i] <- NA_real_
+    }
+    # headcount is inferred from the fitted lorenz curve. At high value of the poverty
+    # line, the returned headcount can be superior to 1, which does not make sense.
+    # Hence the ad-hoc correction below
+    if (headcount[i] > 1) {
+      headcount[i] <- max_headcount
+      poverty_gap[i] <- max_poverty_gap
+      poverty_severity[i] <- max_poverty_severity
     }
   }
-  # fix abnormal values
-  if (headcount < 0) {
-    headcount <- NA_real_
-    poverty_gap <- NA_real_
-    poverty_severity <- NA_real_
-  }
-  # headcount is inferred from the fitted lorenz curve. At high value of the poverty
-  # line, the returned headcount can be superior to 1, which does not make sense.
-  # Hence the ad-hoc correction below
-  if (headcount > 1) {
-    headcount <- max_headcount
-    poverty_gap <- max_poverty_gap
-    poverty_severity <- max_poverty_severity
-  }
+
 
   return(
     list

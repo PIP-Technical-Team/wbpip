@@ -62,9 +62,9 @@ test_that("md_infer_poverty_line() correctly handle NAs", {
   # NAs are not removed as they are supposed to have been removed earlier in
   # the pipeline. Adding this unit test here to highlight the fact that this is
   # expected behavior.
-  res <- md_infer_poverty_line(
+  md_infer_poverty_line(
     welfare = rep(100, 10001),
-    weight = c(rep(1, 10000), NA))
+    weight = c(rep(1, 10000), NA))  |>
+    expect_error()
 
-  expect_equal(res, NaN)
 })

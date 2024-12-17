@@ -33,20 +33,26 @@ gd_compute_dist_stats <- function(welfare,
   A <- reg_results_lq$coef[1]
   B <- reg_results_lq$coef[2]
   C <- reg_results_lq$coef[3]
+  kv <- gd_lq_key_values(A, B, C)
 
   # STEP 3: Compute Sum of Squared Error
   reg_results_lq[["sse"]] <- gd_compute_dist_fit_lq(welfare = welfare,
                                                     population = population,
                                                     A = A,
                                                     B = B,
-                                                    C = C)
+                                                    C = C,
+                                                    key_values = kv)
 
   # STEP 3: Calculate distributional stats
+  # Compute key numbers from Lorenz quadratic form
+
+
   results_lq <- gd_estimate_dist_stats_lq(mean = mean,
                                           p0 = p0,
                                           A = A,
                                           B = B,
-                                          C = C)
+                                          C = C,
+                                          key_values = kv)
 
   results_lq <- append(results_lq, reg_results_lq)
 
@@ -105,26 +111,23 @@ gd_compute_dist_stats <- function(welfare,
 #' @inheritParams gd_estimate_lq
 #' @return list
 #' @keywords internal
-gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
+gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C, key_values) {
 
   # Compute Lorenz quadratic  -----------------------------------------------
 
-  # Compute key numbers from Lorenz quadratic form
-  # Theorem 3 from original Lorenz quadratic paper
-  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
-  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called alpha in paper)
-  n <- (2 * B * e) - (4 * C) # n is called Beta in paper
-  r <- (n^2) - (4 * m * e^2) # r is called K in paper
-
-  validity <- check_curve_validity_lq(A, B, C, e, m, n, r)
-
-  r <- sqrt(r)
-  s1 <- (r - n) / (2 * m)
-  s2 <- -(r + n) / (2 * m)
+  validity <- check_curve_validity_lq(A,
+                                      B,
+                                      C,
+                                      key_values = key_values)
 
   # Compute distributional measures -----------------------------------------
 
-  dist_stats <- gd_compute_dist_stats_lq(mean, p0, A, B, C, e, m, n, r)
+  dist_stats <- gd_compute_dist_stats_lq(mean,
+                                         p0,
+                                         A,
+                                         B,
+                                         C,
+                                         key_values = key_values)
 
   out <- list(
     mean = mean,
@@ -141,6 +144,38 @@ gd_estimate_dist_stats_lq <- function(mean, p0, A, B, C) {
 
   return(out)
 }
+
+
+#' Calculates the key values in Table 2 of Datt (1998)
+#' @inheritParams gd_estimate_lq
+#' @return list
+#' @keywords internal
+gd_lq_key_values <- function(A, B, C) {
+
+  # Theorem 3 from original Lorenz quadratic paper
+  e <- -(A + B + C + 1) # e = -(A + B + C + 1): condition for the curve to go through (1, 1)
+  m <- (B^2) - (4 * A) # m < 0: condition for the curve to be an ellipse (m is called \alpha original in paper)
+  n <- (2 * B * e) - (4 * C) # n is called $\beta$ in original paper
+  r <- sqrt((n^2) - (4 * m * e^2))  # r is called $K*2\alpha$ in original paper
+
+  s1 <- (r - n) / (2 * m)
+  s2 <- -(r + n) / (2 * m)
+
+#   ____________________________________________________________________________
+#   Return                                                                  ####
+  l_res <- list(
+    e = e,
+    m = m,
+    n = n,
+    r = r,
+    s1 = s1,
+    s2 = s2
+  )
+  return(l_res)
+
+}
+
+
 
 #' Estimates distributional stats from beta Lorenz fit
 #' @inheritParams gd_estimate_lb
@@ -252,12 +287,13 @@ gd_compute_dist_fit_lq <- function(welfare,
                                    population,
                                    A,
                                    B,
-                                   C) {
+                                   C,
+                                   key_values) {
 
   sse <- 0L # Sum of square error
 
   for (i in seq_len(length(welfare) - 1)) {
-    residual <- welfare[i] - value_at_lq(population[i], A, B, C)
+    residual <- welfare[i] - value_at_lq(population[i], A, B, C, key_values)
     residual_sq <- residual^2
     sse <- sse + residual_sq
   }

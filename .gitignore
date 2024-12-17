@@ -8,4 +8,4 @@ doc/
 Meta/
 tests/testdata/local/
 TEMP/
-docs
+/sessionInfoLog

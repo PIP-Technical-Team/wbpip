@@ -1,12 +1,13 @@
 #' Compute Poverty Statistics
 #'
-#' Compute poverty statictics for microdata.
+#' Compute poverty statictics for microdata - replace old [md_compute_poverty_stats]
 #'
 #' Given a vector of consumption or income values and their respective weights
 #' `md_compute_poverty_stats()` computes poverty headcount, poverty gap,
 #' poverty severity and the watts index.
 #'
 #' @inheritParams compute_pip_stats
+#' @inheritParams md_compute_headcount
 #' @param povline_lcu numeric: Poverty line in Local Currency Unit (LCU).
 #'
 #' @examples
@@ -16,40 +17,306 @@
 #'   povline_lcu = 10
 #' )
 #' @return list
-#' @keywords internal
-md_compute_poverty_stats <- function(welfare, weight, povline_lcu) {
+#' @export
+md_compute_poverty_stats <- function(
+    welfare,
+    weight,
+    povline_lcu
+) {
 
-  pov_status <- (welfare < povline_lcu)
-  relative_distance <- (1 - (welfare[pov_status] / povline_lcu))
-  weight_pov <- weight[pov_status]
-  weight_total <- sum(weight)
+  # ______________________________________________________________________
+  # FGT measures
+  # ______________________________________________________________________
 
-  fgt0 <- sum(weight_pov) / weight_total
-  fgt1 <- sum(relative_distance * weight_pov) / weight_total
-  fgt2 <- sum(relative_distance^2 * weight_pov) / weight_total
+  fgt <- md_compute_fgt(welfare     = welfare,
+                        weight      = weight,
+                        povline     = povline_lcu,
+                        return_data =  TRUE) |>
+    md_compute_fgt(alpha = 1,
+                   return_data =  TRUE) |>
+    md_compute_fgt(alpha = 2,
+                   return_data =  TRUE)
 
-  #--------- Watts index ---------
-  keep <- welfare > 0 & pov_status
-  w_gt_zero <- welfare[keep]
-  sensitive_distance <- log(povline_lcu / w_gt_zero)
+  hc <- fgt$FGT0
+  pg <- fgt$FGT1
+  ps <- fgt$FGT2
 
-  # watts              <- collapse::fmean(x = c(sensitive_distance, non_pov),
-  #                                       w = weight[welfare > 0])
-  #--------- Old Watts ---------
+  watts <- md_compute_watts(
+    welfare           = welfare,
+    weight            = weight,
+    povline           = povline_lcu
+  )
 
-  watts <- sum(sensitive_distance * weight[keep]) /
-    weight_total
+  # ______________________________________________________________________
+  # Return list
+  # ______________________________________________________________________
+  return(
+    list(
+      headcount        = hc,
+      poverty_gap      = pg,
+      poverty_severity = ps,
+      watts            = watts
+    )
+  )
+}
+
+
+
+
+#' Compute FGT poverty family measures and Watts index for Microdata
+#'
+#' @param fgt_data list of previously computed fgt calculations
+#' @param welfare numeric vector with either income or consumption
+#' @param weight numeric vector with sample weights. Default is 1.
+#' @param povline poverty line. Default is the half the weighted median of
+#'   `welfare`. Allows for vector.
+#' @param alpha numeric. Alpha parameter of FGT measures. if `0`, the default,
+#'   it estimates the poverty headcount. If `1`, the poverty gap, and if `2`,
+#'   the poverty severity. In practice, you can use higher levels of `alpha`,
+#'   but their theoretical interpretation usually goes up to a value of `2`.
+#' @param return_data logical: whether to return a list to be used in subsequent
+#'   calls of [md_compute_fgt] in the parameter `fgt_data`.
+#' @param include_povline logical: Whether to include the poverty line as
+#'   threshold for poverty measure. The default is `FALSE`, as absolute poverty
+#'   is defined as those household *below* the poverty line. Yet, it might be
+#'   useful to include the value of the poverty line for a very limited set of
+#'   analysis (*seldom used*).
+#'
+#' @details [md_compute_fgt] works in two ways. It could either receive a list
+#'   of previously computed calculations in argument `fgt_data` or receive the
+#'   standard poverty calculation inputs such as `welfare`, `weights` and
+#'   `povline`. The first modality ensures efficiency in computations as the
+#'   poverty status of each observation and their relative distance to the
+#'   poverty line is calculated only once.
+#'
+#' @section wrappers:
+#'
+#'   There are a few functions that are basically wrappers of [md_compute_fgt].
+#'   They do not serve any purpose beyond ease to the user to identify the right
+#'   measure.
+#'
+#'   [md_compute_headcount] Computes poverty headcount, which is equivalent to
+#'   `md_compute_fgt(alpha = 0)`
+#'
+#'   [md_compute_pov_gap]   Computes poverty gap, which is equivalent to
+#'   `md_compute_fgt(alpha = 1)`
+#'
+#'   [md_compute_pov_severity] Computes poverty severity, which is equivalent to
+#'   `md_compute_fgt(alpha = 2)`
+#'
+#'   [md_compute_watts] is not a wrapper of [md_compute_fgt] but it is part of
+#'   the poverty measures, so it is included in this documentation. Notice that
+#'   the arguments are the same as of the functions above.
+#'
+#' @section inclusion of poverty line: when `include_povline` is `TRUE`, the
+#'   value of the `povline` is artificially modify to `povline + e` where `e` is
+#'   a very small number (`1e-10`), ensure the inclusion of the line.
+#'
+#'
+#' @return either a vector with the fgt measure selected in argument `alpha` or
+#'   a list of fgt estimations if `return_data` is `TRUE`
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' welfare <- md_ABC_2010_income$welfare/1e6
+#' weight  <- md_ABC_2010_income$weight
+#'
+#' wna     <- !is.na(welfare)
+#' welfare <- welfare[wna]
+#' weight  <- weight[wna]
+#'
+#' md_compute_fgt(welfare = welfare,
+#'                weight  = weight,
+#'                povline = 5)
+#'
+#' # Multiple values of alpha using the return_data argument
+#' fgt <- md_compute_fgt(welfare     = welfare,
+#'                       weight      = weight,
+#'                       povline     = 5,
+#'                       return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 1,
+#'                  return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 2,
+#'                  return_data =  TRUE)
+#'
+#' c(fgt$FGT0, fgt$FGT1, fgt$FGT2)
+#'
+#' # multiple poverty lines
+#' dtgft <- md_compute_fgt(welfare = welfare,
+#' weight  = weight,
+#' povline = seq(from = 1, to = 10, by = .1))
+#' attributes(dtgft)
+#'
+#'
+#' fgt <- md_compute_fgt(welfare     = welfare,
+#'                       weight      = weight,
+#'                       povline     = seq(from = 1, to = 10, by = .1),
+#'                       return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 1,
+#'                  return_data =  TRUE) |>
+#'   md_compute_fgt(alpha = 2,
+#'                  return_data =  TRUE)
+#'
+#' dt_fgt <- data.frame(povline = fgt$povline,
+#'                      FGT0    = fgt$FGT0,
+#'                      FGT1    = fgt$FGT1,
+#'                      FGT2    = fgt$FGT2)
+#'}
+#'
+md_compute_fgt <- function(fgt_data        = NULL,
+                           welfare         = NULL,
+                           weight          = rep(1, length(welfare)),
+                           povline         = fmedian(welfare, w = weight)/2,
+                           alpha           = 0,
+                           return_data     = FALSE,
+                           include_povline = FALSE
+) {
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # computations   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  if (include_povline) {
+    povline <- povline + 1e-10
+  }
+  if (is.null(fgt_data)) {
+    if (is.null(welfare) || is.null(povline)) {
+      stop("welfare and povline can't be NULL")
+    } else {
+      fgt_data        <- vector("list", length = 4)
+      names(fgt_data) <- c("povline",
+                           "pov_status",
+                           "relative_distance",
+                           "weight")
+
+      fgt_data$pov_status         <- vapply(povline,
+                                            function(x) welfare < x,
+                                            logical(length(welfare)))
+      fgt_data$relative_distance  <- vapply(povline,
+                                            function(x) 1 - (welfare / x),
+                                            double(length(welfare)))
+      fgt_data$weight             <- weight
+      fgt_data$povline            <- povline
+    }
+  }
+
+  # estimate FGT
+  x <-
+    ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
+    fmean(w = fgt_data$weight)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Return   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (return_data) {
+    fgt_name <- paste0("FGT", alpha)
+    fgt_data[[fgt_name]] <- x
+    return(fgt_data)
+  }
+
+  attr(x,"povline_value") <- fgt_data$povline
+  x
+
+}
+
+#' @rdname md_compute_fgt
+#' @export
+md_compute_headcount <- function(
+    welfare,
+    weight          = rep(1, length(welfare)),
+    povline         = fmedian(welfare, w = weight)/2,
+    return_data     = FALSE,
+    include_povline = FALSE
+){
+
+
+  md_compute_fgt(welfare         = welfare,
+                 weight          = weight,
+                 povline         = povline,
+                 alpha           = 0,
+                 include_povline = include_povline)
+
+}
+
+
+#' @rdname md_compute_fgt
+#' @export
+md_compute_pov_gap <- function(
+    welfare,
+    weight          = rep(1, length(welfare)),
+    povline         = fmedian(welfare, w = weight)/2,
+    return_data     = FALSE,
+    include_povline = FALSE
+) {
+  md_compute_fgt(welfare         = welfare,
+                 weight          = weight,
+                 povline         = povline,
+                 alpha           = 1,
+                 include_povline = include_povline)
+}
+
+#' @rdname md_compute_fgt
+#' @export
+md_compute_pov_severity <- function(
+    welfare,
+    weight          = rep(1, length(welfare)),
+    povline         = fmedian(welfare, w = weight)/2,
+    return_data     = FALSE,
+    include_povline = FALSE
+) {
+  md_compute_fgt(welfare         = welfare,
+                 weight          = weight,
+                 povline         = povline,
+                 alpha           = 2,
+                 include_povline = include_povline)
+}
+
+#' @rdname md_compute_fgt
+#' @examples
+#' \dontrun{
+#'  md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+#'                   weight = c(0.1041,0.1411,0.1792,0.2182),
+#'                   povline = 1.9)
+#'
+#' md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+#'                  weight = c(0.1041,0.1411,0.1792,0.2182),
+#'                  povline = c(1.9, 2.5))
+#' }
+#' @export
+md_compute_watts <- function(
+    welfare,
+    weight          = rep(1, length(welfare)),
+    povline
+) {
+  vapply(povline, function(x) watt_computation(welfare, weight, x), numeric(1))
+}
+
+#' Main calculation for watt
+#' @noRd
+watt_computation <- function(
+    welfare,
+    weight,
+    povline
+) {
+  # ______________________________________________________________________
+  # Computations
+  # ______________________________________________________________________
+  pov_status         <- (welfare < povline)
+  weight_total       <- sum(weight)
+  keep               <- welfare > 0 & pov_status
+  w_gt_zero          <- welfare[keep]
+  sensitive_distance <- log(povline / w_gt_zero)
+  watts              <- sum(sensitive_distance * weight[keep])/weight_total
 
   # Handle cases where Watts is numeric(0)
   if (identical(watts, numeric(0))) {
     watts <- 0
   }
 
-  return(list(
-    headcount        = fgt0,
-    poverty_gap      = fgt1,
-    poverty_severity = fgt2,
-    watts            = watts # ,
-    # watts_old        = watts_old
-  ))
+  # ______________________________________________________________________
+  # Return
+  # ______________________________________________________________________
+  return(watts)
 }
+

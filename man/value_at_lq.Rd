@@ -4,7 +4,7 @@
 \alias{value_at_lq}
 \title{Solves for quadratic Lorenz curves}
 \usage{
-value_at_lq(x, A, B, C)
+value_at_lq(x, A, B, C, key_values)
 }
 \arguments{
 \item{x}{numeric: Point on curve.}
@@ -17,6 +17,9 @@ value_at_lq(x, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres_lq()$coef[3]}.}
+
+\item{key_values}{named list: key values for lq fit, calculated using A, B, C
+parameters using \link{gd_lq_key_values}}
 }
 \value{
 numeric
@@ -25,4 +28,3 @@ numeric
 \code{value_at_lq()}solves for quadratic Lorenz curves with c = 1
 General quadratic form: ax^2 + bxy + cy^2 + dx + ey + f = 0
 }
-\keyword{internal}

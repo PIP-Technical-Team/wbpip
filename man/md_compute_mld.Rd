@@ -9,6 +9,9 @@ md_compute_mld(welfare, weight, mean = NULL)
 \arguments{
 \item{welfare}{numeric: A vector of income or consumption values}
 
+\item{weight}{numeric: A vector of population weights, optional, a vector
+of 1s if not specified.}
+
 \item{mean}{numeric: A value with the mean. Optional.}
 }
 \value{
@@ -21,4 +24,3 @@ Mean Log Deviation (MLD).
 \examples{
 wbpip:::md_compute_mld(welfare = 1:2000, weight = rep(1, 2000))
 }
-\keyword{internal}

@@ -5,15 +5,6 @@
 #'
 #' @return A numeric vector giving number of poor for each observation
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'   get_number_poor(
-#'     pip$headcount,
-#'     pip$pop) |>
-#'     head()
-#' }
 get_number_poor <- function(headcount, pop){
 
   # headcount must be a ratio
@@ -47,16 +38,6 @@ get_number_poor <- function(headcount, pop){
 #'
 #' @return Numeric vector giving average shortfall for the poor in the units of the poverty line
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'   get_average_shortfall(
-#'     pip$headcount,
-#'     pip$poverty_gap,
-#'     pip$poverty_line) |>
-#'     head()
-#' }
 get_average_shortfall <- function(headcount, povgap, povline){
 
   # Input checks
@@ -88,17 +69,6 @@ get_average_shortfall <- function(headcount, povgap, povline){
 #'
 #' @return Numeric vector giving total shortfall in the same units as the poverty line
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'   get_total_shortfall(
-#'     pip$headcount,
-#'     pip$pop,
-#'     pip$poverty_gap,
-#'     pip$poverty_line) |>
-#'     head()
-#' }
 get_total_shortfall <- function(headcount, pop, povgap, povline){
 
   # Input checks not necessary: all checked in function dependencies
@@ -123,15 +93,6 @@ get_total_shortfall <- function(headcount, pop, povgap, povline){
 #'
 #' @return Numeric vector giving the income gap ratio
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'   get_income_gap_ratio(
-#'     pip$headcount,
-#'     pip$poverty_gap) |>
-#'     head()
-#' }
 get_income_gap_ratio <- function(headcount, povgap){
 
   # Input checks
@@ -164,31 +125,6 @@ get_income_gap_ratio <- function(headcount, povgap){
 #'
 #' @return Numeric vector giving the Palma ratio, the ratio of top 10% to bottom 40% welfare
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'
-#'   get_palma_ratio(
-#'     top10   = pip$decile10,
-#'     decile1 = pip$decile1,
-#'     decile2 = pip$decile2,
-#'     decile3 = pip$decile3,
-#'     decile4 = pip$decile4,
-#'     ) |>
-#'     head()
-#'
-#' # Build the bottom 40 first
-#'
-#' pip <- pip |>
-#' transform(bottom40 = decile1 + decile2 + decile3 + decile4)
-#'
-#'   get_palma_ratio(
-#'     top10    = pip$decile10,
-#'     bottom40 = pip$bottom40
-#'     ) |>
-#'     head()
-#' }
 get_palma_ratio <- function(top10,
                                bottom40 = NULL,
                                decile1  = NULL,
@@ -230,17 +166,6 @@ get_palma_ratio <- function(top10,
 #'
 #' @return Numeric vector giving the ratio of the top 10% to the bottom 10% of the welfare distribution
 #' @export
-#'
-#' @examples
-#' if (suppressWarnings(require(pipr))) {
-#'   pip <- get_stats()
-#'
-#'   get_9010_ratio(
-#'     top10    = pip$decile10,
-#'     bottom10 = pip$decile1
-#'     ) |>
-#'     head()
-#' }
 get_9010_ratio <- function(
     top10,
     bottom10){

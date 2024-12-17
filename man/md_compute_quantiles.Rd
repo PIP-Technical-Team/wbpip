@@ -2,49 +2,32 @@
 % Please edit documentation in R/md_compute_quantiles.R
 \name{md_compute_quantiles}
 \alias{md_compute_quantiles}
-\title{Compute quantiles}
+\title{Compute quantiles for microdata with lorenz function}
 \usage{
 md_compute_quantiles(
-  lwelfare,
-  lweight,
-  percentile,
+  welfare = NULL,
+  weight = rep(1, length(welfare)),
   n_quantile = 10,
-  tolerance = 1e-06
+  lorenz = NULL
 )
 }
 \arguments{
-\item{lwelfare}{numeric: cumulative share of welfare.}
+\item{welfare}{numeric: A vector of income or consumption values.}
 
-\item{lweight}{numeric: cumulative share of population.}
+\item{weight}{numeric: A vector of weights. Default is a vector of ones,}
 
-\item{percentile}{numeric: Monetary value each percentile.}
+\item{lorenz}{numeric: Output from \code{md_compute_lorenz}}
 
-\item{n_quantile}{numeric: Number of quantiles for which share of total income
-is desired. It can't be larger that the total number of percentiles in the
-Lorenz curve provided by the user.  default is 10.}
-
-\item{tolerance}{numeric: Tolerance parameter for \code{lorenzw >= nextQ} check.}
+\item{n_quantiles}{numeric: Number of quantiles for which share of total income
+is desired. Default is 10.}
 }
 \value{
 list
 }
 \description{
-Compute quantiles for microdata.
-}
-\details{
-Calculate share of total welfare in each quantile from Lorenz curve and
-the its corresponding percentile. That is, it requires a vector with the
-cumulative share of the population (\code{lweight}), a vector with cumulative
-share of welfare (\code{lwelfare}), and a vector the corresponding monetary value
-of each percentile (\code{percentile}).
+Compute quantiles for microdata with lorenz function
 }
 \examples{
-lz <- wbpip:::md_compute_lorenz(welfare = 1:2000, weight = rep(1, 2000))
-wbpip:::md_compute_quantiles(
-  lwelfare = lz$welfare,
-  lweight = lz$lorenz_weight,
-  percentile = lz$lorenz_welfare,
-  n_quantile = 10
-)
+md_compute_quantiles(welfare = 1:2000, weight = rep(1, 2000))
 }
 \keyword{internal}

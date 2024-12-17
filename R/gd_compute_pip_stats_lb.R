@@ -87,7 +87,7 @@ gd_compute_pip_stats_lb <- function(welfare,
 #' *Econometrica 48* (2): 437-46.
 #'
 #' @return data.frame
-#' @keywords internal
+#' @export
 create_functional_form_lb <- function(welfare, population) {
   # CHECK inputs
   # assertthat::assert_that(is.numeric(population))
@@ -114,49 +114,40 @@ create_functional_form_lb <- function(welfare, population) {
 
 }
 
-#' Returns the first derivative of the beta Lorenz
+#' Returns the first derivative of the beta Lorenz- Vectorized
 #'
 #' `derive_lb()` returns the first derivative of a beta Lorenz curve.
 #'
-#' @param x numeric: Point on curve.
+#' @param x numeric: Point on curve. Allow for vectors.
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 derive_lb <- function(x, A, B, C) {
-  if (x == 0) {
-    if (B == 1) {
-      return(1 - A)
+  val <- vector("numeric", length(x))
+  val[x == 0] <- -Inf
+  val[x == 1] <- Inf
+
+  if (B == 1) {
+      val[x == 0] <- 1 - A
     }
     if (B > 1) {
-      return(1)
+      val[x == 0] <- 1
     }
-    return(-Inf)
-  } else if (x == 1) {
     if (C == 1) {
-      return(1 + A)
+      val[x == 1] <- 1 + A
     }
     if (C > 1) {
-      return(1)
+      val[x == 1] <- 1
+    } else {
+
+      # Formula for first derivative of GQ Lorenz Curve
+      new_x <- x[!(x %in% c(0,1))]
+      val[!(x %in% c(0,1))] <- 1 - ((A * new_x^B) * ((1 - new_x)^C) * ((B / new_x) - (C / (1 - new_x)) ) )
     }
-    return(Inf)
-  }
-
-  # Formula for first derivative of GQ Lorenz Curve
-  val <- 1 - ((A * x^B) * ((1 - x)^C) * ((B / x) -( C / (1 - x)) ) )
-
   return(val)
 }
 
-# derive_lb <- function(x, A, B, C) {
-#   ifelse(x == 0 & B == 1, 1 - A,
-#          ifelse(x == 0 & B > 1, 1,
-#                 ifelse(x == 0, Inf,
-#                        ifelse(x == 1 & C == 1, 1 + A,
-#                                            ifelse(x == 1 & C > 1, 1,
-#                                                   ifelse(x == 1, Inf,
-#                             1 - ((A * x^B) * ((1 - x)^C) * ((B / x) -( C / (1 - x)) ) )))))))
-# }
 
 #' Check validity of Lorenz beta fit
 #'
@@ -165,17 +156,16 @@ derive_lb <- function(x, A, B, C) {
 #' @inheritParams gd_estimate_lb
 #' @inheritParams gd_compute_fit_lb
 #'
-#' @references
-#' Datt, G. 1998. "[Computational Tools For Poverty Measurement And
-#' Analysis](https://www.ifpri.org/cdmref/p15738coll2/id/125673)". FCND
-#' Discussion Paper 50. World Bank, Washington, DC.
+#' @references Datt, G. 1998. "[Computational Tools For Poverty Measurement And
+#'   Analysis](https://ageconsearch.umn.edu/record/94862/)". FCND Discussion
+#'   Paper 50. World Bank, Washington, DC.
 #'
-#' Kakwani, N. 1980. "[On a Class of Poverty
-#' Measures](https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46)".
-#' *Econometrica 48* (2): 437-46.
+#'   Kakwani, N. 1980. "[On a Class of Poverty
+#'   Measures](https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46)".
+#'    *Econometrica 48* (2): 437-46.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 check_curve_validity_lb <- function(headcount, A, B, C) {
   is_valid <- TRUE
 
@@ -196,11 +186,13 @@ check_curve_validity_lb <- function(headcount, A, B, C) {
   }
 
   # WHAT IS THE RATIONAL HERE?
-  is_normal <- if (!is.na(headcount)) {
-    is_normal <- TRUE
-  } else {
-    is_normal <- FALSE
-  }
+  # is_normal <- if (!is.na(headcount)) {
+  #   is_normal <- TRUE
+  # } else {
+  #   is_normal <- FALSE
+  # }
+
+  is_normal <- all(!is.na(headcount))
 
   return(list(
     is_valid = is_valid,
@@ -220,7 +212,7 @@ check_curve_validity_lb <- function(headcount, A, B, C) {
 #' Discussion Paper 50. World Bank, Washington, DC.
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
   out <- vector(mode = "numeric", length = nbins)
 
@@ -241,8 +233,13 @@ gd_compute_gini_lb <- function(A, B, C, nbins = 499) {
 #' @param x numeric: Point on curve.
 #' @inheritParams gd_compute_fit_lb
 #' @return numeric
-#' @keywords internal
+#' @export
 value_at_lb <- function(x, A, B, C) {
+
+  # Check for NA, Inf and negative values in x
+  check_NA_Inf_values(x)
+  check_neg_values(x)
+
   out <- x - (A * (x^B) * ((1 - x)^C))
 
   return(out)
@@ -253,14 +250,13 @@ value_at_lb <- function(x, A, B, C) {
 #' `gd_compute_mld_lb()` computes the Mean Log deviation (MLD) from a Lorenz
 #' beta fit.
 #'
-#' @param dd numeric: **TO BE DOCUMENTED**.
 #' @param A numeric: Lorenz curve coefficient.
 #' @param B numeric: Lorenz curve coefficient.
 #' @param C numeric: Lorenz curve coefficient.
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_mld_lb <- function(dd, A, B, C) {
+#' @export
+gd_compute_mld_lb <- function(A, B, C) {
   x1 <- derive_lb(0.0005, A, B, C)
   gap <- 0
   mld <- 0
@@ -326,10 +322,17 @@ gd_compute_quantile_lb <- function(A, B, C, n_quantile = 10) {
 #' @param dd numeric: **TO BE DOCUMENTED**.
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 #'
-gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
+gd_compute_watts_lb <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
+  if(length(headcount) != length(povline)) {
+    cli::cli_abort("Length of headcount and povline is not the same")
+  }
+  mapply(\(x, y) gd_compute_watts_lb_calc(x, mean, y, dd, A, B, C), headcount, povline)
+}
 
+
+gd_compute_watts_lb_calc <- function(headcount, mean, povline, dd = 0.005, A, B, C) {
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -375,7 +378,6 @@ gd_compute_watts_lb <- function(headcount, mean, povline, dd, A, B, C) {
     return(watts)
   }
 }
-
 #' Computes distributional stats from Lorenz beta fit
 #'
 #' @inheritParams gd_estimate_lb
@@ -390,7 +392,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
   dcm <- (1 - gini) * mean
   pol <- gd_compute_polarization_lb(mean, p0, dcm, A, B, C)
   ris <- value_at_lb(0.5, A, B, C)
-  mld <- gd_compute_mld_lb(0.01, A, B, C)
+  mld <- gd_compute_mld_lb(A, B, C)
   deciles <- gd_compute_quantile_lb(A, B, C)
 
   return(list(
@@ -414,7 +416,7 @@ gd_compute_dist_stats_lb <- function(mean, p0, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_polarization_lb <- function(mean,
                                        p0,
                                        dcm,
@@ -449,10 +451,21 @@ gd_compute_poverty_stats_lb <- function(mean,
 
   # Poverty gap
   u <- mean / povline
-  pov_gap <- gd_compute_pov_gap_lb(u, headcount, A, B, C)
+  pov_gap <- gd_compute_pov_gap_lb(headcount = headcount,
+                                   A         = A,
+                                   B         = B,
+                                   C         = C,
+                                   u         = u)
 
   # Poverty severity
-  pov_gap_sq <- gd_compute_pov_severity_lb(u, headcount, pov_gap, A, B, C)
+  pov_gap_sq <- gd_compute_pov_severity_lb(
+    headcount = headcount,
+    pov_gap   = pov_gap,
+    A         = A,
+    B         = B,
+    C         = C,
+    u         = u
+  )
 
   # First derivative of the Lorenz curve
   dl <- 1 - A * (headcount^B) * ((1 - headcount)^C) * (B / headcount - C / (1 - headcount))
@@ -565,13 +578,30 @@ gd_estimate_lb <- function(mean, povline, p0, A, B, C) {
 #'   `regres()$coef[3]`.
 #'
 #' @return list
-#' @keywords internal
+#' @export
 gd_compute_fit_lb <- function(welfare,
                               population,
                               headcount,
                               A,
                               B,
                               C) {
+
+  out <- lapply(headcount, function(x)
+    gd_compute_fit_lb_calc(welfare, population, x, A, B, C))
+
+  res <- collapse::rowbind(out)
+
+  return(res)
+}
+
+gd_compute_fit_lb_calc <- function(welfare,
+                                   population,
+                                   headcount,
+                                   A,
+                                   B,
+                                   C
+
+) {
   if (!is.na(headcount)) {
     lasti <- 0
     sse <- 0 # Sum of square error
@@ -595,7 +625,6 @@ gd_compute_fit_lb <- function(welfare,
   } else {
     out <- list(sse = NA_real_, ssez = NA_real_)
   }
-
   return(out)
 }
 
@@ -622,7 +651,7 @@ DDLK <- function(h, A, B, C) {
 #' @inheritParams gd_compute_fit_lb
 #'
 #' @return numeric
-#' @keywords internal
+#' @export
 gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
   # Compute headcount
   headcount <- rtSafe(0.0001, 0.9999, 1e-4,
@@ -633,9 +662,7 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     C = C
   )
   # Check headcount invalidity conditions
-  if (headcount < 0 | is.na(headcount)) {
-    return(NA_real_)
-  }
+  condition0 <- headcount < 0 | is.na(headcount)
 
   condition1 <- is.na(BETAI(
     a = 2 * B - 1,
@@ -652,12 +679,8 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
     b = 2 * C - 1,
     x = headcount
   ))
-
-  if (condition1 | condition2 | condition3) {
-    return(NA_real_)
-  }
-
-  return(headcount)
+  # return
+  ifelse(condition0 | condition1 | condition2 | condition3, NA_real_, headcount)
 }
 
 #' BETAI
@@ -670,27 +693,19 @@ gd_compute_headcount_lb <- function(mean, povline, A, B, C) {
 #'
 #' @return numeric
 #' @noRd
+
 BETAI <- function(a, b, x) {
-  if (!is.na(x)) {
-    bt <- betai <- 0
-
-    if (x == 0 || x == 1) {
-      bt <- 0
-    } else {
-      bt <- exp((a * log(x)) + (b * log(1 - x)))
-    }
-
-    if (x < (a + 1) / (a + b + 2)) {
-      betai <- bt * BETAICF(a, b, x) / a
-    } else if (is.na(GAMMLN(a)) || is.na(GAMMLN(b)) || is.na(GAMMLN(a + b))) {
-      betai <- NA_real_
-    } else {
-      betai <- exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
-    }
-  } else {
-    betai <- NA_real_
-  }
-
+  betai <- vector("numeric", length(x))
+  indx1 <- is.na(x)
+  betai[indx1] <- NA_real_
+  x <- x[!indx1]
+  bt <- ifelse(x %in% c(0, 1), 0, exp((a * log(x)) + (b * log(1 - x))))
+  out <- data.table::fcase(
+    x < (a + 1) / (a + b + 2), bt * BETAICF(a, b, x) / a,
+    rep(is.na(GAMMLN(a)) | is.na(GAMMLN(b)) | is.na(GAMMLN(a + b)), length(x)), NA_real_,
+    rep(TRUE, length(x)) , exp(GAMMLN(a) + GAMMLN(b) - GAMMLN(a + b)) - (bt * BETAICF(b, a, 1 - x) / b)
+  )
+  betai[!indx1] <- out
   return(betai)
 }
 
@@ -708,20 +723,24 @@ GAMMLN <- function(xx) {
   fpf <- 5.5
   x <- xx - 1
   tmp <- x + fpf
-  if (tmp <= 0) {
-    return(NA_real_)
-  }
+  result <- numeric(length(xx))
+  idx1 <- tmp <= 0
+  result[idx1] <- NA_real_
+  tmp <- tmp[!idx1]
+  x <- x[!idx1]
 
   tmp <- (x + 0.5) * log(tmp) - tmp
-  # ser <- 1L
-  x <-  c(x + 1:6)
-  ser <- sum(cof / x) + 1
 
-  if (stp * ser <= 0) {
-    return(NA_real_)
-  }
+  ser <- sapply(x, \(p) {
+    q <- p + 1:6
+    sum(cof/q) + 1
+  })
+  idx2 <- stp * ser <= 0
+  res <- tmp + log(stp * ser)
+  res[idx2] <- NA_real_
+  result[!idx1] <- res
 
-  return(tmp + log(stp * ser))
+  return(result)
 }
 
 #' BETAICF
@@ -736,6 +755,10 @@ GAMMLN <- function(xx) {
 #' @noRd
 #'
 BETAICF <- function(a, b, x) {
+  vapply(x, function(p) BETAICF_calc(a, b, p), numeric(1L))
+}
+
+BETAICF_calc <- function(a, b, x) {
   eps <- 3e-7
   am <- 1
   bm <- 1
@@ -771,23 +794,28 @@ BETAICF <- function(a, b, x) {
 #'
 #' @param u numeric: Normalized mean.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_pov_gap_lb <- function(u, headcount, A, B, C) {
+#' @export
+gd_compute_pov_gap_lb <- function(mean,  povline, headcount, A, B, C, u = NULL) {
+
+  if (is.null(u)) {
+    u <- mean/povline
+  }
   # REVIEW RATIONAL FOR THESE ADJUSTMENTS
   # Adjust Poverty gap
-  if (!is.na(headcount)) {
-    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
-    if (!anyNA(headcount, pov_gap)) {
-      pov_gap <- if (headcount < pov_gap) headcount - 0.00001 else pov_gap
-      pov_gap <- if (pov_gap < 0) 0 else pov_gap
-    }
-  } else {
-    pov_gap <- NA_real_
-  }
+  res <- rep(NA_real_, length(headcount))
+  indx <- !is.na(headcount)
 
-  return(pov_gap)
+  if(any(indx)) {
+    headcount <- headcount[indx]
+    pov_gap <- headcount - (u * value_at_lb(headcount, A, B, C))
+    pov_gap <- ifelse(headcount < pov_gap, headcount - 0.00001, pov_gap)
+    pov_gap <- pmax(pov_gap, 0)
+    res[indx] <- pov_gap
+  }
+  return(res)
 }
 
 #' Compute poverty severity for Lorenz Beta fit
@@ -795,42 +823,41 @@ gd_compute_pov_gap_lb <- function(u, headcount, A, B, C) {
 #' @param u numeric: Mean? **TO BE DOCUMENTED**.
 #' @param pov_gap numeric: Poverty gap.
 #' @inheritParams gd_compute_fit_lb
+#' @inheritParams gd_compute_headcount_lb
 #'
 #' @return numeric
-#' @keywords internal
-gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
-
-  if (!anyNA(headcount, pov_gap)) {
-    u1 <- 1 - u
-    beta1 <- BETAI(
-      a = 2 * B - 1,
-      b = 2 * C + 1,
-      x = headcount
-    )
-    beta2 <- BETAI(
-      a = 2 * B,
-      b = 2 * C,
-      x = headcount
-    )
-    beta3 <- BETAI(
-      a = 2 * B + 1,
-      b = 2 * C - 1,
-      x = headcount
-    )
-
-    pov_gap_sq <-
-      u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
-      (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
-
-    # REVIEW RATIONAL FOR THESE ADJUSTMENTS
-    # Adjust Poverty severity
-    if (!anyNA(pov_gap, pov_gap_sq)) {
-      pov_gap_sq <- if (pov_gap < pov_gap_sq) pov_gap - 0.00001 else pov_gap_sq
-      pov_gap_sq <- if (pov_gap_sq < 0) 0 else pov_gap_sq
-    }
-  } else {
-    pov_gap_sq <- NA_real_
+#' @export
+gd_compute_pov_severity_lb <- function(mean, povline, headcount, pov_gap, A, B, C, u = NULL) {
+  # Do we want to check length of povline, headcount and pov_gap to be equal?
+  if (is.null(u)) {
+    u <-  mean/povline
   }
+
+  u1 <- 1 - u
+  beta1 <- BETAI(
+    a = 2 * B - 1,
+    b = 2 * C + 1,
+    x = headcount
+  )
+  beta2 <- BETAI(
+    a = 2 * B,
+    b = 2 * C,
+    x = headcount
+  )
+  beta3 <- BETAI(
+    a = 2 * B + 1,
+    b = 2 * C - 1,
+    x = headcount
+  )
+
+  pov_gap_sq <-
+    u1 * (2 * pov_gap - u1 * headcount) + A^2 * u^2 *
+    (B^2 * beta1 - 2 * B * C * beta2 + C^2 * beta3)
+
+  # REVIEW RATIONAL FOR THESE ADJUSTMENTS
+  # Adjust Poverty severity
+  pov_gap_sq <- ifelse(pov_gap < pov_gap_sq, pov_gap - 0.00001, pov_gap_sq)
+  pov_gap_sq <- pmax(pov_gap_sq, 0)
 
   return(pov_gap_sq)
 }
@@ -848,6 +875,11 @@ gd_compute_pov_severity_lb <- function(u, headcount, pov_gap, A, B, C) {
 #' @return numeric
 #' @noRd
 rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
+  vapply(povline, function(x) rtSafe_calc(x1, x2, xacc, mean, x, A, B, C), numeric(1L))
+}
+
+
+rtSafe_calc <- function(x1, x2, xacc, mean, povline, A, B, C) {
   funcCall1 <- funcD(x1, mean, povline, A, B, C)
   fl <- funcCall1[[1]]
 
@@ -910,7 +942,6 @@ rtSafe <- function(x1, x2, xacc, mean, povline, A, B, C) {
 
   return(NA_real_)
 }
-
 #' funcD
 #'
 #' **TO BE DOCUMENTED**
@@ -942,6 +973,10 @@ funcD <- function(x, mean, povline, A, B, C) {
 #' @return numeric
 #' @noRd
 rtNewt <- function(mean, povline, A, B, C) {
+  vapply(povline, function(x) rtNewt_calc(mean, x, A, B, C), numeric(1L))
+}
+
+rtNewt_calc <- function(mean, povline, A, B, C) {
   x1 <- 0L
   x2 <- 1L
   xacc <- 1e-4

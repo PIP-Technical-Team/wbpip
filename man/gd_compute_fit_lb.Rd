@@ -30,4 +30,3 @@ list
 Computes the sum of squares of error
 Measures the fit of the model to the data.
 }
-\keyword{internal}

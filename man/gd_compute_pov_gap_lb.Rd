@@ -4,10 +4,12 @@
 \alias{gd_compute_pov_gap_lb}
 \title{Compute poverty gap for Lorenz Beta fit}
 \usage{
-gd_compute_pov_gap_lb(u, headcount, A, B, C)
+gd_compute_pov_gap_lb(mean, povline, headcount, A, B, C, u = NULL)
 }
 \arguments{
-\item{u}{numeric: Normalized mean.}
+\item{mean}{numeric: Welfare mean.}
+
+\item{povline}{numeric: Poverty line.}
 
 \item{headcount}{numeric: Headcount index.}
 
@@ -19,6 +21,8 @@ gd_compute_pov_gap_lb(u, headcount, A, B, C)
 
 \item{C}{numeric: Lorenz curve coefficient. Output of
 \code{regres()$coef[3]}.}
+
+\item{u}{numeric: Normalized mean.}
 }
 \value{
 numeric
@@ -26,4 +30,3 @@ numeric
 \description{
 Compute poverty gap for Lorenz Beta fit
 }
-\keyword{internal}

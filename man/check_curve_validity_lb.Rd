@@ -25,10 +25,9 @@ list
 \code{check_curve_validity_lb()} checks the validity of the Lorenz beta fit
 }
 \references{
-Datt, G. 1998. "\href{https://www.ifpri.org/cdmref/p15738coll2/id/125673}{Computational Tools For Poverty Measurement And Analysis}". FCND
-Discussion Paper 50. World Bank, Washington, DC.
+Datt, G. 1998. "\href{https://ageconsearch.umn.edu/record/94862/}{Computational Tools For Poverty Measurement And Analysis}". FCND Discussion
+Paper 50. World Bank, Washington, DC.
 
 Kakwani, N. 1980. "\href{https://EconPapers.repec.org/RePEc:ecm:emetrp:v:48:y:1980:i:2:p:437-46}{On a Class of Poverty Measures}".
 \emph{Econometrica 48} (2): 437-46.
 }
-\keyword{internal}
