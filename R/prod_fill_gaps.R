@@ -26,6 +26,7 @@ prod_fg_compute_pip_stats <- function(request_year,
                                       distribution_type,
                                       poverty_line,
                                       popshare) {
+  browser()
 
   # Set type
   type <- distribution_type
