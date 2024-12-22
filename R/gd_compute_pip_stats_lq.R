@@ -240,7 +240,7 @@ check_curve_validity_lq <- function(A, B, C, key_values) {
   is_normal <- FALSE
   is_valid <- FALSE
   r <- (key_values$r)^2 # formerly, the input to the func was r^2
-  if(is.na(r)) browser()
+  #if(is.na(r)) browser()
   # r needs to be > 0 because need to extract sq root
   if (r < 0) { # now that r is squared, this will never be TRUE
     return(list( # but r^2 was used as input before `key_values` so
