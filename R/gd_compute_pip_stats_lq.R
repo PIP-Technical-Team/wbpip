@@ -351,7 +351,6 @@ gd_compute_gini_lq <- function(A, B, C, key_values) {
 #' @return numeric
 #' @export
 value_at_lq <- function(x, A, B, C, key_values) {
-
   # Check for NA, Inf and negative values in x
   check_NA_Inf_values(x)
   check_neg_values(x)
@@ -461,6 +460,16 @@ gd_compute_watts_lq <- function(headcount,
     length(mean) == 1
   })
 
+  # This function is complex to vectorize so using mapply to perform the vectorization.
+  # It is assumed that the arguments mean, dd, and key_values would remain of constant length
+  res <- mapply(\(h, p, a, b, c) gd_compute_watts_lq_single(h, mean, p, dd, a, b, c, key_values),
+         headcount, povline, A, B, C)
+  return(res)
+}
+
+gd_compute_watts_lq_single <- function(headcount, mean, povline, dd,
+                                       A, B, C, key_values) {
+
   if (headcount <= 0 | is.na(headcount)) {
     return(0)
   }
@@ -507,7 +516,6 @@ gd_compute_watts_lq <- function(headcount,
     return(watts)
   }
 }
-
 
 #' Computes polarization index from parametric Lorenz fit
 #'
@@ -594,7 +602,6 @@ gd_compute_poverty_stats_lq <- function(
     B       = B,
     key_values = key_values
   )
-
   # ____________________________________________________________________________
   # Compute intermediate terms
   # ____________________________________________________________________________
@@ -602,7 +609,7 @@ gd_compute_poverty_stats_lq <- function(
   tmp0 <- (key_values$m * headcount^2) +
     (key_values$n * headcount) +
     (key_values$e^2)
-  tmp0 <- if (tmp0 < 0) 0L else tmp0
+  tmp0 <- pmax(tmp0, 0L)
   tmp0 <- sqrt(tmp0)
 
   # ____________________________________________________________________________
@@ -614,84 +621,74 @@ gd_compute_poverty_stats_lq <- function(
   # Compute ddl - second derivative of Lorenz curve
   # ____________________________________________________________________________
   ddl <- key_values$r^2 / (tmp0^3 * 8)
-
   # if negative headcount, set all to 0
-  if (headcount < 0) {
-    headcount <- pov_gap <- pov_gap_sq <- watts <- 0L
-    eh <- epg <- ep <- gh <- gpg <- gp <- 0L
-  } else {
+  cond <- headcount < 0
+  headcount <- ifelse(cond, 0L, headcount)
+  # __________________________________________________________________________
+  # Compute Poverty gap
+  # __________________________________________________________________________
+  pov_gap <- ifelse(cond, 0L, gd_compute_pov_gap_lq(
+    mean       = mean,
+    povline    = povline,
+    headcount  = headcount,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
+  ))
 
-    # __________________________________________________________________________
-    # Compute Poverty gap
-    # __________________________________________________________________________
-    pov_gap <- gd_compute_pov_gap_lq(
-      mean       = mean,
-      povline    = povline,
-      headcount  = headcount,
-      A          = A,
-      B          = B,
-      C          = C,
-      key_values = key_values
-    )
-
-    # __________________________________________________________________________
-    # Compute poverty severity
-    # __________________________________________________________________________
-
-    pov_gap_sq <- gd_compute_pov_severity_lq(
-      mean       = mean,
-      povline    = povline,
-      headcount  = headcount,
-      pov_gap    = pov_gap,
-      A          = A,
-      B          = B,
-      C          = C,
-      key_values = key_values
-    )
+  # __________________________________________________________________________
+  # Compute poverty severity
+  # __________________________________________________________________________
+  pov_gap_sq <- ifelse(cond, 0L,  gd_compute_pov_severity_lq(
+    mean       = mean,
+    povline    = povline,
+    headcount  = headcount,
+    pov_gap    = pov_gap,
+    A          = A,
+    B          = B,
+    C          = C,
+    key_values = key_values
+  ))
+  # ____________________________________________________________________________
+  # Compute Watts
+  # ____________________________________________________________________________
+  watts <- ifelse(cond, 0L,gd_compute_watts_lq(headcount  = headcount,
+                           mean       = mean,
+                           povline    = povline,
+                           dd         = 0.01,
+                           A          = A,
+                           B          = B,
+                           C          = C,
+                           key_values = key_values
+                ))
     # __________________________________________________________________________
     # Compute elasticity of headcount index wrt mean (P.eh)
     # __________________________________________________________________________
-    eh <- -povline / (mean * headcount * ddl)
-
+    eh <- ifelse(cond, 0L, -povline / (mean * headcount * ddl))
     # __________________________________________________________________________
     # Compute Elasticity of poverty gap index w.r.t mean (P.epg)
     # __________________________________________________________________________
-    epg <- 1 - (headcount / pov_gap)
-
+    epg <- ifelse(cond, 0L, 1 - (headcount / pov_gap))
     # __________________________________________________________________________
     # Compute Elasticity of distributionally sensitive
     #            FGT poverty measure w.r.t mean (P.ep)
     # __________________________________________________________________________
-    ep <- 2 * (1 - pov_gap / pov_gap_sq)
-
+    ep <- ifelse(cond, 0L, 2 * (1 - pov_gap / pov_gap_sq))
     # __________________________________________________________________________
     # Compute Elasticity of headcount index w.r.t gini index (P.gh)
     # __________________________________________________________________________
-    gh <- (1 - povline / mean) / (headcount * ddl)
-
+    gh <- ifelse(cond, 0L, (1 - povline / mean) / (headcount * ddl))
     # __________________________________________________________________________
     # Compute Elasticity of poverty gap index w.r.t gini index (P.gpg)
     # __________________________________________________________________________
-    gpg <- 1 + (((mean / povline) - 1) * headcount / pov_gap)
-
+    gpg <- ifelse(cond, 0L, 1 + (((mean / povline) - 1) * headcount / pov_gap))
     # __________________________________________________________________________
     # Compute Elasticity of distributionally sensitive
     #             FGT poverty measure w.r.t gini index (P.gp)
     # __________________________________________________________________________
-    gp <- 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq))
 
-    # ____________________________________________________________________________
-    # Compute Watts
-    # ____________________________________________________________________________
-    watts <- gd_compute_watts_lq(headcount  = headcount,
-                                 mean       = mean,
-                                 povline    = povline,
-                                 dd         = 0.01,
-                                 A          = A,
-                                 B          = B,
-                                 C          = C,
-                                 key_values = key_values)
-  }
+    gp <- ifelse(cond, 0L, 2 * (1 + (((mean / povline) - 1) * pov_gap / pov_gap_sq)))
 
   return(
     list(
@@ -729,7 +726,8 @@ gd_compute_headcount_lq <- function(
     B,
     key_values
 ) {
-
+  # This is vectorized provided everything here is always a single number
+  # including everything in key_values
   #   _____________________________________________________________________
   #   Compute headcount
   #   _____________________________________________________________________
@@ -762,28 +760,28 @@ gd_compute_pov_gap_lq <- function(mean,
                                   B,
                                   C,
                                   key_values) {
-
+  # For vectorization purpose, check length of z, hc and pov_gap to be equal
+  if(length(povline) != length(headcount)) {
+    cli::cli_abort("Please ensure that `povline` and `headcount` are of same length")
+  }
   #   _____________________________________________________________________
   #   Computations
   #   _____________________________________________________________________
+  inds <- headcount >= 0
+  hc <- headcount[inds]
+  u    <- mean / povline
 
-  if (headcount < 0 ) {
-    pov_gap <- 0L
-  } else {
+  hc_lq <- value_at_lq(hc, A, B, C,
+                       key_values)
 
-    u    <- mean / povline
-
-    hc_lq <- value_at_lq(headcount, A, B, C,
-                         key_values)
-
-    # Poverty gap index (P.pg)
-    pov_gap <- headcount - (u * hc_lq)
-  }
-
+  # Poverty gap index (P.pg)
+  pov_gap <- hc - (u[inds] * hc_lq)
   #   _____________________________________________________________________
   #   Return
   #   _____________________________________________________________________
-  return(pov_gap)
+  result <- numeric(length(headcount))
+  result[inds] <- pov_gap
+  return(result)
 
 }
 
@@ -809,6 +807,15 @@ gd_compute_pov_severity_lq <- function(
     C,
     key_values
 ) {
+
+  # For vectorization purpose, check length of z, hc and pov_gap to be equal
+  if(!
+     (length(povline) == length(headcount) &&
+     length(headcount) == length(pov_gap))
+     ) {
+      cli::cli_abort("Please ensure that `povline`, `headcount` and `pov_gap` are of same length")
+
+  }
 
   # ________________________________________________________________________
   # Define objects

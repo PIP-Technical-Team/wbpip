@@ -118,6 +118,7 @@ md_compute_poverty_stats <- function(
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' welfare <- md_ABC_2010_income$welfare/1e6
 #' weight  <- md_ABC_2010_income$weight
 #'
@@ -161,6 +162,8 @@ md_compute_poverty_stats <- function(
 #'                      FGT0    = fgt$FGT0,
 #'                      FGT1    = fgt$FGT1,
 #'                      FGT2    = fgt$FGT2)
+#'}
+#'
 md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
@@ -270,23 +273,32 @@ md_compute_pov_severity <- function(
 }
 
 #' @rdname md_compute_fgt
+#' @examples
+#' \dontrun{
+#'  md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+#'                   weight = c(0.1041,0.1411,0.1792,0.2182),
+#'                   povline = 1.9)
+#'
+#' md_compute_watts(welfare = c(0.0355,0.0513,0.0689,0.0882),
+#'                  weight = c(0.1041,0.1411,0.1792,0.2182),
+#'                  povline = c(1.9, 2.5))
+#' }
 #' @export
 md_compute_watts <- function(
     welfare,
     weight          = rep(1, length(welfare)),
     povline
 ) {
+  vapply(povline, function(x) watt_computation(welfare, weight, x), numeric(1))
+}
 
-  # ss_args <- environment() |>
-  #   as.list()
-  #
-  # null_args <- sapply(ss_args, is.null)
-  #
-  # if (any(null_args)) {
-  #   cli::cli_abort("{.or {.arg  {names(ss_args)}}} can't be NULL")
-  # }
-
-
+#' Main calculation for watt
+#' @noRd
+watt_computation <- function(
+    welfare,
+    weight,
+    povline
+) {
   # ______________________________________________________________________
   # Computations
   # ______________________________________________________________________

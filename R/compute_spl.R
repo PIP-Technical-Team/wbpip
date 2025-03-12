@@ -24,6 +24,9 @@ compute_spl <- function(weighted_median_ppp,
   } else if (ppp_year == 2017) {
     constant  <- 1.15
     min_level <- 2.15
+  } else if (ppp_year == 2021) {
+    constant  <- 1.3
+    min_level <- 3
   } else {
     cli::cli_abort("Invalid PPP year. {.field ppp_year} must be either 2011 or 2017")
   }

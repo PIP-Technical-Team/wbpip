@@ -131,7 +131,6 @@ gd_compute_poverty_stats <- function(welfare,
 #' @return list
 #' @keywords internal
 gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
-
   # Compute Lorenz quadratic  -----------------------------------------------
 
   # Compute key numbers from Lorenz quadratic form
@@ -151,6 +150,7 @@ gd_estimate_poverty_stats_lq <- function(mean, povline, A, B, C) {
   )
 
   out <- list(
+    poverty_line = povline,
     headcount = pov_stats$headcount,
     poverty_gap = pov_stats$pg,
     poverty_severity = pov_stats$p2,
@@ -190,6 +190,7 @@ gd_estimate_poverty_stats_lb <- function(mean, povline, A, B, C) {
   validity <- check_curve_validity_lb(headcount = pov_stats$headcount, A, B, C)
 
   out <- list(
+    poverty_line = povline,
     headcount = pov_stats$headcount,
     poverty_gap = pov_stats$pg,
     poverty_severity = pov_stats$p2,

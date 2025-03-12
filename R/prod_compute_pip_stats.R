@@ -31,7 +31,7 @@ prod_compute_pip_stats <- function(welfare,
   distribution_type <- match.arg(distribution_type)
 
   if (distribution_type %in% c("micro", "imputed")) {
-    out <- prod_md_compute_pip_stats(
+    res <- prod_md_compute_pip_stats(
       welfare = welfare,
       povline = povline,
       population = population,
@@ -43,10 +43,8 @@ prod_compute_pip_stats <- function(welfare,
       default_ppp = default_ppp,
       ppp = ppp
     )
-
-    return(out)
   } else if (distribution_type %in% c("group", "aggregate")) {
-    out <- prod_gd_compute_pip_stats(
+    res <- prod_gd_compute_pip_stats(
       welfare = welfare,
       povline = povline,
       population = population,
@@ -58,9 +56,8 @@ prod_compute_pip_stats <- function(welfare,
       ppp = ppp,
       p0 = p0
     )
-
-    return(out)
   } else {
     return(NA_real_)
   }
+  return(res)
 }

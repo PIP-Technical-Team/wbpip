@@ -57,7 +57,7 @@ check_NA_Inf_values <- function(x){
 #' @keywords internal
 check_neg_values <- function(x){
 
-  if(any(x<0)==TRUE){
+  if(length(x) > 0 && any(x<0)){
     cli::cli_abort("All values in x should be positive")
   }
 
