@@ -115,7 +115,7 @@ test_that("md_compute_fgt works", {
                        weight      = weight,
                        return_data =  TRUE)
   expect_equal(names(fgt),
-               c("povline","pov_status", "relative_distance", "weight", "FGT0"))
+               c("povline","pov_status", "relative_distance", "weight", "welfare", "FGT0"))
 
   expect_equal(fgt$FGT0, 0.18186165)
 
@@ -134,6 +134,7 @@ test_that("md_compute_fgt works", {
                  "pov_status",
                  "relative_distance",
                  "weight",
+                 "welfare",
                  "FGT0",
                  "FGT1",
                  "FGT2"
@@ -161,6 +162,7 @@ test_that("md_compute_fgt works with vectorization of povline", {
                  "pov_status",
                  "relative_distance",
                  "weight",
+                 "welfare",
                  "FGT0"))
 
   res_1 <- 0.1818617
@@ -198,6 +200,7 @@ test_that("md_compute_fgt works with vectorization of povline", {
                  "pov_status",
                  "relative_distance",
                  "weight",
+                 "welfare",
                  "FGT0",
                  "FGT1",
                  "FGT2"
@@ -208,6 +211,7 @@ test_that("md_compute_fgt works with vectorization of povline", {
                      "pov_status",
                      "relative_distance",
                      "weight",
+                     "welfare",
                      "FGT0",
                      "FGT1",
                      "FGT2")

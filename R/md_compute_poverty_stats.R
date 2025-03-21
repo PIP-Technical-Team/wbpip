@@ -188,25 +188,27 @@ md_compute_fgt <- function(fgt_data        = NULL,
       stop("welfare and povline can't be NULL")
     }
 
-    fgt_data        <- vector("list", length = 4)
+    fgt_data        <- vector("list", length = 5)
     names(fgt_data) <- c("povline",
                          "pov_status",
                          "relative_distance",
-                         "weight")
+                         "weight",
+                         "welfare")
 
     fgt_data$pov_status         <- vapply(povline,
                                           function(x) welfare < x,
                                           logical(length(welfare)))
     fgt_data$weight             <- weight
     fgt_data$povline            <- povline
+    fgt_data$welfare            <- welfare
 
   }
 
   # optimize depending on alpha
   if (is.null(fgt_data$relative_distance) & alpha > 0) {
-    fgt_data$relative_distance  <- vapply(povline,
-                                          function(x) 1 - (welfare / x),
-                                          double(length(welfare)))
+    fgt_data$relative_distance  <- vapply(fgt_data$povline,
+                                          function(x) 1 - (fgt_data$welfare / x),
+                                          double(length(fgt_data$welfare)))
   }
   # estimate FGT
   x <- calc_fgt(fgt_data, alpha)
