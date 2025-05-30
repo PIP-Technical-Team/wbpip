@@ -12,7 +12,7 @@ md_compute_fgt(
   fgt_data = NULL,
   welfare = NULL,
   weight = rep(1, length(welfare)),
-  povline = fmedian(welfare, w = weight)/2,
+  povline = fmedian(welfare, w = weight, na.rm = TRUE)/2,
   alpha = 0,
   return_data = FALSE,
   include_povline = FALSE

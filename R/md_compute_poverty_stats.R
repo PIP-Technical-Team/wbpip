@@ -167,7 +167,9 @@ md_compute_poverty_stats <- function(
 md_compute_fgt <- function(fgt_data        = NULL,
                            welfare         = NULL,
                            weight          = rep(1, length(welfare)),
-                           povline         = fmedian(welfare, w = weight)/2,
+                           povline         = fmedian(welfare,
+                                                     w = weight,
+                                                     na.rm = TRUE)/2,
                            alpha           = 0,
                            return_data     = FALSE,
                            include_povline = FALSE
@@ -181,30 +183,35 @@ md_compute_fgt <- function(fgt_data        = NULL,
     povline <- povline + 1e-10
   }
   if (is.null(fgt_data)) {
+
     if (is.null(welfare) || is.null(povline)) {
       stop("welfare and povline can't be NULL")
-    } else {
-      fgt_data        <- vector("list", length = 4)
-      names(fgt_data) <- c("povline",
-                           "pov_status",
-                           "relative_distance",
-                           "weight")
-
-      fgt_data$pov_status         <- vapply(povline,
-                                            function(x) welfare < x,
-                                            logical(length(welfare)))
-      fgt_data$relative_distance  <- vapply(povline,
-                                            function(x) 1 - (welfare / x),
-                                            double(length(welfare)))
-      fgt_data$weight             <- weight
-      fgt_data$povline            <- povline
     }
+
+    fgt_data        <- vector("list", length = 5)
+    names(fgt_data) <- c("povline",
+                         "pov_status",
+                         "relative_distance",
+                         "weight",
+                         "welfare")
+
+    fgt_data$pov_status         <- vapply(povline,
+                                          function(x) welfare < x,
+                                          logical(length(welfare)))
+    fgt_data$weight             <- weight
+    fgt_data$povline            <- povline
+    fgt_data$welfare            <- welfare
+
   }
 
+  # optimize depending on alpha
+  if (is.null(fgt_data$relative_distance) & alpha > 0) {
+    fgt_data$relative_distance  <- vapply(fgt_data$povline,
+                                          function(x) 1 - (fgt_data$welfare / x),
+                                          double(length(fgt_data$welfare)))
+  }
   # estimate FGT
-  x <-
-    ((fgt_data$pov_status) * (fgt_data$relative_distance)^alpha) |>
-    fmean(w = fgt_data$weight)
+  x <- calc_fgt(fgt_data, alpha)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Return   ---------
@@ -219,6 +226,27 @@ md_compute_fgt <- function(fgt_data        = NULL,
   x
 
 }
+
+
+
+calc_fgt <- function(fgt_data, alpha) {
+  if (alpha == 0) {
+    # Headcount ratio; no relative_distance calculation needed
+    result <- collapse::fmean(fgt_data$pov_status, w = fgt_data$weight)
+  } else if (alpha == 1) {
+    # Poverty gap; no exponentiation needed
+    result <- collapse::fmean(fgt_data$pov_status * fgt_data$relative_distance,
+                              w = fgt_data$weight)
+  } else {
+    # Generalized for alpha = 2 or other
+    result <- collapse::fmean(fgt_data$pov_status * (fgt_data$relative_distance^alpha),
+                              w = fgt_data$weight)
+  }
+  return(result)
+}
+
+
+
 
 #' @rdname md_compute_fgt
 #' @export
