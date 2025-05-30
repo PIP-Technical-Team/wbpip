@@ -1,4 +1,5 @@
 # wbpip (development version)
+* optimize FGT calculations
 
 # wbpip 0.1.5
 
